@@ -6,7 +6,7 @@
   Time: 23:07
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
     <title>Devcolibri.com exam REST</title>
@@ -30,61 +30,6 @@
             }
         });
     };
-/*
-    var RestPut = function() {
-        var JSONObject= {
-            'time': Date.now(),
-            'message': 'Это пример вызова PUT метода'
-        };
-
-        $.ajax({
-            type: 'PUT',
-            url:  prefix,
-            contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify(JSONObject),
-            dataType: 'json',
-            async: true,
-            success: function(result) {
-                alert('Время: ' + result.time
-                    + ', сообщенеи: ' + result.message);
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                alert(jqXHR.status + ' ' + jqXHR.responseText);
-            }
-        });
-    }
-
-    var RestPost = function() {
-        $.ajax({
-            type: 'POST',
-            url:  prefix,
-            dataType: 'json',
-            async: true,
-            success: function(result) {
-                alert('Время: ' + result.time
-                    + ', сообщение: ' + result.message);
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                alert(jqXHR.status + ' ' + jqXHR.responseText);
-            }
-        });
-    }
-
-    var RestDelete = function() {
-        $.ajax({
-            type: 'DELETE',
-            url:  prefix + '/' + Date.now(),
-            dataType: 'json',
-            async: true,
-            success: function(result) {
-                alert('Время: ' + result.time
-                    + ', сообщение: ' + result.message);
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                alert(jqXHR.status + ' ' + jqXHR.responseText);
-            }
-        });
-    }*/
 </script>
 
 <body>
