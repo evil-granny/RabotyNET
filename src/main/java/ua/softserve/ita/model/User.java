@@ -22,16 +22,19 @@ public class User implements Serializable {
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "login")
+    @Column(name = "login",nullable = false,length = 25)
     private String login;
 
-    @Column(name = "password")
+    @Column(name = "password",nullable = false,length = 20)
     private String password;
 
     @Enumerated(EnumType.STRING)
     @Type(type = "role")
-    @Column(name = "role")
+    @Column(name = "role",nullable = false)
     private Role role;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Person person;
 
     @OneToOne(mappedBy = "user")
     private Company company;

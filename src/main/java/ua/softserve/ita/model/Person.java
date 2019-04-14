@@ -20,12 +20,12 @@ public class Person implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private long userId;
+    private Long userId;
 
-    @Column(name = "first_name")
+    @Column(name = "first_name",nullable = false,length = 20)
     private String firstName;
 
-    @Column(name = "last_name")
+    @Column(name = "last_name",nullable = false,length = 20)
     private String lastName;
 
     @JsonDeserialize(using = LocalDateDeserializer.class)
@@ -33,12 +33,17 @@ public class Person implements Serializable {
     @Column(name = "birthday")
     private LocalDate birthday;
 
-    @Column(name = "phone_number")
+    @Column(name = "phone_number",length = 13)
     private String phoneNumber;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id", referencedColumnName = "address_id")
+    @JoinColumn(name = "address_id", referencedColumnName = "address_id",nullable = false)
     private Address address;
+
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id",nullable = false)
+    @MapsId
+    private User user;
 
     @OneToMany(mappedBy = "person")
     private List<CV> cvs;

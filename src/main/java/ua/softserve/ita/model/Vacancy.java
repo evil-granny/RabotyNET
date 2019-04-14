@@ -8,6 +8,7 @@ import ua.softserve.ita.model.enumtype.TypeOfEmployment;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -23,7 +24,7 @@ public class Vacancy implements Serializable {
     @Column(name = "vacancy_id")
     private Long vacancyId;
 
-    @Column(name = "position")
+    @Column(name = "position",nullable = false,length = 40)
     private String position;
 
     @Enumerated(EnumType.STRING)
@@ -31,7 +32,7 @@ public class Vacancy implements Serializable {
     @Column(name = "type_of_employment")
     private TypeOfEmployment typeOfEmployment;
 
-    @Column(name = "requirements")
+    @Column(name = "requirements",nullable = false,columnDefinition = "character varying []",length = 200)
     private ArrayList<String> requirements;
 
     @Column(name = "salary")

@@ -46,6 +46,7 @@ public class PersonDao implements Dao<Person> {
     public Long update(Person person, Long id) {
         Session session = sessionFactory.getCurrentSession();
         Person updatedPerson = session.byId(Person.class).load(id);
+        updatedPerson.setUserId(person.getUserId());
         updatedPerson.setFirstName(person.getFirstName());
         updatedPerson.setLastName(person.getLastName());
         updatedPerson.setBirthday(person.getBirthday());

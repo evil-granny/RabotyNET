@@ -13,7 +13,7 @@ public class Skill implements Serializable {
     @Column(name = "skill_id")
     private Long skillId;
 
-    @Column(name = "title")
+    @Column(name = "title",nullable = false,length = 30)
     private String title;
 
     @Column(name = "description")

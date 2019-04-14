@@ -13,19 +13,19 @@ public class Address implements Serializable {
     @Column(name = "address_id")
     private long addressId;
 
-    @Column(name = "country")
+    @Column(name = "country",nullable = false,length = 20)
     private String country;
 
-    @Column(name = "city")
+    @Column(name = "city",nullable = false,length = 15)
     private String city;
 
-    @Column(name = "street")
+    @Column(name = "street",length = 30)
     private String street;
 
-    @Column(name = "building")
+    @Column(name = "building",length = 5)
     private String building;
 
-    @Column(name = "apartment")
+    @Column(name = "apartment",length = 5)
     private String apartment;
 
     @Column(name = "zip_code")

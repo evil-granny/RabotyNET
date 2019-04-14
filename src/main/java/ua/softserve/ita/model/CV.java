@@ -17,7 +17,7 @@ public class CV implements Serializable {
     @Column(name = "photo")
     private String photo;
 
-    @Column(name = "position")
+    @Column(name = "position",nullable = false,length = 50)
     private String position;
 
     @OneToMany(mappedBy = "cv")
@@ -27,7 +27,7 @@ public class CV implements Serializable {
     private List<Job> jobs;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "education_id", referencedColumnName = "education_id")
+    @JoinColumn(name = "education_id", referencedColumnName = "education_id",nullable = false)
     private Education education;
 
     @ManyToOne
@@ -100,4 +100,16 @@ public class CV implements Serializable {
         return Objects.hash(cvId, photo, position, skills, jobs, education);
     }
 
+    @Override
+    public String toString() {
+        return "CV{" +
+                "cvId=" + cvId +
+                ", photo='" + photo + '\'' +
+                ", position='" + position + '\'' +
+                ", skills=" + skills +
+                ", jobs=" + jobs +
+                ", education=" + education +
+                ", person=" + person +
+                '}';
+    }
 }

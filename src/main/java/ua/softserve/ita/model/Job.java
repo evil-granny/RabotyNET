@@ -22,15 +22,15 @@ public class Job implements Serializable {
     @Column(name = "job_id")
     private Long jobId;
 
-    @Column(name = "position")
+    @Column(name = "position",nullable = false,length = 40)
     private String position;
 
     @Enumerated(EnumType.STRING)
     @Type(type = "period")
-    @Column(name = "period")
+    @Column(name = "period",nullable = false)
     private Period period;
 
-    @Column(name = "description")
+    @Column(name = "description",length = 200)
     private String description;
 
     @ManyToOne

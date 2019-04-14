@@ -14,23 +14,23 @@ public class Company implements Serializable {
     @Column(name = "company_id")
     private Long companyId;
 
-    @Column(name = "name")
+    @Column(name = "name",nullable = false,length = 30)
     private String name;
 
-    @Column(name = "edrpou")
+    @Column(name = "edrpou",nullable = false)
     private Integer edrpou;
 
     @Column(name = "description")
     private String description;
 
-    @Column(name = "website")
+    @Column(name = "website",length = 50)
     private String website;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id", referencedColumnName = "address_id")
+    @JoinColumn(name = "address_id", referencedColumnName = "address_id",nullable = false)
     private Address address;
 
-    @Column(name = "email")
+    @Column(name = "email",nullable = false,length = 30)
     private String email;
 
     @Column(name = "logo")
@@ -40,7 +40,7 @@ public class Company implements Serializable {
     private List<Vacancy> vacancies;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id",nullable = false)
     private User user;
 
     public Long getCompanyId() {

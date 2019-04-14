@@ -13,19 +13,19 @@ public class Education implements Serializable {
     @Column(name = "education_id")
     private Long educationId;
 
-    @Column(name = "degree")
+    @Column(name = "degree",nullable = false,length = 30)
     private String degree;
 
-    @Column(name = "school")
+    @Column(name = "school",nullable = false,length = 50)
     private String school;
 
-    @Column(name = "specialty")
+    @Column(name = "specialty",length = 100)
     private String specialty;
 
     @Column(name = "graduation")
     private Integer graduation;
 
-    @Column(name = "city")
+    @Column(name = "city",length = 30)
     private String city;
 
     @OneToOne(mappedBy = "education")
