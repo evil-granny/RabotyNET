@@ -47,7 +47,6 @@ public class EducationDao implements Dao<Education> {
         Session session = sessionFactory.getCurrentSession();
         Education updatedEducation = sessionFactory.getCurrentSession().byId(Education.class).load(id);
         updatedEducation.setEducationId(education.getEducationId());
-        updatedEducation.setCity(education.getCity());
         updatedEducation.setDegree(education.getDegree());
         updatedEducation.setGraduation(education.getGraduation());
         updatedEducation.setSchool(education.getSchool());

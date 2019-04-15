@@ -46,10 +46,11 @@ public class JobDao implements Dao<Job> {
     public Long update(Job job, Long id) {
         Session session = sessionFactory.getCurrentSession();
         Job updatedJob = sessionFactory.getCurrentSession().byId(Job.class).load(id);
-        updatedJob.setJobId(job.getJobId());
-        updatedJob.setDescription(job.getDescription());
-        updatedJob.setPeriod(job.getPeriod());
         updatedJob.setPosition(job.getPosition());
+        updatedJob.setBegin(job.getBegin());
+        updatedJob.setEnd(job.getEnd());
+        updatedJob.setCompanyName(job.getCompanyName());
+        updatedJob.setDescription(job.getDescription());
         session.flush();
 
         return id;
@@ -61,4 +62,5 @@ public class JobDao implements Dao<Job> {
         Job job = session.byId(Job.class).load(id);
         session.delete(job);
     }
+
 }

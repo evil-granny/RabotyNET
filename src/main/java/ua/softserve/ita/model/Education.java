@@ -13,20 +13,17 @@ public class Education implements Serializable {
     @Column(name = "education_id")
     private Long educationId;
 
-    @Column(name = "degree",nullable = false,length = 30)
+    @Column(name = "degree", nullable = false, length = 30)
     private String degree;
 
-    @Column(name = "school",nullable = false,length = 50)
+    @Column(name = "school", nullable = false, length = 50)
     private String school;
 
-    @Column(name = "specialty",length = 100)
+    @Column(name = "specialty", length = 100)
     private String specialty;
 
     @Column(name = "graduation")
     private Integer graduation;
-
-    @Column(name = "city",length = 30)
-    private String city;
 
     @OneToOne(mappedBy = "education")
     private CV cv;
@@ -71,14 +68,6 @@ public class Education implements Serializable {
         this.graduation = graduation;
     }
 
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -88,13 +77,12 @@ public class Education implements Serializable {
                 degree.equals(education.degree) &&
                 school.equals(education.school) &&
                 Objects.equals(specialty, education.specialty) &&
-                Objects.equals(graduation, education.graduation) &&
-                Objects.equals(city, education.city);
+                Objects.equals(graduation, education.graduation);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(educationId, degree, school, specialty, graduation, city);
+        return Objects.hash(educationId, degree, school, specialty, graduation);
     }
 
     @Override
@@ -105,7 +93,6 @@ public class Education implements Serializable {
                 ", school='" + school + '\'' +
                 ", specialty='" + specialty + '\'' +
                 ", graduation=" + graduation +
-                ", city='" + city + '\'' +
                 '}';
     }
 

@@ -14,24 +14,25 @@ public class Company implements Serializable {
     @Column(name = "company_id")
     private Long companyId;
 
-    @Column(name = "name",nullable = false,length = 30)
+    @Column(name = "name", nullable = false, length = 30)
     private String name;
 
-    @Column(name = "edrpou",nullable = false)
+    @Column(name = "edrpou", nullable = false)
     private Integer edrpou;
 
     @Column(name = "description")
     private String description;
 
-    @Column(name = "website",length = 50)
+    @Column(name = "website", length = 50)
     private String website;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id", referencedColumnName = "address_id",nullable = false)
-    private Address address;
+    @JoinColumn(name = "contacts_id", referencedColumnName = "contacts_id", nullable = false)
+    private Contacts contacts;
 
-    @Column(name = "email",nullable = false,length = 30)
-    private String email;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false)
+    private Address address;
 
     @Column(name = "logo")
     private String logo;
@@ -40,7 +41,7 @@ public class Company implements Serializable {
     private List<Vacancy> vacancies;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id",nullable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private User user;
 
     public Long getCompanyId() {
@@ -83,20 +84,20 @@ public class Company implements Serializable {
         this.website = website;
     }
 
+    public Contacts getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(Contacts contacts) {
+        this.contacts = contacts;
+    }
+
     public Address getAddress() {
         return address;
     }
 
     public void setAddress(Address address) {
         this.address = address;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getLogo() {
@@ -125,15 +126,15 @@ public class Company implements Serializable {
                 edrpou.equals(company.edrpou) &&
                 Objects.equals(description, company.description) &&
                 Objects.equals(website, company.website) &&
+                contacts.equals(company.contacts) &&
                 address.equals(company.address) &&
-                email.equals(company.email) &&
                 Objects.equals(logo, company.logo) &&
                 Objects.equals(vacancies, company.vacancies);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(companyId, name, edrpou, description, website, address, email, logo, vacancies);
+        return Objects.hash(companyId, name, edrpou, description, website, contacts, address, logo, vacancies);
     }
 
     @Override
@@ -144,8 +145,8 @@ public class Company implements Serializable {
                 ", edrpou=" + edrpou +
                 ", description='" + description + '\'' +
                 ", website='" + website + '\'' +
+                ", contacts=" + contacts +
                 ", address=" + address +
-                ", email='" + email + '\'' +
                 ", logo='" + logo + '\'' +
                 ", vacancies=" + vacancies +
                 '}';

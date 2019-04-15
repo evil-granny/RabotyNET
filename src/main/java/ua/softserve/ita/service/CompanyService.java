@@ -1,11 +1,8 @@
 package ua.softserve.ita.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import ua.softserve.ita.dao.CompanyDao;
 import ua.softserve.ita.dao.Dao;
-import ua.softserve.ita.model.Address;
 import ua.softserve.ita.model.Company;
 
 import javax.annotation.Resource;

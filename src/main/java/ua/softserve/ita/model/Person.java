@@ -18,14 +18,13 @@ import java.util.Objects;
 public class Person implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "first_name",nullable = false,length = 20)
+    @Column(name = "first_name", nullable = false, length = 20)
     private String firstName;
 
-    @Column(name = "last_name",nullable = false,length = 20)
+    @Column(name = "last_name", nullable = false, length = 20)
     private String lastName;
 
     @JsonDeserialize(using = LocalDateDeserializer.class)
@@ -33,16 +32,16 @@ public class Person implements Serializable {
     @Column(name = "birthday")
     private LocalDate birthday;
 
-    @Column(name = "phone_number",length = 13)
-    private String phoneNumber;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "contacts_id", referencedColumnName = "contacts_id", nullable = false)
+    private Contacts contacts;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id", referencedColumnName = "address_id",nullable = false)
+    @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false)
     private Address address;
 
     @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id",nullable = false)
-    @MapsId
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "person")
@@ -81,12 +80,12 @@ public class Person implements Serializable {
         this.birthday = birthday;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public Contacts getContacts() {
+        return contacts;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setContacts(Contacts contacts) {
+        this.contacts = contacts;
     }
 
     public Address getAddress() {
@@ -114,14 +113,14 @@ public class Person implements Serializable {
                 firstName.equals(person.firstName) &&
                 lastName.equals(person.lastName) &&
                 birthday.equals(person.birthday) &&
-                phoneNumber.equals(person.phoneNumber) &&
+                contacts.equals(person.contacts) &&
                 address.equals(person.address) &&
                 cvs.equals(person.cvs);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, firstName, lastName, birthday, phoneNumber, address, cvs);
+        return Objects.hash(userId, firstName, lastName, birthday, contacts, address, cvs);
     }
 
     @Override
@@ -131,7 +130,7 @@ public class Person implements Serializable {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", birthday=" + birthday +
-                ", phoneNumber='" + phoneNumber + '\'' +
+                ", contacts='" + contacts + '\'' +
                 ", address=" + address +
                 ", cvs=" + cvs +
                 '}';

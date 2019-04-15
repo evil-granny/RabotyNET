@@ -46,7 +46,6 @@ public class VacancyDao implements Dao<Vacancy> {
     public Long update(Vacancy vacancy, Long id) {
         Session session = sessionFactory.getCurrentSession();
         Vacancy updatedVacancy = sessionFactory.getCurrentSession().byId(Vacancy.class).load(id);
-        updatedVacancy.setVacancyId(vacancy.getVacancyId());
         updatedVacancy.setPosition(updatedVacancy.getPosition());
         updatedVacancy.setSalary(updatedVacancy.getSalary());
         updatedVacancy.setTypeOfEmployment(updatedVacancy.getTypeOfEmployment());

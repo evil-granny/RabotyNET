@@ -64,4 +64,5 @@ public class AddressDao implements Dao<Address> {
         Address address = session.byId(Address.class).load(id);
         session.delete(address);
     }
+
 }

@@ -1,22 +1,14 @@
 package ua.softserve.ita.model;
 
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import ua.softserve.ita.model.enumtype.PostgreSQLEnumType;
 import ua.softserve.ita.model.enumtype.TypeOfEmployment;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "vacancy")
-@TypeDef(
-        name = "typeOfEmployment",
-        typeClass = PostgreSQLEnumType.class
-)
 public class Vacancy implements Serializable {
 
     @Id
@@ -24,15 +16,14 @@ public class Vacancy implements Serializable {
     @Column(name = "vacancy_id")
     private Long vacancyId;
 
-    @Column(name = "position",nullable = false,length = 40)
+    @Column(name = "position", nullable = false, length = 40)
     private String position;
 
     @Enumerated(EnumType.STRING)
-    @Type(type = "typeOfEmployment")
     @Column(name = "type_of_employment")
     private TypeOfEmployment typeOfEmployment;
 
-    @Column(name = "requirements",nullable = false,columnDefinition = "character varying []",length = 200)
+    @Column(name = "requirements", nullable = false, columnDefinition = "character varying []", length = 200)
     private ArrayList<String> requirements;
 
     @Column(name = "salary")

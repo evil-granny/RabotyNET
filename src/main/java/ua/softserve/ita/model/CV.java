@@ -17,17 +17,21 @@ public class CV implements Serializable {
     @Column(name = "photo")
     private String photo;
 
-    @Column(name = "position",nullable = false,length = 50)
+    @Column(name = "position", nullable = false, length = 50)
     private String position;
 
-    @OneToMany(mappedBy = "cv")
+    @ManyToMany
+    @JoinTable(
+            name = "cv_skill",
+            joinColumns = @JoinColumn(name = "cv_id"),
+            inverseJoinColumns = @JoinColumn(name = "skill_id"))
     private List<Skill> skills;
 
     @OneToMany(mappedBy = "cv")
     private List<Job> jobs;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "education_id", referencedColumnName = "education_id",nullable = false)
+    @JoinColumn(name = "education_id", referencedColumnName = "education_id", nullable = false)
     private Education education;
 
     @ManyToOne
@@ -112,4 +116,5 @@ public class CV implements Serializable {
                 ", person=" + person +
                 '}';
     }
+
 }

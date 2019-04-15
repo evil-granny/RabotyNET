@@ -47,10 +47,9 @@ public class UserDao implements Dao<User> {
     public Long update(User user, Long id) {
         Session session = sessionFactory.getCurrentSession();
         User updatedUser = session.byId(User.class).load(id);
-        updatedUser.setUserId(user.getUserId());
         updatedUser.setLogin(user.getLogin());
         updatedUser.setPassword(user.getPassword());
-        updatedUser.setRole(user.getRole());
+        updatedUser.setRoles(user.getRoles());
         session.flush();
 
         return id;
@@ -62,4 +61,5 @@ public class UserDao implements Dao<User> {
         User user = session.byId(User.class).load(id);
         session.delete(user);
     }
+
 }

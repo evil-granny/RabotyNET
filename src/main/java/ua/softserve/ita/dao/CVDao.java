@@ -46,7 +46,6 @@ public class CVDao implements Dao<CV> {
     public Long update(CV cv, Long id) {
         Session session = sessionFactory.getCurrentSession();
         CV updatedCV = sessionFactory.getCurrentSession().byId(CV.class).load(id);
-        updatedCV.setCvId(cv.getCvId());
         updatedCV.setEducation(cv.getEducation());
         updatedCV.setJobs(cv.getJobs());
         updatedCV.setPhoto(cv.getPhoto());
@@ -63,4 +62,5 @@ public class CVDao implements Dao<CV> {
         CV cv = session.byId(CV.class).load(id);
         session.delete(cv);
     }
+
 }

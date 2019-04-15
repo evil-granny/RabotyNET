@@ -47,7 +47,7 @@ public class CompanyDao implements Dao<Company> {
         Session session = sessionFactory.getCurrentSession();
         Company updatedCompany = sessionFactory.getCurrentSession().byId(Company.class).load(id);
         updatedCompany.setCompanyId(company.getCompanyId());
-        updatedCompany.setEmail(company.getEmail());
+        updatedCompany.setContacts(company.getContacts());
         updatedCompany.setAddress(company.getAddress());
         updatedCompany.setEdrpou(company.getEdrpou());
         updatedCompany.setDescription(company.getDescription());
@@ -66,4 +66,5 @@ public class CompanyDao implements Dao<Company> {
         Company company = session.byId(Company.class).load(id);
         session.delete(company);
     }
+
 }

@@ -1,20 +1,12 @@
 package ua.softserve.ita.model;
 
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import ua.softserve.ita.model.enumtype.PostgreSQLEnumType;
-import ua.softserve.ita.model.enumtype.Role;
-
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "\"user\"")
-@TypeDef(
-        name = "role",
-        typeClass = PostgreSQLEnumType.class
-)
 public class User implements Serializable {
 
     @Id
@@ -22,16 +14,18 @@ public class User implements Serializable {
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "login",nullable = false,length = 25)
+    @Column(name = "login", nullable = false, length = 50)
     private String login;
 
-    @Column(name = "password",nullable = false,length = 20)
+    @Column(name = "password", nullable = false, length = 20)
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    @Type(type = "role")
-    @Column(name = "role",nullable = false)
-    private Role role;
+    @ManyToMany
+    @JoinTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private List<Role> roles;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Person person;
@@ -63,12 +57,12 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public Role getRole() {
-        return role;
+    public List<Role> getRoles() {
+        return roles;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 
     @Override
@@ -79,12 +73,12 @@ public class User implements Serializable {
         return userId.equals(user.userId) &&
                 login.equals(user.login) &&
                 password.equals(user.password) &&
-                role == user.role;
+                roles.equals(user.roles);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, login, password, role);
+        return Objects.hash(userId, login, password);
     }
 
     @Override
@@ -93,7 +87,7 @@ public class User implements Serializable {
                 "userId=" + userId +
                 ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
-                ", role=" + role +
+                ", roles='" + roles + '\'' +
                 '}';
     }
 

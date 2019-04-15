@@ -1,20 +1,19 @@
 package ua.softserve.ita.model;
 
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import ua.softserve.ita.model.enumtype.Period;
-import ua.softserve.ita.model.enumtype.PostgreSQLEnumType;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import ua.softserve.ita.adapter.LocalDateAdapter;
+import ua.softserve.ita.adapter.LocalDateDeserializer;
+import ua.softserve.ita.adapter.LocalDateSerializer;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
 @Table(name = "job")
-@TypeDef(
-        name = "period",
-        typeClass = PostgreSQLEnumType.class
-)
 public class Job implements Serializable {
 
     @Id
@@ -22,15 +21,23 @@ public class Job implements Serializable {
     @Column(name = "job_id")
     private Long jobId;
 
-    @Column(name = "position",nullable = false,length = 40)
+    @Column(name = "position", nullable = false, length = 40)
     private String position;
 
-    @Enumerated(EnumType.STRING)
-    @Type(type = "period")
-    @Column(name = "period",nullable = false)
-    private Period period;
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @Column(name = "begin")
+    private LocalDate begin;
 
-    @Column(name = "description",length = 200)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @Column(name = "\"end\"")
+    private LocalDate end;
+
+    @Column(name = "companyName", length = 50)
+    private String companyName;
+
+    @Column(name = "description", length = 200)
     private String description;
 
     @ManyToOne
@@ -53,12 +60,30 @@ public class Job implements Serializable {
         this.position = position;
     }
 
-    public Period getPeriod() {
-        return period;
+    @XmlJavaTypeAdapter(value = LocalDateAdapter.class)
+    public LocalDate getBegin() {
+        return begin;
     }
 
-    public void setPeriod(Period period) {
-        this.period = period;
+    public void setBegin(LocalDate begin) {
+        this.begin = begin;
+    }
+
+    @XmlJavaTypeAdapter(value = LocalDateAdapter.class)
+    public LocalDate getEnd() {
+        return end;
+    }
+
+    public void setEnd(LocalDate end) {
+        this.end = end;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
     public String getDescription() {
@@ -76,13 +101,15 @@ public class Job implements Serializable {
         Job job = (Job) o;
         return jobId.equals(job.jobId) &&
                 position.equals(job.position) &&
-                period == job.period &&
+                Objects.equals(begin, job.begin) &&
+                Objects.equals(end, job.end) &&
+                Objects.equals(companyName, job.companyName) &&
                 Objects.equals(description, job.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(jobId, position, period, description);
+        return Objects.hash(jobId, position, begin, end, companyName, description);
     }
 
     @Override
@@ -90,7 +117,9 @@ public class Job implements Serializable {
         return "Job{" +
                 "jobId=" + jobId +
                 ", position='" + position + '\'' +
-                ", period=" + period +
+                ", begin=" + begin +
+                ", end=" + end +
+                ", companyName='" + companyName + '\'' +
                 ", description='" + description + '\'' +
                 '}';
     }

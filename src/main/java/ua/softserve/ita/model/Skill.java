@@ -2,6 +2,7 @@ package ua.softserve.ita.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -13,15 +14,14 @@ public class Skill implements Serializable {
     @Column(name = "skill_id")
     private Long skillId;
 
-    @Column(name = "title",nullable = false,length = 30)
+    @Column(name = "title", nullable = false, length = 30)
     private String title;
 
     @Column(name = "description")
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "cv_id", nullable = false)
-    private CV cv;
+    @ManyToMany(mappedBy = "skills")
+    private List<CV> cvs;
 
     public Long getSkillId() {
         return skillId;

@@ -46,7 +46,6 @@ public class SkillDao implements Dao<Skill> {
     public Long update(Skill skill, Long id) {
         Session session = sessionFactory.getCurrentSession();
         Skill updatedSkill = sessionFactory.getCurrentSession().byId(Skill.class).load(id);
-        updatedSkill.setSkillId(skill.getSkillId());
         updatedSkill.setTitle(skill.getTitle());
         updatedSkill.setDescription(skill.getDescription());
         session.flush();
