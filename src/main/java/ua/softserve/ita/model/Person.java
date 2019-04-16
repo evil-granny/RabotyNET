@@ -1,5 +1,6 @@
 package ua.softserve.ita.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import ua.softserve.ita.adapter.LocalDateAdapter;
@@ -44,6 +45,7 @@ public class Person implements Serializable {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private User user;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "person")
     private List<CV> cvs;
 

@@ -14,7 +14,7 @@ public class RabotyNETInitializer implements WebApplicationInitializer {
     public void onStartup(ServletContext servletContext) {
         AnnotationConfigWebApplicationContext rootContext =
                 new AnnotationConfigWebApplicationContext();
-        rootContext.register(AppConfig.class);
+        rootContext.register(WebSecurityConfig.class, AppConfig.class);
         servletContext.addListener(new ContextLoaderListener(rootContext));
 
         AnnotationConfigWebApplicationContext dispatcherContext =
