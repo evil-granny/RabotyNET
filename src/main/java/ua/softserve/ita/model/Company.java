@@ -1,5 +1,7 @@
 package ua.softserve.ita.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -37,6 +39,7 @@ public class Company implements Serializable {
     @Column(name = "logo")
     private String logo;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "company")
     private List<Vacancy> vacancies;
 
