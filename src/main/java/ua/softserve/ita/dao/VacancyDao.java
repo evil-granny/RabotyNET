@@ -6,23 +6,33 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
+import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Vacancy;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
+import java.util.Objects;
 
 @Component("vacancyDao")
 @Repository
-public class VacancyDao implements Dao<Vacancy> {
+public class VacancyDao implements BaseDao<Vacancy> {
 
     @Autowired
     private SessionFactory sessionFactory;
 
     @Override
     public Vacancy findById(Long id) {
-        return sessionFactory.getCurrentSession().get(Vacancy.class, id);
+        Vacancy vacancy = sessionFactory.getCurrentSession().get(Vacancy.class, id);
+        if(vacancy==null){
+            try {
+                throw new ResourceNotFoundException("Vacancy not found for this id: " + id);
+            } catch (ResourceNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        return vacancy;
     }
 
     @Override
@@ -37,28 +47,42 @@ public class VacancyDao implements Dao<Vacancy> {
     }
 
     @Override
-    public Long insert(Vacancy vacancy) {
+    public Vacancy insert(Vacancy vacancy) {
         sessionFactory.getCurrentSession().save(vacancy);
-        return vacancy.getVacancyId();
+        return vacancy;
     }
 
     @Override
-    public Long update(Vacancy vacancy, Long id) {
+    public Vacancy update(Vacancy vacancy, Long id) {
         Session session = sessionFactory.getCurrentSession();
         Vacancy updatedVacancy = sessionFactory.getCurrentSession().byId(Vacancy.class).load(id);
-        updatedVacancy.setPosition(updatedVacancy.getPosition());
-        updatedVacancy.setSalary(updatedVacancy.getSalary());
-        updatedVacancy.setTypeOfEmployment(updatedVacancy.getTypeOfEmployment());
-        updatedVacancy.setRequirements(updatedVacancy.getRequirements());
+        if (updatedVacancy == null) {
+            try {
+                throw new ResourceNotFoundException("Vacancy not found for this id: " + id);
+            } catch (ResourceNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        Objects.requireNonNull(updatedVacancy).setPosition(vacancy.getPosition());
+        updatedVacancy.setSalary(vacancy.getSalary());
+        updatedVacancy.setTypeOfEmployment(vacancy.getTypeOfEmployment());
+        updatedVacancy.setRequirements(vacancy.getRequirements());
+        updatedVacancy.setCompany(vacancy.getCompany());
         session.flush();
-
-        return id;
+        return updatedVacancy;
     }
 
     @Override
     public void deleteById(Long id) {
         Session session = sessionFactory.getCurrentSession();
         Vacancy vacancy = session.byId(Vacancy.class).load(id);
+        if (vacancy == null) {
+            try {
+                throw new ResourceNotFoundException("Vacancy not found for this id: " + id);
+            } catch (ResourceNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
         session.delete(vacancy);
     }
 }

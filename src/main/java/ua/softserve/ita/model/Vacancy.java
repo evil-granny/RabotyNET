@@ -1,10 +1,14 @@
 package ua.softserve.ita.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import ua.softserve.ita.model.enumtype.TypeOfEmployment;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -12,7 +16,7 @@ import java.util.Objects;
 public class Vacancy implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "vacancy_id")
     private Long vacancyId;
 
@@ -23,16 +27,38 @@ public class Vacancy implements Serializable {
     @Column(name = "type_of_employment")
     private TypeOfEmployment typeOfEmployment;
 
+   /* //@JsonIgnore
     @Column(name = "requirements", nullable = false, columnDefinition = "character varying []", length = 200)
-    private ArrayList<String> requirements;
+    //@ElementCollection(targetClass=String.class)
+    private List<String> requirements;*/
 
     @Column(name = "salary")
     private Integer salary;
 
+    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "company_id", nullable = false)
+    @JoinColumn(name = "company_id", nullable = false,insertable =false,updatable = false)
     private Company company;
 
+    @Column(name = "company_id")
+    private Long companyId;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "vacancy")
+    //@Column(insertable = false,updatable = false)
+    //@JoinColumn(name = "requirement_id", insertable = false, updatable = false)
+    private List<Requirement> requirements;
+
+
+//
+    public Long getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(Long companyId) {
+        this.companyId = companyId;
+    }
+//
     public Long getVacancyId() {
         return vacancyId;
     }
@@ -57,20 +83,28 @@ public class Vacancy implements Serializable {
         this.typeOfEmployment = typeOfEmployment;
     }
 
-    public ArrayList<String> getRequirements() {
-        return requirements;
-    }
-
-    public void setRequirements(ArrayList<String> requirements) {
-        this.requirements = requirements;
-    }
-
     public Integer getSalary() {
         return salary;
     }
 
     public void setSalary(Integer salary) {
         this.salary = salary;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
+    public List<Requirement> getRequirements() {
+        return requirements;
+    }
+
+    public void setRequirements(List<Requirement> requirements) {
+        this.requirements = requirements;
     }
 
     @Override
@@ -80,14 +114,14 @@ public class Vacancy implements Serializable {
         Vacancy vacancy = (Vacancy) o;
         return vacancyId.equals(vacancy.vacancyId) &&
                 position.equals(vacancy.position) &&
+                company.equals(vacancy.company) &&
                 typeOfEmployment == vacancy.typeOfEmployment &&
-                requirements.equals(vacancy.requirements) &&
                 Objects.equals(salary, vacancy.salary);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(vacancyId, position, typeOfEmployment, requirements, salary);
+        return Objects.hash(vacancyId, position, typeOfEmployment, salary,company);
     }
 
     @Override
@@ -96,9 +130,9 @@ public class Vacancy implements Serializable {
                 "vacancyId=" + vacancyId +
                 ", position='" + position + '\'' +
                 ", typeOfEmployment=" + typeOfEmployment +
-                ", requirements=" + requirements +
                 ", salary=" + salary +
+                ", company=" + company +
+                ", requirements=" + requirements +
                 '}';
     }
-
 }
