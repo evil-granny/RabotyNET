@@ -14,6 +14,11 @@ public class PersonController {
     @Resource(name = "personService")
     private Service<Person> personService;
 
+    @RequestMapping(method=RequestMethod.GET, value="/admin")
+    public String index(){
+        return "admin";
+    }
+
     @GetMapping(value = "/person/{id}")
     public ResponseEntity<Person> getPerson(@PathVariable("id") long id) {
         Person person = personService.findById(id);

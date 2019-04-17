@@ -27,27 +27,39 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //        return super.userDetailsService();
 //    }
 
-//    @Bean
-//    public UserDetailsService userDetailsService(){
-//        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-//        manager.createUser(User.withDefaultPasswordEncoder().username("user").password("password").roles("USER").build());
-//        return manager;
-//    }
-
-    @Autowired
-    protected void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService);
+    @Bean
+    public UserDetailsService userDetailsService(){
+        // ensure the passwords are encoded properly
+        User.UserBuilder users = User.withDefaultPasswordEncoder();
+        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+        manager.createUser(users.username("user").password("qwerty").roles("USER").build());
+        manager.createUser(users.username("admin").password("admin").roles("USER","ADMIN").build());
+        return manager;
     }
+
+//    @Autowired
+//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.userDetailsService(userDetailsService);
+//    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+//        http.authorizeRequests().anyRequest().authenticated()
+//                .and()
+//                .formLogin()
+//                .and()
+//                .httpBasic();
         http
-                .authorizeRequests()
-                .anyRequest().authenticated()
+            .authorizeRequests()
+                .antMatchers("/", "/signup", "/login").permitAll()
+                .antMatchers("/", "/persons").hasAnyRole("USER")
+                .anyRequest().hasAnyRole("ADMIN")
                 .and()
                 .formLogin()
                 .and()
-                .httpBasic();
+                .logout().permitAll().logoutSuccessUrl("/login")
+                .and()
+                .csrf().disable();
     }
 
     @Bean

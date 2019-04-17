@@ -1,25 +1,32 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
-<body onload='document.loginForm.username.focus();'>
+<body>
 <h1>Spring Security 5 - Login Form</h1>
 
-<c:if test="${not empty errorMessge}"><div style="color:red; font-weight: bold; margin: 30px 0px;">${errorMessge}</div></c:if>
-
-<form name='login' action="/login" method='POST'>
-    <table>
-        <tr>
-            <td>UserName:</td>
-            <td><input type='text' name='username' value=''></td>
-        </tr>
-        <tr>
-            <td>Password:</td>
-            <td><input type='password' name='password' /></td>
-        </tr>
-        <tr>
-            <td colspan='2'><input name="submit" type="submit" value="submit" /></td>
-        </tr>
-    </table>
-    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+<c:url value="/login" var="loginUrl"/>
+<form action="${loginUrl}" method="post">       1
+    <c:if test="${param.error != null}">        2
+        <p>
+            Invalid username and password.
+        </p>
+    </c:if>
+    <c:if test="${param.logout != null}">       3
+        <p>
+            You have been logged out.
+        </p>
+    </c:if>
+    <p>
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username"/>  4
+    </p>
+    <p>
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password"/>  5
+    </p>
+    <input type="hidden"                        6
+           name="${_csrf.parameterName}"
+           value="${_csrf.token}"/>
+    <button type="submit" class="btn">Log in</button>
 </form>
 </body>
 </html>
