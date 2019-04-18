@@ -11,8 +11,12 @@ import ua.softserve.ita.dao.UserDao;
 import ua.softserve.ita.dao.UserDetailsDao;
 import ua.softserve.ita.model.User;
 
+import java.util.logging.Logger;
+
 @Service("userDetailsService")
 public class UserDetailsServiceImp implements UserDetailsService {
+
+    private static final Logger lOGGER = Logger.getLogger(UserDetailsServiceImp.class.getName());
 
     @Autowired
     private UserDao userDao;
@@ -27,7 +31,7 @@ public class UserDetailsServiceImp implements UserDetailsService {
 
         User user = userDao.findUserByUsername(username);
         if (user != null) {
-
+            lOGGER.severe("Our user " + user);
             return user;
         } else {
             throw new UsernameNotFoundException("User not found.");

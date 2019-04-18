@@ -81,8 +81,8 @@ public class LoginController {
 //        return ResponseEntity.ok().body(person);
 //    }
 
-    @GetMapping(value = "/person/{id}")
-    public ResponseEntity<UserDetails> getPerson(@PathVariable("id") String username) {
+    @GetMapping(value = "/person/{text}")
+    public ResponseEntity<UserDetails> showPerson(@PathVariable("text") String username) {
         UserDetails user = userDetails.loadUserByUsername(username);
         return ResponseEntity.ok().body(user);
     }

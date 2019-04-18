@@ -14,11 +14,15 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Primary
 @Component("userDao")
 @Repository
+@Transactional
 public class UserDao implements Dao<User>, UserDetailsDao {
+
+    private static final Logger lOGGER = Logger.getLogger(UserDao.class.getName());
 
     @Autowired
     private SessionFactory sessionFactory;
@@ -68,6 +72,9 @@ public class UserDao implements Dao<User>, UserDetailsDao {
     public User findUserByUsername(String username) {
         Query<User> query = sessionFactory.getCurrentSession().createQuery("select u from User u where u.login = :login", User.class);
         query.setParameter("login", username);
+        lOGGER.severe("query = " + query.getSingleResult());
         return query.getSingleResult();
+
+//        return sessionFactory.getCurrentSession().get(User.class,username);
     }
 }

@@ -13,7 +13,7 @@ import java.util.Properties;
 
 @Configuration
 @PropertySource("classpath:database.properties")
-@EnableTransactionManagement
+@EnableTransactionManagement(proxyTargetClass = true)
 @ComponentScans(value = {@ComponentScan("ua.softserve.ita.dao"),
         @ComponentScan("ua.softserve.ita.service")})
 public class AppConfig {
