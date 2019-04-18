@@ -66,7 +66,7 @@ public class VacancyDao implements BaseDao<Vacancy> {
         Objects.requireNonNull(updatedVacancy).setPosition(vacancy.getPosition());
         updatedVacancy.setSalary(vacancy.getSalary());
         updatedVacancy.setTypeOfEmployment(vacancy.getTypeOfEmployment());
-        updatedVacancy.setRequirements(vacancy.getRequirements());
+        //updatedVacancy.setRequirements(vacancy.());
         updatedVacancy.setCompany(vacancy.getCompany());
         session.flush();
         return updatedVacancy;

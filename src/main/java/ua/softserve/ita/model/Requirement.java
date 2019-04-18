@@ -1,57 +1,38 @@
 package ua.softserve.ita.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 @Table(name = "requirement")
-public class Requirement implements Serializable {
+@Getter
+@Setter
+@NoArgsConstructor
+public class Requirement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "requirement_id")
     private Long requirementId;
 
-    @Column(name = "description",length = 100,nullable = false)
+    @Column(name = "description", length = 100, nullable = false)
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "vacancy_id", nullable = false,insertable = false,updatable = false)//
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vacancy_id", nullable = false/*,insertable = false,updatable = false*/)//
     private Vacancy vacancy;
 
-    @Column(name = "vacancy_id")
-    private Long vacancyId;
+   /* @Column(name = "vacancy_id")
+    private Long vacancyId;*/
 
-    public Long getRequirementId() {
-        return requirementId;
-    }
-
-    public void setRequirementId(Long requirementId) {
-        this.requirementId = requirementId;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+    public Requirement(String description, Vacancy vacancy) {
         this.description = description;
-    }
-
-    public Vacancy getVacancy() {
-        return vacancy;
-    }
-
-    public void setVacancy(Vacancy vacancy) {
         this.vacancy = vacancy;
-    }
-
-    public Long getVacancyId() {
-        return vacancyId;
-    }
-
-    public void setVacancyId(Long vacancyId) {
-        this.vacancyId = vacancyId;
     }
 
     @Override
@@ -74,7 +55,7 @@ public class Requirement implements Serializable {
         return "Requirement{" +
                 "requirementId=" + requirementId +
                 ", description='" + description + '\'' +
-                ", vacancy=" + vacancy +
+                //", vacancy=" + vacancy +
                 '}';
     }
 }

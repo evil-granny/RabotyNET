@@ -1,8 +1,5 @@
 package ua.softserve.ita.model;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -40,9 +37,10 @@ public class Company implements Serializable {
     @Column(name = "logo")
     private String logo;
 
-    @OneToMany/*(mappedBy = "company")*/
+    /*@OneToMany(fetch = FetchType.EAGER)
     @JoinColumn (name = "company_id", insertable = false, updatable = false)
-    @Fetch(value = FetchMode.JOIN)
+    @Fetch(value = FetchMode.JOIN)*/
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "company", cascade = CascadeType.REMOVE)
     private List<Vacancy> vacancies;
 
     @OneToOne(cascade = CascadeType.ALL)
