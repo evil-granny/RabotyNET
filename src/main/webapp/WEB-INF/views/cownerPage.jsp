@@ -1,6 +1,6 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <h3>Welcome to RabotyNET</h3>
-<h3>User Page</h3>
+<h3>Cowner Page</h3>
 
 You can check <a href="${pageContext.request.contextPath}/homePage">Home Page</a>
 

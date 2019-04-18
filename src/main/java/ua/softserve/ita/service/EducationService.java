@@ -40,4 +40,6 @@ public class EducationService implements Service<Education> {
     public void deleteById(Long id) {
         educationDao.deleteById(id);
     }
+
+
 }

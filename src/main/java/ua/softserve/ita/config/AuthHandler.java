@@ -39,7 +39,7 @@ public class AuthHandler implements AuthenticationSuccessHandler {
         boolean isAdmin = false;
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         for (GrantedAuthority grantedAuthority : authorities) {
-            if (grantedAuthority.getAuthority().equals("ROLE_USER")) {
+            if (grantedAuthority.getAuthority().equals("ROLE_USER") || grantedAuthority.getAuthority().equals("ROLE_COWNER")) {
                 isUser = true;
                 break;
             } else if (grantedAuthority.getAuthority().equals("ROLE_ADMIN")) {
@@ -49,7 +49,7 @@ public class AuthHandler implements AuthenticationSuccessHandler {
         }
 
         if (isUser) {
-            return "/userPage";
+            return "/homePage";
         } else if (isAdmin) {
             return "/adminPage";
         } else {

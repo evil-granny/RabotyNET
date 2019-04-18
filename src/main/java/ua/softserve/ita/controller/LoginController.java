@@ -1,10 +1,15 @@
 package ua.softserve.ita.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import ua.softserve.ita.model.Person;
+import ua.softserve.ita.model.User;
 import ua.softserve.ita.service.Service;
+import ua.softserve.ita.service.UserDetailsService;
+import ua.softserve.ita.service.UserDetailsServiceImp;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -14,6 +19,9 @@ public class LoginController {
 
     @Resource(name = "personService")
     private Service<Person> personService;
+
+    @Resource(name = "userDetailsService")
+    private UserDetailsServiceImp userDetails;
 
     @RequestMapping(value = { "/"}, method = RequestMethod.GET)
     public ModelAndView welcomePage() {
@@ -33,6 +41,13 @@ public class LoginController {
     public ModelAndView userPage() {
         ModelAndView model = new ModelAndView();
         model.setViewName("userPage");
+        return model;
+    }
+
+    @RequestMapping(value = {"/cownerPage"}, method = RequestMethod.GET)
+    public ModelAndView cownerPage() {
+        ModelAndView model = new ModelAndView();
+        model.setViewName("cownerPage");
         return model;
     }
 
@@ -60,10 +75,16 @@ public class LoginController {
         return model;
     }
 
+//    @GetMapping(value = "/person/{id}")
+//    public ResponseEntity<Person> getPerson(@PathVariable("id") long id) {
+//        Person person = personService.findById(id);
+//        return ResponseEntity.ok().body(person);
+//    }
+
     @GetMapping(value = "/person/{id}")
-    public ResponseEntity<Person> getPerson(@PathVariable("id") long id) {
-        Person person = personService.findById(id);
-        return ResponseEntity.ok().body(person);
+    public ResponseEntity<UserDetails> getPerson(@PathVariable("id") String username) {
+        UserDetails user = userDetails.loadUserByUsername(username);
+        return ResponseEntity.ok().body(user);
     }
 
     @GetMapping("/persons")

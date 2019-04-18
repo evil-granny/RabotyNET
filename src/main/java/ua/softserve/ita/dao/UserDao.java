@@ -4,9 +4,10 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
-import ua.softserve.ita.model.Person;
+import org.springframework.transaction.annotation.Transactional;
 import ua.softserve.ita.model.User;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -14,9 +15,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
+@Primary
 @Component("userDao")
 @Repository
-public class UserDao implements Dao<User> {
+public class UserDao implements Dao<User>, UserDetailsDao {
 
     @Autowired
     private SessionFactory sessionFactory;
@@ -62,4 +64,10 @@ public class UserDao implements Dao<User> {
         session.delete(user);
     }
 
+    @Override
+    public User findUserByUsername(String username) {
+        Query<User> query = sessionFactory.getCurrentSession().createQuery("select u from User u where u.login = :login", User.class);
+        query.setParameter("login", username);
+        return query.getSingleResult();
+    }
 }

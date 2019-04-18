@@ -1,5 +1,5 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<a href="${pageContext.request.contextPath}/userPage">JD User</a> | <a href="${pageContext.request.contextPath}/adminPage">JD Admin</a> | <a href="javascript:document.getElementById('logout').submit()">Logout</a>
+<a href="${pageContext.request.contextPath}/userPage">JD User</a> | <a href="${pageContext.request.contextPath}/cownerPage">JD COwner</a> | <a href="${pageContext.request.contextPath}/adminPage">JD Admin</a> | <a href="javascript:document.getElementById('logout').submit()">Logout</a>
 
 <h3>Welcome to RabotyNET Home Page</h3>
 <ul>
