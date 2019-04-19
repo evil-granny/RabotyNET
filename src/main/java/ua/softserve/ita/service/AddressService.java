@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ua.softserve.ita.dao.Dao;
 import ua.softserve.ita.model.Address;
-import ua.softserve.ita.model.Person;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -28,17 +27,18 @@ public class AddressService implements Service<Address> {
     }
 
     @Override
-    public Long insert(Address address) {
-        return addressDao.insert(address);
+    public Address create(Address address) {
+        return addressDao.create(address);
     }
 
     @Override
-    public Long update(Address address, Long id) {
-        return addressDao.update(address,id);
+    public Address update(Address address, Long id) {
+        return addressDao.update(address, id);
     }
 
     @Override
     public void deleteById(Long id) {
-          addressDao.deleteById(id);
+        addressDao.deleteById(id);
     }
+
 }

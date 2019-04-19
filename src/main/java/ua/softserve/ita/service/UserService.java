@@ -12,6 +12,7 @@ import java.util.List;
 @org.springframework.stereotype.Service
 @Transactional
 public class UserService implements Service<User> {
+
     @Resource(name = "userDao")
     private Dao<User> userDao;
 
@@ -26,12 +27,12 @@ public class UserService implements Service<User> {
     }
 
     @Override
-    public Long insert(User user) {
-        return userDao.insert(user);
+    public User create(User user) {
+        return userDao.create(user);
     }
 
     @Override
-    public Long update(User user, Long id) {
+    public User update(User user, Long id) {
         return userDao.update(user, id);
     }
 
@@ -39,4 +40,5 @@ public class UserService implements Service<User> {
     public void deleteById(Long id) {
         userDao.deleteById(id);
     }
+
 }

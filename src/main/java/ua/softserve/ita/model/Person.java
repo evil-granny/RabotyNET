@@ -27,12 +27,18 @@ public class Person implements Serializable {
     @Column(name = "last_name", nullable = false, length = 20)
     private String lastName;
 
+    @Column(name = "email", nullable = false, length = 30)
+    private String email;
+
+    @Column(name = "phone_number", nullable = false, length = 30)
+    private String phoneNumber;
+
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
     @Column(name = "birthday")
     private LocalDate birthday;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    /* @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "contacts_id", referencedColumnName = "contacts_id", nullable = false)
     private Contacts contacts;
 
@@ -45,7 +51,7 @@ public class Person implements Serializable {
     private User user;
 
     @OneToMany(mappedBy = "person")
-    private List<CV> cvs;
+    private List<CV> cvs; */
 
     public long getUserId() {
         return userId;
@@ -71,6 +77,22 @@ public class Person implements Serializable {
         this.lastName = lastName;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
     @XmlJavaTypeAdapter(value = LocalDateAdapter.class)
     public LocalDate getBirthday() {
         return birthday;
@@ -80,7 +102,7 @@ public class Person implements Serializable {
         this.birthday = birthday;
     }
 
-    public Contacts getContacts() {
+    /* public Contacts getContacts() {
         return contacts;
     }
 
@@ -102,9 +124,9 @@ public class Person implements Serializable {
 
     public void setCvs(List<CV> cvs) {
         this.cvs = cvs;
-    }
+    } */
 
-    @Override
+    /* @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -134,6 +156,6 @@ public class Person implements Serializable {
                 ", address=" + address +
                 ", cvs=" + cvs +
                 '}';
-    }
+    } */
 
 }

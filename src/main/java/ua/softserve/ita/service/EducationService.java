@@ -27,12 +27,12 @@ public class EducationService implements Service<Education> {
     }
 
     @Override
-    public Long insert(Education education) {
-        return educationDao.insert(education);
+    public Education create(Education education) {
+        return educationDao.create(education);
     }
 
     @Override
-    public Long update(Education education, Long id) {
+    public Education update(Education education, Long id) {
         return educationDao.update(education, id);
     }
 
@@ -40,4 +40,5 @@ public class EducationService implements Service<Education> {
     public void deleteById(Long id) {
         educationDao.deleteById(id);
     }
+
 }

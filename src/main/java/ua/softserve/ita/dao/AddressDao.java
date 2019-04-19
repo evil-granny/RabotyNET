@@ -33,29 +33,32 @@ public class AddressDao implements Dao<Address> {
         Root<Address> root = criteriaQuery.from(Address.class);
         criteriaQuery.select(root);
         Query<Address> query = session.createQuery(criteriaQuery);
+
         return query.getResultList();
     }
 
     @Override
-    public Long insert(Address address) {
+    public Address create(Address address) {
         sessionFactory.getCurrentSession().save(address);
-        return address.getAddressId();
+
+        return address;
     }
 
     @Override
-    public Long update(Address address, Long id) {
+    public Address update(Address address, Long id) {
         Session session = sessionFactory.getCurrentSession();
+
         Address updatedAddress = session.byId(Address.class).load(id);
-        updatedAddress.setAddressId(address.getAddressId());
         updatedAddress.setStreet(address.getStreet());
         updatedAddress.setCity(address.getCity());
         updatedAddress.setCountry(address.getCountry());
         updatedAddress.setApartment(address.getApartment());
         updatedAddress.setBuilding(address.getBuilding());
         updatedAddress.setZipCode(address.getZipCode());
+
         session.flush();
 
-        return id;
+        return updatedAddress;
     }
 
     @Override

@@ -33,20 +33,23 @@ public class CompanyDao implements Dao<Company> {
         Root<Company> root = criteriaQuery.from(Company.class);
         criteriaQuery.select(root);
         Query<Company> query = session.createQuery(criteriaQuery);
+
         return query.getResultList();
     }
 
     @Override
-    public Long insert(Company company) {
+    public Company create(Company company) {
         sessionFactory.getCurrentSession().save(company);
-        return company.getCompanyId();
+
+        return company;
     }
 
     @Override
-    public Long update(Company company, Long id) {
+    public Company update(Company company, Long id) {
         Session session = sessionFactory.getCurrentSession();
+
         Company updatedCompany = sessionFactory.getCurrentSession().byId(Company.class).load(id);
-        updatedCompany.setCompanyId(company.getCompanyId());
+
         updatedCompany.setContacts(company.getContacts());
         updatedCompany.setAddress(company.getAddress());
         updatedCompany.setEdrpou(company.getEdrpou());
@@ -55,9 +58,10 @@ public class CompanyDao implements Dao<Company> {
         updatedCompany.setName(company.getName());
         updatedCompany.setWebsite(company.getWebsite());
         updatedCompany.setVacancies(company.getVacancies());
+
         session.flush();
 
-        return id;
+        return updatedCompany;
     }
 
     @Override

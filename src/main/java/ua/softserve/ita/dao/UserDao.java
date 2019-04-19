@@ -6,7 +6,6 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
-import ua.softserve.ita.model.Person;
 import ua.softserve.ita.model.User;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -23,7 +22,7 @@ public class UserDao implements Dao<User> {
 
     @Override
     public User findById(Long id) {
-        return sessionFactory.getCurrentSession().get(User.class,id);
+        return sessionFactory.getCurrentSession().get(User.class, id);
     }
 
     @Override
@@ -34,25 +33,29 @@ public class UserDao implements Dao<User> {
         Root<User> root = criteriaQuery.from(User.class);
         criteriaQuery.select(root);
         Query<User> query = session.createQuery(criteriaQuery);
+
         return query.getResultList();
     }
 
     @Override
-    public Long insert(User user) {
+    public User create(User user) {
         sessionFactory.getCurrentSession().save(user);
-        return user.getUserId();
+
+        return user;
     }
 
     @Override
-    public Long update(User user, Long id) {
+    public User update(User user, Long id) {
         Session session = sessionFactory.getCurrentSession();
+
         User updatedUser = session.byId(User.class).load(id);
         updatedUser.setLogin(user.getLogin());
         updatedUser.setPassword(user.getPassword());
         updatedUser.setRoles(user.getRoles());
+
         session.flush();
 
-        return id;
+        return updatedUser;
     }
 
     @Override

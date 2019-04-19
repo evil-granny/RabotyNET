@@ -27,12 +27,12 @@ public class SkillService implements Service<Skill> {
     }
 
     @Override
-    public Long insert(Skill skill) {
-        return skillDao.insert(skill);
+    public Skill create(Skill skill) {
+        return skillDao.create(skill);
     }
 
     @Override
-    public Long update(Skill skill, Long id) {
+    public Skill update(Skill skill, Long id) {
         return skillDao.update(skill, id);
     }
 
@@ -40,4 +40,5 @@ public class SkillService implements Service<Skill> {
     public void deleteById(Long id) {
         skillDao.deleteById(id);
     }
+
 }

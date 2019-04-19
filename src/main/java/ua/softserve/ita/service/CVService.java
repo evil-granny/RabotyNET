@@ -27,12 +27,12 @@ public class CVService implements Service<CV> {
     }
 
     @Override
-    public Long insert(CV cv) {
-        return cvDao.insert(cv);
+    public CV create(CV cv) {
+        return cvDao.create(cv);
     }
 
     @Override
-    public Long update(CV cv, Long id) {
+    public CV update(CV cv, Long id) {
         return cvDao.update(cv, id);
     }
 
@@ -40,4 +40,5 @@ public class CVService implements Service<CV> {
     public void deleteById(Long id) {
         cvDao.deleteById(id);
     }
+
 }

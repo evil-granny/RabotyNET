@@ -3,7 +3,6 @@ package ua.softserve.ita.service;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ua.softserve.ita.dao.Dao;
-import ua.softserve.ita.model.Education;
 import ua.softserve.ita.model.Job;
 
 import javax.annotation.Resource;
@@ -28,17 +27,18 @@ public class JobService implements Service<Job> {
     }
 
     @Override
-    public Long insert(Job job) {
-        return jobDao.insert(job);
+    public Job create(Job job) {
+        return jobDao.create(job);
     }
 
     @Override
-    public Long update(Job job, Long id) {
-        return jobDao.update(job,id);
+    public Job update(Job job, Long id) {
+        return jobDao.update(job, id);
     }
 
     @Override
     public void deleteById(Long id) {
-       jobDao.deleteById(id);
+        jobDao.deleteById(id);
     }
+
 }

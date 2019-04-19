@@ -33,25 +33,28 @@ public class ContactsDao implements Dao<Contacts> {
         Root<Contacts> root = criteriaQuery.from(Contacts.class);
         criteriaQuery.select(root);
         Query<Contacts> query = session.createQuery(criteriaQuery);
+
         return query.getResultList();
     }
 
     @Override
-    public Long insert(Contacts contacts) {
+    public Contacts create(Contacts contacts) {
         sessionFactory.getCurrentSession().save(contacts);
-        return contacts.getContactsId();
+
+        return contacts;
     }
 
     @Override
-    public Long update(Contacts contacts, Long id) {
+    public Contacts update(Contacts contacts, Long id) {
         Session session = sessionFactory.getCurrentSession();
+
         Contacts updatedContacts = sessionFactory.getCurrentSession().byId(Contacts.class).load(id);
         updatedContacts.setEmail(contacts.getEmail());
         updatedContacts.setPhoneNumber(contacts.getPhoneNumber());
 
         session.flush();
 
-        return id;
+        return updatedContacts;
     }
 
     @Override

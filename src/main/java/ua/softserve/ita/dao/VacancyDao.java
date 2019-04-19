@@ -33,26 +33,30 @@ public class VacancyDao implements Dao<Vacancy> {
         Root<Vacancy> root = criteriaQuery.from(Vacancy.class);
         criteriaQuery.select(root);
         Query<Vacancy> query = session.createQuery(criteriaQuery);
+
         return query.getResultList();
     }
 
     @Override
-    public Long insert(Vacancy vacancy) {
+    public Vacancy create(Vacancy vacancy) {
         sessionFactory.getCurrentSession().save(vacancy);
-        return vacancy.getVacancyId();
+
+        return vacancy;
     }
 
     @Override
-    public Long update(Vacancy vacancy, Long id) {
+    public Vacancy update(Vacancy vacancy, Long id) {
         Session session = sessionFactory.getCurrentSession();
         Vacancy updatedVacancy = sessionFactory.getCurrentSession().byId(Vacancy.class).load(id);
+
         updatedVacancy.setPosition(updatedVacancy.getPosition());
         updatedVacancy.setSalary(updatedVacancy.getSalary());
         updatedVacancy.setTypeOfEmployment(updatedVacancy.getTypeOfEmployment());
         updatedVacancy.setRequirements(updatedVacancy.getRequirements());
+
         session.flush();
 
-        return id;
+        return updatedVacancy;
     }
 
     @Override
@@ -61,4 +65,5 @@ public class VacancyDao implements Dao<Vacancy> {
         Vacancy vacancy = session.byId(Vacancy.class).load(id);
         session.delete(vacancy);
     }
+
 }

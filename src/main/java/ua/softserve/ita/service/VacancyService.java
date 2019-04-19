@@ -27,12 +27,12 @@ public class VacancyService implements Service<Vacancy> {
     }
 
     @Override
-    public Long insert(Vacancy vacancy) {
-        return vacancyDao.insert(vacancy);
+    public Vacancy create(Vacancy vacancy) {
+        return vacancyDao.create(vacancy);
     }
 
     @Override
-    public Long update(Vacancy vacancy, Long id) {
+    public Vacancy update(Vacancy vacancy, Long id) {
         return vacancyDao.update(vacancy, id);
     }
 
@@ -40,4 +40,5 @@ public class VacancyService implements Service<Vacancy> {
     public void deleteById(Long id) {
         vacancyDao.deleteById(id);
     }
+
 }

@@ -16,6 +16,7 @@ import java.util.List;
 @Component("roleDao")
 @Repository
 public class RoleDao implements Dao<Role> {
+
     @Autowired
     private SessionFactory sessionFactory;
 
@@ -32,25 +33,26 @@ public class RoleDao implements Dao<Role> {
         Root<Role> root = criteriaQuery.from(Role.class);
         criteriaQuery.select(root);
         Query<Role> query = session.createQuery(criteriaQuery);
+
         return query.getResultList();
     }
 
     @Override
-    public Long insert(Role role) {
+    public Role create(Role role) {
         sessionFactory.getCurrentSession().save(role);
-        return role.getRoleId();
+
+        return role;
     }
 
     @Override
-    public Long update(Role role, Long id) {
+    public Role update(Role role, Long id) {
         Session session = sessionFactory.getCurrentSession();
         Role updatedRole = sessionFactory.getCurrentSession().byId(Role.class).load(id);
-        updatedRole.setRoleId(role.getRoleId());
         updatedRole.setType(role.getType());
         updatedRole.setUsers(role.getUsers());
         session.flush();
 
-        return id;
+        return updatedRole;
     }
 
     @Override
@@ -59,4 +61,5 @@ public class RoleDao implements Dao<Role> {
         Role role = session.byId(Role.class).load(id);
         session.delete(role);
     }
+
 }

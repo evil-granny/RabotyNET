@@ -27,12 +27,12 @@ public class RoleService implements Service<Role> {
     }
 
     @Override
-    public Long insert(Role role) {
-        return roleDao.insert(role);
+    public Role create(Role role) {
+        return roleDao.create(role);
     }
 
     @Override
-    public Long update(Role role, Long id) {
+    public Role update(Role role, Long id) {
         return roleDao.update(role, id);
     }
 

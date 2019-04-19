@@ -33,27 +33,31 @@ public class CVDao implements Dao<CV> {
         Root<CV> root = criteriaQuery.from(CV.class);
         criteriaQuery.select(root);
         Query<CV> query = session.createQuery(criteriaQuery);
+
         return query.getResultList();
     }
 
     @Override
-    public Long insert(CV cv) {
+    public CV create(CV cv) {
         sessionFactory.getCurrentSession().save(cv);
-        return cv.getCvId();
+
+        return cv;
     }
 
     @Override
-    public Long update(CV cv, Long id) {
+    public CV update(CV cv, Long id) {
         Session session = sessionFactory.getCurrentSession();
+
         CV updatedCV = sessionFactory.getCurrentSession().byId(CV.class).load(id);
         updatedCV.setEducation(cv.getEducation());
         updatedCV.setJobs(cv.getJobs());
         updatedCV.setPhoto(cv.getPhoto());
         updatedCV.setPosition(cv.getPosition());
         updatedCV.setSkills(cv.getSkills());
+
         session.flush();
 
-        return id;
+        return updatedCV;
     }
 
     @Override

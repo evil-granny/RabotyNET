@@ -33,27 +33,31 @@ public class JobDao implements Dao<Job> {
         Root<Job> root = criteriaQuery.from(Job.class);
         criteriaQuery.select(root);
         Query<Job> query = session.createQuery(criteriaQuery);
+
         return query.getResultList();
     }
 
     @Override
-    public Long insert(Job job) {
+    public Job create(Job job) {
         sessionFactory.getCurrentSession().save(job);
-        return job.getJobId();
+
+        return job;
     }
 
     @Override
-    public Long update(Job job, Long id) {
+    public Job update(Job job, Long id) {
         Session session = sessionFactory.getCurrentSession();
+
         Job updatedJob = sessionFactory.getCurrentSession().byId(Job.class).load(id);
         updatedJob.setPosition(job.getPosition());
         updatedJob.setBegin(job.getBegin());
         updatedJob.setEnd(job.getEnd());
         updatedJob.setCompanyName(job.getCompanyName());
         updatedJob.setDescription(job.getDescription());
+
         session.flush();
 
-        return id;
+        return updatedJob;
     }
 
     @Override

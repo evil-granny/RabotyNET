@@ -33,24 +33,28 @@ public class SkillDao implements Dao<Skill> {
         Root<Skill> root = criteriaQuery.from(Skill.class);
         criteriaQuery.select(root);
         Query<Skill> query = session.createQuery(criteriaQuery);
+
         return query.getResultList();
     }
 
     @Override
-    public Long insert(Skill skill) {
+    public Skill create(Skill skill) {
         sessionFactory.getCurrentSession().save(skill);
-        return skill.getSkillId();
+
+        return skill;
     }
 
     @Override
-    public Long update(Skill skill, Long id) {
+    public Skill update(Skill skill, Long id) {
         Session session = sessionFactory.getCurrentSession();
+
         Skill updatedSkill = sessionFactory.getCurrentSession().byId(Skill.class).load(id);
         updatedSkill.setTitle(skill.getTitle());
         updatedSkill.setDescription(skill.getDescription());
+
         session.flush();
 
-        return id;
+        return updatedSkill;
     }
 
     @Override
@@ -59,4 +63,5 @@ public class SkillDao implements Dao<Skill> {
         Skill skill = session.byId(Skill.class).load(id);
         session.delete(skill);
     }
+
 }

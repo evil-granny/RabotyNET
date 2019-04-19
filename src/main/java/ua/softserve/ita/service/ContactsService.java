@@ -27,12 +27,12 @@ public class ContactsService implements Service<Contacts> {
     }
 
     @Override
-    public Long insert(Contacts contacts) {
-        return contactsDao.insert(contacts);
+    public Contacts create(Contacts contacts) {
+        return contactsDao.create(contacts);
     }
 
     @Override
-    public Long update(Contacts contacts, Long id) {
+    public Contacts update(Contacts contacts, Long id) {
         return contactsDao.update(contacts, id);
     }
 

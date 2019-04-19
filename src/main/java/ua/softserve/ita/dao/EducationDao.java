@@ -33,27 +33,30 @@ public class EducationDao implements Dao<Education> {
         Root<Education> root = criteriaQuery.from(Education.class);
         criteriaQuery.select(root);
         Query<Education> query = session.createQuery(criteriaQuery);
+
         return query.getResultList();
     }
 
     @Override
-    public Long insert(Education education) {
+    public Education create(Education education) {
         sessionFactory.getCurrentSession().save(education);
-        return education.getEducationId();
+
+        return education;
     }
 
     @Override
-    public Long update(Education education, Long id) {
+    public Education update(Education education, Long id) {
         Session session = sessionFactory.getCurrentSession();
+
         Education updatedEducation = sessionFactory.getCurrentSession().byId(Education.class).load(id);
-        updatedEducation.setEducationId(education.getEducationId());
         updatedEducation.setDegree(education.getDegree());
         updatedEducation.setGraduation(education.getGraduation());
         updatedEducation.setSchool(education.getSchool());
         updatedEducation.setSpecialty(education.getSpecialty());
+
         session.flush();
 
-        return id;
+        return updatedEducation;
     }
 
     @Override
@@ -62,4 +65,5 @@ public class EducationDao implements Dao<Education> {
         Education education = session.byId(Education.class).load(id);
         session.delete(education);
     }
+
 }
