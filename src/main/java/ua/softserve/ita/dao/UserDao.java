@@ -70,11 +70,11 @@ public class UserDao implements Dao<User>, UserDetailsDao {
 
     @Override
     public User findUserByUsername(String username) {
-        Query<User> query = sessionFactory.getCurrentSession().createQuery("select u from User u where u.login = :login", User.class);
+        Query<User> query = sessionFactory.getCurrentSession().createQuery("from User u where u.login = :login", User.class);
         query.setParameter("login", username);
-        lOGGER.severe("query = " + query.getSingleResult());
+        lOGGER.severe("QUERY = " + query.getSingleResult());
         return query.getSingleResult();
 
-//        return sessionFactory.getCurrentSession().get(User.class,username);
+//        return sessionFactory.getCurrentSession().get(User.class,login);
     }
 }

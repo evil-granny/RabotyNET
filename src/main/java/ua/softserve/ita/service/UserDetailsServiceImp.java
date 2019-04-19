@@ -31,7 +31,7 @@ public class UserDetailsServiceImp implements UserDetailsService {
 
         User user = userDao.findUserByUsername(username);
         if (user != null) {
-            lOGGER.severe("Our user " + user);
+            lOGGER.severe("Our user is - " + user);
             return user;
         } else {
             throw new UsernameNotFoundException("User not found.");

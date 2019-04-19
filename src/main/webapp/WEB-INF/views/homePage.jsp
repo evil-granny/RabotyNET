@@ -6,6 +6,7 @@
     <li><a href="${pageContext.request.contextPath}/persons">All persons page</a></li>
     <li><a href="${pageContext.request.contextPath}/person/1">Person id = 1</a></li>
     <li><a href="${pageContext.request.contextPath}/person/2">Person id = 2</a></li>
+    <li><a href="${pageContext.request.contextPath}/personInfo">Person info</a></li>
 </ul>
 
 <c:url value="/logout" var="logoutUrl" />

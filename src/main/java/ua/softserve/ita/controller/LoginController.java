@@ -75,15 +75,15 @@ public class LoginController {
         return model;
     }
 
-//    @GetMapping(value = "/person/{id}")
-//    public ResponseEntity<Person> getPerson(@PathVariable("id") long id) {
-//        Person person = personService.findById(id);
-//        return ResponseEntity.ok().body(person);
-//    }
+    @GetMapping(value = "/person/{id}")
+    public ResponseEntity<Person> getPerson(@PathVariable("id") long id) {
+        Person person = personService.findById(id);
+        return ResponseEntity.ok().body(person);
+    }
 
-    @GetMapping(value = "/person/{text}")
-    public ResponseEntity<UserDetails> showPerson(@PathVariable("text") String username) {
-        UserDetails user = userDetails.loadUserByUsername(username);
+    @GetMapping(value = "/personInfo")
+    public ResponseEntity<UserDetails> showPerson() {
+        UserDetails user = userDetails.loadUserByUsername("admin");
         return ResponseEntity.ok().body(user);
     }
 
