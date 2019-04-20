@@ -9,6 +9,7 @@ import ua.softserve.ita.service.Service;
 import javax.annotation.Resource;
 import java.util.List;
 
+@CrossOrigin
 @RestController
 public class CompanyController {
 
@@ -21,12 +22,9 @@ public class CompanyController {
         return ResponseEntity.ok().body(company);
     }
 
-    @GetMapping("/companies")
-    public String getAll(ModelMap model) {
-        List<Company> companies = companyService.findAll();
-        model.addAttribute("companies", companies);
-        model.addAttribute("hello", "hello");
-        return "companies";
+    @GetMapping(path = {"/companies"})
+    public List<Company> getAll() {
+        return companyService.findAll();
     }
 
     @PutMapping("/updateCompany/{id}")
@@ -36,15 +34,14 @@ public class CompanyController {
     }
 
     @DeleteMapping("/deleteCompany/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") long id) {
+    public void delete(@PathVariable("id") long id) {
         companyService.deleteById(id);
-        return ResponseEntity.ok().body("Company has been deleted successfully.");
     }
 
-    @PostMapping("/insertCompany")
-    public ResponseEntity<?> insert(@RequestBody Company company) {
-        Company newCompany = companyService.insert(company);
-        return ResponseEntity.ok().body("New Company has been saved with ID:" + newCompany.getCompanyId());
+    @PostMapping("/createCompany")
+    public Company insert(@RequestBody Company company) {
+        System.out.println(company);
+        return companyService.insert(company);
     }
 
 }

@@ -4,16 +4,24 @@ import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { PersonComponent } from './person/person.component';
-import { AppRoutingModule } from './app.routing.module';
-import { PersonService } from './person/person.service';
-import { HttpClientModule } from '@angular/common/http';
 import { AddPersonComponent } from './person/add-person.component';
+import { CompanyComponent } from './company/company.component';
+import { AddCompanyComponent} from "./company/add-company.component";
+
+import { PersonService } from './person/person.service';
+import { CompanyService } from './company/company.service';
+
+import { AppRoutingModule } from './app.routing.module';
+import { HttpClientModule } from '@angular/common/http';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     PersonComponent,
-    AddPersonComponent
+    CompanyComponent,
+    AddPersonComponent,
+    AddCompanyComponent
   ],
   imports: [
     BrowserModule,
@@ -21,7 +29,7 @@ import { AddPersonComponent } from './person/add-person.component';
     HttpClientModule,
     FormsModule
   ],
-  providers: [PersonService],
+  providers: [PersonService, CompanyService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

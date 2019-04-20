@@ -28,7 +28,6 @@ public class PersonService implements Service<Person> {
 
     @Override
     public Person insert(Person person) {
-        System.out.println("hello2");
         return personDao.insert(person);
     }
 

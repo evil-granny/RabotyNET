@@ -56,7 +56,7 @@ public class CompanyDao implements Dao<Company> {
         updatedCompany.setLogo(company.getLogo());
         updatedCompany.setName(company.getName());
         updatedCompany.setWebsite(company.getWebsite());
-        updatedCompany.setVacancies(company.getVacancies());
+        //updatedCompany.setVacancies(company.getVacancies());
         session.flush();
 
         return updatedCompany;
@@ -67,16 +67,6 @@ public class CompanyDao implements Dao<Company> {
         Session session = sessionFactory.getCurrentSession();
         Company company = session.byId(Company.class).load(id);
         session.delete(company);
-    }
-
-    public List<Company> findByUserId(Long userId) {
-        Session session = sessionFactory.getCurrentSession();
-        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-        CriteriaQuery<Company> criteriaQuery = criteriaBuilder.createQuery(Company.class);
-        Root<Company> root = criteriaQuery.from(Company.class);
-        criteriaQuery.select(root);
-        Query<Company> query = session.createQuery(criteriaQuery);
-        return query.getResultStream().filter(company -> company.getUser().getUserId().equals(userId)).collect(Collectors.toList());
     }
 
 }

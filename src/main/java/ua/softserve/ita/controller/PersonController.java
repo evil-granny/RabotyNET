@@ -26,7 +26,6 @@ public class PersonController {
 
     @PostMapping(path = "/create")
     public Person create(@RequestBody Person person) {
-        System.out.println("hello");
         return personService.insert(person);
     }
 

@@ -22,8 +22,8 @@ public class Contacts implements Serializable {
 //    @OneToOne(mappedBy = "contacts")
 //    private Person person;
 
-    @OneToOne(mappedBy = "contacts")
-    private Company company;
+//    @OneToOne(mappedBy = "contacts")
+//    private Company company;
 
     public Long getContactsId() {
         return contactsId;

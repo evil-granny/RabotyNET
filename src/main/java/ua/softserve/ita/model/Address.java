@@ -34,8 +34,8 @@ public class Address implements Serializable {
 //    @OneToOne(mappedBy = "address")
 //    private Person person;
 
-    @OneToOne(mappedBy = "address")
-    private Company company;
+//    @OneToOne(mappedBy = "address")
+//    private Company company;
 
     public long getAddressId() {
         return addressId;

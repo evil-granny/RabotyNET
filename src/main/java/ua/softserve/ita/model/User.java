@@ -33,8 +33,8 @@ public class User implements Serializable {
 //    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
 //    private Person person;
 
-    @OneToOne(mappedBy = "user")
-    private Company company;
+//    @OneToOne(mappedBy = "user")
+//    private Company company;
 
     public Long getUserId() {
         return userId;

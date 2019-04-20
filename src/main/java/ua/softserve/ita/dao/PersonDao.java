@@ -39,8 +39,6 @@ public class PersonDao implements Dao<Person> {
 
     @Override
     public Person insert(Person person) {
-        System.out.println("hello3");
-        System.out.println(person);
         sessionFactory.getCurrentSession().save(person);
 
         return person;
