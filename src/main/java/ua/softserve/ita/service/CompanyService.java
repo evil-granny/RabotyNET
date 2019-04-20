@@ -27,12 +27,12 @@ public class CompanyService implements Service<Company> {
     }
 
     @Override
-    public Long insert(Company company) {
+    public Company insert(Company company) {
         return companyDao.insert(company);
     }
 
     @Override
-    public Long update(Company company, Long id) {
+    public Company update(Company company, Long id) {
         return companyDao.update(company,id);
     }
 

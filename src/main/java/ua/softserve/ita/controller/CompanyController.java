@@ -1,6 +1,7 @@
 package ua.softserve.ita.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.model.Company;
 import ua.softserve.ita.service.Service;
@@ -21,9 +22,11 @@ public class CompanyController {
     }
 
     @GetMapping("/companies")
-    public ResponseEntity<List<Company>> getAll() {
+    public String getAll(ModelMap model) {
         List<Company> companies = companyService.findAll();
-        return ResponseEntity.ok().body(companies);
+        model.addAttribute("companies", companies);
+        model.addAttribute("hello", "hello");
+        return "companies";
     }
 
     @PutMapping("/updateCompany/{id}")
@@ -40,8 +43,8 @@ public class CompanyController {
 
     @PostMapping("/insertCompany")
     public ResponseEntity<?> insert(@RequestBody Company company) {
-        long id = companyService.insert(company);
-        return ResponseEntity.ok().body("New Company has been saved with ID:" + id);
+        Company newCompany = companyService.insert(company);
+        return ResponseEntity.ok().body("New Company has been saved with ID:" + newCompany.getCompanyId());
     }
 
 }

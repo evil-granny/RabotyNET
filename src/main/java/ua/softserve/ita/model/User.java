@@ -1,5 +1,7 @@
 package ua.softserve.ita.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -20,6 +22,7 @@ public class User implements Serializable {
     @Column(name = "password", nullable = false, length = 20)
     private String password;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "user_role",
@@ -27,8 +30,8 @@ public class User implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private Person person;
+//    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+//    private Person person;
 
     @OneToOne(mappedBy = "user")
     private Company company;

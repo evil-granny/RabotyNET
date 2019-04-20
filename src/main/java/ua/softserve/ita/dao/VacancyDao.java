@@ -37,13 +37,13 @@ public class VacancyDao implements Dao<Vacancy> {
     }
 
     @Override
-    public Long insert(Vacancy vacancy) {
+    public Vacancy insert(Vacancy vacancy) {
         sessionFactory.getCurrentSession().save(vacancy);
-        return vacancy.getVacancyId();
+        return vacancy;
     }
 
     @Override
-    public Long update(Vacancy vacancy, Long id) {
+    public Vacancy update(Vacancy vacancy, Long id) {
         Session session = sessionFactory.getCurrentSession();
         Vacancy updatedVacancy = sessionFactory.getCurrentSession().byId(Vacancy.class).load(id);
         updatedVacancy.setPosition(updatedVacancy.getPosition());
@@ -52,7 +52,7 @@ public class VacancyDao implements Dao<Vacancy> {
         updatedVacancy.setRequirements(updatedVacancy.getRequirements());
         session.flush();
 
-        return id;
+        return updatedVacancy;
     }
 
     @Override

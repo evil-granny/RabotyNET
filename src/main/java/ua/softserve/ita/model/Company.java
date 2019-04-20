@@ -111,6 +111,14 @@ public class Company implements Serializable {
         this.logo = logo;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public List<Vacancy> getVacancies() {
         return vacancies;
     }

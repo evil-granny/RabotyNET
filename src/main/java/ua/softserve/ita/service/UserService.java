@@ -26,12 +26,12 @@ public class UserService implements Service<User> {
     }
 
     @Override
-    public Long insert(User user) {
+    public User insert(User user) {
         return userDao.insert(user);
     }
 
     @Override
-    public Long update(User user, Long id) {
+    public User update(User user, Long id) {
         return userDao.update(user, id);
     }
 

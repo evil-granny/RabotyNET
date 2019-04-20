@@ -37,13 +37,13 @@ public class CVDao implements Dao<CV> {
     }
 
     @Override
-    public Long insert(CV cv) {
+    public CV insert(CV cv) {
         sessionFactory.getCurrentSession().save(cv);
-        return cv.getCvId();
+        return cv;
     }
 
     @Override
-    public Long update(CV cv, Long id) {
+    public CV update(CV cv, Long id) {
         Session session = sessionFactory.getCurrentSession();
         CV updatedCV = sessionFactory.getCurrentSession().byId(CV.class).load(id);
         updatedCV.setEducation(cv.getEducation());
@@ -53,7 +53,7 @@ public class CVDao implements Dao<CV> {
         updatedCV.setSkills(cv.getSkills());
         session.flush();
 
-        return id;
+        return updatedCV;
     }
 
     @Override

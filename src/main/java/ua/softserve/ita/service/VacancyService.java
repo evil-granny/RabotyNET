@@ -27,12 +27,12 @@ public class VacancyService implements Service<Vacancy> {
     }
 
     @Override
-    public Long insert(Vacancy vacancy) {
+    public Vacancy insert(Vacancy vacancy) {
         return vacancyDao.insert(vacancy);
     }
 
     @Override
-    public Long update(Vacancy vacancy, Long id) {
+    public Vacancy update(Vacancy vacancy, Long id) {
         return vacancyDao.update(vacancy, id);
     }
 

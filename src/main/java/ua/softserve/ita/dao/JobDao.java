@@ -37,13 +37,13 @@ public class JobDao implements Dao<Job> {
     }
 
     @Override
-    public Long insert(Job job) {
+    public Job insert(Job job) {
         sessionFactory.getCurrentSession().save(job);
-        return job.getJobId();
+        return job;
     }
 
     @Override
-    public Long update(Job job, Long id) {
+    public Job update(Job job, Long id) {
         Session session = sessionFactory.getCurrentSession();
         Job updatedJob = sessionFactory.getCurrentSession().byId(Job.class).load(id);
         updatedJob.setPosition(job.getPosition());
@@ -53,7 +53,7 @@ public class JobDao implements Dao<Job> {
         updatedJob.setDescription(job.getDescription());
         session.flush();
 
-        return id;
+        return updatedJob;
     }
 
     @Override

@@ -11,7 +11,9 @@ import ua.softserve.ita.model.Company;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component("companyDao")
 @Repository
@@ -37,18 +39,18 @@ public class CompanyDao implements Dao<Company> {
     }
 
     @Override
-    public Long insert(Company company) {
+    public Company insert(Company company) {
         sessionFactory.getCurrentSession().save(company);
-        return company.getCompanyId();
+        return company;
     }
 
     @Override
-    public Long update(Company company, Long id) {
+    public Company update(Company company, Long id) {
         Session session = sessionFactory.getCurrentSession();
         Company updatedCompany = sessionFactory.getCurrentSession().byId(Company.class).load(id);
-        updatedCompany.setCompanyId(company.getCompanyId());
-        updatedCompany.setContacts(company.getContacts());
-        updatedCompany.setAddress(company.getAddress());
+        //updatedCompany.setCompanyId(company.getCompanyId());
+        //updatedCompany.setContacts(company.getContacts());
+        //updatedCompany.setAddress(company.getAddress());
         updatedCompany.setEdrpou(company.getEdrpou());
         updatedCompany.setDescription(company.getDescription());
         updatedCompany.setLogo(company.getLogo());
@@ -57,7 +59,7 @@ public class CompanyDao implements Dao<Company> {
         updatedCompany.setVacancies(company.getVacancies());
         session.flush();
 
-        return id;
+        return updatedCompany;
     }
 
     @Override
@@ -65,6 +67,16 @@ public class CompanyDao implements Dao<Company> {
         Session session = sessionFactory.getCurrentSession();
         Company company = session.byId(Company.class).load(id);
         session.delete(company);
+    }
+
+    public List<Company> findByUserId(Long userId) {
+        Session session = sessionFactory.getCurrentSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<Company> criteriaQuery = criteriaBuilder.createQuery(Company.class);
+        Root<Company> root = criteriaQuery.from(Company.class);
+        criteriaQuery.select(root);
+        Query<Company> query = session.createQuery(criteriaQuery);
+        return query.getResultStream().filter(company -> company.getUser().getUserId().equals(userId)).collect(Collectors.toList());
     }
 
 }

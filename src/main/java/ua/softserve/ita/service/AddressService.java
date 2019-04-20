@@ -28,12 +28,12 @@ public class AddressService implements Service<Address> {
     }
 
     @Override
-    public Long insert(Address address) {
+    public Address insert(Address address) {
         return addressDao.insert(address);
     }
 
     @Override
-    public Long update(Address address, Long id) {
+    public Address update(Address address, Long id) {
         return addressDao.update(address,id);
     }
 

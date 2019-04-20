@@ -38,13 +38,13 @@ public class UserDao implements Dao<User> {
     }
 
     @Override
-    public Long insert(User user) {
+    public User insert(User user) {
         sessionFactory.getCurrentSession().save(user);
-        return user.getUserId();
+        return user;
     }
 
     @Override
-    public Long update(User user, Long id) {
+    public User update(User user, Long id) {
         Session session = sessionFactory.getCurrentSession();
         User updatedUser = session.byId(User.class).load(id);
         updatedUser.setLogin(user.getLogin());
@@ -52,7 +52,7 @@ public class UserDao implements Dao<User> {
         updatedUser.setRoles(user.getRoles());
         session.flush();
 
-        return id;
+        return updatedUser;
     }
 
     @Override

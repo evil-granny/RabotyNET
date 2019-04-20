@@ -27,12 +27,12 @@ public class EducationService implements Service<Education> {
     }
 
     @Override
-    public Long insert(Education education) {
+    public Education insert(Education education) {
         return educationDao.insert(education);
     }
 
     @Override
-    public Long update(Education education, Long id) {
+    public Education update(Education education, Long id) {
         return educationDao.update(education, id);
     }
 
