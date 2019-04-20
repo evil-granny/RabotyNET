@@ -1,0 +1,23 @@
+<div class="col-md-12">
+  <h2 class="text-center">Add Vacancy</h2>
+  <form>
+    <div class="form-group">
+      <label for="position">Position:</label>
+      <input type="text" [(ngModel)]="vacancy.position" placeholder="Position" class="form-control" id="position"
+             name="position">
+    </div>
+
+    <div class="form-group">
+      <label for="salary">Salary:</label>
+      <input type="text" [(ngModel)]="vacancy.salary" placeholder="Salary" class="form-control" id="salary"
+             name="salary">
+    </div>
+
+    <div class="form-group">
+      <label for="typeOfEmployment">TypeOfEmployment:</label>
+      <input type="email" [(ngModel)]="vacancy.typeOfEmployment" placeholder="Employment" class="form-control" id="typeOfEmployment" name="typeOfEmployment">
+    </div>
+
+    <button class="btn btn-success" (click)="create()">Create</button>
+  </form>
+</div>

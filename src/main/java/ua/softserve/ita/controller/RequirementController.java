@@ -3,6 +3,7 @@ package ua.softserve.ita.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.model.Requirement;
+import ua.softserve.ita.model.Vacancy;
 import ua.softserve.ita.service.IService;
 
 import javax.annotation.Resource;
@@ -35,8 +36,12 @@ public class RequirementController {
         return ResponseEntity.ok(updatedVacancy);
     }
 
-    @PostMapping("/requirement")
-    public ResponseEntity<Requirement> createVacancy(@Valid @RequestBody Requirement requirement) {
+    @PostMapping("/requirement/{vacancy_id}")
+    public ResponseEntity<Requirement> createVacancy(@Valid @RequestBody Requirement requirement, @PathVariable(value = "vacancy_id") Long vacancy_id) {
+        Vacancy vacancy = new Vacancy();
+        vacancy.setVacancyId(vacancy_id);
+        requirement.setVacancy(vacancy);
+
         requirementService.insert(requirement);
         return ResponseEntity.ok(requirement);
     }

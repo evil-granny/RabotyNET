@@ -65,7 +65,7 @@ public class RequirementDao implements BaseDao<Requirement> {
             }
         }
         Objects.requireNonNull(updatedRequirement).setDescription(requirement.getDescription());
-        updatedRequirement.setVacancy(requirement.getVacancy());
+       updatedRequirement.setVacancy(requirement.getVacancy());
         session.flush();
         return updatedRequirement;
     }

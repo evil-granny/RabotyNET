@@ -54,7 +54,7 @@ public class CompanyDao implements Dao<Company> {
         updatedCompany.setLogo(company.getLogo());
         updatedCompany.setName(company.getName());
         updatedCompany.setWebsite(company.getWebsite());
-        updatedCompany.setVacancies(company.getVacancies());
+        //updatedCompany.setVacancies(company.getVacancies());
         session.flush();
 
         return id;

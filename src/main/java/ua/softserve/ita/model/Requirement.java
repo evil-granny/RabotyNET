@@ -1,9 +1,12 @@
 package ua.softserve.ita.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -13,7 +16,9 @@ import java.util.Objects;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Requirement {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "requirement_id")
@@ -23,17 +28,13 @@ public class Requirement {
     private String description;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vacancy_id", nullable = false/*,insertable = false,updatable = false*/)//
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "vacancy_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Vacancy vacancy;
 
    /* @Column(name = "vacancy_id")
     private Long vacancyId;*/
-
-    public Requirement(String description, Vacancy vacancy) {
-        this.description = description;
-        this.vacancy = vacancy;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -41,13 +42,13 @@ public class Requirement {
         if (o == null || getClass() != o.getClass()) return false;
         Requirement that = (Requirement) o;
         return Objects.equals(requirementId, that.requirementId) &&
-                Objects.equals(description, that.description) &&
-                Objects.equals(vacancy, that.vacancy);
+                Objects.equals(description, that.description);
+               /* Objects.equals(vacancy, that.vacancy);*/
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(requirementId, description, vacancy);
+        return Objects.hash(requirementId, description/*,vacancy*/);
     }
 
     @Override

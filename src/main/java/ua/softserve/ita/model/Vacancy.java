@@ -2,11 +2,12 @@ package ua.softserve.ita.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import ua.softserve.ita.model.enumtype.TypeOfEmployment;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import ua.softserve.ita.model.enumtype.Employment;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.Objects;
+
 import java.util.Set;
 
 @Entity
@@ -27,54 +28,29 @@ public class Vacancy {
     private String position;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "type_of_employment")
-    private TypeOfEmployment typeOfEmployment;
+    @Column(name = "employment")
+    private Employment employment;
 
     @Column(name = "salary")
     private Integer salary;
 
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id", referencedColumnName = "company_id", nullable = false/*,insertable =false,updatable = false*/)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "company_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Company company;
 
-    /*@Column(name = "company_id")
-    private Long companyId;*/
-
     //@JsonIgnore
-    @OneToMany(mappedBy = "vacancy", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    //@Column(insertable = false,updatable = false)
-    //@JoinColumn(name = "requirement_id", insertable = false, updatable = false)
+    @OneToMany(mappedBy = "vacancy", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private Set<Requirement> requirements;
-
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Vacancy vacancy = (Vacancy) o;
-        return vacancyId.equals(vacancy.vacancyId) &&
-                position.equals(vacancy.position) &&
-                company.equals(vacancy.company) &&
-                typeOfEmployment == vacancy.typeOfEmployment &&
-                Objects.equals(salary, vacancy.salary);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(vacancyId, position, typeOfEmployment, salary, company);
-    }
 
     @Override
     public String toString() {
         return "Vacancy{" +
                 "vacancyId=" + vacancyId +
                 ", position='" + position + '\'' +
-                ", typeOfEmployment=" + typeOfEmployment +
+                ", employment=" + employment +
                 ", salary=" + salary +
-               /* ", company=" + company +
-                ", requirements=" + requirements +*/
                 '}';
     }
 }

@@ -25,7 +25,7 @@ public class VacancyDao implements BaseDao<Vacancy> {
     @Override
     public Vacancy findById(Long id) {
         Vacancy vacancy = sessionFactory.getCurrentSession().get(Vacancy.class, id);
-        if(vacancy==null){
+        if (vacancy == null) {
             try {
                 throw new ResourceNotFoundException("Vacancy not found for this id: " + id);
             } catch (ResourceNotFoundException e) {
@@ -65,8 +65,8 @@ public class VacancyDao implements BaseDao<Vacancy> {
         }
         Objects.requireNonNull(updatedVacancy).setPosition(vacancy.getPosition());
         updatedVacancy.setSalary(vacancy.getSalary());
-        updatedVacancy.setTypeOfEmployment(vacancy.getTypeOfEmployment());
-        //updatedVacancy.setRequirements(vacancy.());
+        updatedVacancy.setEmployment(vacancy.getEmployment());
+        updatedVacancy.setRequirements(vacancy.getRequirements());
         updatedVacancy.setCompany(vacancy.getCompany());
         session.flush();
         return updatedVacancy;

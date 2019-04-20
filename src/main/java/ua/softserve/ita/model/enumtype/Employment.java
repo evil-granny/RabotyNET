@@ -1,6 +1,6 @@
 package ua.softserve.ita.model.enumtype;
 
-public enum TypeOfEmployment {
+public enum Employment {
 
     FULL("full"),
 
@@ -12,7 +12,7 @@ public enum TypeOfEmployment {
 
     private String type;
 
-    TypeOfEmployment(String code) {
+    Employment(String code) {
         this.type = code;
     }
 
@@ -20,8 +20,8 @@ public enum TypeOfEmployment {
         return type;
     }
 
-    public static TypeOfEmployment fromCode(String code) {
-        for (TypeOfEmployment type : TypeOfEmployment.values()) {
+    public static Employment fromCode(String code) {
+        for (Employment type : Employment.values()) {
             if (type.getCode().equals(code)) {
                 return type;
             }
