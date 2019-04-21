@@ -40,6 +40,8 @@ public class CompanyDao implements Dao<Company> {
 
     @Override
     public Company insert(Company company) {
+        sessionFactory.getCurrentSession().save(company.getAddress());
+        sessionFactory.getCurrentSession().save(company.getContacts());
         sessionFactory.getCurrentSession().save(company);
         return company;
     }

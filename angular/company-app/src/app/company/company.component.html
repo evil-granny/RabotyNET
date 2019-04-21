@@ -10,6 +10,11 @@
       <th>Description</th>
       <th>Website</th>
       <th>Logo</th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>Country</th>
+      <th>City</th>
+      <th>ZipCode</th>
       <th>Action</th>
     </tr>
     </thead>
@@ -21,6 +26,11 @@
       <td>{{company.description}}</td>
       <td>{{company.website}}</td>
       <td>{{company.logo}}</td>
+      <td>{{company.contacts.email}}</td>
+      <td>{{company.contacts.phoneNumber}}</td>
+      <td>{{company.address.country}}</td>
+      <td>{{company.address.city}}</td>
+      <td>{{company.address.zipCode}}</td>
       <td>
         <button class="btn btn-danger" (click)="deleteById(company)">Delete Company</button>
       </td>

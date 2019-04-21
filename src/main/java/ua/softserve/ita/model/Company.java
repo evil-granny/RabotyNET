@@ -28,13 +28,13 @@ public class Company implements Serializable {
     @Column(name = "website", length = 50)
     private String website;
 
-//    @OneToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "contacts_id", referencedColumnName = "contacts_id", nullable = false)
-//    private Contacts contacts;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "contacts_id", referencedColumnName = "contacts_id", nullable = false)
+    private Contacts contacts;
 
-//    @OneToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false)
-//    private Address address;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false)
+    private Address address;
 
     @Column(name = "logo")
     private String logo;
@@ -56,6 +56,8 @@ public class Company implements Serializable {
                 ", edrpou='" + edrpou + '\'' +
                 ", description='" + description + '\'' +
                 ", website='" + website + '\'' +
+                ", contacts=" + contacts +
+                ", address=" + address +
                 ", logo='" + logo + '\'' +
                 '}';
     }
@@ -100,21 +102,21 @@ public class Company implements Serializable {
         this.website = website;
     }
 
-//    public Contacts getContacts() {
-//        return contacts;
-//    }
-//
-//    public void setContacts(Contacts contacts) {
-//        this.contacts = contacts;
-//    }
-//
-//    public Address getAddress() {
-//        return address;
-//    }
-//
-//    public void setAddress(Address address) {
-//        this.address = address;
-//    }
+    public Contacts getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(Contacts contacts) {
+        this.contacts = contacts;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 
     public String getLogo() {
         return logo;

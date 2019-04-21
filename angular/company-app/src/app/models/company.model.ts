@@ -1,3 +1,6 @@
+import {Contacts} from "./contacts.model";
+import {Address} from "./address.model";
+
 export class Company {
   companyId: BigInteger;
 
@@ -11,4 +14,7 @@ export class Company {
 
   logo: string;
 
+  contacts: Contacts = new Contacts();
+
+  address: Address = new Address();
 }

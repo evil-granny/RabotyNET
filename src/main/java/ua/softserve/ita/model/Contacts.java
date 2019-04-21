@@ -13,10 +13,10 @@ public class Contacts implements Serializable {
     @Column(name = "contacts_id")
     private Long contactsId;
 
-    @Column(name = "email")
+    @Column(name = "email", length = 50)
     private String email;
 
-    @Column(name = "phoneNumber")
+    @Column(name = "phoneNumber", length = 15)
     private String phoneNumber;
 
 //    @OneToOne(mappedBy = "contacts")
