@@ -7,13 +7,13 @@ import { VacancyComponent } from './vacancy/vacancy.component';
 import { AppRoutingModule } from './app.routing.module';
 import { VacancyService } from './vacancy/vacancy.service';
 import { HttpClientModule } from '@angular/common/http';
-import { AddVacancyComponent } from './vacancy/add/add-vacancy.component';
+import { EditVacancyComponent } from './vacancy/edit/vacancy-edit.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     VacancyComponent,
-    AddVacancyComponent
+    EditVacancyComponent
   ],
   imports: [
     BrowserModule,

@@ -2,11 +2,22 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { VacancyComponent } from './vacancy/vacancy.component';
-import { AddVacancyComponent } from './vacancy/add/add-vacancy.component';
+import { EditVacancyComponent } from './vacancy/edit/vacancy-edit.component';
 
 const routes: Routes = [
-  { path: 'vacancies', component: VacancyComponent },
-  { path: 'add', component: AddVacancyComponent }
+  { 
+    path: '', redirectTo: '/vacancies', pathMatch: 'full' 
+  },
+  { 
+    path: 'vacancies', component: VacancyComponent 
+  },
+  { 
+    path: 'vacancy', component: EditVacancyComponent 
+  },
+  {
+    path: 'vacancy/:id',
+    component: EditVacancyComponent
+  }
 ];
 
 @NgModule({

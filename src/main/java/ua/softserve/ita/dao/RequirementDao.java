@@ -22,11 +22,11 @@ public class RequirementDao implements BaseDao<Requirement> {
 
     @Autowired
     private SessionFactory sessionFactory;
-    
+
     @Override
     public Requirement findById(Long id) {
         Requirement requirement = sessionFactory.getCurrentSession().get(Requirement.class, id);
-        if(requirement==null){
+        if (requirement == null) {
             try {
                 throw new ResourceNotFoundException("Requirement not found for this id: " + id);
             } catch (ResourceNotFoundException e) {
@@ -65,7 +65,7 @@ public class RequirementDao implements BaseDao<Requirement> {
             }
         }
         Objects.requireNonNull(updatedRequirement).setDescription(requirement.getDescription());
-       updatedRequirement.setVacancy(requirement.getVacancy());
+        updatedRequirement.setVacancy(requirement.getVacancy());
         session.flush();
         return updatedRequirement;
     }

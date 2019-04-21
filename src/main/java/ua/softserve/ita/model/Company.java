@@ -42,7 +42,6 @@ public class Company {
     @Column(name = "logo")
     private String logo;
 
-    //@JsonIgnore
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "company", cascade = CascadeType.REMOVE)
     private Set<Vacancy> vacancies;
 
@@ -62,7 +61,6 @@ public class Company {
                 ", contacts=" + contacts +
                 ", address=" + address +
                 ", logo='" + logo + '\'' +
-                //", vacancies=" + vacancies +
                 '}';
     }
 

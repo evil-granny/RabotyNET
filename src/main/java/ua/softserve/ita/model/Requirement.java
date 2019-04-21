@@ -33,9 +33,6 @@ public class Requirement {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Vacancy vacancy;
 
-   /* @Column(name = "vacancy_id")
-    private Long vacancyId;*/
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -43,12 +40,11 @@ public class Requirement {
         Requirement that = (Requirement) o;
         return Objects.equals(requirementId, that.requirementId) &&
                 Objects.equals(description, that.description);
-               /* Objects.equals(vacancy, that.vacancy);*/
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(requirementId, description/*,vacancy*/);
+        return Objects.hash(requirementId, description);
     }
 
     @Override
@@ -56,7 +52,6 @@ public class Requirement {
         return "Requirement{" +
                 "requirementId=" + requirementId +
                 ", description='" + description + '\'' +
-                //", vacancy=" + vacancy +
                 '}';
     }
 }

@@ -42,12 +42,17 @@ public class VacancyController {
         Company company = new Company();
         company.setCompanyId(1L);
         vacancy.setCompany(company);
+
+       /* Set<Requirement> requirements = vacancy.getRequirements();
+        requirements.forEach(e -> e.setVacancy(vacancy));*/
         final Vacancy updatedVacancy = vacancyService.update(vacancy, id);
+        //requirements.forEach(e -> requirementService.update(e,id));
+
         return ResponseEntity.ok(updatedVacancy);
     }
 
     @PostMapping("/vacancy/{company_id}")
-    public ResponseEntity<Vacancy> createVacancy(@Valid @RequestBody Vacancy vacancy, @PathVariable(value = "company_id") Long companyId) throws IOException {
+    public ResponseEntity<Vacancy> createVacancy(@Valid @RequestBody Vacancy vacancy, @PathVariable(value = "company_id") Long companyId) {
         Company company = new Company();
         company.setCompanyId(companyId);
         vacancy.setCompany(company);

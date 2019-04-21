@@ -1,0 +1,35 @@
+<div class="col-md-12">
+  <h2 class="text-center">{{vacancy.vacancyId ? 'Edit' : 'Add'}} Vacancy</h2>
+  <form #vacancyForm="ngForm" (ngSubmit)="save(vacancyForm.value)">
+    <div class="form-group">
+        <input type="hidden" name="id" [(ngModel)]="vacancy.vacancyId">
+      <label for="position">Position:</label>
+      <input type="text" [(ngModel)]="vacancy.position" placeholder="Input position"  class="form-control" id="position"
+            required name="position" #position>
+    </div>
+
+    <div class="form-group">
+      <label for="salary">Salary:</label>
+      <input type="number" [(ngModel)]="vacancy.salary" placeholder="Input salary" class="form-control" id="salary"
+             required name="salary" #salary >
+    </div>
+    <div class="form-group">
+      <label for="employment">Employment:</label>
+      <input type="text" [(ngModel)]="vacancy.employment" placeholder="Input type of employment" class="form-control" 
+      id="employment" required name="employment" #employment>
+    </div>
+    <!-- <div class="form-group">
+        <label for="description">Requirement:</label>
+        <input type="text" [(ngModel)]="vacancy.requirements.description" placeholder="Input requirement" class="form-control" 
+        id="description" required name="description" #description>
+      </div> -->
+     
+    <div class="buttons">
+    <button class="btn btn-primary" type="submit" [disabled]="!vacancyForm.form.valid">Save</button>
+       <!-- <button class="btn btn-secondary" (click)="remove(vacancy.id)"*ngIf="vacancy.id" type="button">Delete</button> -->
+      <a class="cancel" routerLink="/vacancies" style="font-size: 17px;
+      margin-left: 20px;">Cancel</a>
+    <!-- <button class="btn btn-success" (click)="create()">Create</button> -->
+  </div>
+  </form>
+</div>

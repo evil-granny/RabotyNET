@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders} from '@angular/common/http';
 
 import { Vacancy } from "../models/vacancy.model";
+import { Observable } from 'rxjs';
+
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -16,20 +18,32 @@ export class VacancyService {
   constructor(private http: HttpClient) {}
 
   private vacancyUrl = 'http://localhost:8080/test';
+  private vacancyAPI = this.vacancyUrl+'/vacancy';
 
-  public findAll() {
-    console.log("[findAll]");
-    return this.http.get<Vacancy[]>(this.vacancyUrl + "/vacancies");
+  public findAll(): Observable<any> {
+    return this.http.get(this.vacancyUrl + "/vacancies");
+  }
+  
+  get(id: BigInteger) : Observable<Object> {
+    return this.http.get(this.vacancyAPI + '/' + id);
   }
 
-  public deleteById(vacancy) {
-    console.log("[deleteById]");
-    return this.http.delete(this.vacancyUrl + "/vacancy/" + vacancy.vacancyId);
+  public deleteById(id:number): Observable<Object> {
+    return this.http.delete(this.vacancyUrl + "/vacancy/" + id);
   }
 
-  public create(vacancy) {
-    console.log("[create]");
-    return this.http.post<Vacancy>(this.vacancyUrl + "/vacancy", vacancy);
+  save(vacancy: any): Observable<any> {
+    let result: Observable<Object>;
+    if (vacancy['id']) {
+      result = this.http.put<Vacancy>(this.vacancyAPI,vacancy.id, vacancy);
+    } else {
+      result = this.http.post<Vacancy>(this.vacancyAPI+ '/'+1, vacancy);
+    }
+    return result;
+  }
+
+  public create(vacancy : Object) {
+    return this.http.post<Vacancy>(this.vacancyUrl + "/vacancy/"+1, vacancy);
   }
 
 }
