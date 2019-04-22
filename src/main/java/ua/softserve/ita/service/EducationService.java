@@ -32,8 +32,8 @@ public class EducationService implements Service<Education> {
     }
 
     @Override
-    public Education update(Education education, Long id) {
-        return educationDao.update(education, id);
+    public Education update(Education education) {
+        return educationDao.update(education);
     }
 
     @Override

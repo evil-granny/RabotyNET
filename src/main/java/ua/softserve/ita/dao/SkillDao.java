@@ -43,14 +43,12 @@ public class SkillDao implements Dao<Skill> {
     }
 
     @Override
-    public Skill update(Skill skill, Long id) {
+    public Skill update(Skill skill) {
         Session session = sessionFactory.getCurrentSession();
-        Skill updatedSkill = sessionFactory.getCurrentSession().byId(Skill.class).load(id);
-        updatedSkill.setTitle(skill.getTitle());
-        updatedSkill.setDescription(skill.getDescription());
+        session.update(skill);
         session.flush();
 
-        return updatedSkill;
+        return skill;
     }
 
     @Override

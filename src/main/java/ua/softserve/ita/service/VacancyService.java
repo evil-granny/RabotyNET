@@ -32,8 +32,8 @@ public class VacancyService implements Service<Vacancy> {
     }
 
     @Override
-    public Vacancy update(Vacancy vacancy, Long id) {
-        return vacancyDao.update(vacancy, id);
+    public Vacancy update(Vacancy vacancy) {
+        return vacancyDao.update(vacancy);
     }
 
     @Override

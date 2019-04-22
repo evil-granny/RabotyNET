@@ -43,17 +43,12 @@ public class JobDao implements Dao<Job> {
     }
 
     @Override
-    public Job update(Job job, Long id) {
+    public Job update(Job job) {
         Session session = sessionFactory.getCurrentSession();
-        Job updatedJob = sessionFactory.getCurrentSession().byId(Job.class).load(id);
-        updatedJob.setPosition(job.getPosition());
-        updatedJob.setBegin(job.getBegin());
-        updatedJob.setEnd(job.getEnd());
-        updatedJob.setCompanyName(job.getCompanyName());
-        updatedJob.setDescription(job.getDescription());
+        session.update(job);
         session.flush();
 
-        return updatedJob;
+        return job;
     }
 
     @Override

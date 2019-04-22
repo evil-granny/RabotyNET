@@ -32,8 +32,8 @@ public class CVService implements Service<CV> {
     }
 
     @Override
-    public CV update(CV cv, Long id) {
-        return cvDao.update(cv, id);
+    public CV update(CV cv) {
+        return cvDao.update(cv);
     }
 
     @Override

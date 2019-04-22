@@ -32,8 +32,8 @@ public class ContactsService implements Service<Contacts> {
     }
 
     @Override
-    public Contacts update(Contacts contacts, Long id) {
-        return contactsDao.update(contacts, id);
+    public Contacts update(Contacts contacts) {
+        return contactsDao.update(contacts);
     }
 
     @Override

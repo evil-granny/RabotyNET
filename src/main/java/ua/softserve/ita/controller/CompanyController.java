@@ -26,9 +26,9 @@ public class CompanyController {
         return companyService.findAll();
     }
 
-    @PutMapping("/updateCompany/{id}")
-    public Company update(@PathVariable("id") long id, @RequestBody Company company) {
-        return companyService.update(company, id);
+    @PutMapping("/updateCompany")
+    public Company update(@RequestBody Company company) {
+        return companyService.update(company);
     }
 
     @DeleteMapping("/deleteCompany/{id}")

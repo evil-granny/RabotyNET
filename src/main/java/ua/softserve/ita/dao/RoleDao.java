@@ -42,15 +42,12 @@ public class RoleDao implements Dao<Role> {
     }
 
     @Override
-    public Role update(Role role, Long id) {
+    public Role update(Role role) {
         Session session = sessionFactory.getCurrentSession();
-        Role updatedRole = sessionFactory.getCurrentSession().byId(Role.class).load(id);
-        updatedRole.setRoleId(role.getRoleId());
-        updatedRole.setType(role.getType());
-        updatedRole.setUsers(role.getUsers());
+        session.update(role);
         session.flush();
 
-        return updatedRole;
+        return role;
     }
 
     @Override

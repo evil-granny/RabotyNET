@@ -34,7 +34,7 @@ export class CompanyService {
 
   public update(company) {
     console.log("[update company]");
-    return this.http.put<Company>(this.companyURL + "/updateCompany/" + company.companyId, company);
+    return this.http.put<Company>(this.companyURL + "/updateCompany", company);
   }
 
   public findById(companyId) {

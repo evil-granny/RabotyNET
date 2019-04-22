@@ -29,9 +29,9 @@ public class PersonController {
         return personService.insert(person);
     }
 
-    @PutMapping(path = "/update/{id}")
-    public Person update(@RequestBody Person person, @PathVariable("id") long id) {
-        return personService.update(person, id);
+    @PutMapping(path = "/update")
+    public Person update(@RequestBody Person person) {
+        return personService.update(person);
     }
 
     @DeleteMapping(path = "/delete/{id}")

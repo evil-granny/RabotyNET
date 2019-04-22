@@ -43,17 +43,12 @@ public class EducationDao implements Dao<Education> {
     }
 
     @Override
-    public Education update(Education education, Long id) {
+    public Education update(Education education) {
         Session session = sessionFactory.getCurrentSession();
-        Education updatedEducation = sessionFactory.getCurrentSession().byId(Education.class).load(id);
-        updatedEducation.setEducationId(education.getEducationId());
-        updatedEducation.setDegree(education.getDegree());
-        updatedEducation.setGraduation(education.getGraduation());
-        updatedEducation.setSchool(education.getSchool());
-        updatedEducation.setSpecialty(education.getSpecialty());
+        session.update(education);
         session.flush();
 
-        return updatedEducation;
+        return education;
     }
 
     @Override
