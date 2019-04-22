@@ -36,11 +36,15 @@ public class AuthHandler implements AuthenticationSuccessHandler {
 
     protected String determineTargetUrl(Authentication authentication) {
         boolean isUser = false;
+        boolean isCowner = false;
         boolean isAdmin = false;
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         for (GrantedAuthority grantedAuthority : authorities) {
-            if (grantedAuthority.getAuthority().equals("ROLE_USER") || grantedAuthority.getAuthority().equals("ROLE_COWNER")) {
+            if (grantedAuthority.getAuthority().equals("ROLE_USER")) {
                 isUser = true;
+                break;
+            } else if (grantedAuthority.getAuthority().equals("ROLE_COWNER")) {
+                isCowner = true;
                 break;
             } else if (grantedAuthority.getAuthority().equals("ROLE_ADMIN")) {
                 isAdmin = true;
@@ -49,7 +53,9 @@ public class AuthHandler implements AuthenticationSuccessHandler {
         }
 
         if (isUser) {
-            return "/homePage";
+            return "/userPage";
+        } else if (isCowner) {
+            return "/cownerPage";
         } else if (isAdmin) {
             return "/adminPage";
         } else {
