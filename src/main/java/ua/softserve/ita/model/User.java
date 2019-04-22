@@ -28,18 +28,9 @@ public class User implements Serializable, UserDetails {
     @Column(name = "password", nullable = false, length = 20)
     private String password;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "user_role", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "role_id") })
     private List<Role> roles;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private Person person;
-
-    @OneToOne(mappedBy = "user")
-    private Company company;
 
     public Long getUserId() {
         return userId;

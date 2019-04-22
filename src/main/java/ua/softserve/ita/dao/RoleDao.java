@@ -47,7 +47,6 @@ public class RoleDao implements Dao<Role> {
         Role updatedRole = sessionFactory.getCurrentSession().byId(Role.class).load(id);
         updatedRole.setRoleId(role.getRoleId());
         updatedRole.setType(role.getType());
-        updatedRole.setUsers(role.getUsers());
         session.flush();
 
         return id;

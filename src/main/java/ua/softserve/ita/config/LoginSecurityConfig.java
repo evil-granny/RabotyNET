@@ -24,17 +24,6 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthenticationSuccessHandler successUrlHandler;
 
-    @Autowired
-    private LocalSessionFactoryBean dataSource;
-
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-
-//        auth.jdbcAuthentication().dataSource((DataSource) dataSource)
-//                .usersByUsernameQuery("select login, password from public.user where login = 'admin'")
-//                .authoritiesByUsernameQuery("select type from public.user inner join user_role on public.user.user_id = user_role.user_id inner join role on user_role.role_id = role.role_id where public.user.login = 'admin'");
-//    }
-
 //    @Autowired
 //    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 //        auth.inMemoryAuthentication()
@@ -62,8 +51,8 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/homePage").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN') or hasRole('ROLE_COWNER')")
-                .antMatchers("/userPage").access("hasRole('ROLE_USER')")
                 .antMatchers("/cownerPage", "/persons").access("hasRole('ROLE_COWNER')")
+                .antMatchers("/userPage").access("hasRole('ROLE_USER')")
                 .antMatchers("/adminPage", "/persons", "/person/**","/personInfo").access("hasRole('ROLE_ADMIN')")
                 .and()
                 .formLogin().loginPage("/loginPage")

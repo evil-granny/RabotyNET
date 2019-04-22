@@ -16,9 +16,6 @@ public class Role {
     @Column(name = "type", nullable = false, length = 10)
     private String type;
 
-    @ManyToMany(mappedBy = "roles")
-    private List<User> users;
-
     public Long getRoleId() {
         return roleId;
     }
@@ -35,27 +32,18 @@ public class Role {
         this.type = type;
     }
 
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Role role = (Role) o;
         return Objects.equals(roleId, role.roleId) &&
-                Objects.equals(type, role.type) &&
-                Objects.equals(users, role.users);
+                Objects.equals(type, role.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(roleId, type, users);
+        return Objects.hash(roleId, type);
     }
 
     @Override
@@ -63,7 +51,6 @@ public class Role {
         return "Role{" +
                 "roleId=" + roleId +
                 ", type='" + type + '\'' +
-                ", users=" + users +
                 '}';
     }
 
