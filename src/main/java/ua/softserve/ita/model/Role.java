@@ -16,6 +16,13 @@ public class Role {
     @Column(name = "type", nullable = false, length = 10)
     private String type;
 
+    public Role() {
+    }
+
+    public Role(String type) {
+        this.type = type;
+    }
+
     public Long getRoleId() {
         return roleId;
     }

@@ -32,6 +32,15 @@ public class User implements Serializable, UserDetails {
     @JoinTable(name = "user_role", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "role_id") })
     private List<Role> roles;
 
+    public User() {
+    }
+
+    public User(String login, String password, List<Role> roles) {
+        this.login = login;
+        this.password = password;
+        this.roles = roles;
+    }
+
     public Long getUserId() {
         return userId;
     }

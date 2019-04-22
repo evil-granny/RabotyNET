@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ua.softserve.ita.model.Role;
 import ua.softserve.ita.model.User;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -70,7 +71,8 @@ public class UserDao implements Dao<User>, UserDetailsDao {
 
     @Override
     public User findUserByUsername(String username) {
-        Query<User> query = sessionFactory.getCurrentSession().createQuery("from User u where u.login = :login", User.class);
+        Query<User> query = sessionFactory.getCurrentSession().createQuery("select u from User u join u.roles where u.login = :login", User.class);
+//        Query<User> query = sessionFactory.getCurrentSession().createQuery("select new User(u.login, u.password, elements(r.type)) from User u join u.roles r where u.login = :login", User.class);
         query.setParameter("login", username);
         lOGGER.severe("QUERY = " + query.getSingleResult());
         return query.getSingleResult();
