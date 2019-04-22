@@ -32,7 +32,10 @@
       <td>{{company.address.city}}</td>
       <td>{{company.address.zipCode}}</td>
       <td>
-        <button class="btn btn-danger" (click)="deleteById(company)">Delete Company</button>
+        <button class="btn btn-danger" (click)="deleteById(company)">Delete</button>
+        <div *ngIf="company.approved === false">
+          <button class="btn btn-success" (click)="approve(company)">Approve</button>
+        </div>
       </td>
     </tr>
     </tbody>

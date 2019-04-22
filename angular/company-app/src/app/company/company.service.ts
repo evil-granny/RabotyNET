@@ -32,4 +32,9 @@ export class CompanyService {
     return this.http.post<Company>(this.companyURL + "/createCompany", company);
   }
 
+  public update(company) {
+    console.log("[update company]");
+    return this.http.put<Company>(this.companyURL + "/updateCompany/" + company.companyId, company);
+  }
+
 }

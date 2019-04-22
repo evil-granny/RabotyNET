@@ -17,9 +17,8 @@ public class CompanyController {
     private Service<Company> companyService;
 
     @GetMapping(value = "/company/{id}")
-    public ResponseEntity<Company> getCompany(@PathVariable("id") long id) {
-        Company company = companyService.findById(id);
-        return ResponseEntity.ok().body(company);
+    public Company getCompany(@PathVariable("id") long id) {
+        return companyService.findById(id);
     }
 
     @GetMapping(path = {"/companies"})
@@ -28,9 +27,8 @@ public class CompanyController {
     }
 
     @PutMapping("/updateCompany/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") long id, @RequestBody Company company) {
-        companyService.update(company, id);
-        return ResponseEntity.ok().body("Company has been updated successfully.");
+    public Company update(@PathVariable("id") long id, @RequestBody Company company) {
+        return companyService.update(company, id);
     }
 
     @DeleteMapping("/deleteCompany/{id}")

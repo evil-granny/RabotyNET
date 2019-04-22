@@ -39,6 +39,9 @@ public class Company implements Serializable {
     @Column(name = "logo")
     private String logo;
 
+    @Column(name = "approved")
+    private boolean approved;
+
 //    @JsonIgnore
 //    @OneToMany(mappedBy = "company")
 //    private List<Vacancy> vacancies;
@@ -59,6 +62,7 @@ public class Company implements Serializable {
                 ", contacts=" + contacts +
                 ", address=" + address +
                 ", logo='" + logo + '\'' +
+                ", approved=" + approved +
                 '}';
     }
 
@@ -126,7 +130,15 @@ public class Company implements Serializable {
         this.logo = logo;
     }
 
-//    public User getUser() {
+    public boolean isApproved() {
+        return approved;
+    }
+
+    public void setApproved(boolean approved) {
+        this.approved = approved;
+    }
+
+    //    public User getUser() {
 //        return user;
 //    }
 //

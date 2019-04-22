@@ -14,6 +14,8 @@ export class Company {
 
   logo: string;
 
+  approved: boolean;
+
   contacts: Contacts = new Contacts();
 
   address: Address = new Address();

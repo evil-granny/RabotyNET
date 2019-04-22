@@ -29,4 +29,12 @@ export class CompanyComponent implements OnInit {
       })
   };
 
+  approve(company: Company) : void {
+    company.approved = true;
+    this.companyService.update(company)
+      .subscribe( data => {
+        this.companies.find((c) => c.companyId === company.companyId).approved = true;
+      })
+  }
+
 }
