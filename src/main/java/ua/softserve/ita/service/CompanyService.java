@@ -32,8 +32,8 @@ public class CompanyService implements Service<Company> {
     }
 
     @Override
-    public Company update(Company company, Long id) {
-        return companyDao.update(company, id);
+    public Company update(Company company) {
+        return companyDao.update(company);
     }
 
     @Override

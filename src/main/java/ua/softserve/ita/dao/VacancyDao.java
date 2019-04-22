@@ -45,18 +45,13 @@ public class VacancyDao implements Dao<Vacancy> {
     }
 
     @Override
-    public Vacancy update(Vacancy vacancy, Long id) {
+    public Vacancy update(Vacancy vacancy) {
         Session session = sessionFactory.getCurrentSession();
-        Vacancy updatedVacancy = sessionFactory.getCurrentSession().byId(Vacancy.class).load(id);
 
-        updatedVacancy.setPosition(updatedVacancy.getPosition());
-        updatedVacancy.setSalary(updatedVacancy.getSalary());
-        updatedVacancy.setTypeOfEmployment(updatedVacancy.getTypeOfEmployment());
-        updatedVacancy.setRequirements(updatedVacancy.getRequirements());
-
+        session.update(vacancy);
         session.flush();
 
-        return updatedVacancy;
+        return vacancy;
     }
 
     @Override

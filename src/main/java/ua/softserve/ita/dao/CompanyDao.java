@@ -45,23 +45,13 @@ public class CompanyDao implements Dao<Company> {
     }
 
     @Override
-    public Company update(Company company, Long id) {
+    public Company update(Company company) {
         Session session = sessionFactory.getCurrentSession();
 
-        Company updatedCompany = sessionFactory.getCurrentSession().byId(Company.class).load(id);
-
-        updatedCompany.setContacts(company.getContacts());
-        updatedCompany.setAddress(company.getAddress());
-        updatedCompany.setEdrpou(company.getEdrpou());
-        updatedCompany.setDescription(company.getDescription());
-        updatedCompany.setLogo(company.getLogo());
-        updatedCompany.setName(company.getName());
-        updatedCompany.setWebsite(company.getWebsite());
-        updatedCompany.setVacancies(company.getVacancies());
-
+        session.update(company);
         session.flush();
 
-        return updatedCompany;
+        return company;
     }
 
     @Override

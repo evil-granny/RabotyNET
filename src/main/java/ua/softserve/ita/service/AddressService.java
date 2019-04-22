@@ -32,8 +32,8 @@ public class AddressService implements Service<Address> {
     }
 
     @Override
-    public Address update(Address address, Long id) {
-        return addressDao.update(address, id);
+    public Address update(Address address) {
+        return addressDao.update(address);
     }
 
     @Override

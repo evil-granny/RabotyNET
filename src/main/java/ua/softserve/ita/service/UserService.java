@@ -32,8 +32,8 @@ public class UserService implements Service<User> {
     }
 
     @Override
-    public User update(User user, Long id) {
-        return userDao.update(user, id);
+    public User update(User user) {
+        return userDao.update(user);
     }
 
     @Override

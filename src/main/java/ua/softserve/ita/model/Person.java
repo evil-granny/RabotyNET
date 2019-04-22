@@ -18,6 +18,7 @@ import java.util.Objects;
 public class Person implements Serializable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long userId;
 
@@ -27,18 +28,15 @@ public class Person implements Serializable {
     @Column(name = "last_name", nullable = false, length = 20)
     private String lastName;
 
-    @Column(name = "email", nullable = false, length = 30)
-    private String email;
-
-    @Column(name = "phone_number", nullable = false, length = 30)
-    private String phoneNumber;
-
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
-    @Column(name = "birthday")
+    @Column(name = "birthday", nullable = false)
     private LocalDate birthday;
 
-    /* @OneToOne(cascade = CascadeType.ALL)
+    @Column(name = "photo")
+    private byte[] photo;
+
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "contacts_id", referencedColumnName = "contacts_id", nullable = false)
     private Contacts contacts;
 
@@ -46,7 +44,7 @@ public class Person implements Serializable {
     @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false)
     private Address address;
 
-    @OneToOne
+    /* @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private User user;
 
@@ -77,22 +75,6 @@ public class Person implements Serializable {
         this.lastName = lastName;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
     @XmlJavaTypeAdapter(value = LocalDateAdapter.class)
     public LocalDate getBirthday() {
         return birthday;
@@ -102,7 +84,15 @@ public class Person implements Serializable {
         this.birthday = birthday;
     }
 
-    /* public Contacts getContacts() {
+    public byte[] getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(byte[] photo) {
+        this.photo = photo;
+    }
+
+    public Contacts getContacts() {
         return contacts;
     }
 
@@ -118,7 +108,7 @@ public class Person implements Serializable {
         this.address = address;
     }
 
-    public List<CV> getCvs() {
+    /* public List<CV> getCvs() {
         return cvs;
     }
 
@@ -143,7 +133,7 @@ public class Person implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(userId, firstName, lastName, birthday, contacts, address, cvs);
-    }
+    } */
 
     @Override
     public String toString() {
@@ -154,8 +144,7 @@ public class Person implements Serializable {
                 ", birthday=" + birthday +
                 ", contacts='" + contacts + '\'' +
                 ", address=" + address +
-                ", cvs=" + cvs +
                 '}';
-    } */
+    }
 
 }

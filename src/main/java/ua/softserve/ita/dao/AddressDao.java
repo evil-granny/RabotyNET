@@ -45,20 +45,13 @@ public class AddressDao implements Dao<Address> {
     }
 
     @Override
-    public Address update(Address address, Long id) {
+    public Address update(Address address) {
         Session session = sessionFactory.getCurrentSession();
 
-        Address updatedAddress = session.byId(Address.class).load(id);
-        updatedAddress.setStreet(address.getStreet());
-        updatedAddress.setCity(address.getCity());
-        updatedAddress.setCountry(address.getCountry());
-        updatedAddress.setApartment(address.getApartment());
-        updatedAddress.setBuilding(address.getBuilding());
-        updatedAddress.setZipCode(address.getZipCode());
-
+        session.update(address);
         session.flush();
 
-        return updatedAddress;
+        return address;
     }
 
     @Override
