@@ -32,8 +32,8 @@ public class SkillService implements Service<Skill> {
     }
 
     @Override
-    public Skill update(Skill skill, Long id) {
-        return skillDao.update(skill, id);
+    public Skill update(Skill skill) {
+        return skillDao.update(skill);
     }
 
     @Override

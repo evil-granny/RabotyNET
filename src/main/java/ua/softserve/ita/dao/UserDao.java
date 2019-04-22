@@ -45,17 +45,13 @@ public class UserDao implements Dao<User> {
     }
 
     @Override
-    public User update(User user, Long id) {
+    public User update(User user) {
         Session session = sessionFactory.getCurrentSession();
 
-        User updatedUser = session.byId(User.class).load(id);
-        updatedUser.setLogin(user.getLogin());
-        updatedUser.setPassword(user.getPassword());
-        updatedUser.setRoles(user.getRoles());
-
+        session.update(user);
         session.flush();
 
-        return updatedUser;
+        return user;
     }
 
     @Override

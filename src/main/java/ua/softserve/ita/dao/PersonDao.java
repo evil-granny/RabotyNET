@@ -45,18 +45,13 @@ public class PersonDao implements Dao<Person> {
     }
 
     @Override
-    public Person update(Person person, Long id) {
+    public Person update(Person person) {
         Session session = sessionFactory.getCurrentSession();
 
-        Person updatedPerson = session.byId(Person.class).load(id);
-        updatedPerson.setFirstName(person.getFirstName());
-        updatedPerson.setLastName(person.getLastName());
-        updatedPerson.setBirthday(person.getBirthday());
-        // updatedPerson.setAddress(person.getAddress());
-
+        session.update(person);
         session.flush();
 
-        return updatedPerson;
+        return person;
     }
 
     @Override

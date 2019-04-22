@@ -16,11 +16,11 @@ public class Contacts implements Serializable {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "phoneNumber")
+    @Column(name = "phone_number")
     private String phoneNumber;
 
-    /* @OneToOne(mappedBy = "contacts")
-    private Person person; */
+    @OneToOne(mappedBy = "contacts")
+    private Person person;
 
     @OneToOne(mappedBy = "contacts")
     private Company company;

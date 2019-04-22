@@ -1,0 +1,116 @@
+<body>
+  <div class="container">
+    <div class="view-account">
+      <section class="module">
+        <div class="module-inner">
+          <div class="side-bar">
+            <div class="user-info">
+              <img class="img-profile img-circle img-responsive center-block rounded-circle"
+                style="height: 150px; width: 150px" src="data:image/png;base64,{{person.photo}}" alt="">
+              <ul class="meta list list-unstyled">
+                <li class="name">{{person.firstName}} {{person.lastName}}
+              </ul>
+            </div>
+            <nav class="side-menu">
+              <ul class="nav">
+                <li class="active"><a href="#"><span class="fa fa-user"></span> Profile</a></li>
+                <li><a href="#"><span class="fa fa-cog"></span> Settings</a></li>
+                <li><a href="#"><span class="fa fa-envelope"></span> Messages</a></li>
+              </ul>
+            </nav>
+          </div>
+          <div class="content-panel">
+            <h2 class="title">Profile</h2>
+            <form class="form-horizontal" (ngSubmit)="update()">
+              <fieldset class="fieldset">
+                <h3 class="fieldset-title">Personal Info</h3>
+                <div class="form-group avatar">
+                  <figure class="figure col-md-2 col-sm-3 col-xs-12">
+                    <img class="img-rounded img-responsive rounded" style="height: 150px; width: 130px; float: left;"
+                      src="data:image/png;base64,{{person.photo}}" alt="">
+                  </figure>
+                  <div class="form-inline col-md-10 col-sm-9 col-xs-12">
+                    <input type="file" class="file-uploader pull-left">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="firstName" class="col-md-2 col-sm-3 col-xs-12 control-label">First Name</label>
+                  <div class="col-md-10 col-sm-9 col-xs-12">
+                    <input type="text" class="form-control" [(ngModel)]="person.firstName" placeholder="First Name"
+                      id="firstName" name="firstName">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="lastName" class="col-md-2 col-sm-3 col-xs-12 control-label">Last Name</label>
+                  <div class="col-md-10 col-sm-9 col-xs-12">
+                    <input type="text" class="form-control" [(ngModel)]="person.lastName" placeholder="Last Name"
+                      id="lastName" name="lastName">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="birthday" class="col-md-2 col-sm-3 col-xs-12 control-label">Birthday</label>
+                  <div class="col-md-10 col-sm-9 col-xs-12">
+                    <input type="date" class="form-control" [(ngModel)]="person.birthday" placeholder="Birthday"
+                      id="birthday" name="birthday">
+                  </div>
+                </div>
+              </fieldset>
+              <fieldset class="fieldset">
+                <h3 class="fieldset-title">Contact Info</h3>
+                <div class="form-group">
+                  <label for="email" class="col-md-2  col-sm-3 col-xs-12 control-label">Email</label>
+                  <div class="col-md-10 col-sm-9 col-xs-12">
+                    <input type="email" class="form-control" [(ngModel)]="person.contacts.email" placeholder="Email"
+                      id="email" name="email">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="phoneNumber" class="col-md-2  col-sm-3 col-xs-12 control-label">Phone Number</label>
+                  <div class="col-md-10 col-sm-9 col-xs-12">
+                    <input type="text" class="form-control" [(ngModel)]="person.contacts.phoneNumber"
+                      placeholder="Phone Number" id="phoneNumber" name="phoneNumber">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="country" class="col-md-2  col-sm-3 col-xs-12 control-label">Address</label>
+                  <div class="col-md-10 col-sm-9 col-xs-12">
+                    <input type="text" class="form-control" [(ngModel)]="person.address.country" placeholder="Country"
+                      id="country" name="country">
+                  </div>
+                  <label for="city street" class="col-md-10 col-form-label form-control-label"></label>
+                  <div class="col-md-5" style="float: left; ">
+                    <input type="text" class="form-control" [(ngModel)]="person.address.city" placeholder="City"
+                      id="city" name="city">
+                  </div>
+                  <div class="col-md-5" style="float: left; ">
+                    <input type="text" class="form-control" [(ngModel)]="person.address.street" placeholder="Street"
+                      id="street" name="street">
+                  </div>
+                  <label for="building apartment zipCode" class="col-md-10 col-form-label form-control-label"></label>
+                  <div class="col-md-3" style="float: left; ">
+                    <input type="text" class="form-control" [(ngModel)]="person.address.building" placeholder="Building"
+                      id="building" name="building">
+                  </div>
+                  <div class="col-md-3" style="float: left; ">
+                    <input type="text" class="form-control" [(ngModel)]="person.address.apartment"
+                      placeholder="Apartment" id="apartment" name="apartment">
+                  </div>
+                  <div class="col-md-4" style="float: left; ">
+                    <input type="number" class="form-control" [(ngModel)]="person.address.zipCode"
+                      placeholder="Zip Code" id="zipCode" name="zipCode">
+                  </div>
+                </div>
+              </fieldset>
+              <hr>
+              <div class="form-group">
+                <div class="col-md-10 col-sm-9 col-xs-12 col-md-push-2 col-sm-push-3 col-xs-push-0">
+                  <input class="btn btn-primary" type="submit" value="Update Profile">
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</body>

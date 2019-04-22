@@ -45,19 +45,13 @@ public class CVDao implements Dao<CV> {
     }
 
     @Override
-    public CV update(CV cv, Long id) {
+    public CV update(CV cv) {
         Session session = sessionFactory.getCurrentSession();
 
-        CV updatedCV = sessionFactory.getCurrentSession().byId(CV.class).load(id);
-        updatedCV.setEducation(cv.getEducation());
-        updatedCV.setJobs(cv.getJobs());
-        updatedCV.setPhoto(cv.getPhoto());
-        updatedCV.setPosition(cv.getPosition());
-        updatedCV.setSkills(cv.getSkills());
-
+        session.update(cv);
         session.flush();
 
-        return updatedCV;
+        return cv;
     }
 
     @Override

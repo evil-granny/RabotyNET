@@ -45,16 +45,13 @@ public class ContactsDao implements Dao<Contacts> {
     }
 
     @Override
-    public Contacts update(Contacts contacts, Long id) {
+    public Contacts update(Contacts contacts) {
         Session session = sessionFactory.getCurrentSession();
 
-        Contacts updatedContacts = sessionFactory.getCurrentSession().byId(Contacts.class).load(id);
-        updatedContacts.setEmail(contacts.getEmail());
-        updatedContacts.setPhoneNumber(contacts.getPhoneNumber());
-
+        session.update(contacts);
         session.flush();
 
-        return updatedContacts;
+        return contacts;
     }
 
     @Override
