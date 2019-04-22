@@ -32,9 +32,10 @@
       <td>{{company.address.city}}</td>
       <td>{{company.address.zipCode}}</td>
       <td>
+        <a href="/updateCompany/{{company.companyId}}" class="btn btn-success">Update</a>
         <button class="btn btn-danger" (click)="deleteById(company)">Delete</button>
         <div *ngIf="company.approved === false">
-          <button class="btn btn-success" (click)="approve(company)">Approve</button>
+          <button class="btn btn-primary" (click)="approve(company)">Approve</button>
         </div>
       </td>
     </tr>

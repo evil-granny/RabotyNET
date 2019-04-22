@@ -37,4 +37,9 @@ export class CompanyService {
     return this.http.put<Company>(this.companyURL + "/updateCompany/" + company.companyId, company);
   }
 
+  public findById(companyId) {
+    console.log("[find by id]");
+    return this.http.get<Company>(this.companyURL + "/company/" + companyId);
+  }
+
 }

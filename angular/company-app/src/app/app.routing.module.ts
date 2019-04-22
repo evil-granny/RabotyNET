@@ -11,6 +11,7 @@ const routes: Routes = [
   { path: 'add', component: AddPersonComponent },
   { path: 'companies', component: CompanyComponent },
   { path: 'createCompany', component: AddCompanyComponent },
+  { path: 'updateCompany/:companyId', component: AddCompanyComponent },
 ];
 
 @NgModule({

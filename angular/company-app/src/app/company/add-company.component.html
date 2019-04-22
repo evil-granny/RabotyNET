@@ -79,6 +79,11 @@
              name="zipcode">
     </div>
 
-    <button class="btn btn-success" (click)="create()">Create</button>
+    <div *ngIf="company.companyId == null">
+      <button class="btn btn-primary" (click)="create()">Create</button>
+    </div>
+    <div *ngIf="company.companyId != null">
+      <button class="btn btn-success" (click)="update()">Update</button>
+    </div>
   </form>
 </div>
