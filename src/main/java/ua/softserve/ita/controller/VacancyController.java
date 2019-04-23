@@ -9,7 +9,6 @@ import ua.softserve.ita.service.IService;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,12 +41,7 @@ public class VacancyController {
         Company company = new Company();
         company.setCompanyId(1L);
         vacancy.setCompany(company);
-
-       /* Set<Requirement> requirements = vacancy.getRequirements();
-        requirements.forEach(e -> e.setVacancy(vacancy));*/
         final Vacancy updatedVacancy = vacancyService.update(vacancy, id);
-        //requirements.forEach(e -> requirementService.update(e,id));
-
         return ResponseEntity.ok(updatedVacancy);
     }
 

@@ -9,6 +9,9 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.Objects;
 
 @Entity
@@ -24,6 +27,9 @@ public class Requirement {
     @Column(name = "requirement_id")
     private Long requirementId;
 
+    @NotNull
+    @Pattern(regexp = "^[A-Z]?[a-z]*(?:-[A-Z][a-z]*)?$")
+    @NotBlank(message = "description can't be blank")
     @Column(name = "description", length = 100, nullable = false)
     private String description;
 

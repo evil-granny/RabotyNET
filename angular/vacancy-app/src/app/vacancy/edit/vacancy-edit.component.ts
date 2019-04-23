@@ -4,56 +4,67 @@ import { Subscription } from 'rxjs';
 
 import { Vacancy } from '../../models/vacancy.model';
 import { VacancyService } from '../vacancy.service';
-import { NgForm } from '@angular/forms';
+import { NgForm, FormControl } from '@angular/forms';
+import { Requirement } from 'src/app/models/requirement.model';
+import { FormGroup,  FormBuilder,  Validators } from '@angular/forms';
 
 @Component({
-  //selector: 'app-car-edit',
   templateUrl: './vacancy-edit.component.html'
 })
-export class EditVacancyComponent implements OnInit, OnDestroy{
+export class EditVacancyComponent implements OnInit{
 
   vacancy: Vacancy = new Vacancy();
+  
+  constructor(private route: ActivatedRoute,private router: Router, private vacancyService: VacancyService,
+    private fb: FormBuilder) {
+    }
 
-  sub: Subscription;
-
-  constructor(private route: ActivatedRoute,private router: Router, private vacancyService: VacancyService) {}
-
-  create(): void {
-    this.vacancyService.create(this.vacancy)
-      .subscribe(data => {
-        this.gotoList;
-      }, error => console.error(error));
-  };
-
-  ngOnInit() {
-    this.sub = this.route.params.subscribe(params => {
-      const id = params['id'];
-      if (id) {
-        this.vacancyService.get(id).subscribe((vacancy: any) => {
-          if (vacancy) {
-            this.vacancy = vacancy;
-          } else {
-            console.log(`Vacancy with id '${id}' not found, returning to list`);
-            this.gotoList();
-          }
-        });
+   create(): void {
+   
+      console.log(this.vacancy);
+      this.vacancyService.create(this.vacancy)
+        .subscribe(data => {
+          this.gotoList();
+        }, error => console.error(error));
+   };
+   ngOnInit(): void {
+        let vacancyId = this.route.snapshot.paramMap.get("vacancyId");
+        if(vacancyId !== null) {
+          this.vacancyService.get(vacancyId)
+            .subscribe(data => {
+              this.vacancy = data;
+            });
+        }
       }
-    });
-  }
 
-  ngOnDestroy() {
-    this.sub.unsubscribe();
-  }
-
+      update(vacancy: Vacancy ): void {
+             this.vacancyService.save(this.vacancy)
+               .subscribe(data => {
+                 this.gotoList();
+               }, error => console.error(error));
+          };
+   
   gotoList() {
     this.router.navigate(['/vacancies']);
   }
 
-  save(form: NgForm) {
-    this.vacancyService.save(form).subscribe(result => {
+  Requirement: Array<any>;
+
+  save(form: NgForm):void {
+    this.vacancyService.create(form).subscribe(result => {
       this.gotoList();
     }, error => console.error(error));
   }
 
+  private fieldArray: Array<any> = [];
+  private newAttribute: any = {};
 
+  addFieldValue() {
+    console.log(this.vacancy);
+    this.vacancy.requirements.push(new Requirement());
+  }
+
+  deleteFieldValue(index) {
+      this.fieldArray.splice(index, 1);
+  }
 }

@@ -8,6 +8,7 @@ import { AppRoutingModule } from './app.routing.module';
 import { VacancyService } from './vacancy/vacancy.service';
 import { HttpClientModule } from '@angular/common/http';
 import { EditVacancyComponent } from './vacancy/edit/vacancy-edit.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { EditVacancyComponent } from './vacancy/edit/vacancy-edit.component';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [VacancyService],
   bootstrap: [AppComponent]

@@ -24,15 +24,15 @@ export class VacancyService {
     return this.http.get(this.vacancyUrl + "/vacancies");
   }
   
-  get(id: BigInteger) : Observable<Object> {
-    return this.http.get(this.vacancyAPI + '/' + id);
+  get(vacancyId : string)   {
+    return this.http.get<Vacancy>(this.vacancyAPI + '/' + vacancyId);
   }
 
   public deleteById(id:number): Observable<Object> {
     return this.http.delete(this.vacancyUrl + "/vacancy/" + id);
   }
 
-  save(vacancy: any): Observable<any> {
+  public save(vacancy: any): Observable<any> {
     let result: Observable<Object>;
     if (vacancy['id']) {
       result = this.http.put<Vacancy>(this.vacancyAPI,vacancy.id, vacancy);
@@ -41,9 +41,12 @@ export class VacancyService {
     }
     return result;
   }
-
-  public create(vacancy : Object) {
-    return this.http.post<Vacancy>(this.vacancyUrl + "/vacancy/"+1, vacancy);
+  public update(vacancy : Vacancy) {
+    return this.http.put<Vacancy>(this.vacancyAPI + vacancy.vacancyId, vacancy);
   }
+
+   public create(vacancy : any) : Observable<Object>{
+     return this.http.post<Vacancy>(this.vacancyUrl + "/vacancy/"+1, vacancy);
+   }
 
 }

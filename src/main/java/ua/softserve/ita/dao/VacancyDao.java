@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ua.softserve.ita.exception.ResourceNotFoundException;
+import ua.softserve.ita.model.Requirement;
 import ua.softserve.ita.model.Vacancy;
 
 import javax.persistence.criteria.CriteriaBuilder;

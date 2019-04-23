@@ -7,6 +7,10 @@ import org.hibernate.annotations.OnDeleteAction;
 import ua.softserve.ita.model.enumtype.Employment;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import java.util.Set;
 
@@ -24,9 +28,12 @@ public class Vacancy {
     @Column(name = "vacancy_id")
     private Long vacancyId;
 
+    @NotNull(message = "Position must be not null")@Max(40)
+    @NotBlank(message = "position can't be blank")
     @Column(name = "position", nullable = false, length = 40)
     private String position;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "employment")
     private Employment employment;
@@ -40,7 +47,6 @@ public class Vacancy {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Company company;
 
-    //@JsonIgnore
     @OneToMany(mappedBy = "vacancy", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private Set<Requirement> requirements;
 
@@ -51,6 +57,7 @@ public class Vacancy {
                 ", position='" + position + '\'' +
                 ", employment=" + employment +
                 ", salary=" + salary +
+                ", requirement=" + requirements +
                 '}';
     }
 }

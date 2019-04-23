@@ -13,6 +13,6 @@ export class  Vacancy {
 
   company: BigInteger;
 
-  requirements: Observable<Requirement[]>;
+  requirements: Requirement[] = [];
 
 }
