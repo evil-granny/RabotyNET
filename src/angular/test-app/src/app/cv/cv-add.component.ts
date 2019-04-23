@@ -24,12 +24,12 @@ export class AddCvComponent {
   };
 
   newSkill() {
-    console.log(this.cv.skill);
-    this.cv.skill.push(new Skill());
+    console.log(this.cv.skills);
+    this.cv.skills.push(new Skill());
   }
 
   newJob(){
-    this.cv.job.push(new Job());
+    this.cv.jobs.push(new Job());
   }
 
 }

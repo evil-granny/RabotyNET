@@ -10,10 +10,10 @@ export class CV {
 
     position: string;
 
-    skill: Skill[] = [];
+    skills: Skill[] = [];
 
     education: Education = new Education();
 
-    job: Job[] = [];
+    jobs: Job[] = [];
 
 }

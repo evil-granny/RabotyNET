@@ -6,7 +6,7 @@
       <input type="text" [(ngModel)]="cv.position" placeholder="Position" class="form-control" id="position"
              name="position">
     </div>
-    <div *ngFor="let skill of cv.skill">
+    <div *ngFor="let skill of cv.skills">
       <div class="form-group">
         <label for="title">Title:</label>
         <input type="text" [(ngModel)]="skill.title" placeholder="Title" class="form-control" id="title"
@@ -46,7 +46,7 @@
              name="graduation">
     </div>
 
-    <div *ngFor="let job of cv.job">
+    <div *ngFor="let job of cv.jobs">
       <div class="form-group">
         <label for="begin">Begin Work:</label>
         <input type="date" [(ngModel)]="job.begin" placeholder="BeginWork" class="form-control" id="begin"

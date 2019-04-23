@@ -5,6 +5,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "cv")
@@ -21,16 +22,11 @@ public class CV implements Serializable {
     @Column(name = "position", nullable = false, length = 50)
     private String position;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "cv_skill",
-            joinColumns = @JoinColumn(name = "cv_id"),
-            inverseJoinColumns = @JoinColumn(name = "skill_id"))
-    private List<Skill> skills;
+    @OneToMany(mappedBy = "cv",fetch = FetchType.EAGER)
+    private Set<Skill> skills;
 
-
-    @OneToMany(mappedBy = "cv")
-    private List<Job> jobs;
+    @OneToMany(mappedBy = "cv",fetch = FetchType.EAGER)
+    private Set<Job> jobs;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "education_id", referencedColumnName = "education_id", nullable = false)
@@ -64,19 +60,19 @@ public class CV implements Serializable {
         this.position = position;
     }
 
-    public List<Skill> getSkills() {
+    public Set<Skill> getSkills() {
         return skills;
     }
 
-    public void setSkills(List<Skill> skills) {
+    public void setSkills(Set<Skill> skills) {
         this.skills = skills;
     }
 
-    public List<Job> getJobs() {
+    public Set<Job> getJobs() {
         return jobs;
     }
 
-    public void setJobs(List<Job> jobs) {
+    public void setJobs(Set<Job> jobs) {
         this.jobs = jobs;
     }
 
@@ -123,7 +119,7 @@ public class CV implements Serializable {
 
     }
 
-    public CV(String photo, String position, List<Skill> skills, List<Job> jobs,Education education) {
+    public CV(String photo, String position, Set<Skill> skills, Set<Job> jobs, Education education) {
         this.photo = photo;
         this.position = position;
         this.skills = skills;
