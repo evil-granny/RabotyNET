@@ -11,7 +11,9 @@ import ua.softserve.ita.model.Company;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component("companyDao")
 @Repository
@@ -39,6 +41,8 @@ public class CompanyDao implements Dao<Company> {
 
     @Override
     public Company create(Company company) {
+        sessionFactory.getCurrentSession().save(company.getAddress());
+        sessionFactory.getCurrentSession().save(company.getContacts());
         sessionFactory.getCurrentSession().save(company);
 
         return company;
@@ -48,6 +52,9 @@ public class CompanyDao implements Dao<Company> {
     public Company update(Company company) {
         Session session = sessionFactory.getCurrentSession();
 
+        session.update(company);
+        session.update(company.getContacts());
+        session.update(company.getAddress());
         session.update(company);
         session.flush();
 

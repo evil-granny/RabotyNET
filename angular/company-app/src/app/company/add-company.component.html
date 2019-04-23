@@ -1,0 +1,89 @@
+<div class="col-md-12">
+  <h2 class="text-center">Create Company</h2>
+  <form>
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" [(ngModel)]="company.name" placeholder="Name" class="form-control" id="name"
+             name="name">
+    </div>
+
+    <div class="form-group">
+      <label for="erdpou">ERDPOU:</label>
+      <input type="text" [(ngModel)]="company.edrpou" placeholder="ERDPOU" class="form-control" id="erdpou"
+             name="erdpou">
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description:</label>
+      <input type="text" [(ngModel)]="company.description" placeholder="Description" class="form-control" id="description"
+             name="description">
+    </div>
+
+    <div class="form-group">
+      <label for="website">Website:</label>
+      <input type="text" [(ngModel)]="company.website" placeholder="Website" class="form-control" id="website"
+             name="website">
+    </div>
+
+    <div class="form-group">
+      <label for="logo">Logo:</label>
+      <input type="text" [(ngModel)]="company.logo" placeholder="Logo" class="form-control" id="logo"
+             name="logo">
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="text" [(ngModel)]="company.contacts.email" placeholder="Email" class="form-control" id="email"
+             name="email">
+    </div>
+
+    <div class="form-group">
+      <label for="phone">Phone:</label>
+      <input type="text" [(ngModel)]="company.contacts.phoneNumber" placeholder="Phone" class="form-control" id="phone"
+             name="phone">
+    </div>
+
+    <div class="form-group">
+      <label for="country">Country:</label>
+      <input type="text" [(ngModel)]="company.address.country" placeholder="Country" class="form-control" id="country"
+             name="country">
+    </div>
+
+    <div class="form-group">
+      <label for="city">City:</label>
+      <input type="text" [(ngModel)]="company.address.city" placeholder="City" class="form-control" id="city"
+             name="city">
+    </div>
+
+    <div class="form-group">
+      <label for="street">Street:</label>
+      <input type="text" [(ngModel)]="company.address.street" placeholder="Street" class="form-control" id="street"
+             name="street">
+    </div>
+
+    <div class="form-group">
+      <label for="building">Building:</label>
+      <input type="text" [(ngModel)]="company.address.building" placeholder="Building" class="form-control" id="building"
+             name="building">
+    </div>
+
+    <div class="form-group">
+      <label for="apartment">Apartment:</label>
+      <input type="text" [(ngModel)]="company.address.apartment" placeholder="Apartment" class="form-control" id="apartment"
+             name="apartment">
+    </div>
+
+    <div class="form-group">
+      <label for="zipcode">ZipCode:</label>
+      <input type="text" [(ngModel)]="company.address.zipCode" placeholder="ZipCode" class="form-control" id="zipcode"
+             name="zipcode">
+    </div>
+
+    <div *ngIf="company.companyId == null">
+      <button class="btn btn-primary" (click)="create()">Create</button>
+    </div>
+    <div *ngIf="company.companyId != null">
+      <button class="btn btn-success" (click)="update()">Update</button>
+    </div>
+  </form>
+</div>

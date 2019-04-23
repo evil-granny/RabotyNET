@@ -26,7 +26,7 @@ export class PersonService {
   }
 
   public update(person: Person): Observable<any> {
-    console.log("[update]");
+    console.log("[update]"); 
     return this.http.put<Person>(this.personUrl + "/update", person, httpOptions);
   }
 

@@ -2,8 +2,7 @@ package ua.softserve.ita.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
-import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "company")
@@ -17,8 +16,8 @@ public class Company implements Serializable {
     @Column(name = "name", nullable = false, length = 30)
     private String name;
 
-    @Column(name = "edrpou", nullable = false)
-    private Integer edrpou;
+    @Column(name = "edrpou", nullable = false, length = 30)
+    private String edrpou;
 
     @Column(name = "description")
     private String description;
@@ -37,12 +36,16 @@ public class Company implements Serializable {
     @Column(name = "logo")
     private String logo;
 
-    @OneToMany(mappedBy = "company")
-    private List<Vacancy> vacancies;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "company", cascade = CascadeType.REMOVE)
+    private Set<Vacancy> vacancies;
+    @Column(name = "approved")
+    private boolean approved;
+
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private User user;
+
 
     public Long getCompanyId() {
         return companyId;
@@ -60,11 +63,11 @@ public class Company implements Serializable {
         this.name = name;
     }
 
-    public Integer getEdrpou() {
+    public String getEdrpou() {
         return edrpou;
     }
 
-    public void setEdrpou(Integer edrpou) {
+    public void setEdrpou(String edrpou) {
         this.edrpou = edrpou;
     }
 
@@ -108,33 +111,28 @@ public class Company implements Serializable {
         this.logo = logo;
     }
 
-    public List<Vacancy> getVacancies() {
+    public boolean isApproved() {
+        return approved;
+    }
+
+    public void setApproved(boolean approved) {
+        this.approved = approved;
+    }
+
+    public User getUser() {
+          return user;
+     }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Set<Vacancy> getVacancies() {
         return vacancies;
     }
 
-    public void setVacancies(List<Vacancy> vacancies) {
+    public void setVacancies(Set<Vacancy> vacancies) {
         this.vacancies = vacancies;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Company company = (Company) o;
-        return companyId.equals(company.companyId) &&
-                name.equals(company.name) &&
-                edrpou.equals(company.edrpou) &&
-                Objects.equals(description, company.description) &&
-                Objects.equals(website, company.website) &&
-                contacts.equals(company.contacts) &&
-                address.equals(company.address) &&
-                Objects.equals(logo, company.logo) &&
-                Objects.equals(vacancies, company.vacancies);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(companyId, name, edrpou, description, website, contacts, address, logo, vacancies);
     }
 
     @Override
@@ -142,14 +140,15 @@ public class Company implements Serializable {
         return "Company{" +
                 "companyId=" + companyId +
                 ", name='" + name + '\'' +
-                ", edrpou=" + edrpou +
+                ", edrpou='" + edrpou + '\'' +
                 ", description='" + description + '\'' +
                 ", website='" + website + '\'' +
                 ", contacts=" + contacts +
                 ", address=" + address +
                 ", logo='" + logo + '\'' +
                 ", vacancies=" + vacancies +
+                ", approved=" + approved +
+                ", user=" + user +
                 '}';
     }
-
 }

@@ -1,5 +1,6 @@
 package ua.softserve.ita.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.model.Person;
 import ua.softserve.ita.service.Service;
@@ -24,17 +25,17 @@ public class PersonController {
         return personService.findAll();
     }
 
-    @PostMapping(path = "/create")
+    @PostMapping(path = "/createPerson")
     public Person create(@RequestBody Person person) {
         return personService.create(person);
     }
 
-    @PutMapping(path = "/update")
+    @PutMapping(path = "/updatePerson")
     public Person update(@RequestBody Person person) {
         return personService.update(person);
     }
 
-    @DeleteMapping(path = "/delete/{id}")
+    @DeleteMapping(path = "/deletePerson/{id}")
     public void deleteById(@PathVariable("id") long id) {
         personService.deleteById(id);
     }
