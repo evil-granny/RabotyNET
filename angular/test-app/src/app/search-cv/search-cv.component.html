@@ -1,0 +1,40 @@
+<form>
+  <label>
+    <input type="text" [(ngModel)]="searchCv.searchText" placeholder="Search.." name="searchText" class="form-control">
+  </label>
+
+
+  <label>
+    <select [(ngModel)]="searchCv.searchParameter" name="searchParameter" class="form-control">
+      <option value="firstName">by first name</option>
+      <option value="lastName">by last name</option>
+    </select>
+  </label>
+
+  <br>
+  <button class="btn btn-success" (click)="startSearch()">Start CV search</button>
+</form>
+
+
+<div class="col-md-12">
+  <h2>Search result</h2>
+
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th class="d-none">Id</th>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Birthday</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let person of people">
+      <td class="d-none">{{person.userId}}</td>
+      <td>{{person.firstName}}</td>
+      <td>{{person.lastName}}</td>
+      <td>{{person.birthday}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
