@@ -42,6 +42,7 @@ public class CVDao implements Dao<CV> {
         /*for (Skill skill: cv.getSkills()) {
             sessionFactory.getCurrentSession().save(skill);
         }*/
+        System.out.println(cv);
         sessionFactory.getCurrentSession().save(cv);
         return cv;
     }

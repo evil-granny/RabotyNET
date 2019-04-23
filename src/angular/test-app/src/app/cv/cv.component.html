@@ -1,0 +1,45 @@
+<div class="col-md-12">
+    <h2>List of CV</h2>
+  
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th class="d-none">Id</th>
+        <th>Photo</th>
+        <th>Position</th>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Degree</th>
+        <th>School</th>
+        <th>Speciality</th>
+        <th>Graduation</th>
+        <th>Begin Work</th>
+        <th>Company Name</th>
+        <th>Position Job</th>
+        <th>Description Job</th>
+        <th>End Job</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor ="let cv of cvs">
+        <td class="d-none">{{cv.cvId}}</td>
+        <td>{{cv.photo}}</td>
+        <td>{{cv.position}}</td>
+        <td><li *ngFor ="let skill of cv.skill">{{skill.title}}</li></td>
+        <td><li *ngFor ="let skill of cv.skill ">{{skill.description}}</li></td>
+        <td>{{cv.education.degree}}</td>
+        <td>{{cv.education.school}}</td>
+        <td>{{cv.education.speciality}}</td>
+        <td>{{cv.education.graduation}}</td>
+        <td><li *ngFor ="let job of cv.job">{{job.begin}}</li></td>
+        <td><li *ngFor ="let job of cv.job">{{job.companyName}}</li></td>
+        <td><li *ngFor ="let job of cv.job">{{job.position}}</li></td>
+        <td><li *ngFor ="let job of cv.job">{{job.description}}</li></td>
+        <td><li *ngFor ="let job of cv.job">{{job.end}}</li></td>
+        <td>
+          <button class="btn btn-danger" (click)="deleteById(cv)">Delete CV</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
