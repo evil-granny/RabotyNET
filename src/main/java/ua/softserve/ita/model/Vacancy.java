@@ -1,104 +1,63 @@
 package ua.softserve.ita.model;
 
-import ua.softserve.ita.model.enumtype.TypeOfEmployment;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import ua.softserve.ita.model.enumtype.Employment;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Objects;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import java.util.Set;
 
 @Entity
 @Table(name = "vacancy")
-public class Vacancy implements Serializable {
+@Getter
+@Setter
+@NoArgsConstructor
+@Builder
+@AllArgsConstructor
+public class Vacancy {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "vacancy_id")
     private Long vacancyId;
 
+    @NotNull(message = "Position must be not null")@Max(40)
+    @NotBlank(message = "position can't be blank")
     @Column(name = "position", nullable = false, length = 40)
     private String position;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "type_of_employment")
-    private TypeOfEmployment typeOfEmployment;
-
-    @Column(name = "requirements", nullable = false, columnDefinition = "character varying []", length = 200)
-    private ArrayList<String> requirements;
+    @Column(name = "employment")
+    private Employment employment;
 
     @Column(name = "salary")
     private Integer salary;
 
-    @ManyToOne
-    @JoinColumn(name = "company_id", nullable = false)
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "company_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Company company;
 
-    public Long getVacancyId() {
-        return vacancyId;
-    }
-
-    public void setVacancyId(Long vacancyId) {
-        this.vacancyId = vacancyId;
-    }
-
-    public String getPosition() {
-        return position;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
-    }
-
-    public TypeOfEmployment getTypeOfEmployment() {
-        return typeOfEmployment;
-    }
-
-    public void setTypeOfEmployment(TypeOfEmployment typeOfEmployment) {
-        this.typeOfEmployment = typeOfEmployment;
-    }
-
-    public ArrayList<String> getRequirements() {
-        return requirements;
-    }
-
-    public void setRequirements(ArrayList<String> requirements) {
-        this.requirements = requirements;
-    }
-
-    public Integer getSalary() {
-        return salary;
-    }
-
-    public void setSalary(Integer salary) {
-        this.salary = salary;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Vacancy vacancy = (Vacancy) o;
-        return vacancyId.equals(vacancy.vacancyId) &&
-                position.equals(vacancy.position) &&
-                typeOfEmployment == vacancy.typeOfEmployment &&
-                requirements.equals(vacancy.requirements) &&
-                Objects.equals(salary, vacancy.salary);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(vacancyId, position, typeOfEmployment, requirements, salary);
-    }
+    @OneToMany(mappedBy = "vacancy", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    private Set<Requirement> requirements;
 
     @Override
     public String toString() {
         return "Vacancy{" +
                 "vacancyId=" + vacancyId +
                 ", position='" + position + '\'' +
-                ", typeOfEmployment=" + typeOfEmployment +
-                ", requirements=" + requirements +
+                ", employment=" + employment +
                 ", salary=" + salary +
+                ", requirement=" + requirements +
                 '}';
     }
-
 }

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Requirement;
-import ua.softserve.ita.model.Vacancy;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -16,65 +15,62 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Objects;
 
-@Component("vacancyDao")
+@Component("requirementDao")
 @Repository
-public class VacancyDao implements Dao<Vacancy> {
+public class RequirementDao implements Dao<Requirement> {
 
     @Autowired
     private SessionFactory sessionFactory;
 
     @Override
-    public Vacancy findById(Long id) {
-        Vacancy vacancy = sessionFactory.getCurrentSession().get(Vacancy.class, id);
-        if (vacancy == null) {
+    public Requirement findById(Long id) {
+        Requirement requirement = sessionFactory.getCurrentSession().get(Requirement.class, id);
+        if (requirement == null) {
             try {
-                throw new ResourceNotFoundException("Vacancy not found for this id: " + id);
+                throw new ResourceNotFoundException("Requirement not found for this id: " + id);
             } catch (ResourceNotFoundException e) {
                 e.printStackTrace();
             }
         }
-        return vacancy;
+        return requirement;
     }
 
     @Override
-    public List<Vacancy> findAll() {
+    public List<Requirement> findAll() {
         Session session = sessionFactory.getCurrentSession();
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-        CriteriaQuery<Vacancy> criteriaQuery = criteriaBuilder.createQuery(Vacancy.class);
-        Root<Vacancy> root = criteriaQuery.from(Vacancy.class);
+        CriteriaQuery<Requirement> criteriaQuery = criteriaBuilder.createQuery(Requirement.class);
+        Root<Requirement> root = criteriaQuery.from(Requirement.class);
         criteriaQuery.select(root);
-        Query<Vacancy> query = session.createQuery(criteriaQuery);
-
+        Query<Requirement> query = session.createQuery(criteriaQuery);
         return query.getResultList();
     }
 
     @Override
-    public Vacancy create(Vacancy vacancy) {
-        sessionFactory.getCurrentSession().save(vacancy);
-        return vacancy;
+    public Requirement create(Requirement requirement) {
+        sessionFactory.getCurrentSession().save(requirement);
+        return requirement;
     }
 
     @Override
-    public Vacancy update(Vacancy vacancy) {
+    public Requirement update(Requirement requirement) {
         Session session = sessionFactory.getCurrentSession();
-        session.update(vacancy);
+        session.update(requirement);
         session.flush();
-
-        return vacancy;
+        return requirement;
     }
 
     @Override
     public void deleteById(Long id) {
         Session session = sessionFactory.getCurrentSession();
-        Vacancy vacancy = session.byId(Vacancy.class).load(id);
-        if (vacancy == null) {
+        Requirement requirement = session.byId(Requirement.class).load(id);
+        if (requirement == null) {
             try {
-                throw new ResourceNotFoundException("Vacancy not found for this id: " + id);
+                throw new ResourceNotFoundException("Requirement not found for this id: " + id);
             } catch (ResourceNotFoundException e) {
                 e.printStackTrace();
             }
         }
-        session.delete(vacancy);
+        session.delete(requirement);
     }
-
 }
