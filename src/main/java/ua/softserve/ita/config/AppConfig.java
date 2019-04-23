@@ -21,7 +21,7 @@ import java.util.Properties;
 @Configuration
 
 @PropertySource("classpath:database.properties")
-@EnableTransactionManagement
+@EnableTransactionManagement(proxyTargetClass = true)
 
 @ComponentScan(basePackages = "ua.softserve.ita")
 public class AppConfig {

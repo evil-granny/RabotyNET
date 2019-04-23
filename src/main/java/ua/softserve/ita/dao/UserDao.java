@@ -4,18 +4,27 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+import ua.softserve.ita.model.Role;
 import ua.softserve.ita.model.User;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
+import java.util.logging.Logger;
 
+@Primary
 @Component("userDao")
 @Repository
-public class UserDao implements Dao<User> {
+@Transactional
+public class UserDao implements Dao<User>, UserDetailsDao {
+
+    private static final Logger lOGGER = Logger.getLogger(UserDao.class.getName());
 
     @Autowired
     private SessionFactory sessionFactory;
@@ -61,4 +70,12 @@ public class UserDao implements Dao<User> {
         session.delete(user);
     }
 
+    @Override
+    public User findUserByUsername(String username) {
+        Query<User> query = sessionFactory.getCurrentSession().createQuery("select u from User u join u.roles where u.login = :login", User.class);
+        query.setParameter("login", username);
+        lOGGER.severe("QUERY = " + query.getSingleResult());
+        return query.getSingleResult();
+
+    }
 }
