@@ -14,7 +14,6 @@ import { CompanyService } from './company/company.service';
 import { AppRoutingModule } from './app.routing.module';
 import { HttpClientModule } from '@angular/common/http';
 
-import { AddPersonComponent } from './person/add-person.component';
 import { SearchCVComponent } from './search-cv/search-cv.component';
 
 @NgModule({
@@ -23,8 +22,7 @@ import { SearchCVComponent } from './search-cv/search-cv.component';
     PersonComponent,
     CompanyComponent,
     AddPersonComponent,
-    AddCompanyComponent
-    AddPersonComponent,
+    AddCompanyComponent,
     SearchCVComponent
   ],
   imports: [
