@@ -1,5 +1,9 @@
 package ua.softserve.ita.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -20,8 +24,18 @@ public class Skill implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @ManyToMany(mappedBy = "skills")
-    private List<CV> cvs;
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "cv_id", nullable = false)
+    private CV cv;
+
+    public CV getCv() {
+        return cv;
+    }
+
+    public void setCv(CV cv) {
+        this.cv = cv;
+    }
 
     public Long getSkillId() {
         return skillId;
@@ -46,6 +60,8 @@ public class Skill implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
+
+
 
     @Override
     public boolean equals(Object o) {
