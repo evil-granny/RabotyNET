@@ -1,5 +1,7 @@
 package ua.softserve.ita.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -20,7 +22,8 @@ public class User implements Serializable {
     @Column(name = "password", nullable = false, length = 20)
     private String password;
 
-    @ManyToMany
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -30,8 +33,8 @@ public class User implements Serializable {
     /* @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Person person; */
 
-    @OneToOne(mappedBy = "user")
-    private Company company;
+//    @OneToOne(mappedBy = "user")
+//    private Company company;
 
     public Long getUserId() {
         return userId;

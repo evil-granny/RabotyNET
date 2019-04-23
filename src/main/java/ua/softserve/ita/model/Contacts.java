@@ -13,17 +13,17 @@ public class Contacts implements Serializable {
     @Column(name = "contacts_id")
     private Long contactsId;
 
-    @Column(name = "email")
+    @Column(name = "email", length = 50)
     private String email;
 
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @OneToOne(mappedBy = "contacts")
-    private Person person;
+//    @OneToOne(mappedBy = "contacts")
+//    private Person person;
 
-    @OneToOne(mappedBy = "contacts")
-    private Company company;
+//    @OneToOne(mappedBy = "contacts")
+//    private Company company;
 
     public Long getContactsId() {
         return contactsId;

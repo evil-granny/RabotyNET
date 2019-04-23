@@ -1,5 +1,6 @@
 package ua.softserve.ita.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.model.Person;
 import ua.softserve.ita.service.Service;
