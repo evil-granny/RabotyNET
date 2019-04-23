@@ -3,19 +3,27 @@ package ua.softserve.ita.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+
 
 import static org.hibernate.cfg.AvailableSettings.*;
 
 import java.util.Properties;
 
 @Configuration
+
 @PropertySource("classpath:database.properties")
 @EnableTransactionManagement
-@ComponentScans(value = {@ComponentScan("ua.softserve.ita.dao"),
-        @ComponentScan("ua.softserve.ita.service")})
+
+@ComponentScan(basePackages = "ua.softserve.ita")
 public class AppConfig {
 
     @Autowired
@@ -54,6 +62,29 @@ public class AppConfig {
         transactionManager.setSessionFactory(getSessionFactory().getObject());
 
         return transactionManager;
+    }
+
+    @Bean
+    public JavaMailSender getMailSender(){
+
+
+        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+
+        mailSender.setHost(environment.getProperty("mail.host"));
+        mailSender.setPort(Integer.parseInt(environment.getProperty("mail.port")));
+        mailSender.setUsername(environment.getProperty("mail.username"));
+        mailSender.setPassword(environment.getProperty("mail.password"));
+
+        Properties javaMailProperties = new Properties();
+
+        javaMailProperties.put("mail.smtp.starttls.enable", environment.getProperty("mail.smtp.starttls.enable"));
+        javaMailProperties.put("mail.smtp.auth", environment.getProperty("mail.smtp.auth"));
+        javaMailProperties.put("mail.transport.protocol", environment.getProperty("mail.transport.protocol"));
+        javaMailProperties.put("mail.debug", environment.getProperty("mail.debug"));
+
+        mailSender.setJavaMailProperties(javaMailProperties);
+
+        return mailSender;
     }
 
 }

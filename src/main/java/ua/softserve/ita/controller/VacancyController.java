@@ -1,10 +1,15 @@
 package ua.softserve.ita.controller;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.model.Company;
 import ua.softserve.ita.model.Requirement;
 import ua.softserve.ita.model.Vacancy;
+import ua.softserve.ita.service.ApplicationContextProvider;
+import ua.softserve.ita.service.GenerateLetter;
+import ua.softserve.ita.service.LetterService;
 import ua.softserve.ita.service.Service;
 
 import javax.annotation.Resource;
@@ -33,6 +38,16 @@ public class VacancyController {
     @GetMapping("/vacancy/{id}")
     public ResponseEntity<Vacancy> getVacancyById(@PathVariable("id") Long id) {
         Vacancy vacancy = vacancyService.findById(id);
+        ApplicationContext context = ApplicationContextProvider.getApplicationContext();
+
+        GenerateLetter letterService = (GenerateLetter) context.getBean("generateService");
+        letterService.sendVacancyEmail(vacancy);
+
+
+
+        ((AbstractApplicationContext) context).close();
+
+
         return ResponseEntity.ok().body(vacancy);
     }
 
@@ -55,6 +70,7 @@ public class VacancyController {
         requirements.forEach(e -> e.setVacancy(vacancy));
         vacancyService.create(vacancy);
         requirements.forEach(e -> requirementService.create(e));
+
         return ResponseEntity.ok(vacancy);
     }
 
