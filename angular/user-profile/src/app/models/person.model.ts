@@ -11,7 +11,7 @@ export class Person {
 
     birthday: Date;
 
-    photo: string;
+    photo: BinaryType;
 
     address: Address = new Address();
 
