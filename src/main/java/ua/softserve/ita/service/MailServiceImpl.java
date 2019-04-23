@@ -60,9 +60,10 @@ public class MailServiceImpl implements MailService {
 				String content = letter.getContent();
 
 				// Add an inline resource.
-				// use the true flag to indicate you need a multipart message
-				helper.setText("<html><body><p>" + content + "</p>></body></html>", true);
-				//helper.addInline("company-logo", new ClassPathResource("linux-icon.png"));
+
+				helper.setText("<html><body><p>" + content + "</p><img src='cid:company-logo'></body></html>", true);
+				helper.addInline("company-logo", new ClassPathResource("linux-icon.png"));
+
 			}
 		};
 		return preparator;

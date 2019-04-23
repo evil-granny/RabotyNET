@@ -67,22 +67,24 @@ public class AppConfig {
     @Bean
     public JavaMailSender getMailSender(){
 
+
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 
         //Using gmail.
-        mailSender.setHost("smtp.gmail.com");
-        mailSender.setPort(587);
-        mailSender.setUsername("rabotynetch082@gmail.com");
-        mailSender.setPassword("SoftServeCh082");
+        mailSender.setHost(environment.getProperty("mail.host"));
+        mailSender.setPort(Integer.parseInt(environment.getProperty("mail.port")));
+        mailSender.setUsername(environment.getProperty("mail.username"));
+        mailSender.setPassword(environment.getProperty("mail.password"));
 
         Properties javaMailProperties = new Properties();
-        javaMailProperties.put("mail.smtp.starttls.enable", "true");
-        javaMailProperties.put("mail.smtp.auth", "true");
-        javaMailProperties.put("mail.transport.protocol", "smtp");
-        javaMailProperties.put("mail.debug", "true");
 
+        javaMailProperties.put("mail.smtp.starttls.enable", environment.getProperty("mail.smtp.starttls.enable"));
+        javaMailProperties.put("mail.smtp.auth", environment.getProperty("mail.smtp.auth"));
+        javaMailProperties.put("mail.transport.protocol", environment.getProperty("mail.transport.protocol"));
+        javaMailProperties.put("mail.debug", environment.getProperty("mail.debug"));
 
         mailSender.setJavaMailProperties(javaMailProperties);
+
         return mailSender;
     }
 
