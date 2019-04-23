@@ -1,6 +1,9 @@
 package ua.softserve.ita.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import ua.softserve.ita.validation.PasswordMatches;
+import ua.softserve.ita.validation.ValidEmail;
+import ua.softserve.ita.validation.ValidPassword;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -8,7 +11,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "\"user\"")
+@Table(name = "users")
 public class User implements Serializable {
 
     @Id
@@ -16,25 +19,31 @@ public class User implements Serializable {
     @Column(name = "user_id")
     private Long userId;
 
+    @ValidEmail
     @Column(name = "login", nullable = false, length = 50)
     private String login;
 
-    @Column(name = "password", nullable = false, length = 20)
+    @ValidPassword
+    @Column(name = "password", nullable = false, length = 200)
     private String password;
 
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles;
 
-    /* @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private Person person; */
+    private String matchingPassword;
 
-//    @OneToOne(mappedBy = "user")
-//    private Company company;
+    public String getMatchingPassword() {
+        return matchingPassword;
+    }
+
+    public void setMatchingPassword(String matchingPassword) {
+        this.matchingPassword = matchingPassword;
+    }
 
     public Long getUserId() {
         return userId;
@@ -48,7 +57,7 @@ public class User implements Serializable {
         return login;
     }
 
-    public void setLogin(String login) {
+    public void setLogin(String  login) {
         this.login = login;
     }
 

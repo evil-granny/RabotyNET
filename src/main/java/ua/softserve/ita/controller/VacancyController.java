@@ -42,9 +42,6 @@ public class VacancyController {
 
         GenerateLetter letterService = (GenerateLetter) context.getBean("generateService");
         letterService.sendVacancyEmail(vacancy);
-
-
-
         ((AbstractApplicationContext) context).close();
 
 
