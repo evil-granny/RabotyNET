@@ -47,6 +47,8 @@ public class Skill implements Serializable {
         this.description = description;
     }
 
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

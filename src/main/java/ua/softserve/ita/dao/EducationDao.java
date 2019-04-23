@@ -37,13 +37,13 @@ public class EducationDao implements Dao<Education> {
     }
 
     @Override
-    public Long insert(Education education) {
+    public Education insert(Education education) {
         sessionFactory.getCurrentSession().save(education);
-        return education.getEducationId();
+        return education;
     }
 
     @Override
-    public Long update(Education education, Long id) {
+    public Education update(Education education, Long id) {
         Session session = sessionFactory.getCurrentSession();
         Education updatedEducation = sessionFactory.getCurrentSession().byId(Education.class).load(id);
         updatedEducation.setEducationId(education.getEducationId());
@@ -53,7 +53,7 @@ public class EducationDao implements Dao<Education> {
         updatedEducation.setSpecialty(education.getSpecialty());
         session.flush();
 
-        return id;
+        return education;
     }
 
     @Override

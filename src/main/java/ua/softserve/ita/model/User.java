@@ -27,8 +27,8 @@ public class User implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private Person person;
+    /* @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Person person; */
 
     @OneToOne(mappedBy = "user")
     private Company company;

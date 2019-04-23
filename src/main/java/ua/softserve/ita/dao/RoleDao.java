@@ -36,13 +36,13 @@ public class RoleDao implements Dao<Role> {
     }
 
     @Override
-    public Long insert(Role role) {
+    public Role insert(Role role) {
         sessionFactory.getCurrentSession().save(role);
-        return role.getRoleId();
+        return role;
     }
 
     @Override
-    public Long update(Role role, Long id) {
+    public Role update(Role role, Long id) {
         Session session = sessionFactory.getCurrentSession();
         Role updatedRole = sessionFactory.getCurrentSession().byId(Role.class).load(id);
         updatedRole.setRoleId(role.getRoleId());
@@ -50,7 +50,7 @@ public class RoleDao implements Dao<Role> {
         updatedRole.setUsers(role.getUsers());
         session.flush();
 
-        return id;
+        return role;
     }
 
     @Override

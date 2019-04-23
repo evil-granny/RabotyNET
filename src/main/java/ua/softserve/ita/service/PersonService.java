@@ -27,12 +27,12 @@ public class PersonService implements Service<Person> {
     }
 
     @Override
-    public Long insert(Person person) {
+    public Person insert(Person person) {
         return personDao.insert(person);
     }
 
     @Override
-    public Long update(Person person, Long id) {
+    public Person update(Person person, Long id) {
         return personDao.update(person, id);
     }
 

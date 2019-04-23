@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ua.softserve.ita.model.CV;
+import ua.softserve.ita.model.Skill;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -37,13 +38,16 @@ public class CVDao implements Dao<CV> {
     }
 
     @Override
-    public Long insert(CV cv) {
+    public CV insert(CV cv) {
+        /*for (Skill skill: cv.getSkills()) {
+            sessionFactory.getCurrentSession().save(skill);
+        }*/
         sessionFactory.getCurrentSession().save(cv);
-        return cv.getCvId();
+        return cv;
     }
 
     @Override
-    public Long update(CV cv, Long id) {
+    public CV update(CV cv, Long id) {
         Session session = sessionFactory.getCurrentSession();
         CV updatedCV = sessionFactory.getCurrentSession().byId(CV.class).load(id);
         updatedCV.setEducation(cv.getEducation());
@@ -53,7 +57,7 @@ public class CVDao implements Dao<CV> {
         updatedCV.setSkills(cv.getSkills());
         session.flush();
 
-        return id;
+        return cv;
     }
 
     @Override

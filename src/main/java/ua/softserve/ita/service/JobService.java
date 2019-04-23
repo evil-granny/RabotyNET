@@ -28,12 +28,12 @@ public class JobService implements Service<Job> {
     }
 
     @Override
-    public Long insert(Job job) {
+    public Job insert(Job job) {
         return jobDao.insert(job);
     }
 
     @Override
-    public Long update(Job job, Long id) {
+    public Job update(Job job, Long id) {
         return jobDao.update(job,id);
     }
 

@@ -1,5 +1,6 @@
 package ua.softserve.ita.model;
 
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -20,12 +21,13 @@ public class CV implements Serializable {
     @Column(name = "position", nullable = false, length = 50)
     private String position;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "cv_skill",
             joinColumns = @JoinColumn(name = "cv_id"),
             inverseJoinColumns = @JoinColumn(name = "skill_id"))
     private List<Skill> skills;
+
 
     @OneToMany(mappedBy = "cv")
     private List<Job> jobs;
@@ -34,9 +36,9 @@ public class CV implements Serializable {
     @JoinColumn(name = "education_id", referencedColumnName = "education_id", nullable = false)
     private Education education;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private Person person;
+//    @ManyToOne
+//    @JoinColumn(name = "user_id", nullable = false)
+//    private Person person;
 
     public Long getCvId() {
         return cvId;
@@ -101,7 +103,7 @@ public class CV implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(cvId, photo, position, skills, jobs, education);
+        return Objects.hash(cvId, photo, position, skills, education);
     }
 
     @Override
@@ -113,8 +115,19 @@ public class CV implements Serializable {
                 ", skills=" + skills +
                 ", jobs=" + jobs +
                 ", education=" + education +
-                ", person=" + person +
+                //", person=" + person +
                 '}';
     }
 
+    public CV(){
+
+    }
+
+    public CV(String photo, String position, List<Skill> skills, List<Job> jobs,Education education) {
+        this.photo = photo;
+        this.position = position;
+        this.skills = skills;
+        this.jobs = jobs;
+        this.education = education;
+    }
 }

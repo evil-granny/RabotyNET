@@ -3,6 +3,7 @@ package ua.softserve.ita.service;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ua.softserve.ita.dao.Dao;
+import ua.softserve.ita.model.CV;
 import ua.softserve.ita.model.Education;
 
 import javax.annotation.Resource;
@@ -27,12 +28,12 @@ public class EducationService implements Service<Education> {
     }
 
     @Override
-    public Long insert(Education education) {
+    public Education insert(Education education) {
         return educationDao.insert(education);
     }
 
     @Override
-    public Long update(Education education, Long id) {
+    public Education update(Education education, Long id) {
         return educationDao.update(education, id);
     }
 

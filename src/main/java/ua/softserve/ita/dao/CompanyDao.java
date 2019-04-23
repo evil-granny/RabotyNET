@@ -37,13 +37,13 @@ public class CompanyDao implements Dao<Company> {
     }
 
     @Override
-    public Long insert(Company company) {
+    public Company insert(Company company) {
         sessionFactory.getCurrentSession().save(company);
-        return company.getCompanyId();
+        return company;
     }
 
     @Override
-    public Long update(Company company, Long id) {
+    public Company update(Company company, Long id) {
         Session session = sessionFactory.getCurrentSession();
         Company updatedCompany = sessionFactory.getCurrentSession().byId(Company.class).load(id);
         updatedCompany.setCompanyId(company.getCompanyId());
@@ -57,7 +57,7 @@ public class CompanyDao implements Dao<Company> {
         updatedCompany.setVacancies(company.getVacancies());
         session.flush();
 
-        return id;
+        return company;
     }
 
     @Override

@@ -37,13 +37,13 @@ public class AddressDao implements Dao<Address> {
     }
 
     @Override
-    public Long insert(Address address) {
+    public Address insert(Address address) {
         sessionFactory.getCurrentSession().save(address);
-        return address.getAddressId();
+        return address;
     }
 
     @Override
-    public Long update(Address address, Long id) {
+    public Address update(Address address, Long id) {
         Session session = sessionFactory.getCurrentSession();
         Address updatedAddress = session.byId(Address.class).load(id);
         updatedAddress.setAddressId(address.getAddressId());
@@ -55,7 +55,7 @@ public class AddressDao implements Dao<Address> {
         updatedAddress.setZipCode(address.getZipCode());
         session.flush();
 
-        return id;
+        return address;
     }
 
     @Override

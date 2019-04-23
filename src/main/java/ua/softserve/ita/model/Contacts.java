@@ -19,8 +19,8 @@ public class Contacts implements Serializable {
     @Column(name = "phoneNumber")
     private String phoneNumber;
 
-    @OneToOne(mappedBy = "contacts")
-    private Person person;
+    /* @OneToOne(mappedBy = "contacts")
+    private Person person; */
 
     @OneToOne(mappedBy = "contacts")
     private Company company;

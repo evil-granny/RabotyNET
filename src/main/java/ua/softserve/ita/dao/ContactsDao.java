@@ -37,13 +37,13 @@ public class ContactsDao implements Dao<Contacts> {
     }
 
     @Override
-    public Long insert(Contacts contacts) {
+    public Contacts insert(Contacts contacts) {
         sessionFactory.getCurrentSession().save(contacts);
-        return contacts.getContactsId();
+        return contacts;
     }
 
     @Override
-    public Long update(Contacts contacts, Long id) {
+    public Contacts update(Contacts contacts, Long id) {
         Session session = sessionFactory.getCurrentSession();
         Contacts updatedContacts = sessionFactory.getCurrentSession().byId(Contacts.class).load(id);
         updatedContacts.setEmail(contacts.getEmail());
@@ -51,7 +51,7 @@ public class ContactsDao implements Dao<Contacts> {
 
         session.flush();
 
-        return id;
+        return contacts;
     }
 
     @Override
