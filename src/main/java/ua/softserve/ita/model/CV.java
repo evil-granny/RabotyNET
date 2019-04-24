@@ -32,10 +32,6 @@ public class CV implements Serializable {
     @JoinColumn(name = "education_id", referencedColumnName = "education_id", nullable = false)
     private Education education;
 
-//    @ManyToOne
-//    @JoinColumn(name = "user_id", nullable = false)
-//    private Person person;
-
     public Long getCvId() {
         return cvId;
     }

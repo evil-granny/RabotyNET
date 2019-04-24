@@ -18,6 +18,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
+@CrossOrigin
 @RestController
 public class RegistrationController {
 
@@ -55,12 +56,13 @@ public class RegistrationController {
         return ResponseEntity.ok().body("User has been deleted successfully.");
     }
 
-    @PostMapping("/registration")
+    @PostMapping(path = "/registration")
     public ResponseEntity<User> insert(@RequestBody @Valid User user, final HttpServletRequest request) {
+        System.out.println("[registration]");
         User userWithId = userService.create(user);
         String token = UUID.randomUUID().toString();
         VerificationToken vToken =  verificationTokenIService.createVerificationTokenForUser(userWithId,token);
-        String confirmationUrl = getAppUrl(request) + "/vacancies?token=" + vToken.getToken();
+        String confirmationUrl = getAppUrl(request) + "/profile?token=" + vToken.getToken();
 
         ApplicationContext context = ApplicationContextProvider.getApplicationContext();
         GenerateLetter letterService = (GenerateLetter) context.getBean("generateService");
@@ -70,7 +72,7 @@ public class RegistrationController {
     }
 
     private String getAppUrl(HttpServletRequest request) {
-        return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+        return "http://" + request.getServerName() + ":" + 4200 + request.getContextPath();
     }
 
 }
