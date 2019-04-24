@@ -48,8 +48,9 @@ public class UserDao implements Dao<User>, UserDetailsDao {
 
     @Override
     public User create(User user) {
-        sessionFactory.getCurrentSession().save(user);
-
+        Session session = sessionFactory.getCurrentSession();
+        session.save(user);
+        session.persist(user);
         return user;
     }
 
@@ -78,4 +79,13 @@ public class UserDao implements Dao<User>, UserDetailsDao {
         return query.getSingleResult();
 
     }
+    public User findByEmail(String email) {
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("from User where login = '" + email + "'");
+        if (!query.getResultList().isEmpty()) {
+            return (User) query.getResultList().get(0);
+        } else
+            return null;
+    }
+
 }

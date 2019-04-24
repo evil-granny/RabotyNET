@@ -1,11 +1,20 @@
 package ua.softserve.ita.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ua.softserve.ita.dao.Dao;
+import ua.softserve.ita.dao.UserDao;
+import ua.softserve.ita.dao.VerificationTokenIDao;
+import ua.softserve.ita.exception.PasswordNotMatchException;
+import ua.softserve.ita.exception.UserAlreadyExistException;
 import ua.softserve.ita.model.User;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 
 @Component("userService")
@@ -15,6 +24,35 @@ public class UserService implements Service<User> {
 
     @Resource(name = "userDao")
     private Dao<User> userDao;
+
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Resource(name = "tokenDao")
+    private VerificationTokenIDao verificationTokenIDao;
+
+    public static final String TOKEN_INVALID = "invalidToken";
+    public static final String TOKEN_EXPIRED = "expired";
+    public static final String TOKEN_VALID = "valid";
+
+    public static String QR_PREFIX = "https://chart.googleapis.com/chart?chs=200x200&chld=M%%7C0&cht=qr&chl=";
+    public static String APP_NAME = "RabotyNet";
+
+//    @Autowired
+//    PasswordConstraintValidator passwordConstraintValidator;
+//
+//    @Autowired
+//    PasswordMatchesValidator passwordMatchesValidator;
+//
+//    @Autowired
+//    EmailValidator emailValidator;
+//
+//    @Autowired
+//    UserValidator userValidator;
+
+
+    @Resource(name = "userDao")
+    private UserDao uDao;
 
     @Override
     public User findById(Long id) {
@@ -27,9 +65,21 @@ public class UserService implements Service<User> {
     }
 
     @Override
-    public User create(User user) {
-        return userDao.create(user);
+    public User create(@Valid User user) {
+        if (emailExists(user.getLogin())) {
+            throw new UserAlreadyExistException("There is an account with that email address: " + user.getLogin());
+        }
+        final User newUser = new User();
+        newUser.setLogin(user.getLogin());
+
+        if (user.getPassword().equals(user.getMatchingPassword())) {
+            newUser.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        }else{
+            throw new PasswordNotMatchException("Passwords don't match");
+        }
+        return userDao.create(newUser);
     }
+
 
     @Override
     public User update(User user) {
@@ -39,6 +89,14 @@ public class UserService implements Service<User> {
     @Override
     public void deleteById(Long id) {
         userDao.deleteById(id);
+    }
+
+    public User findByEmail(String email) {
+        return uDao.findByEmail(email);
+    }
+
+    private boolean emailExists(final String email) {
+        return findByEmail(email) != null;
     }
 
 }

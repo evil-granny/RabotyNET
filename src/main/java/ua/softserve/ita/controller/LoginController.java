@@ -55,6 +55,13 @@ public class LoginController {
         return model;
     }
 
+    @RequestMapping(value = {"/accessDenied"}, method = RequestMethod.GET)
+    public ModelAndView accessDenied() {
+        ModelAndView model = new ModelAndView();
+        model.setViewName("accessDenied");
+        return model;
+    }
+
     @RequestMapping(value = "/loginPage", method = RequestMethod.GET)
     public ModelAndView loginPage(@RequestParam(value = "error",required = false) String error,
                                   @RequestParam(value = "logout",	required = false) String logout) {
