@@ -56,7 +56,7 @@ public class RegistrationController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<?> insert(@RequestBody @Valid User user, final HttpServletRequest request) {
+    public ResponseEntity<User> insert(@RequestBody @Valid User user, final HttpServletRequest request) {
         User userWithId = userService.create(user);
         String token = UUID.randomUUID().toString();
         VerificationToken vToken =  verificationTokenIService.createVerificationTokenForUser(userWithId,token);
@@ -66,7 +66,7 @@ public class RegistrationController {
         GenerateLetter letterService = (GenerateLetter) context.getBean("generateService");
         letterService.sendValidationEmail(user, confirmationUrl);
 
-        return ResponseEntity.ok().body("Confirm your email please!");
+        return ResponseEntity.ok().body(user);
     }
 
     private String getAppUrl(HttpServletRequest request) {

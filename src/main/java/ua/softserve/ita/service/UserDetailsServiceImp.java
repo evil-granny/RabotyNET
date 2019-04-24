@@ -46,7 +46,6 @@ public class UserDetailsServiceImp implements UserDetailsService {
                     user.getPassword(),
                     authorities
             );
-//            return user;
         } else {
             throw new UsernameNotFoundException("User not found.");
         }
