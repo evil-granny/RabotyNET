@@ -1,10 +1,6 @@
 package ua.softserve.ita.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -16,10 +12,6 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "requirement")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class Requirement {
 
     @Id
@@ -38,6 +30,38 @@ public class Requirement {
     @JoinColumn(name = "vacancy_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Vacancy vacancy;
+
+    public Requirement(String description, Vacancy vacancy) {
+        this.description = description;
+        this.vacancy = vacancy;
+    }
+
+    public Requirement() {
+    }
+
+    public Long getRequirementId() {
+        return requirementId;
+    }
+
+    public void setRequirementId(Long requirementId) {
+        this.requirementId = requirementId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Vacancy getVacancy() {
+        return vacancy;
+    }
+
+    public void setVacancy(Vacancy vacancy) {
+        this.vacancy = vacancy;
+    }
 
     @Override
     public boolean equals(Object o) {
