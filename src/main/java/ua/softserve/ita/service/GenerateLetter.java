@@ -42,7 +42,7 @@ public class GenerateLetter{
     public void sendVacancyEmail(Vacancy vacancy){
         Letter letter = new Letter();
 
-        letter.seteMail("chornevich_a@ukr.net");
+        letter.seteMail("chornevich.A@gmail.com");
         letter.setSubject("Hello on ");
         String someLink="someLink";
         String content = "some text" + someLink;

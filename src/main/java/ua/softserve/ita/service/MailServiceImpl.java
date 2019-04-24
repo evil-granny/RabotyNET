@@ -35,7 +35,7 @@ public class MailServiceImpl implements MailService {
 
 		try {
 			mailSender.send(preparator);
-			System.out.println("Message With Attachement has been sent.............................");
+			System.out.println("Message has been sent.............................");
 			//preparator = getContentAsInlineResourceMessagePreparator(person);
 			//mailSender.send(preparator);
 			//System.out.println("Message With Inline Resource has been sent.........................");
