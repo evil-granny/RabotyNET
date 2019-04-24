@@ -16,6 +16,6 @@ public class SearchCVService {
     private SearchCVDao searchCVDao;
 
     public List<Person> getShortCvs(String parameter, String searchText) {
-       return searchCVDao.searchByParameter(parameter, searchText);
+        return searchCVDao.searchByParameter(parameter, searchText);
     }
 }
