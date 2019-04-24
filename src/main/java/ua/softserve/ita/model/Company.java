@@ -41,11 +41,9 @@ public class Company implements Serializable {
     @Column(name = "approved")
     private boolean approved;
 
-
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private User user;
-
 
     public Long getCompanyId() {
         return companyId;
@@ -151,4 +149,5 @@ public class Company implements Serializable {
                 ", user=" + user +
                 '}';
     }
+
 }

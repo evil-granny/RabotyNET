@@ -1,0 +1,85 @@
+<div class="col-md-12">
+  <h2 class="text-center">Create CV</h2>
+  <form>
+    <div class="form-group">
+      <label for="Position">Position:</label>
+      <input type="text" [(ngModel)]="cv.position" placeholder="Position" class="form-control" id="position"
+             name="position">
+    </div>
+    <div *ngFor="let skill of cv.skills">
+      <div class="form-group">
+        <label for="title">Title:</label>
+        <input type="text" [(ngModel)]="skill.title" placeholder="Title" class="form-control" id="title"
+               name="title">
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description:</label>
+        <input type="text" [(ngModel)]="skill.description" placeholder="Description" class="form-control" id="description"
+               name="description">
+      </div>
+    </div>
+
+    <button class="btn btn-success" (click)="newSkill()">New Skill</button>
+
+    <div class="form-group">
+      <label for="degree">Degree:</label>
+      <input type="text" [(ngModel)]="cv.education.degree" placeholder="Degree" class="form-control" id="degree"
+             name="degree">
+    </div>
+
+    <div class="form-group">
+      <label for="school">School:</label>
+      <input type="text" [(ngModel)]="cv.education.school" placeholder="School" class="form-control" id="school"
+             name="school">
+    </div>
+
+    <div class="form-group">
+      <label for="speciality">Speciality:</label>
+      <input type="text" [(ngModel)]="cv.education.speciality" placeholder="Speciality" class="form-control" id="speciality"
+             name="speciality">
+    </div>
+
+    <div class="form-group">
+      <label for="graduation">Graduation:</label>
+      <input type="text" [(ngModel)]="cv.education.graduation" placeholder="Graduation" class="form-control" id="graduation"
+             name="graduation">
+    </div>
+
+    <div *ngFor="let job of cv.jobs">
+      <div class="form-group">
+        <label for="begin">Begin Work:</label>
+        <input type="date" [(ngModel)]="job.begin" placeholder="BeginWork" class="form-control" id="begin"
+               name="begin">
+      </div>
+
+      <div class="form-group">
+        <label for="companyName">Company Name:</label>
+        <input type="text" [(ngModel)]="job.companyName" placeholder="CompanyName" class="form-control" id="companyName"
+               name="companyName">
+      </div>
+
+      <div class="form-group">
+        <label for="positionJob">Position:</label>
+        <input type="text" [(ngModel)]="job.position" placeholder="Position" class="form-control" id="positionJob"
+               name="positionJob">
+      </div>
+
+      <div class="form-group">
+        <label for="descriptionJob">Description:</label>
+        <input type="text" [(ngModel)]="job.description" placeholder="Description" class="form-control" id="descriptionJob"
+               name="descriptionJob">
+      </div>
+
+      <div class="form-group">
+        <label for="end">End Work:</label>
+        <input type="date" [(ngModel)]="job.end" placeholder="EndWork" class="form-control" id="end"
+               name="end">
+      </div>
+    </div>
+
+    <button class="btn btn-success" (click)="newJob()">New Job</button>
+
+    <button class="btn btn-success" (click)="insert()">Create</button>
+  </form>
+</div>
