@@ -48,19 +48,13 @@
 <div class="container">
 <ul class="ml-auto">
     <li>
-        <a class="nav-link" href="/persons">List of Persons</a>
+        <a class="nav-link" href="/personInfoAdmin">Administrator info</a>
     </li>
     <li>
-        <a class="nav-link" href="/person/1">Person 1 info</a>
+        <a class="nav-link" href="/personInfoCompanyOwner">Company Owner info</a>
     </li>
     <li>
-        <a class="nav-link" href="/person/2">Person 2 info</a>
-    </li>
-    <li>
-        <a class="nav-link" href="/person/3">Person 3 info</a>
-    </li>
-    <li>
-        <a class="nav-link" href="/personInfo">Administrator info</a>
+        <a class="nav-link" href="/personInfoUser">User info</a>
     </li>
 </ul>
 </div>

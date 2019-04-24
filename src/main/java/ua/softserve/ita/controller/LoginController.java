@@ -79,15 +79,21 @@ public class LoginController {
         return model;
     }
 
-    @GetMapping(value = "/personInfo")
-    public ResponseEntity<UserDetails> showPerson() {
+    @GetMapping(value = "/personInfoAdmin")
+    public ResponseEntity<UserDetails> showAdmin() {
         UserDetails user = userDetails.loadUserByUsername("admin");
         return ResponseEntity.ok().body(user);
     }
 
-    @GetMapping("/persons")
-    public ResponseEntity<List<Person>> getAll() {
-        List<Person> people = personService.findAll();
-        return ResponseEntity.ok().body(people);
+    @GetMapping(value = "/personInfoCompanyOwner")
+    public ResponseEntity<UserDetails> showCompanyOwner() {
+        UserDetails user = userDetails.loadUserByUsername("cowner");
+        return ResponseEntity.ok().body(user);
+    }
+
+    @GetMapping(value = "/personInfoUser")
+    public ResponseEntity<UserDetails> showUser() {
+        UserDetails user = userDetails.loadUserByUsername("user");
+        return ResponseEntity.ok().body(user);
     }
 }
