@@ -6,16 +6,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ua.softserve.ita.dao.Dao;
 import ua.softserve.ita.dao.UserDao;
+import ua.softserve.ita.dao.VerificationTokenIDao;
 import ua.softserve.ita.exception.PasswordNotMatchException;
 import ua.softserve.ita.exception.UserAlreadyExistException;
 import ua.softserve.ita.model.User;
-import ua.softserve.ita.validation.EmailValidator;
-import ua.softserve.ita.validation.PasswordConstraintValidator;
-import ua.softserve.ita.validation.PasswordMatchesValidator;
-import ua.softserve.ita.validation.UserValidator;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 
 @Component("userService")
@@ -28,6 +27,16 @@ public class UserService implements Service<User> {
 
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Resource(name = "tokenDao")
+    private VerificationTokenIDao verificationTokenIDao;
+
+    public static final String TOKEN_INVALID = "invalidToken";
+    public static final String TOKEN_EXPIRED = "expired";
+    public static final String TOKEN_VALID = "valid";
+
+    public static String QR_PREFIX = "https://chart.googleapis.com/chart?chs=200x200&chld=M%%7C0&cht=qr&chl=";
+    public static String APP_NAME = "RabotyNet";
 
 //    @Autowired
 //    PasswordConstraintValidator passwordConstraintValidator;

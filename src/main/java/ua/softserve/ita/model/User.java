@@ -10,8 +10,10 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
+
 @Entity
 @Table(name = "users")
+@PasswordMatches
 public class User implements Serializable {
 
     @Id
@@ -36,6 +38,21 @@ public class User implements Serializable {
     private List<Role> roles;
 
     private String matchingPassword;
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    @Column(name = "enabled")
+    private boolean enabled;
+
+    public User() {
+        this.enabled=false;
+    }
 
     public String getMatchingPassword() {
         return matchingPassword;

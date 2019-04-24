@@ -39,8 +39,10 @@ public class UserDao implements Dao<User> {
 
     @Override
     public User create(User user) {
-        sessionFactory.getCurrentSession().save(user);
-
+        Session session = sessionFactory.getCurrentSession();
+        session.save(user);
+        session.persist(user);
+        System.out.println(user.getUserId());
         return user;
     }
 
