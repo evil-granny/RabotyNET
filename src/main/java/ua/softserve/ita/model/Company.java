@@ -38,6 +38,7 @@ public class Company implements Serializable {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "company", cascade = CascadeType.REMOVE)
     private Set<Vacancy> vacancies;
+
     @Column(name = "approved")
     private boolean approved;
 

@@ -20,7 +20,6 @@ export class EditVacancyComponent implements OnInit{
     }
 
    create(): void {
-    console.log("fff");
       console.log(this.vacancy);
       this.vacancyService.create(this.vacancy)
         .subscribe(data => {
