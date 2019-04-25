@@ -41,7 +41,6 @@ public class CompanyController {
     @PostMapping("/createCompany")
     public Company create(@RequestBody Company company) {
         company.setUser(userService.findById(1L));
-        System.out.println(company);
         return companyService.create(company);
     }
 
