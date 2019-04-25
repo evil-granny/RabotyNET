@@ -31,12 +31,12 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/adminPage", "/persons","/personInfo").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/adminPage", "/personInfoAdmin").access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/cownerPage").access("hasRole('ROLE_COWNER')")
                 .antMatchers("/userPage").access("hasRole('ROLE_USER')")
-                .antMatchers("/person/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_COWNER')")
-                .antMatchers("/homePage", "/persons").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN') or hasRole('ROLE_COWNER')")
-                .antMatchers("/", "/user/registration").permitAll()
+                .antMatchers("/personInfoCompanyOwner").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_COWNER')")
+                .antMatchers("/homePage", "/personInfoUser").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN') or hasRole('ROLE_COWNER')")
+                .antMatchers("/").permitAll()
                 .and()
                 .formLogin().loginPage("/loginPage")
                 .failureUrl("/loginPage?error")

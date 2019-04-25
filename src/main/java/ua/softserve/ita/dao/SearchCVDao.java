@@ -25,7 +25,7 @@ public class SearchCVDao {
         if (parameter.equals("firstName")) {
             return searchResult("first_name", searchText);
         } else if (parameter.equals("lastName")) {
-            return searchResult( "last_name", searchText);
+            return searchResult("last_name", searchText);
         } else {
             return null;
         }
@@ -34,9 +34,8 @@ public class SearchCVDao {
     // Search from Person table
     private List<Person> searchResult(String parameter, String searchText) {
         Query query = sessionFactory.createEntityManager().createNativeQuery
-                ("SELECT user_id, first_name, last_name FROM person WHERE "+parameter+" ILIKE :text");
-        query.setParameter("text", searchText+"%");
+                ("SELECT * FROM person WHERE " + parameter + " ILIKE :text", Person.class);
+        query.setParameter("text", searchText + "%");
         return query.getResultList();
     }
-
 }

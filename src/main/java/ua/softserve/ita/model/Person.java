@@ -44,13 +44,21 @@ public class Person implements Serializable {
     @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false)
     private Address address;
 
-    /* @OneToOne
+    @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private User user;
 
-    @JsonIgnore
+    /*@JsonIgnore
     @OneToMany(mappedBy = "person")
     private List<CV> cvs; */
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public long getUserId() {
         return userId;

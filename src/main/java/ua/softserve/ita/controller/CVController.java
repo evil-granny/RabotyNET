@@ -36,8 +36,8 @@ public class CVController {
     @PostMapping(path = "/createCV")
     public CV insert(@RequestBody CV cv) {
         Set<Skill> skills = cv.getSkills();
-        skills.forEach(x -> x.setCv(cv));
         cvService.create(cv);
+        skills.forEach(x -> x.setCv(cv));
         skills.forEach(x -> skillService.create(x));
         Set<Job> jobs = cv.getJobs();
         jobs.forEach(x -> x.setCv(cv));
