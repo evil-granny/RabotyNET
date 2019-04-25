@@ -15,7 +15,6 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Objects;
 
-@Component("requirementDao")
 @Repository
 public class RequirementDao implements Dao<Requirement> {
 

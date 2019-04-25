@@ -1,5 +1,6 @@
 package ua.softserve.ita.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.model.Requirement;
@@ -12,10 +13,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin
 @RestController
 public class RequirementController {
 
     @Resource(name = "requirementService")
+    //@Autowired
     private Service<Requirement> requirementService;
 
     @GetMapping("/requirements")

@@ -1,20 +1,19 @@
 package ua.softserve.ita.service;
 
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import ua.softserve.ita.dao.Dao;
+import ua.softserve.ita.dao.VacancyDao;
 import ua.softserve.ita.model.Vacancy;
 
 import javax.annotation.Resource;
 import java.util.List;
 
-@Component("vacancyService")
+
 @org.springframework.stereotype.Service
 @Transactional
 public class VacancyService implements Service<Vacancy> {
 
     @Resource(name = "vacancyDao")
-    private Dao<Vacancy> vacancyDao;
+    private VacancyDao vacancyDao;
 
     @Override
     public Vacancy findById(Long id) {

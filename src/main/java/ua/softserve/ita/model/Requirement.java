@@ -1,6 +1,7 @@
 package ua.softserve.ita.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -12,6 +13,11 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "requirement")
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Requirement {
 
     @Id
@@ -31,50 +37,19 @@ public class Requirement {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Vacancy vacancy;
 
-    public Requirement(String description, Vacancy vacancy) {
-        this.description = description;
-        this.vacancy = vacancy;
-    }
-
-    public Requirement() {
-    }
-
-    public Long getRequirementId() {
-        return requirementId;
-    }
-
-    public void setRequirementId(Long requirementId) {
-        this.requirementId = requirementId;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Vacancy getVacancy() {
-        return vacancy;
-    }
-
-    public void setVacancy(Vacancy vacancy) {
-        this.vacancy = vacancy;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Requirement that = (Requirement) o;
         return Objects.equals(requirementId, that.requirementId) &&
-                Objects.equals(description, that.description);
+                Objects.equals(description, that.description) &&
+                Objects.equals(vacancy, that.vacancy);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(requirementId, description);
+        return Objects.hash(requirementId, description, vacancy);
     }
 
     @Override

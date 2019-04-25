@@ -48,10 +48,6 @@ public class Person implements Serializable {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private User user;
 
-    /*@JsonIgnore
-    @OneToMany(mappedBy = "person")
-    private List<CV> cvs; */
-
     public User getUser() {
         return user;
     }
@@ -116,33 +112,6 @@ public class Person implements Serializable {
     public void setAddress(Address address) {
         this.address = address;
     }
-
-    /* public List<CV> getCvs() {
-        return cvs;
-    }
-
-    public void setCvs(List<CV> cvs) {
-        this.cvs = cvs;
-    } */
-
-    /* @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Person person = (Person) o;
-        return userId == person.userId &&
-                firstName.equals(person.firstName) &&
-                lastName.equals(person.lastName) &&
-                birthday.equals(person.birthday) &&
-                contacts.equals(person.contacts) &&
-                address.equals(person.address) &&
-                cvs.equals(person.cvs);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(userId, firstName, lastName, birthday, contacts, address, cvs);
-    } */
 
     @Override
     public String toString() {

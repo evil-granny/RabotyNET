@@ -38,9 +38,6 @@ public class VacancyController {
 
     @PutMapping("/updateVacancy")
     public ResponseEntity<Vacancy> updateVacancy(@Valid @RequestBody Vacancy vacancy) {
-        Company company = new Company();
-        company.setCompanyId(1L);
-        vacancy.setCompany(company);
         final Vacancy updatedVacancy = vacancyService.update(vacancy);
         return ResponseEntity.ok(updatedVacancy);
     }
