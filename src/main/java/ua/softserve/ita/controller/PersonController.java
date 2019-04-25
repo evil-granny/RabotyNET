@@ -1,5 +1,6 @@
 package ua.softserve.ita.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.*;
@@ -7,6 +8,7 @@ import ua.softserve.ita.model.Person;
 import ua.softserve.ita.service.ApplicationContextProvider;
 import ua.softserve.ita.service.GenerateLetter;
 import ua.softserve.ita.model.User;
+import ua.softserve.ita.service.MailService;
 import ua.softserve.ita.service.Service;
 
 import javax.annotation.Resource;
@@ -15,6 +17,9 @@ import java.util.List;
 @CrossOrigin
 @RestController
 public class PersonController {
+
+    @Autowired
+    GenerateLetter generateService;
 
     @Resource(name = "personService")
     private Service<Person> personService;
@@ -25,11 +30,7 @@ public class PersonController {
     @GetMapping(path = {"/person/{id}"})
     public Person findById(@PathVariable("id") long id) {
 
-        ApplicationContext context = ApplicationContextProvider.getApplicationContext();
-
-        GenerateLetter generateLetter = (GenerateLetter) context.getBean("generateService");
-        generateLetter.sendPersonEmail(personService.findById(id));
-
+        generateService.sendPersonEmail(personService.findById(id));
         return personService.findById(id);
     }
 
