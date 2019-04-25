@@ -23,12 +23,10 @@ public class VerificationToken {
     private Date expiryDate;
 
     public VerificationToken() {
-        super();
+
     }
 
     public VerificationToken(final String token) {
-        super();
-
         this.token = token;
         this.expiryDate = calculateExpiryDate(EXPIRATION);
     }
@@ -80,8 +78,6 @@ public class VerificationToken {
         this.token = token;
         this.expiryDate = calculateExpiryDate(EXPIRATION);
     }
-
-    //
 
     @Override
     public int hashCode() {

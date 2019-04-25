@@ -25,9 +25,6 @@ public class VerificationTokenService implements VerificationTokenIService{
     public static final String TOKEN_EXPIRED = "expired";
     public static final String TOKEN_VALID = "valid";
 
-    public static String QR_PREFIX = "http://localhost:8080/";
-    public static String APP_NAME = "RabotyNet";
-
     @Resource(name = "tokenDao")
     private VerificationTokenIDao verificationTokenIDao;
 

@@ -13,8 +13,6 @@ import ua.softserve.ita.model.User;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.List;
 
 @Component("userService")

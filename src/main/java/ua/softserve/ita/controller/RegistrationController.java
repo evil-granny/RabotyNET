@@ -28,10 +28,6 @@ public class RegistrationController {
     @Resource(name = "tokenService")
     private VerificationTokenIService verificationTokenIService;
 
-
-    @Autowired
-    private ApplicationEventPublisher eventPublisher;
-
     @GetMapping(value = "/user/{id}")
     public ResponseEntity<User> getPerson(@PathVariable("id") long id) {
         User user = userService.findById(id);
@@ -56,13 +52,12 @@ public class RegistrationController {
         return ResponseEntity.ok().body("User has been deleted successfully.");
     }
 
-    @PostMapping(path = "/registration")
+    @PostMapping("/registration")
     public ResponseEntity<User> insert(@RequestBody @Valid User user, final HttpServletRequest request) {
-        System.out.println("[registration]");
         User userWithId = userService.create(user);
         String token = UUID.randomUUID().toString();
         VerificationToken vToken =  verificationTokenIService.createVerificationTokenForUser(userWithId,token);
-        String confirmationUrl = getAppUrl(request) + "/profile?token=" + vToken.getToken();
+        String confirmationUrl = getAppUrl(request) + "/vacancies?token=" + vToken.getToken();
 
         ApplicationContext context = ApplicationContextProvider.getApplicationContext();
         GenerateLetter letterService = (GenerateLetter) context.getBean("generateService");
@@ -72,7 +67,7 @@ public class RegistrationController {
     }
 
     private String getAppUrl(HttpServletRequest request) {
-        return "http://" + request.getServerName() + ":" + 4200 + request.getContextPath();
+        return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
     }
 
 }
