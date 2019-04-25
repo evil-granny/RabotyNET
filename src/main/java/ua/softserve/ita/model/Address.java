@@ -31,11 +31,11 @@ public class Address implements Serializable {
     @Column(name = "zip_code")
     private Integer zipCode;
 
-    @OneToOne(mappedBy = "address")
-    private Person person;
+//    @OneToOne(mappedBy = "address")
+//    private Person person;
 
-    @OneToOne(mappedBy = "address")
-    private Company company;
+//    @OneToOne(mappedBy = "address")
+//    private Company company;
 
     public long getAddressId() {
         return addressId;

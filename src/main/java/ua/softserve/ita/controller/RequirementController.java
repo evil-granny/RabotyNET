@@ -41,7 +41,6 @@ public class RequirementController {
         Vacancy vacancy = new Vacancy();
         vacancy.setVacancyId(vacancy_id);
         requirement.setVacancy(vacancy);
-
         requirementService.create(requirement);
         return ResponseEntity.ok(requirement);
     }

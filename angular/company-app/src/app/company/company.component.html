@@ -1,0 +1,44 @@
+<div class="col-md-12">
+  <h2>List of Companies</h2>
+
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th class="d-none">Id</th>
+      <th>Name</th>
+      <th>ERDPOU</th>
+      <th>Description</th>
+      <th>Website</th>
+      <th>Logo</th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>Country</th>
+      <th>City</th>
+      <th>ZipCode</th>
+      <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let company of companies">
+      <td class="d-none">{{company.companyId}}</td>
+      <td>{{company.name}}</td>
+      <td>{{company.edrpou}}</td>
+      <td>{{company.description}}</td>
+      <td>{{company.website}}</td>
+      <td>{{company.logo}}</td>
+      <td>{{company.contacts.email}}</td>
+      <td>{{company.contacts.phoneNumber}}</td>
+      <td>{{company.address.country}}</td>
+      <td>{{company.address.city}}</td>
+      <td>{{company.address.zipCode}}</td>
+      <td>
+        <a href="/updateCompany/{{company.companyId}}" class="btn btn-success">Update</a>
+        <button class="btn btn-danger" (click)="deleteById(company)">Delete</button>
+        <div *ngIf="company.approved === false">
+          <button class="btn btn-primary" (click)="approve(company)">Approve</button>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
