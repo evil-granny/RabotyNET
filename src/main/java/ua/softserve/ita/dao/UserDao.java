@@ -5,11 +5,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ua.softserve.ita.model.Role;
 import ua.softserve.ita.model.User;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -19,8 +16,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @Primary
-@Component("userDao")
-@Repository
+@Repository("userDao")
 @Transactional
 public class UserDao implements Dao<User>, UserDetailsDao {
 
@@ -79,13 +75,11 @@ public class UserDao implements Dao<User>, UserDetailsDao {
         return query.getSingleResult();
 
     }
-    public User findByEmail(String email) {
+
+    public List<User> findByEmail(String email) {
         Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery("from User where login = '" + email + "'");
-        if (!query.getResultList().isEmpty()) {
-            return (User) query.getResultList().get(0);
-        } else
-            return null;
+            return query.getResultList();
     }
 
 }

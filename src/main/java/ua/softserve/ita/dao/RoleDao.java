@@ -61,4 +61,10 @@ public class RoleDao implements Dao<Role> {
         session.delete(role);
     }
 
+    public Role findByType(String type) {
+            Session session = sessionFactory.getCurrentSession();
+           // Query query = session.createQuery("from Role where type =:type").setParameter("type",type);
+            //return (Role) query.getSingleResult();
+            return new Role("ROLE_USER");
+    }
 }
