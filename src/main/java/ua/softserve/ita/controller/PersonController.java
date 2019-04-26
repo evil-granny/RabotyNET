@@ -1,10 +1,9 @@
 package ua.softserve.ita.controller;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.model.Person;
-import ua.softserve.ita.model.User;
 import ua.softserve.ita.service.Service;
+import ua.softserve.ita.service.UserIService;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -17,7 +16,7 @@ public class PersonController {
     private Service<Person> personService;
 
     @Resource(name = "userService")
-    private Service<User> userService;
+    private UserIService userService;
 
     @GetMapping(path = {"/person/{id}"})
     public Person findById(@PathVariable("id") long id) {
