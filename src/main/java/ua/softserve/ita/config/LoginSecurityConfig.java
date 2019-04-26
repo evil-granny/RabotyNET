@@ -36,7 +36,7 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/userPage").access("hasRole('ROLE_USER')")
                 .antMatchers("/personInfoCompanyOwner").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_COWNER')")
                 .antMatchers("/homePage", "/personInfoUser").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN') or hasRole('ROLE_COWNER')")
-                .antMatchers("/", "/registration").permitAll()
+                .antMatchers("/").permitAll()
                 .and()
                 .formLogin().loginPage("/loginPage")
                 .failureUrl("/loginPage?error")

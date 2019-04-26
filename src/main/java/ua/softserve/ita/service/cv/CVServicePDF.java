@@ -16,17 +16,14 @@ public class CVServicePDF {
 
         table.setWidthPercentage(60);
 
-       // putInTable("CV", String.valueOf(person.getCvs()));
 
         putInTable("Name", person.getFirstName());
 
         putInTable("Last name", person.getLastName());
 
-        //putInTable("Contact", String.valueOf(person.getContacts()));
 
         putInTable("Date of birth", String.valueOf(person.getBirthday()));
 
-       // putInTable("Address", String.valueOf(person.getAddress()));
 
         return writeToDocument();
     }

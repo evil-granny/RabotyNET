@@ -31,26 +31,6 @@ public class UserService implements Service<User> {
     @Resource(name = "tokenDao")
     private VerificationTokenIDao verificationTokenIDao;
 
-    public static final String TOKEN_INVALID = "invalidToken";
-    public static final String TOKEN_EXPIRED = "expired";
-    public static final String TOKEN_VALID = "valid";
-
-    public static String QR_PREFIX = "https://chart.googleapis.com/chart?chs=200x200&chld=M%%7C0&cht=qr&chl=";
-    public static String APP_NAME = "RabotyNet";
-
-//    @Autowired
-//    PasswordConstraintValidator passwordConstraintValidator;
-//
-//    @Autowired
-//    PasswordMatchesValidator passwordMatchesValidator;
-//
-//    @Autowired
-//    EmailValidator emailValidator;
-//
-//    @Autowired
-//    UserValidator userValidator;
-
-
     @Resource(name = "userDao")
     private UserDao uDao;
 
