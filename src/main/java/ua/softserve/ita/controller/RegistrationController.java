@@ -1,32 +1,28 @@
 package ua.softserve.ita.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ua.softserve.ita.dto.UserDto;
 import ua.softserve.ita.model.User;
-import ua.softserve.ita.model.VerificationToken;
-import ua.softserve.ita.service.ApplicationContextProvider;
-import ua.softserve.ita.service.GenerateLetter;
-import ua.softserve.ita.service.Service;
-import ua.softserve.ita.service.VerificationTokenIService;
+import ua.softserve.ita.registration.OnRegistrationCompleteEvent;
+import ua.softserve.ita.service.UserIService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.UUID;
 
 @CrossOrigin
 @RestController
 public class RegistrationController {
 
     @Resource(name = "userService")
-    private Service<User> userService;
+    private UserIService userService;
 
-    @Resource(name = "tokenService")
-    private VerificationTokenIService verificationTokenIService;
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
     @GetMapping(value = "/user/{id}")
     public ResponseEntity<User> getPerson(@PathVariable("id") long id) {
@@ -53,16 +49,9 @@ public class RegistrationController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<User> insert(@RequestBody @Valid User user, final HttpServletRequest request) {
-        User userWithId = userService.create(user);
-        String token = UUID.randomUUID().toString();
-        VerificationToken vToken =  verificationTokenIService.createVerificationTokenForUser(userWithId,token);
-        String confirmationUrl = getAppUrl(request) + "/vacancies?token=" + vToken.getToken();
-
-        ApplicationContext context = ApplicationContextProvider.getApplicationContext();
-        GenerateLetter letterService = (GenerateLetter) context.getBean("generateService");
-        letterService.sendValidationEmail(user, confirmationUrl);
-
+    public ResponseEntity<User> insert(@RequestBody @Valid UserDto userDto, final HttpServletRequest request) {
+        User user = userService.create(userDto);
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, getAppUrl(request)));
         return ResponseEntity.ok().body(user);
     }
 
