@@ -1,16 +1,11 @@
 package ua.softserve.ita.model;
 
+import lombok.Data;
+
+@Data
 public class SearchCV {
 
-    public String searchText;
+    private String searchText;
 
-    public String searchParameter;
-
-    @Override
-    public String toString() {
-        return "SearchCV{" +
-                "searchText='" + searchText + '\'' +
-                ", searchParameter='" + searchParameter + '\'' +
-                '}';
-    }
+    private String searchParameter;
 }
