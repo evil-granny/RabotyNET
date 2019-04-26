@@ -16,14 +16,8 @@ public class Contacts implements Serializable {
     @Column(name = "email", length = 50)
     private String email;
 
-    @Column(name = "phone_number")
+    @Column(name = "phone_number", length = 20)
     private String phoneNumber;
-
-//    @OneToOne(mappedBy = "contacts")
-//    private Person person;
-
-//    @OneToOne(mappedBy = "contacts")
-//    private Company company;
 
     public Long getContactsId() {
         return contactsId;

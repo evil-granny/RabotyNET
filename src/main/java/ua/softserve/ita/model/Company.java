@@ -16,13 +16,13 @@ public class Company implements Serializable {
     @Column(name = "name", nullable = false, length = 30)
     private String name;
 
-    @Column(name = "edrpou", nullable = false, length = 30)
+    @Column(name = "edrpou", nullable = false, length = 10)
     private String edrpou;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 512)
     private String description;
 
-    @Column(name = "website", length = 50)
+    @Column(name = "website", nullable = false, length = 50)
     private String website;
 
     @OneToOne(cascade = CascadeType.ALL)
