@@ -70,7 +70,16 @@ public class GenerateLetter{
     }
 
     public void sendCompanyApprove(Company company, String linkToAttachment){
+        Letter letter = new Letter();
 
+        letter.seteMail(company.getContacts().getEmail());
+        letter.setSubject("Approving company " + company.getName() + " on website RabotyNET");
+        letter.setWithAttachment(false);
+        letter.setContent("This email has benn specified as " + company.getName() + " company email.\n" +
+                "Company " + company.getName() + " has been approved by RabotyNET admin.\n" +
+                "To complete the approving visit the next link " + linkToAttachment);
+
+        letterService.sendLetter(letter);
     }
 
 

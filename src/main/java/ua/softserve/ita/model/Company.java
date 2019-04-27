@@ -42,6 +42,9 @@ public class Company implements Serializable {
     @Column(name = "approved")
     private boolean approved;
 
+    @Column(name = "email_sent")
+    private boolean emailSent;
+
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private User user;
@@ -118,6 +121,14 @@ public class Company implements Serializable {
         this.approved = approved;
     }
 
+    public boolean isEmailSent() {
+        return emailSent;
+    }
+
+    public void setEmailSent(boolean emailSent) {
+        this.emailSent = emailSent;
+    }
+
     public User getUser() {
           return user;
      }
@@ -147,8 +158,8 @@ public class Company implements Serializable {
                 ", logo='" + logo + '\'' +
                 ", vacancies=" + vacancies +
                 ", approved=" + approved +
+                ", emailSent=" + emailSent +
                 ", user=" + user +
                 '}';
     }
-
 }
