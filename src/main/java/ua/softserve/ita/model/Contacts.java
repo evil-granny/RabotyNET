@@ -19,12 +19,6 @@ public class Contacts implements Serializable {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-//    @OneToOne(mappedBy = "contacts")
-//    private Person person;
-
-//    @OneToOne(mappedBy = "contacts")
-//    private Company company;
-
     public Long getContactsId() {
         return contactsId;
     }
@@ -54,8 +48,8 @@ public class Contacts implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Contacts contacts = (Contacts) o;
-        return Objects.equals(contactsId, contacts.contactsId) &&
-                email.equals(contacts.email) &&
+        return contactsId.equals(contacts.contactsId) &&
+                Objects.equals(email, contacts.email) &&
                 Objects.equals(phoneNumber, contacts.phoneNumber);
     }
 

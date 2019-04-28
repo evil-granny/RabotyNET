@@ -10,7 +10,6 @@ import java.util.List;
 
 @Component("cvService")
 @org.springframework.stereotype.Service
-@Transactional
 public class CVService implements Service<CV> {
 
     @Resource(name = "cvDao")

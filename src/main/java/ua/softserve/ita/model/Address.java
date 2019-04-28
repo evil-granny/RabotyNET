@@ -13,29 +13,23 @@ public class Address implements Serializable {
     @Column(name = "address_id")
     private long addressId;
 
-    @Column(name = "country",nullable = false,length = 20)
+    @Column(name = "country", nullable = false, length = 30)
     private String country;
 
-    @Column(name = "city",nullable = false,length = 15)
+    @Column(name = "city", nullable = false, length = 30)
     private String city;
 
-    @Column(name = "street",length = 30)
+    @Column(name = "street", length = 30)
     private String street;
 
-    @Column(name = "building",length = 5)
+    @Column(name = "building", length = 5)
     private String building;
 
-    @Column(name = "apartment",length = 5)
+    @Column(name = "apartment", length = 5)
     private String apartment;
 
     @Column(name = "zip_code")
     private Integer zipCode;
-
-//    @OneToOne(mappedBy = "address")
-//    private Person person;
-
-//    @OneToOne(mappedBy = "address")
-//    private Company company;
 
     public long getAddressId() {
         return addressId;
