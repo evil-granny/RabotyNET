@@ -27,7 +27,6 @@ public class Vacancy {
     private Long vacancyId;
 
     @NotNull(message = "Position must be not null")
-    @Max(40)
     @NotBlank(message = "Position can't be blank")
     @Column(name = "position", nullable = false, length = 40)
     private String position;
@@ -49,7 +48,6 @@ public class Vacancy {
     @OneToMany(mappedBy = "vacancy", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private Set<Requirement> requirements;
 
-
     @Override
     public String toString() {
         return "Vacancy{" +
@@ -58,7 +56,7 @@ public class Vacancy {
                 ", employment=" + employment +
                 ", salary=" + salary +
                 ", requirement=" + requirements +
-                ", company=" + company +
+                //", company=" + company +
                 '}';
     }
 }

@@ -16,9 +16,7 @@ public class VacancyService implements Service<Vacancy> {
     private VacancyDao vacancyDao;
 
     @Override
-    public Vacancy findById(Long id) {
-        return vacancyDao.findById(id);
-    }
+    public Vacancy findById(Long id) { return vacancyDao.findById(id); }
 
     @Override
     public List<Vacancy> findAll() {
