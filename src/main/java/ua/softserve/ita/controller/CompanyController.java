@@ -36,6 +36,9 @@ public class CompanyController {
 
     @PutMapping("/updateCompany")
     public Company update(@RequestBody Company company) {
+        if(!Company.isValid(company))
+            return null;
+
         return companyService.update(company);
     }
 
@@ -55,6 +58,10 @@ public class CompanyController {
     @PostMapping("/createCompany")
     public Company create(@RequestBody Company company) {
         company.setUser(userService.findById(1L));
+
+        if(!Company.isValid(company))
+            return null;
+
         return companyService.create(company);
     }
 

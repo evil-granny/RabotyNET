@@ -1,6 +1,9 @@
 package ua.softserve.ita.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -14,9 +17,13 @@ public class Contacts implements Serializable {
     private Long contactsId;
 
     @Column(name = "email", length = 50)
+    @Email(message = "email is incorrect")
+    @Size(max = 50, message = "email is too long")
     private String email;
 
     @Column(name = "phone_number", length = 20)
+    @Pattern(regexp = "^[+]*[0-9][0-9][(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$", message = "phone number is incorrect")
+    @Size(max = 20, message = "phone number is too long")
     private String phoneNumber;
 
     public Long getContactsId() {
