@@ -21,7 +21,6 @@ public class Vacancy {
     private Long vacancyId;
 
     @NotNull(message = "Position must be not null")
-    @Max(40)
     @NotBlank(message = "position can't be blank")
     @Column(name = "position", nullable = false, length = 40)
     private String position;

@@ -30,8 +30,8 @@ public class Company implements Serializable {
     @Size(min = 8, max = 10, message = "edrpou length is incorrect")
     private String edrpou;
 
-    @Column(name = "description", length = 512)
-    @Size(max = 512, message = "description is too long")
+    @Column(name = "description", length = 2000)
+    @Size(max = 2000, message = "description is too long")
     private String description;
 
     @Column(name = "website", nullable = false, length = 50)
