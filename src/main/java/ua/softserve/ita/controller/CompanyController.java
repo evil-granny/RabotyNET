@@ -3,7 +3,6 @@ package ua.softserve.ita.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.model.Company;
-import ua.softserve.ita.model.User;
 import ua.softserve.ita.service.GenerateLetter;
 import ua.softserve.ita.service.Service;
 
@@ -17,9 +16,6 @@ public class CompanyController {
 
     @Resource(name = "companyService")
     private Service<Company> companyService;
-
-    @Resource(name = "userService")
-    private Service<User> userService;
 
     @Autowired
     GenerateLetter letterService;
@@ -57,8 +53,6 @@ public class CompanyController {
 
     @PostMapping("/createCompany")
     public Company create(@RequestBody Company company) {
-        company.setUser(userService.findById(1L));
-
         if(!Company.isValid(company))
             return null;
 
