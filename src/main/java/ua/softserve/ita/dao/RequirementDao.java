@@ -4,16 +4,15 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Requirement;
+import ua.softserve.ita.model.Vacancy;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
-import java.util.Objects;
 
 @Repository
 public class RequirementDao implements Dao<Requirement> {
@@ -54,6 +53,11 @@ public class RequirementDao implements Dao<Requirement> {
     @Override
     public Requirement update(Requirement requirement) {
         Session session = sessionFactory.getCurrentSession();
+        Query query = (Query) sessionFactory.createEntityManager().createNativeQuery
+                ("SELECT * FROM vacancy WHERE vacancy_id = (SELECT requirement.vacancy_id FROM requirement WHERE requirement_id = :id)", Vacancy.class);
+        query.setParameter("id", requirement.getRequirementId());
+        Vacancy vacancy = (Vacancy) query.getSingleResult();
+        requirement.setVacancy(vacancy);
         session.update(requirement);
         session.flush();
         return requirement;
