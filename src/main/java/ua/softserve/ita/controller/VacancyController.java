@@ -32,8 +32,8 @@ public class VacancyController {
 
     @GetMapping("/vacancy/{id}")
     public ResponseEntity<Vacancy> getVacancyById(@PathVariable("id") Long id) {
-        Vacancy vacancy = vacancyService.findById(id);
-        return ResponseEntity.ok().body(vacancy);
+            Vacancy vacancy = vacancyService.findById(id);
+            return ResponseEntity.ok().body(vacancy);
     }
 
     @PutMapping("/updateVacancy")

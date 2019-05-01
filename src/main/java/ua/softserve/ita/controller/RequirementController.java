@@ -18,7 +18,6 @@ import java.util.Map;
 public class RequirementController {
 
     @Resource(name = "requirementService")
-    //@Autowired
     private Service<Requirement> requirementService;
 
     @GetMapping("/requirements")
