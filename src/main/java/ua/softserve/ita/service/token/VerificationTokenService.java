@@ -18,9 +18,9 @@ import java.util.stream.Stream;
 @Transactional
 public class VerificationTokenService implements VerificationTokenIService {
 
-    public static final String TOKEN_INVALID = "invalidToken";
-    public static final String TOKEN_EXPIRED = "expired";
-    public static final String TOKEN_VALID = "valid";
+    private static final String TOKEN_INVALID = "invalidToken";
+    private static final String TOKEN_EXPIRED = "expired";
+    private static final String TOKEN_VALID = "valid";
 
     @Resource(name = "tokenDao")
     private VerificationTokenIDao verificationTokenIDao;
