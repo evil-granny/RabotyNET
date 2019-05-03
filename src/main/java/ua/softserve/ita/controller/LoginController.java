@@ -1,5 +1,7 @@
 package ua.softserve.ita.controller;
 
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -8,17 +10,14 @@ import java.security.Principal;
 @RestController
 public class LoginController {
 
-    @RequestMapping("/logedUser")
-    public Principal user(Principal user) {
-        System.out.println("LOGEDUSEWR");
-        System.out.println(user);
-        return user;
-    }
-
-    @PostMapping("/searchCV")
-    public Principal userPost(@RequestBody String user) {
-        System.out.println("LOGEDUSEWR");
-        System.out.println(user);
-        return null;
+    @PostMapping("/loggedUser")
+    public Object userPost() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            String username = ((UserDetails)principal).getUsername();
+        } else {
+            String username = principal.toString();
+        }
+        return principal;
     }
 }

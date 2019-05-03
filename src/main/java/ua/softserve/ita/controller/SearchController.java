@@ -17,10 +17,10 @@ public class SearchController {
     @Resource(name = "searchCVService")
     private SearchCVService searchCVService;
 
-//    @PostMapping("/searchCV")
-//    public List<Person> getResult(@RequestBody SearchCV searchCV) {
-//        LOGGER.severe("Request = " + searchCV.toString());
-//        return searchCVService.getShortCvs(searchCV.searchParameter, searchCV.searchText.trim());
-//    }
+    @PostMapping("/searchCV")
+    public List<Person> getResult(@RequestBody SearchCV searchCV) {
+        LOGGER.severe("Request = " + searchCV.toString());
+        return searchCVService.getShortCvs(searchCV.searchParameter, searchCV.searchText.trim());
+    }
 
 }
