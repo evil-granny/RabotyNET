@@ -2,6 +2,7 @@ package ua.softserve.ita.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ua.softserve.ita.model.Claim;
 import ua.softserve.ita.model.Company;
 import ua.softserve.ita.service.GenerateLetter;
 import ua.softserve.ita.service.Service;
@@ -9,6 +10,7 @@ import ua.softserve.ita.service.Service;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin
 @RestController
@@ -16,6 +18,9 @@ public class CompanyController {
 
     @Resource(name = "companyService")
     private Service<Company> companyService;
+
+    @Resource(name = "claimService")
+    private Service<Claim> claimService;
 
     @Autowired
     GenerateLetter letterService;
@@ -57,6 +62,30 @@ public class CompanyController {
             return null;
 
         return companyService.create(company);
+    }
+
+    @PostMapping("/createClaim")
+    public Company createClaim(@RequestBody Claim claim) {
+
+        Company company = claim.getCompany();
+
+        System.out.println(claim);
+        System.out.println(company);
+
+        claimService.create(claim);
+
+        return companyService.update(company);
+    }
+
+    @GetMapping(value = {"/findClaims/{companyId}"})
+    public List<Claim> findClaims(@PathVariable("companyId") long companyId) {
+        List<Claim> res = claimService.findAll().stream().filter((c) -> c.getCompany().getCompanyId().equals(companyId)).collect(Collectors.toList());
+        return res;
+    }
+
+    @DeleteMapping("/deleteClaim/{id}")
+    public void deleteClaim(@PathVariable("id") long id) {
+        claimService.deleteById(id);
     }
 
     private String getAppUrl(HttpServletRequest request) {
