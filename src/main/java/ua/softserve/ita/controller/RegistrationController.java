@@ -1,5 +1,6 @@
 package ua.softserve.ita.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -7,11 +8,9 @@ import ua.softserve.ita.dto.UserDto;
 import ua.softserve.ita.model.User;
 import ua.softserve.ita.model.VerificationToken;
 import ua.softserve.ita.registration.OnRegistrationCompleteEvent;
+import ua.softserve.ita.service.GenerateLetter;
 import ua.softserve.ita.service.UserIService;
 import ua.softserve.ita.service.token.VerificationTokenIService;
-import ua.softserve.ita.service.GenerateLetter;
-import ua.softserve.ita.service.Service;
-import ua.softserve.ita.service.VerificationTokenIService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -24,8 +23,6 @@ public class RegistrationController {
     @Autowired
     GenerateLetter generateService;
 
-    @Resource(name = "userService")
-    private Service<User> userService;
     private final UserIService userService;
 
     private final ApplicationEventPublisher eventPublisher;
