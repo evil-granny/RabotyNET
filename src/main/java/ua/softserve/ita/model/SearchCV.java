@@ -8,4 +8,6 @@ public class SearchCV {
     private String searchText;
 
     private String searchParameter;
+
+    private String searchDocument;
 }
