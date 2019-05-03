@@ -49,6 +49,11 @@ public class VerificationTokenService implements VerificationTokenIService {
     }
 
     @Override
+    public void deleteByUserId(Long userId) {
+        verificationTokenIDao.deleteByUserId(userId);
+    }
+
+    @Override
     public void deleteAllExpiredSince(Date now) {
         verificationTokenIDao.deleteAllExpiredSince(now);
     }

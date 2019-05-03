@@ -8,25 +8,27 @@ import java.util.stream.Stream;
 
 public interface VerificationTokenIService {
 
-    ua.softserve.ita.model.VerificationToken findByToken(String token);
+    VerificationToken findByToken(String token);
 
-    ua.softserve.ita.model.VerificationToken findByUser(User user);
+    VerificationToken findByUser(User user);
 
-    Stream<ua.softserve.ita.model.VerificationToken> findAllByExpiryDateLessThan(Date now);
+    Stream<VerificationToken> findAllByExpiryDateLessThan(Date now);
 
     void deleteByExpiryDateLessThan(Date now);
 
+    void deleteByUserId(Long userId);
+
     void deleteAllExpiredSince(Date now);
 
-    ua.softserve.ita.model.VerificationToken create(ua.softserve.ita.model.VerificationToken verificationToken);
+    VerificationToken create(VerificationToken verificationToken);
 
-    ua.softserve.ita.model.VerificationToken update(ua.softserve.ita.model.VerificationToken verificationToken);
+    VerificationToken update(VerificationToken verificationToken);
 
-    void delete(ua.softserve.ita.model.VerificationToken verificationToken);
+    void delete(VerificationToken verificationToken);
 
-    ua.softserve.ita.model.VerificationToken createVerificationTokenForUser(final User user, final String token);
+    VerificationToken createVerificationTokenForUser(final User user, final String token);
 
-    public ua.softserve.ita.model.VerificationToken generateNewVerificationToken(final String existingVerificationToken);
+    VerificationToken generateNewVerificationToken(final String existingVerificationToken);
 
     String validateVerificationToken(String token);
 

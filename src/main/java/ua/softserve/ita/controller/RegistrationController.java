@@ -1,15 +1,15 @@
 package ua.softserve.ita.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.dto.UserDto;
 import ua.softserve.ita.model.User;
+import ua.softserve.ita.model.VerificationToken;
 import ua.softserve.ita.registration.OnRegistrationCompleteEvent;
 import ua.softserve.ita.service.UserIService;
+import ua.softserve.ita.service.token.VerificationTokenIService;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
@@ -18,11 +18,17 @@ import java.util.List;
 @RestController
 public class RegistrationController {
 
-    @Resource(name = "userService")
-    private UserIService userService;
+    private final UserIService userService;
 
-    @Autowired
-    private ApplicationEventPublisher eventPublisher;
+    private final ApplicationEventPublisher eventPublisher;
+
+    private final VerificationTokenIService tokenService;
+
+    public RegistrationController(ApplicationEventPublisher eventPublisher, UserIService userService, VerificationTokenIService tokenService) {
+        this.eventPublisher = eventPublisher;
+        this.userService = userService;
+        this.tokenService = tokenService;
+    }
 
     @GetMapping(value = "/user/{id}")
     public ResponseEntity<User> getPerson(@PathVariable("id") long id) {
@@ -38,14 +44,20 @@ public class RegistrationController {
 
     @PutMapping("/updateUser/{id}")
     public ResponseEntity<?> update(@PathVariable("id") long id, @Valid @RequestBody User user) {
-        userService.update(user);
+        User currentUser = userService.findById(id);
+        currentUser.setLogin(user.getLogin());
+        currentUser.setEnabled(user.isEnabled());
+        userService.update(currentUser);
         return ResponseEntity.ok().body("User has been updated successfully.");
     }
 
     @DeleteMapping("/deleteUser/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
+        User user = userService.findById(id);
+        VerificationToken verificationToken = tokenService.findByUser(user);
+        tokenService.delete(verificationToken);
         userService.deleteById(id);
-        return ResponseEntity.ok().body("User has been deleted successfully.");
+        return ResponseEntity.ok().body(user);
     }
 
     @PostMapping("/registration")
