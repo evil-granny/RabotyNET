@@ -48,9 +48,9 @@ public class Person implements Serializable {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private User user;
 
-    /*@JsonIgnore
-    @OneToMany(mappedBy = "person")
-    private List<CV> cvs; */
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "person")
+    private List<CV> cvs;
 
     public User getUser() {
         return user;
@@ -117,15 +117,15 @@ public class Person implements Serializable {
         this.address = address;
     }
 
-    /* public List<CV> getCvs() {
+    public List<CV> getCvs() {
         return cvs;
     }
 
     public void setCvs(List<CV> cvs) {
         this.cvs = cvs;
-    } */
+    }
 
-    /* @Override
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -142,7 +142,7 @@ public class Person implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(userId, firstName, lastName, birthday, contacts, address, cvs);
-    } */
+    }
 
     @Override
     public String toString() {
