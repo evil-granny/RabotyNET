@@ -30,7 +30,7 @@ public class PhotoService {
         }
     }
 
-    public Resource loadPhoto(String fileName) {
+    /* public Resource loadPhoto(String fileName) {
         System.out.println(rootLocation);
         try {
             Path photo = rootLocation.resolve(fileName);
@@ -43,7 +43,7 @@ public class PhotoService {
         }
 
         return null;
-    }
+    } */
 
     public void init() {
         try {
