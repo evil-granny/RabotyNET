@@ -1,5 +1,8 @@
 package ua.softserve.ita.model;
 
+import ua.softserve.ita.model.profile.Address;
+import ua.softserve.ita.model.profile.Contacts;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;

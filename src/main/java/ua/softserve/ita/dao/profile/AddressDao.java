@@ -1,4 +1,4 @@
-package ua.softserve.ita.dao;
+package ua.softserve.ita.dao.profile;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -6,59 +6,62 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
-import ua.softserve.ita.model.Person;
+import ua.softserve.ita.dao.Dao;
+import ua.softserve.ita.model.profile.Address;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
-@Component("personDao")
+@Component("addressDao")
 @Repository
-public class PersonDao implements Dao<Person> {
+public class AddressDao implements Dao<Address> {
 
     @Autowired
     private SessionFactory sessionFactory;
 
     @Override
-    public Person findById(Long id) {
-        return sessionFactory.getCurrentSession().get(Person.class, id);
+    public Address findById(Long id) {
+        return sessionFactory.getCurrentSession().get(Address.class, id);
     }
 
     @Override
-    public List<Person> findAll() {
+    public List<Address> findAll() {
         Session session = sessionFactory.getCurrentSession();
+
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-        CriteriaQuery<Person> criteriaQuery = criteriaBuilder.createQuery(Person.class);
-        Root<Person> root = criteriaQuery.from(Person.class);
+        CriteriaQuery<Address> criteriaQuery = criteriaBuilder.createQuery(Address.class);
+        Root<Address> root = criteriaQuery.from(Address.class);
         criteriaQuery.select(root);
-        Query<Person> query = session.createQuery(criteriaQuery);
+        Query<Address> query = session.createQuery(criteriaQuery);
 
         return query.getResultList();
     }
 
     @Override
-    public Person create(Person person) {
-        sessionFactory.getCurrentSession().save(person);
+    public Address create(Address address) {
+        sessionFactory.getCurrentSession().save(address);
 
-        return person;
+        return address;
     }
 
     @Override
-    public Person update(Person person) {
+    public Address update(Address address) {
         Session session = sessionFactory.getCurrentSession();
 
-        session.update(person);
+        session.update(address);
         session.flush();
 
-        return person;
+        return address;
     }
 
     @Override
     public void deleteById(Long id) {
         Session session = sessionFactory.getCurrentSession();
-        Person person = session.byId(Person.class).load(id);
-        session.delete(person);
+
+        Address address = session.byId(Address.class).load(id);
+        session.delete(address);
     }
 
 }

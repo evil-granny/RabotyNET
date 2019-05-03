@@ -4,12 +4,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import ua.softserve.ita.model.Person;
+import ua.softserve.ita.model.profile.Person;
 import ua.softserve.ita.service.Service;
 import ua.softserve.ita.service.UserDetailsServiceImp;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 @RestController
 public class LoginController {

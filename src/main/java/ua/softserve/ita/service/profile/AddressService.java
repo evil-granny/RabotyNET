@@ -1,9 +1,10 @@
-package ua.softserve.ita.service;
+package ua.softserve.ita.service.profile;
 
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ua.softserve.ita.dao.Dao;
-import ua.softserve.ita.model.Address;
+import ua.softserve.ita.model.profile.Address;
+import ua.softserve.ita.service.Service;
 
 import javax.annotation.Resource;
 import java.util.List;

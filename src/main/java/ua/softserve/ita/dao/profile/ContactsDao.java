@@ -1,12 +1,12 @@
-package ua.softserve.ita.dao;
+package ua.softserve.ita.dao.profile;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
-import ua.softserve.ita.model.Contacts;
+import ua.softserve.ita.dao.Dao;
+import ua.softserve.ita.model.profile.Contacts;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -17,8 +17,11 @@ import java.util.List;
 @Repository
 public class ContactsDao implements Dao<Contacts> {
 
-    @Autowired
-    private SessionFactory sessionFactory;
+    private final SessionFactory sessionFactory;
+
+    public ContactsDao(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
     @Override
     public Contacts findById(Long id) {
@@ -28,6 +31,7 @@ public class ContactsDao implements Dao<Contacts> {
     @Override
     public List<Contacts> findAll() {
         Session session = sessionFactory.getCurrentSession();
+
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<Contacts> criteriaQuery = criteriaBuilder.createQuery(Contacts.class);
         Root<Contacts> root = criteriaQuery.from(Contacts.class);
@@ -57,6 +61,7 @@ public class ContactsDao implements Dao<Contacts> {
     @Override
     public void deleteById(Long id) {
         Session session = sessionFactory.getCurrentSession();
+
         Contacts contacts = session.byId(Contacts.class).load(id);
         session.delete(contacts);
     }

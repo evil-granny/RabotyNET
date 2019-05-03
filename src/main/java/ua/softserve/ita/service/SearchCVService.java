@@ -2,7 +2,7 @@ package ua.softserve.ita.service;
 
 import org.springframework.stereotype.Component;
 import ua.softserve.ita.dao.SearchCVDao;
-import ua.softserve.ita.model.Person;
+import ua.softserve.ita.model.profile.Person;
 
 import javax.annotation.Resource;
 import java.util.List;

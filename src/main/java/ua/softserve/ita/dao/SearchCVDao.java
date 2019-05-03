@@ -4,7 +4,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
-import ua.softserve.ita.model.Person;
+import ua.softserve.ita.model.profile.Person;
 
 import javax.persistence.Query;
 import java.util.List;

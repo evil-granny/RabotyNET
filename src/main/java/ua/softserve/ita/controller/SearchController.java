@@ -1,7 +1,7 @@
 package ua.softserve.ita.controller;
 
 import org.springframework.web.bind.annotation.*;
-import ua.softserve.ita.model.Person;
+import ua.softserve.ita.model.profile.Person;
 import ua.softserve.ita.model.SearchCV;
 import ua.softserve.ita.service.SearchCVService;
 
