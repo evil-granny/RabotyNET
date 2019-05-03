@@ -1,5 +1,6 @@
 package ua.softserve.ita.model;
 
+import lombok.*;
 import ua.softserve.ita.validation.Validator;
 
 import javax.persistence.*;
@@ -9,6 +10,11 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Set;
 
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "company")
 public class Company implements Serializable {
@@ -64,94 +70,6 @@ public class Company implements Serializable {
 
     public static boolean isValid(Company company) {
         return Validator.validate(company) && Validator.validate(company.address) && Validator.validate(company.contact);
-    }
-
-    public Long getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(Long companyId) {
-        this.companyId = companyId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEdrpou() {
-        return edrpou;
-    }
-
-    public void setEdrpou(String edrpou) {
-        this.edrpou = edrpou;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getWebsite() {
-        return website;
-    }
-
-    public void setWebsite(String website) {
-        this.website = website;
-    }
-
-    public Contact getContact() {
-        return contact;
-    }
-
-    public void setContact(Contact contact) {
-        this.contact = contact;
-    }
-
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
-    }
-
-    public String getLogo() {
-        return logo;
-    }
-
-    public void setLogo(String logo) {
-        this.logo = logo;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public User getUser() {
-          return user;
-     }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Set<Vacancy> getVacancies() {
-        return vacancies;
-    }
-
-    public void setVacancies(Set<Vacancy> vacancies) {
-        this.vacancies = vacancies;
     }
 
     @Override

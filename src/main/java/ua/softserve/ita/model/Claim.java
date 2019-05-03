@@ -1,12 +1,18 @@
 package ua.softserve.ita.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "claim")
 public class Claim implements Serializable {
@@ -39,45 +45,5 @@ public class Claim implements Serializable {
                 ", user=" + user +
 //                ", company=" + company +
                 '}';
-    }
-
-    public long getClaimId() {
-        return claimId;
-    }
-
-    public void setClaimId(long claimId) {
-        this.claimId = claimId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Company getCompany() {
-        return company;
-    }
-
-    public void setCompany(Company company) {
-        this.company = company;
     }
 }

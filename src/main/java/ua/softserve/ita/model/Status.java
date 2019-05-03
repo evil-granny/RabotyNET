@@ -1,7 +1,14 @@
 package ua.softserve.ita.model;
 
+import lombok.*;
+
 import javax.persistence.*;
 
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "status")
 public class Status {
@@ -26,33 +33,5 @@ public class Status {
 
     public boolean isReadToDelete() {
         return approved && mailSent && reliable;
-    }
-
-    public void setStatusId(long statusId) {
-        this.statusId = statusId;
-    }
-
-    public boolean isApproved() {
-        return approved;
-    }
-
-    public void setApproved(boolean approved) {
-        this.approved = approved;
-    }
-
-    public boolean isMailSent() {
-        return mailSent;
-    }
-
-    public void setMailSent(boolean mailSent) {
-        this.mailSent = mailSent;
-    }
-
-    public boolean isReliable() {
-        return reliable;
-    }
-
-    public void setReliable(boolean reliable) {
-        this.reliable = reliable;
     }
 }

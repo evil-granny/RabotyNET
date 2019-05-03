@@ -1,10 +1,17 @@
 package ua.softserve.ita.model;
 
+import lombok.*;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Objects;
 
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "address")
 public class Address implements Serializable {
@@ -42,62 +49,6 @@ public class Address implements Serializable {
     @Min(value = 10000, message = "zip code is incorrect")
     @Max(value = 99999, message = "zip code is incorrect")
     private Integer zipCode;
-
-    public long getAddressId() {
-        return addressId;
-    }
-
-    public void setAddressId(long addressId) {
-        this.addressId = addressId;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getStreet() {
-        return street;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public String getBuilding() {
-        return building;
-    }
-
-    public void setBuilding(String building) {
-        this.building = building;
-    }
-
-    public String getApartment() {
-        return apartment;
-    }
-
-    public void setApartment(String apartment) {
-        this.apartment = apartment;
-    }
-
-    public Integer getZipCode() {
-        return zipCode;
-    }
-
-    public void setZipCode(Integer zipCode) {
-        this.zipCode = zipCode;
-    }
 
     @Override
     public boolean equals(Object o) {
