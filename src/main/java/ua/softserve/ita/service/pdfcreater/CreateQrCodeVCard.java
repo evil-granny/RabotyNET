@@ -28,9 +28,9 @@ public class CreateQrCodeVCard {
                 .append(person.getAddress().getZipCode());
        // vCard.setAddress(address.toString());
         //vCard.setCompany("company Inc.");
-        vCard.setPhoneNumber(person.getContacts().getPhoneNumber());
+        vCard.setPhoneNumber(person.getContact().getPhoneNumber());
         //vCard.setTitle("title");
-        vCard.setEmail(person.getContacts().getEmail());
+        vCard.setEmail(person.getContact().getEmail());
         vCard.setWebsite(url);
 
 
