@@ -1,6 +1,5 @@
 package ua.softserve.ita.service;
 
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ua.softserve.ita.dao.Dao;
 import ua.softserve.ita.model.Person;
@@ -8,8 +7,7 @@ import ua.softserve.ita.model.Person;
 import javax.annotation.Resource;
 import java.util.List;
 
-@Component("personService")
-@org.springframework.stereotype.Service
+@org.springframework.stereotype.Service("personService")
 @Transactional
 public class PersonService implements Service<Person> {
 

@@ -38,7 +38,7 @@ public class Person implements Serializable {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "contacts_id", referencedColumnName = "contacts_id", nullable = false)
-    private Contacts contacts;
+    private Contact contact;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false)
@@ -48,9 +48,9 @@ public class Person implements Serializable {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private User user;
 
-    /*@JsonIgnore
-    @OneToMany(mappedBy = "person")
-    private List<CV> cvs; */
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "person")
+    private List<CV> cvs;
 
     public User getUser() {
         return user;
@@ -101,12 +101,12 @@ public class Person implements Serializable {
         this.photo = photo;
     }
 
-    public Contacts getContacts() {
-        return contacts;
+    public Contact getContact() {
+        return contact;
     }
 
-    public void setContacts(Contacts contacts) {
-        this.contacts = contacts;
+    public void setContact(Contact contact) {
+        this.contact = contact;
     }
 
     public Address getAddress() {
@@ -117,15 +117,15 @@ public class Person implements Serializable {
         this.address = address;
     }
 
-    /* public List<CV> getCvs() {
+    public List<CV> getCvs() {
         return cvs;
     }
 
     public void setCvs(List<CV> cvs) {
         this.cvs = cvs;
-    } */
+    }
 
-    /* @Override
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -134,15 +134,15 @@ public class Person implements Serializable {
                 firstName.equals(person.firstName) &&
                 lastName.equals(person.lastName) &&
                 birthday.equals(person.birthday) &&
-                contacts.equals(person.contacts) &&
+                contact.equals(person.contact) &&
                 address.equals(person.address) &&
                 cvs.equals(person.cvs);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, firstName, lastName, birthday, contacts, address, cvs);
-    } */
+        return Objects.hash(userId, firstName, lastName, birthday, contact, address, cvs);
+    }
 
     @Override
     public String toString() {
@@ -151,7 +151,7 @@ public class Person implements Serializable {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", birthday=" + birthday +
-                ", contacts='" + contacts + '\'' +
+                ", contact='" + contact + '\'' +
                 ", address=" + address +
                 '}';
     }

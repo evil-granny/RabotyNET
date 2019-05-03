@@ -81,4 +81,9 @@ public class VerificationTokenDaoImpl implements VerificationTokenIDao {
     public void delete(VerificationToken verificationToken) {
         sessionFactory.getCurrentSession().delete(verificationToken);
     }
+
+    @Override
+    public void deleteByUserId(Long userId) {
+        //
+    }
 }
