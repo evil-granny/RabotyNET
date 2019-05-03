@@ -1,6 +1,5 @@
 package ua.softserve.ita.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import ua.softserve.ita.adapter.LocalDateAdapter;
@@ -11,8 +10,6 @@ import javax.persistence.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "person")
@@ -38,7 +35,7 @@ public class Person implements Serializable {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "contacts_id", referencedColumnName = "contacts_id", nullable = false)
-    private Contacts contacts;
+    private Contact contact;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false)
@@ -101,12 +98,12 @@ public class Person implements Serializable {
         this.photo = photo;
     }
 
-    public Contacts getContacts() {
-        return contacts;
+    public Contact getContact() {
+        return contact;
     }
 
-    public void setContacts(Contacts contacts) {
-        this.contacts = contacts;
+    public void setContact(Contact contact) {
+        this.contact = contact;
     }
 
     public Address getAddress() {
@@ -134,14 +131,14 @@ public class Person implements Serializable {
                 firstName.equals(person.firstName) &&
                 lastName.equals(person.lastName) &&
                 birthday.equals(person.birthday) &&
-                contacts.equals(person.contacts) &&
+                contact.equals(person.contact) &&
                 address.equals(person.address) &&
                 cvs.equals(person.cvs);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, firstName, lastName, birthday, contacts, address, cvs);
+        return Objects.hash(userId, firstName, lastName, birthday, contact, address, cvs);
     } */
 
     @Override
@@ -151,7 +148,7 @@ public class Person implements Serializable {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", birthday=" + birthday +
-                ", contacts='" + contacts + '\'' +
+                ", contact='" + contact + '\'' +
                 ", address=" + address +
                 '}';
     }

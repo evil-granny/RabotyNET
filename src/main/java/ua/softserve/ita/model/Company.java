@@ -42,7 +42,7 @@ public class Company implements Serializable {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "contacts_id", referencedColumnName = "contacts_id", nullable = false)
-    private Contacts contacts;
+    private Contact contact;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false)
@@ -65,7 +65,7 @@ public class Company implements Serializable {
     private User user;
 
     public static boolean isValid(Company company) {
-        return Validator.validate(company) && Validator.validate(company.address) && Validator.validate(company.contacts);
+        return Validator.validate(company) && Validator.validate(company.address) && Validator.validate(company.contact);
     }
 
     public Long getCompanyId() {
@@ -108,12 +108,12 @@ public class Company implements Serializable {
         this.website = website;
     }
 
-    public Contacts getContacts() {
-        return contacts;
+    public Contact getContact() {
+        return contact;
     }
 
-    public void setContacts(Contacts contacts) {
-        this.contacts = contacts;
+    public void setContact(Contact contact) {
+        this.contact = contact;
     }
 
     public Address getAddress() {
@@ -172,7 +172,7 @@ public class Company implements Serializable {
                 ", edrpou='" + edrpou + '\'' +
                 ", description='" + description + '\'' +
                 ", website='" + website + '\'' +
-                ", contacts=" + contacts +
+                ", contact=" + contact +
                 ", address=" + address +
                 ", logo='" + logo + '\'' +
                 ", vacancies=" + vacancies +

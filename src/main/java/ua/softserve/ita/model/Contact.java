@@ -9,7 +9,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "contacts")
-public class Contacts implements Serializable {
+public class Contact implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,10 +54,10 @@ public class Contacts implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Contacts contacts = (Contacts) o;
-        return Objects.equals(contactsId, contacts.contactsId) &&
-                email.equals(contacts.email) &&
-                Objects.equals(phoneNumber, contacts.phoneNumber);
+        Contact contact = (Contact) o;
+        return Objects.equals(contactsId, contact.contactsId) &&
+                email.equals(contact.email) &&
+                Objects.equals(phoneNumber, contact.phoneNumber);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class Contacts implements Serializable {
 
     @Override
     public String toString() {
-        return "Contacts{" +
+        return "Contact{" +
                 "contactsId=" + contactsId +
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +

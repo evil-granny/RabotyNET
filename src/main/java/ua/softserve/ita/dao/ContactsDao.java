@@ -6,7 +6,7 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
-import ua.softserve.ita.model.Contacts;
+import ua.softserve.ita.model.Contact;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -15,50 +15,50 @@ import java.util.List;
 
 @Component("contactsDao")
 @Repository
-public class ContactsDao implements Dao<Contacts> {
+public class ContactsDao implements Dao<Contact> {
 
     @Autowired
     private SessionFactory sessionFactory;
 
     @Override
-    public Contacts findById(Long id) {
-        return sessionFactory.getCurrentSession().get(Contacts.class, id);
+    public Contact findById(Long id) {
+        return sessionFactory.getCurrentSession().get(Contact.class, id);
     }
 
     @Override
-    public List<Contacts> findAll() {
+    public List<Contact> findAll() {
         Session session = sessionFactory.getCurrentSession();
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-        CriteriaQuery<Contacts> criteriaQuery = criteriaBuilder.createQuery(Contacts.class);
-        Root<Contacts> root = criteriaQuery.from(Contacts.class);
+        CriteriaQuery<Contact> criteriaQuery = criteriaBuilder.createQuery(Contact.class);
+        Root<Contact> root = criteriaQuery.from(Contact.class);
         criteriaQuery.select(root);
-        Query<Contacts> query = session.createQuery(criteriaQuery);
+        Query<Contact> query = session.createQuery(criteriaQuery);
 
         return query.getResultList();
     }
 
     @Override
-    public Contacts create(Contacts contacts) {
-        sessionFactory.getCurrentSession().save(contacts);
+    public Contact create(Contact contact) {
+        sessionFactory.getCurrentSession().save(contact);
 
-        return contacts;
+        return contact;
     }
 
     @Override
-    public Contacts update(Contacts contacts) {
+    public Contact update(Contact contact) {
         Session session = sessionFactory.getCurrentSession();
 
-        session.update(contacts);
+        session.update(contact);
         session.flush();
 
-        return contacts;
+        return contact;
     }
 
     @Override
     public void deleteById(Long id) {
         Session session = sessionFactory.getCurrentSession();
-        Contacts contacts = session.byId(Contacts.class).load(id);
-        session.delete(contacts);
+        Contact contact = session.byId(Contact.class).load(id);
+        session.delete(contact);
     }
 
 }

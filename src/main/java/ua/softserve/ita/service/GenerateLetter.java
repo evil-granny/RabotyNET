@@ -29,7 +29,7 @@ public class GenerateLetter{
     public void sendPersonEmail(Person person){
         Letter letter = new Letter();
 
-        letter.seteMail(person.getContacts().getEmail());
+        letter.seteMail(person.getContact().getEmail());
         letter.setSubject("Hello on ");
         String someLink="someLink";
         String content = "some text" + someLink;
@@ -56,7 +56,7 @@ public class GenerateLetter{
     public void sendPersonWithAttachment(Person person, String linkToAttachment){
         Letter letter = new Letter();
 
-        letter.seteMail(person.getContacts().getEmail());
+        letter.seteMail(person.getContact().getEmail());
         letter.setSubject("Hello on ");
         String validationLink="someLink";
         String content = "some text";
@@ -72,7 +72,7 @@ public class GenerateLetter{
     public void sendCompanyApprove(Company company, String linkToAttachment){
         Letter letter = new Letter();
 
-        letter.seteMail(company.getContacts().getEmail());
+        letter.seteMail(company.getContact().getEmail());
         letter.setSubject("Approving company " + company.getName() + " on website RabotyNET");
         letter.setWithAttachment(false);
         letter.setContent("This email has benn specified as " + company.getName() + " company email.\n" +
