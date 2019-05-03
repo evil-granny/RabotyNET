@@ -23,4 +23,6 @@ public interface VerificationTokenIDao {
     VerificationToken update(VerificationToken verificationToken);
 
     public void delete(VerificationToken verificationToken);
+
+    void deleteByUserId(Long userId);
 }

@@ -6,59 +6,58 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
-import ua.softserve.ita.model.Contact;
+import ua.softserve.ita.model.Claim;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
-@Component("contactsDao")
+@Component("claimDao")
 @Repository
-public class ContactsDao implements Dao<Contact> {
+public class ClaimDao implements Dao<Claim> {
 
     @Autowired
     private SessionFactory sessionFactory;
 
     @Override
-    public Contact findById(Long id) {
-        return sessionFactory.getCurrentSession().get(Contact.class, id);
+    public Claim findById(Long id) {
+        return sessionFactory.getCurrentSession().get(Claim.class, id);
     }
 
     @Override
-    public List<Contact> findAll() {
+    public List<Claim> findAll() {
         Session session = sessionFactory.getCurrentSession();
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-        CriteriaQuery<Contact> criteriaQuery = criteriaBuilder.createQuery(Contact.class);
-        Root<Contact> root = criteriaQuery.from(Contact.class);
+        CriteriaQuery<Claim> criteriaQuery = criteriaBuilder.createQuery(Claim.class);
+        Root<Claim> root = criteriaQuery.from(Claim.class);
         criteriaQuery.select(root);
-        Query<Contact> query = session.createQuery(criteriaQuery);
+        Query<Claim> query = session.createQuery(criteriaQuery);
 
         return query.getResultList();
     }
 
     @Override
-    public Contact create(Contact contact) {
-        sessionFactory.getCurrentSession().save(contact);
+    public Claim create(Claim claim) {
+        sessionFactory.getCurrentSession().save(claim);
 
-        return contact;
+        return claim;
     }
 
     @Override
-    public Contact update(Contact contact) {
+    public Claim update(Claim claim) {
         Session session = sessionFactory.getCurrentSession();
 
-        session.update(contact);
+        session.update(claim);
         session.flush();
 
-        return contact;
+        return claim;
     }
 
     @Override
     public void deleteById(Long id) {
         Session session = sessionFactory.getCurrentSession();
-        Contact contact = session.byId(Contact.class).load(id);
-        session.delete(contact);
+        Claim claim = session.byId(Claim.class).load(id);
+        session.delete(claim);
     }
-
 }

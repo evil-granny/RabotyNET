@@ -20,7 +20,7 @@ public class GenerateLetter{
         String validationLink=linkOfValidation;
         String content = "Your mail has been specified for registration on the site of RabotyNET " +
                 "to complete the registration by clicking on the link:" + validationLink +
-                "If you do not know about this, ignore this message;";
+                " If you do not know about this, ignore this message;";
         letter.setContent(content);
         letter.setWithAttachment(false);
 
@@ -31,7 +31,7 @@ public class GenerateLetter{
     public void sendPersonEmail(Person person){
         Letter letter = new Letter();
 
-        letter.setEMail(person.getContacts().getEmail());
+        letter.setEMail(person.getContact().getEmail());
         letter.setSubject("Hello on ");
         String someLink="someLink";
         String content = "some text" + someLink;
@@ -58,7 +58,7 @@ public class GenerateLetter{
     public void sendPersonWithAttachment(Person person, String linkToAttachment){
         Letter letter = new Letter();
 
-        letter.setEMail(person.getContacts().getEmail());
+        letter.setEMail(person.getContact().getEmail());
         letter.setSubject("Hello on ");
         String validationLink="someLink";
         String content = "some text";
@@ -74,7 +74,7 @@ public class GenerateLetter{
     public void sendPersonPDF(Person person, String path){
         Letter letter = new Letter();
 
-        letter.setEMail(person.getContacts().getEmail());
+        letter.setEMail(person.getContact().getEmail());
         letter.setSubject("First PDF");
         String content = "some text";
         letter.setContent(content);
@@ -85,7 +85,16 @@ public class GenerateLetter{
     }
 
     public void sendCompanyApprove(Company company, String linkToAttachment){
+        Letter letter = new Letter();
 
+        letter.setEMail(company.getContact().getEmail());
+        letter.setSubject("Approving company " + company.getName() + " on website RabotyNET");
+        letter.setWithAttachment(false);
+        letter.setContent("This email has benn specified as " + company.getName() + " company email.\n" +
+                "Company " + company.getName() + " has been approved by RabotyNET admin.\n" +
+                "To complete the approving visit the next link " + linkToAttachment);
+
+        letterService.sendLetter(letter);
     }
 
 
