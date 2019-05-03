@@ -54,11 +54,9 @@ public class Company implements Serializable {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "company", cascade = CascadeType.REMOVE)
     private Set<Vacancy> vacancies;
 
-    @Column(name = "approved")
-    private boolean approved;
-
-    @Column(name = "email_sent")
-    private boolean emailSent;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "status_id", referencedColumnName = "status_id")
+    private Status status;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
@@ -132,20 +130,12 @@ public class Company implements Serializable {
         this.logo = logo;
     }
 
-    public boolean isApproved() {
-        return approved;
+    public Status getStatus() {
+        return status;
     }
 
-    public void setApproved(boolean approved) {
-        this.approved = approved;
-    }
-
-    public boolean isEmailSent() {
-        return emailSent;
-    }
-
-    public void setEmailSent(boolean emailSent) {
-        this.emailSent = emailSent;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public User getUser() {
@@ -176,8 +166,6 @@ public class Company implements Serializable {
                 ", address=" + address +
                 ", logo='" + logo + '\'' +
                 ", vacancies=" + vacancies +
-                ", approved=" + approved +
-                ", emailSent=" + emailSent +
                 ", user=" + user +
                 '}';
     }

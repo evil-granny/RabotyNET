@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.model.Claim;
 import ua.softserve.ita.model.Company;
+import ua.softserve.ita.model.Status;
 import ua.softserve.ita.service.GenerateLetter;
 import ua.softserve.ita.service.Service;
 
@@ -21,6 +22,9 @@ public class CompanyController {
 
     @Resource(name = "claimService")
     private Service<Claim> claimService;
+
+    @Resource(name = "statusService")
+    private Service<Status> statusService;
 
     @Autowired
     GenerateLetter letterService;
@@ -40,13 +44,17 @@ public class CompanyController {
         if(!Company.isValid(company))
             return null;
 
+        if(company.getStatus().isReadToDelete()) {
+            statusService.deleteById(company.getStatus().getStatusId());
+        }
+
         return companyService.update(company);
     }
 
     @PutMapping("/approveCompany")
     public Company approve(@RequestBody Company company, final HttpServletRequest request) {
         letterService.sendCompanyApprove(company, getAppUrl(request) + "/approveCompany/" + company.getCompanyId());
-        company.setEmailSent(true);
+        company.getStatus().setMailSent(true);
 
         return companyService.update(company);
     }
@@ -69,9 +77,6 @@ public class CompanyController {
 
         Company company = claim.getCompany();
 
-        System.out.println(claim);
-        System.out.println(company);
-
         claimService.create(claim);
 
         return companyService.update(company);
@@ -86,6 +91,11 @@ public class CompanyController {
     @DeleteMapping("/deleteClaim/{id}")
     public void deleteClaim(@PathVariable("id") long id) {
         claimService.deleteById(id);
+    }
+
+    @PostMapping("/createStatus")
+    public Status createStatus(@RequestBody Status status) {
+        return statusService.create(status);
     }
 
     private String getAppUrl(HttpServletRequest request) {
