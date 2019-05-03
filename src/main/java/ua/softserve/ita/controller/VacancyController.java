@@ -2,6 +2,7 @@ package ua.softserve.ita.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Company;
 import ua.softserve.ita.model.Requirement;
 import ua.softserve.ita.model.Vacancy;
@@ -32,8 +33,12 @@ public class VacancyController {
 
     @GetMapping("/vacancy/{id}")
     public ResponseEntity<Vacancy> getVacancyById(@PathVariable("id") Long id) {
-            Vacancy vacancy = vacancyService.findById(id);
-            return ResponseEntity.ok().body(vacancy);
+        Vacancy vacancy = vacancyService.findById(id);
+        if (vacancy == null) {
+            throw new ResourceNotFoundException("Vacancy not found by id: " + id);
+        }
+        return ResponseEntity.ok().body(vacancy);
+
     }
 
     @PutMapping("/updateVacancy")

@@ -22,15 +22,7 @@ public class RequirementDao implements Dao<Requirement> {
 
     @Override
     public Requirement findById(Long id) {
-        Requirement requirement = sessionFactory.getCurrentSession().get(Requirement.class, id);
-        if (requirement == null) {
-            try {
-                throw new ResourceNotFoundException("Requirement not found for this id: " + id);
-            } catch (ResourceNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-        return requirement;
+        return sessionFactory.getCurrentSession().get(Requirement.class, id);
     }
 
     @Override
@@ -68,11 +60,7 @@ public class RequirementDao implements Dao<Requirement> {
         Session session = sessionFactory.getCurrentSession();
         Requirement requirement = session.byId(Requirement.class).load(id);
         if (requirement == null) {
-            try {
-                throw new ResourceNotFoundException("Requirement not found for this id: " + id);
-            } catch (ResourceNotFoundException e) {
-                e.printStackTrace();
-            }
+            throw new ResourceNotFoundException("Requirement not found by id: " + id);
         }
         session.delete(requirement);
     }

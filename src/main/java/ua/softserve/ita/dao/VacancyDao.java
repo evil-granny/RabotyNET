@@ -4,6 +4,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Company;
@@ -24,15 +25,7 @@ public class VacancyDao implements Dao<Vacancy> {
 
     @Override
     public Vacancy findById(Long id) {
-        Vacancy vacancy = sessionFactory.getCurrentSession().get(Vacancy.class, id);
-        if (vacancy == null) {
-            try {
-                throw new ResourceNotFoundException("Vacancy not found for this id: " + id);
-            } catch (ResourceNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-        return vacancy;
+        return sessionFactory.getCurrentSession().get(Vacancy.class, id);
     }
 
     @Override
@@ -77,11 +70,7 @@ public class VacancyDao implements Dao<Vacancy> {
         Session session = sessionFactory.getCurrentSession();
         Vacancy vacancy = session.byId(Vacancy.class).load(id);
         if (vacancy == null) {
-            try {
-                throw new ResourceNotFoundException("Vacancy not found for this id: " + id);
-            } catch (ResourceNotFoundException e) {
-                e.printStackTrace();
-            }
+            throw new ResourceNotFoundException("Vacancy not found by id: " + id);
         }
         session.delete(vacancy);
     }
