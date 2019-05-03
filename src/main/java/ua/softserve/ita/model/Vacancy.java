@@ -18,8 +18,9 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+//@NamedQuery(name = Vacancy.FIND_BY_COMPANY, query = "select vac from Vacancy vac where vac.company_id = :id")
 public class Vacancy {
-
+    //public static final String FIND_BY_COMPANY = "Vacancy.findByCompany";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "vacancy_id")
