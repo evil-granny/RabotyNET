@@ -4,7 +4,6 @@ package ua.softserve.ita.service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
-import ua.softserve.ita.model.Person;
 
 @Service("letterService")
 public class LetterServiceImpl implements LetterService {

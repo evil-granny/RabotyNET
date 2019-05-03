@@ -1,6 +1,8 @@
 package ua.softserve.ita.model;
 
 import lombok.*;
+import ua.softserve.ita.model.profile.Address;
+import ua.softserve.ita.model.profile.Contact;
 import ua.softserve.ita.validation.Validator;
 
 import javax.persistence.*;
@@ -47,7 +49,7 @@ public class Company implements Serializable {
     private String website;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "contacts_id", referencedColumnName = "contacts_id", nullable = false)
+    @JoinColumn(name = "contact_id", referencedColumnName = "contact_id", nullable = false)
     private Contact contact;
 
     @OneToOne(cascade = CascadeType.ALL)

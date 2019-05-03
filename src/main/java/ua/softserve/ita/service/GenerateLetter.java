@@ -3,11 +3,12 @@ package ua.softserve.ita.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.softserve.ita.model.*;
+import ua.softserve.ita.model.profile.Person;
 
 import java.io.File;
 
 @Service("generateService")
-public class GenerateLetter{
+public class GenerateLetter {
 
     @Autowired
     LetterService letterService;

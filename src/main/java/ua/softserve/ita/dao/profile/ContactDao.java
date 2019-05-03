@@ -1,4 +1,4 @@
-package ua.softserve.ita.dao;
+package ua.softserve.ita.dao.profile;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -6,59 +6,62 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
-import ua.softserve.ita.model.Address;
+import ua.softserve.ita.dao.Dao;
+import ua.softserve.ita.model.profile.Contact;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
-@Component("addressDao")
+@Component("contactDao")
 @Repository
-public class AddressDao implements Dao<Address> {
+public class ContactDao implements Dao<Contact> {
 
     @Autowired
     private SessionFactory sessionFactory;
 
     @Override
-    public Address findById(Long id) {
-        return sessionFactory.getCurrentSession().get(Address.class, id);
+    public Contact findById(Long id) {
+        return sessionFactory.getCurrentSession().get(Contact.class, id);
     }
 
     @Override
-    public List<Address> findAll() {
+    public List<Contact> findAll() {
         Session session = sessionFactory.getCurrentSession();
+
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-        CriteriaQuery<Address> criteriaQuery = criteriaBuilder.createQuery(Address.class);
-        Root<Address> root = criteriaQuery.from(Address.class);
+        CriteriaQuery<Contact> criteriaQuery = criteriaBuilder.createQuery(Contact.class);
+        Root<Contact> root = criteriaQuery.from(Contact.class);
         criteriaQuery.select(root);
-        Query<Address> query = session.createQuery(criteriaQuery);
+        Query<Contact> query = session.createQuery(criteriaQuery);
 
         return query.getResultList();
     }
 
     @Override
-    public Address create(Address address) {
-        sessionFactory.getCurrentSession().save(address);
+    public Contact create(Contact contact) {
+        sessionFactory.getCurrentSession().save(contact);
 
-        return address;
+        return contact;
     }
 
     @Override
-    public Address update(Address address) {
+    public Contact update(Contact contact) {
         Session session = sessionFactory.getCurrentSession();
 
-        session.update(address);
+        session.update(contact);
         session.flush();
 
-        return address;
+        return contact;
     }
 
     @Override
     public void deleteById(Long id) {
         Session session = sessionFactory.getCurrentSession();
-        Address address = session.byId(Address.class).load(id);
-        session.delete(address);
+        Contact contact = session.byId(Contact.class).load(id);
+
+        session.delete(contact);
     }
 
 }

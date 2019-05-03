@@ -1,6 +1,7 @@
 package ua.softserve.ita.model;
 
 import lombok.Data;
+import ua.softserve.ita.model.profile.Person;
 
 import javax.persistence.*;
 import java.io.Serializable;

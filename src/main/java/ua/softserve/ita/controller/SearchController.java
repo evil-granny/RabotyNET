@@ -2,7 +2,7 @@ package ua.softserve.ita.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ua.softserve.ita.model.Person;
+import ua.softserve.ita.model.profile.Person;
 import ua.softserve.ita.model.SearchCV;
 import ua.softserve.ita.service.SearchCVService;
 
