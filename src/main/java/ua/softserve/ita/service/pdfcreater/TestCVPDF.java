@@ -53,10 +53,10 @@ public class TestCVPDF {
                 contentStream.setLeading(15f);
                 contentStream.newLine();
                 contentStream.showText("Phone: ");
-                contentStream.showText(person.getContacts().getPhoneNumber());
+                contentStream.showText(person.getContact().getPhoneNumber());
                 contentStream.newLine();
                 contentStream.showText("Email: ");
-                contentStream.showText(person.getContacts().getEmail());
+                contentStream.showText(person.getContact().getEmail());
                 contentStream.endText();
 
 
