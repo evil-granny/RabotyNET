@@ -1,8 +1,6 @@
 package ua.softserve.ita.controller;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -12,6 +10,15 @@ public class LoginController {
 
     @RequestMapping("/logedUser")
     public Principal user(Principal user) {
+        System.out.println("LOGEDUSEWR");
+        System.out.println(user);
         return user;
+    }
+
+    @PostMapping("/searchCV")
+    public Principal userPost(@RequestBody String user) {
+        System.out.println("LOGEDUSEWR");
+        System.out.println(user);
+        return null;
     }
 }

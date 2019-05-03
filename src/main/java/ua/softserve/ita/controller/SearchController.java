@@ -6,6 +6,7 @@ import ua.softserve.ita.model.SearchCV;
 import ua.softserve.ita.service.SearchCVService;
 
 import javax.annotation.Resource;
+import java.security.Principal;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -16,9 +17,10 @@ public class SearchController {
     @Resource(name = "searchCVService")
     private SearchCVService searchCVService;
 
-    @PostMapping("/searchCV")
-    public List<Person> getResult(@RequestBody SearchCV searchCV) {
-        LOGGER.severe("Request = " + searchCV.toString());
-        return searchCVService.getShortCvs(searchCV.searchParameter, searchCV.searchText.trim());
-    }
+//    @PostMapping("/searchCV")
+//    public List<Person> getResult(@RequestBody SearchCV searchCV) {
+//        LOGGER.severe("Request = " + searchCV.toString());
+//        return searchCVService.getShortCvs(searchCV.searchParameter, searchCV.searchText.trim());
+//    }
+
 }
