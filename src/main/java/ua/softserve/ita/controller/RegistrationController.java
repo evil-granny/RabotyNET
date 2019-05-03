@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.model.User;
 import ua.softserve.ita.model.VerificationToken;
-import ua.softserve.ita.service.ApplicationContextProvider;
 import ua.softserve.ita.service.GenerateLetter;
 import ua.softserve.ita.service.Service;
 import ua.softserve.ita.service.VerificationTokenIService;
@@ -21,6 +20,9 @@ import java.util.UUID;
 @CrossOrigin
 @RestController
 public class RegistrationController {
+
+    @Autowired
+    GenerateLetter generateService;
 
     @Resource(name = "userService")
     private Service<User> userService;
@@ -64,9 +66,7 @@ public class RegistrationController {
         VerificationToken vToken =  verificationTokenIService.createVerificationTokenForUser(userWithId,token);
         String confirmationUrl = getAppUrl(request) + "/profile?token=" + vToken.getToken();
 
-        ApplicationContext context = ApplicationContextProvider.getApplicationContext();
-        GenerateLetter letterService = (GenerateLetter) context.getBean("generateService");
-        letterService.sendValidationEmail(user, confirmationUrl);
+        generateService.sendValidationEmail(user, confirmationUrl);
 
         return ResponseEntity.ok().body(user);
     }
