@@ -18,7 +18,7 @@ public class GenerateLetter{
         String validationLink=linkOfValidation;
         String content = "Your mail has been specified for registration on the site of RabotyNET " +
                 "to complete the registration by clicking on the link:" + validationLink +
-                "If you do not know about this, ignore this message;";
+                " If you do not know about this, ignore this message;";
         letter.setContent(content);
         letter.setWithAttachment(false);
 

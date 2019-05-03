@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.model.Company;
 import ua.softserve.ita.model.User;
 import ua.softserve.ita.service.Service;
+import ua.softserve.ita.service.UserIService;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -16,7 +17,7 @@ public class CompanyController {
     private Service<Company> companyService;
 
     @Resource(name = "userService")
-    private Service<User> userService;
+    private UserIService userService;
 
     @GetMapping(value = "/company/{id}")
     public Company getCompany(@PathVariable("id") long id) {

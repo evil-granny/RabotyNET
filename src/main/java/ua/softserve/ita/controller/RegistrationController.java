@@ -1,36 +1,34 @@
 package ua.softserve.ita.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ua.softserve.ita.dto.UserDto;
 import ua.softserve.ita.model.User;
 import ua.softserve.ita.model.VerificationToken;
-import ua.softserve.ita.service.ApplicationContextProvider;
-import ua.softserve.ita.service.GenerateLetter;
-import ua.softserve.ita.service.Service;
-import ua.softserve.ita.service.VerificationTokenIService;
+import ua.softserve.ita.registration.OnRegistrationCompleteEvent;
+import ua.softserve.ita.service.UserIService;
+import ua.softserve.ita.service.token.VerificationTokenIService;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.UUID;
 
 @CrossOrigin
 @RestController
 public class RegistrationController {
 
-    @Resource(name = "userService")
-    private Service<User> userService;
+    private final UserIService userService;
 
-    @Resource(name = "tokenService")
-    private VerificationTokenIService verificationTokenIService;
+    private final ApplicationEventPublisher eventPublisher;
 
+    private final VerificationTokenIService tokenService;
 
-    @Autowired
-    private ApplicationEventPublisher eventPublisher;
+    public RegistrationController(ApplicationEventPublisher eventPublisher, UserIService userService, VerificationTokenIService tokenService) {
+        this.eventPublisher = eventPublisher;
+        this.userService = userService;
+        this.tokenService = tokenService;
+    }
 
     @GetMapping(value = "/user/{id}")
     public ResponseEntity<User> getPerson(@PathVariable("id") long id) {
@@ -46,33 +44,31 @@ public class RegistrationController {
 
     @PutMapping("/updateUser/{id}")
     public ResponseEntity<?> update(@PathVariable("id") long id, @Valid @RequestBody User user) {
-        userService.update(user);
+        User currentUser = userService.findById(id);
+        currentUser.setLogin(user.getLogin());
+        currentUser.setEnabled(user.isEnabled());
+        userService.update(currentUser);
         return ResponseEntity.ok().body("User has been updated successfully.");
     }
 
     @DeleteMapping("/deleteUser/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
+        User user = userService.findById(id);
+        VerificationToken verificationToken = tokenService.findByUser(user);
+        tokenService.delete(verificationToken);
         userService.deleteById(id);
-        return ResponseEntity.ok().body("User has been deleted successfully.");
+        return ResponseEntity.ok().body(user);
     }
 
-    @PostMapping(path = "/registration")
-    public ResponseEntity<User> insert(@RequestBody @Valid User user, final HttpServletRequest request) {
-        System.out.println("[registration]");
-        User userWithId = userService.create(user);
-        String token = UUID.randomUUID().toString();
-        VerificationToken vToken =  verificationTokenIService.createVerificationTokenForUser(userWithId,token);
-        String confirmationUrl = getAppUrl(request) + "/profile?token=" + vToken.getToken();
-
-        ApplicationContext context = ApplicationContextProvider.getApplicationContext();
-        GenerateLetter letterService = (GenerateLetter) context.getBean("generateService");
-        letterService.sendValidationEmail(user, confirmationUrl);
-
+    @PostMapping("/registration")
+    public ResponseEntity<User> insert(@RequestBody @Valid UserDto userDto, final HttpServletRequest request) {
+        User user = userService.create(userDto);
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, getAppUrl(request)));
         return ResponseEntity.ok().body(user);
     }
 
     private String getAppUrl(HttpServletRequest request) {
-        return "http://" + request.getServerName() + ":" + 4200 + request.getContextPath();
+        return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
     }
 
 }

@@ -1,4 +1,4 @@
-package ua.softserve.ita.service;
+package ua.softserve.ita.service.token;
 
 import ua.softserve.ita.model.User;
 import ua.softserve.ita.model.VerificationToken;
@@ -16,6 +16,8 @@ public interface VerificationTokenIService {
 
     void deleteByExpiryDateLessThan(Date now);
 
+    void deleteByUserId(Long userId);
+
     void deleteAllExpiredSince(Date now);
 
     VerificationToken create(VerificationToken verificationToken);
@@ -26,7 +28,7 @@ public interface VerificationTokenIService {
 
     VerificationToken createVerificationTokenForUser(final User user, final String token);
 
-    public VerificationToken generateNewVerificationToken(final String existingVerificationToken);
+    VerificationToken generateNewVerificationToken(final String existingVerificationToken);
 
     String validateVerificationToken(String token);
 

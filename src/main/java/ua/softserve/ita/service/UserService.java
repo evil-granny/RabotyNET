@@ -1,38 +1,36 @@
 package ua.softserve.ita.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ua.softserve.ita.dao.Dao;
+import ua.softserve.ita.dao.RoleDao;
 import ua.softserve.ita.dao.UserDao;
-import ua.softserve.ita.dao.VerificationTokenIDao;
-import ua.softserve.ita.exception.PasswordNotMatchException;
+import ua.softserve.ita.dto.UserDto;
 import ua.softserve.ita.exception.UserAlreadyExistException;
 import ua.softserve.ita.model.User;
 
 import javax.annotation.Resource;
-import javax.validation.Valid;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.List;
 
-@Component("userService")
-@org.springframework.stereotype.Service
+@org.springframework.stereotype.Service("userService")
 @Transactional
-public class UserService implements Service<User> {
+public class UserService implements UserIService {
 
     @Resource(name = "userDao")
     private Dao<User> userDao;
 
-    @Autowired
-    BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Resource(name = "roleDao")
+    private RoleDao roleDao;
 
-    @Resource(name = "tokenDao")
-    private VerificationTokenIDao verificationTokenIDao;
+    private final
+    BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Resource(name = "userDao")
     private UserDao uDao;
+
+    public UserService(BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
 
     @Override
     public User findById(Long id) {
@@ -45,21 +43,15 @@ public class UserService implements Service<User> {
     }
 
     @Override
-    public User create(@Valid User user) {
-        if (emailExists(user.getLogin())) {
-            throw new UserAlreadyExistException("There is an account with that email address: " + user.getLogin());
+    public User create(UserDto userDto) {
+        if (emailExists(userDto.getLogin())) {
+            throw new UserAlreadyExistException("There is an account with that email address: " + userDto.getLogin());
         }
-        final User newUser = new User();
-        newUser.setLogin(user.getLogin());
-
-        if (user.getPassword().equals(user.getMatchingPassword())) {
-            newUser.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        }else{
-            throw new PasswordNotMatchException("Passwords don't match");
-        }
-        return userDao.create(newUser);
+        final User user = new User();
+        user.setLogin(userDto.getLogin());
+        user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+        return userDao.create(user);
     }
-
 
     @Override
     public User update(User user) {
@@ -71,12 +63,12 @@ public class UserService implements Service<User> {
         userDao.deleteById(id);
     }
 
-    public User findByEmail(String email) {
+    public List<User> findByEmail(String email) {
         return uDao.findByEmail(email);
     }
 
     private boolean emailExists(final String email) {
-        return findByEmail(email) != null;
+        return !findByEmail(email).isEmpty();
     }
 
 }
