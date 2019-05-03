@@ -1,5 +1,6 @@
 package ua.softserve.ita.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import ua.softserve.ita.adapter.LocalDateAdapter;
@@ -10,7 +11,7 @@ import javax.persistence.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -21,37 +22,49 @@ public class Person implements Serializable {
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "first_name", length = 20)
+    @Column(name = "first_name", nullable = false, length = 20)
     private String firstName;
 
-    @Column(name = "last_name", length = 20)
+    @Column(name = "last_name", nullable = false, length = 20)
     private String lastName;
 
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
-    @Column(name = "birthday")
+    @Column(name = "birthday", nullable = false)
     private LocalDate birthday;
 
     @Column(name = "photo")
     private byte[] photo;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "contacts_id", referencedColumnName = "contacts_id")
-    private Contacts contacts;
+    @JoinColumn(name = "contacts_id", referencedColumnName = "contacts_id", nullable = false)
+    private Contact contact;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id", referencedColumnName = "address_id")
+    @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false)
     private Address address;
 
     @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private User user;
 
-    public Long getUserId() {
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "person")
+    private List<CV> cvs;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 
@@ -88,12 +101,12 @@ public class Person implements Serializable {
         this.photo = photo;
     }
 
-    public Contacts getContacts() {
-        return contacts;
+    public Contact getContact() {
+        return contact;
     }
 
-    public void setContacts(Contacts contacts) {
-        this.contacts = contacts;
+    public void setContact(Contact contact) {
+        this.contact = contact;
     }
 
     public Address getAddress() {
@@ -104,12 +117,12 @@ public class Person implements Serializable {
         this.address = address;
     }
 
-    public User getUser() {
-        return user;
+    public List<CV> getCvs() {
+        return cvs;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setCvs(List<CV> cvs) {
+        this.cvs = cvs;
     }
 
     @Override
@@ -117,21 +130,18 @@ public class Person implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Person person = (Person) o;
-        return userId.equals(person.userId) &&
-                Objects.equals(firstName, person.firstName) &&
-                Objects.equals(lastName, person.lastName) &&
-                Objects.equals(birthday, person.birthday) &&
-                Arrays.equals(photo, person.photo) &&
-                Objects.equals(contacts, person.contacts) &&
-                Objects.equals(address, person.address) &&
-                Objects.equals(user, person.user);
+        return userId == person.userId &&
+                firstName.equals(person.firstName) &&
+                lastName.equals(person.lastName) &&
+                birthday.equals(person.birthday) &&
+                contact.equals(person.contact) &&
+                address.equals(person.address) &&
+                cvs.equals(person.cvs);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(userId, firstName, lastName, birthday, contacts, address, user);
-        result = 31 * result + Arrays.hashCode(photo);
-        return result;
+        return Objects.hash(userId, firstName, lastName, birthday, contact, address, cvs);
     }
 
     @Override
@@ -141,10 +151,8 @@ public class Person implements Serializable {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", birthday=" + birthday +
-                ", photo=" + Arrays.toString(photo) +
-                ", contacts=" + contacts +
+                ", contact='" + contact + '\'' +
                 ", address=" + address +
-                ", user=" + user +
                 '}';
     }
 

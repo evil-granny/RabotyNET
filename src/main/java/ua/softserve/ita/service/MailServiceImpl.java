@@ -45,7 +45,7 @@ public class MailServiceImpl implements MailService {
 
 				helper.setSubject(letter.getSubject());
 				helper.setFrom("rabotynetch082@gmail.com");
-				helper.setTo(letter.geteMail());
+				helper.setTo(letter.getEMail());
 				String content = letter.getContent();
 
 				helper.setText("<html><body><p>" + content + "</p><img src='cid:company-logo'></body></html>", true);
@@ -65,12 +65,10 @@ public class MailServiceImpl implements MailService {
 
 				helper.setSubject(letter.getSubject());
 				helper.setFrom("rabotynetch082@gmail.com");
-				helper.setTo(letter.geteMail());
+				helper.setTo(letter.getEMail());
 				helper.setText(letter.getContent());
-
 				FileSystemResource file = new FileSystemResource(new File(letter.getLinkForAttachment()));
-				helper.addAttachment("attacment",file);
-
+				helper.addAttachment("attacment", file);
 			}
 		};
 		return preparator;

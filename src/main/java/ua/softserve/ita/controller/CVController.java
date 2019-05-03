@@ -13,7 +13,7 @@ import java.util.Set;
 @CrossOrigin
 @RestController
 public class CVController {
-    
+
     @Resource(name = "cvService")
     private Service<CV> cvService;
 
@@ -56,4 +56,3 @@ public class CVController {
     }
 
 }
-

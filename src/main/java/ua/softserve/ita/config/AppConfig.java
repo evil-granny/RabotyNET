@@ -21,6 +21,7 @@ import java.util.Properties;
 @Configuration
 
 @PropertySource("classpath:database.properties")
+@PropertySource("classpath:mail.properties")
 @EnableTransactionManagement(proxyTargetClass = true)
 
 @ComponentScan(basePackages = "ua.softserve.ita")
@@ -64,6 +65,7 @@ public class AppConfig {
         return transactionManager;
     }
 
+
     @Bean
     public JavaMailSender getMailSender(){
 
@@ -71,6 +73,7 @@ public class AppConfig {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 
         mailSender.setHost(environment.getProperty("mail.host"));
+
         mailSender.setPort(Integer.parseInt(environment.getProperty("mail.port")));
         mailSender.setUsername(environment.getProperty("mail.username"));
         mailSender.setPassword(environment.getProperty("mail.password"));
