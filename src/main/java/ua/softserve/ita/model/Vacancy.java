@@ -57,7 +57,6 @@ public class Vacancy {
                 ", employment=" + employment +
                 ", salary=" + salary +
                 ", requirement=" + requirements +
-                //", company=" + company +
                 '}';
     }
 }

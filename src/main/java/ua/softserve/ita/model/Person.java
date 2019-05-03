@@ -38,7 +38,7 @@ public class Person implements Serializable {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "contacts_id", referencedColumnName = "contacts_id", nullable = false)
-    private Contacts contacts;
+    private Contact contact;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false)
@@ -97,12 +97,12 @@ public class Person implements Serializable {
         this.photo = photo;
     }
 
-    public Contacts getContacts() {
-        return contacts;
+    public Contact getContact() {
+        return contact;
     }
 
-    public void setContacts(Contacts contacts) {
-        this.contacts = contacts;
+    public void setContact(Contact contact) {
+        this.contact = contact;
     }
 
     public Address getAddress() {
@@ -120,7 +120,7 @@ public class Person implements Serializable {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", birthday=" + birthday +
-                ", contacts='" + contacts + '\'' +
+                ", contact='" + contact + '\'' +
                 ", address=" + address +
                 '}';
     }

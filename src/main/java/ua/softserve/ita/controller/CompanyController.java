@@ -1,13 +1,17 @@
 package ua.softserve.ita.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ua.softserve.ita.model.Claim;
 import ua.softserve.ita.model.Company;
-import ua.softserve.ita.model.User;
+import ua.softserve.ita.model.Status;
+import ua.softserve.ita.service.GenerateLetter;
 import ua.softserve.ita.service.Service;
-import ua.softserve.ita.service.UserIService;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin
 @RestController
@@ -16,8 +20,14 @@ public class CompanyController {
     @Resource(name = "companyService")
     private Service<Company> companyService;
 
-    @Resource(name = "userService")
-    private UserIService userService;
+    @Resource(name = "claimService")
+    private Service<Claim> claimService;
+
+    @Resource(name = "statusService")
+    private Service<Status> statusService;
+
+    @Autowired
+    GenerateLetter letterService;
 
     @GetMapping(value = "/company/{id}")
     public Company getCompany(@PathVariable("id") long id) {
@@ -31,6 +41,21 @@ public class CompanyController {
 
     @PutMapping("/updateCompany")
     public Company update(@RequestBody Company company) {
+        if(!Company.isValid(company))
+            return null;
+
+        if(company.getStatus().isReadToDelete()) {
+            statusService.deleteById(company.getStatus().getStatusId());
+        }
+
+        return companyService.update(company);
+    }
+
+    @PutMapping("/approveCompany")
+    public Company approve(@RequestBody Company company, final HttpServletRequest request) {
+        letterService.sendCompanyApprove(company, getAppUrl(request) + "/approveCompany/" + company.getCompanyId());
+        company.getStatus().setMailSent(true);
+
         return companyService.update(company);
     }
 
@@ -41,9 +66,40 @@ public class CompanyController {
 
     @PostMapping("/createCompany")
     public Company create(@RequestBody Company company) {
-        company.setUser(userService.findById(1L));
-        System.out.println(company);
+        if(!Company.isValid(company))
+            return null;
+
         return companyService.create(company);
+    }
+
+    @PostMapping("/createClaim")
+    public Company createClaim(@RequestBody Claim claim) {
+
+        Company company = claim.getCompany();
+
+        claimService.create(claim);
+
+        return companyService.update(company);
+    }
+
+    @GetMapping(value = {"/findClaims/{companyId}"})
+    public List<Claim> findClaims(@PathVariable("companyId") long companyId) {
+        List<Claim> res = claimService.findAll().stream().filter((c) -> c.getCompany().getCompanyId().equals(companyId)).collect(Collectors.toList());
+        return res;
+    }
+
+    @DeleteMapping("/deleteClaim/{id}")
+    public void deleteClaim(@PathVariable("id") long id) {
+        claimService.deleteById(id);
+    }
+
+    @PostMapping("/createStatus")
+    public Status createStatus(@RequestBody Status status) {
+        return statusService.create(status);
+    }
+
+    private String getAppUrl(HttpServletRequest request) {
+        return "http://" + request.getServerName() + ":" + 4200 + request.getContextPath();
     }
 
 }
