@@ -8,11 +8,10 @@ import ua.softserve.ita.dto.UserDto;
 import ua.softserve.ita.model.User;
 import ua.softserve.ita.model.VerificationToken;
 import ua.softserve.ita.registration.OnRegistrationCompleteEvent;
+import ua.softserve.ita.service.GenerateLetter;
 import ua.softserve.ita.service.UserIService;
 import ua.softserve.ita.service.token.VerificationTokenIService;
-import ua.softserve.ita.service.GenerateLetter;
-import ua.softserve.ita.service.Service;
-import javax.annotation.Resource;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
@@ -23,7 +22,6 @@ public class RegistrationController {
 
     @Autowired
     GenerateLetter generateService;
-
 
     private final UserIService userService;
 

@@ -10,7 +10,10 @@ import ua.softserve.ita.service.UserIService;
 import ua.softserve.ita.service.pdfcreater.TestCVPDF;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @CrossOrigin
 @RestController
