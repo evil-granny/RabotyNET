@@ -1,11 +1,11 @@
 package ua.softserve.ita.service.impl;
 
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.softserve.ita.dao.CompanyDao;
 import ua.softserve.ita.dao.RequirementDao;
 import ua.softserve.ita.dao.VacancyDao;
+import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Company;
 import ua.softserve.ita.model.Requirement;
 import ua.softserve.ita.model.Vacancy;
@@ -20,18 +20,15 @@ import java.util.Set;
 @Transactional
 public class VacancyServiceImpl implements VacancyService {
 
-    private final SessionFactory sessionFactory;
     private final VacancyDao vacancyDao;
     private final RequirementDao requirementDao;
     private final CompanyDao companyDao;
-
     //private final VacancyMapper mapper;
 
     @Autowired
-    public VacancyServiceImpl(VacancyDao vacancyDao, RequirementDao requirementDao, SessionFactory sessionFactory, CompanyDao companyDao) {
+    public VacancyServiceImpl(VacancyDao vacancyDao, RequirementDao requirementDao, CompanyDao companyDao) {
         this.vacancyDao = vacancyDao;
         this.requirementDao = requirementDao;
-        this.sessionFactory = sessionFactory;
         this.companyDao = companyDao;
     }
 
@@ -57,8 +54,8 @@ public class VacancyServiceImpl implements VacancyService {
 
     @Override
     public Vacancy update(Vacancy vacancy) {
-        Company company = new Company();
-        company.setCompanyId(1L);//temporary
+        Company company = companyDao.findByVacancyId(vacancy.getVacancyId())
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Company by vacancy id: %d not found", vacancy.getVacancyId())));
         vacancy.setCompany(company);
 
         Set<Requirement> requirements = vacancy.getRequirements();
