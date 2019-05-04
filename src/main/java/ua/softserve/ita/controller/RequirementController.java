@@ -6,9 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Requirement;
 import ua.softserve.ita.model.Vacancy;
-import ua.softserve.ita.service.Service;
+import ua.softserve.ita.service.RequirementService;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -19,8 +18,12 @@ import java.util.Map;
 @RequestMapping("/requirements")
 public class RequirementController {
 
-    @Resource(name = "requirementService")
-    private Service<Requirement> requirementService;
+    private final RequirementService requirementService;
+
+    @Autowired
+    public RequirementController(RequirementService requirementService) {
+        this.requirementService = requirementService;
+    }
 
     @GetMapping
     public ResponseEntity<List<Requirement>> getAllVacancies() {
@@ -30,7 +33,7 @@ public class RequirementController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Requirement> getVacancyById(@PathVariable("id") Long id) {
-        Requirement requirement = requirementService.findById(id);
+        Requirement requirement = requirementService.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("Requirement with id: %d not found", id)));
         if (requirement == null) {
             throw new ResourceNotFoundException("Requirement not found by id: " + id);
         }
@@ -48,7 +51,7 @@ public class RequirementController {
         Vacancy vacancy = new Vacancy();
         vacancy.setVacancyId(vacancy_id);
         requirement.setVacancy(vacancy);
-        requirementService.create(requirement);
+        requirementService.save(requirement);
         return ResponseEntity.ok(requirement);
     }
 

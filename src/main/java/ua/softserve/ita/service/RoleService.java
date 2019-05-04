@@ -1,44 +1,18 @@
 package ua.softserve.ita.service;
 
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-import ua.softserve.ita.dao.Dao;
 import ua.softserve.ita.model.Role;
 
-import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 
-@Component("roleService")
-@org.springframework.stereotype.Service
-@Transactional
-public class RoleService implements Service<Role> {
+public interface RoleService {
+    Optional<Role> findById(Long id);
 
-    @Resource(name = "roleDao")
-    private Dao<Role> roleDao;
+    List<Role> findAll();
 
-    @Override
-    public Role findById(Long id) {
-        return roleDao.findById(id);
-    }
+    Role save(Role role);
 
-    @Override
-    public List<Role> findAll() {
-        return roleDao.findAll();
-    }
+    Role update(Role role);
 
-    @Override
-    public Role create(Role role) {
-        return roleDao.create(role);
-    }
-
-    @Override
-    public Role update(Role role) {
-        return roleDao.update(role);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        roleDao.deleteById(id);
-    }
-
+    void deleteById(Long id);
 }

@@ -1,43 +1,18 @@
 package ua.softserve.ita.service;
 
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-import ua.softserve.ita.dao.Dao;
 import ua.softserve.ita.model.Status;
 
-import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 
-@Component("statusService")
-@org.springframework.stereotype.Service
-@Transactional
-public class StatusService implements Service<Status> {
+public interface StatusService {
+    Optional<Status> findById(Long id);
 
-    @Resource(name = "statusDao")
-    private Dao<Status> statusDao;
+    List<Status> findAll();
 
-    @Override
-    public Status findById(Long id) {
-        return statusDao.findById(id);
-    }
+    Status save(Status status);
 
-    @Override
-    public List<Status> findAll() {
-        return statusDao.findAll();
-    }
+    Status update(Status status);
 
-    @Override
-    public Status create(Status status) {
-        return statusDao.create(status);
-    }
-
-    @Override
-    public Status update(Status status) {
-        return statusDao.update(status);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        statusDao.deleteById(id);
-    }
+    void deleteById(Long id);
 }

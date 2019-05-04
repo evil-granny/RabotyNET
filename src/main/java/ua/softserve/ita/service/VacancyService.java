@@ -1,41 +1,21 @@
 package ua.softserve.ita.service;
 
-import org.springframework.transaction.annotation.Transactional;
-import ua.softserve.ita.dao.VacancyDao;
 import ua.softserve.ita.model.Vacancy;
 
-import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 
+public interface VacancyService {
 
-@org.springframework.stereotype.Service
-@Transactional
-public class VacancyService implements Service<Vacancy> {
+    Optional<Vacancy> findById(Long id);
 
-    @Resource(name = "vacancyDao")
-    private VacancyDao vacancyDao;
+    List<Vacancy> findAll();
 
-    @Override
-    public Vacancy findById(Long id) { return vacancyDao.findById(id); }
+    List<Vacancy> findAllByCompanyId(Long companyId);
 
-    @Override
-    public List<Vacancy> findAll() {
-        return vacancyDao.findAll();
-    }
+    Vacancy save(Vacancy vacancy);
 
-    @Override
-    public Vacancy create(Vacancy vacancy) {
-        return vacancyDao.create(vacancy);
-    }
+    Vacancy update(Vacancy vacancy);
 
-    @Override
-    public Vacancy update(Vacancy vacancy) {
-        return vacancyDao.update(vacancy);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        vacancyDao.deleteById(id);
-    }
-
+    void deleteById(Long id);
 }
