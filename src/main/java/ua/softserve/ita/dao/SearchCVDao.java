@@ -75,9 +75,9 @@ public class SearchCVDao {
 
     public List<Person> searchByAll(String searchText) {
         List<Person> emptyList = new ArrayList<>();
-        Person person = new Person();
-        person.setFirstName("No matching");
-        emptyList.add(person);
+//        Person person = new Person();
+//        person.setFirstName("No matching");
+//        emptyList.add(person);
         return emptyList;
     }
 

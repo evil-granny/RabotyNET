@@ -1,9 +1,12 @@
 package ua.softserve.ita.model;
 
+import lombok.Builder;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
+@Builder
 @Entity
 @Table(name = "education")
 public class Education implements Serializable {

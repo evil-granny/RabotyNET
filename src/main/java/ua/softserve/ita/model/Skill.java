@@ -1,6 +1,7 @@
 package ua.softserve.ita.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Builder;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -9,6 +10,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
+@Builder
 @Entity
 @Table(name = "skill")
 public class Skill implements Serializable {

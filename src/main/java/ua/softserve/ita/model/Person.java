@@ -3,6 +3,7 @@ package ua.softserve.ita.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import lombok.Builder;
 import ua.softserve.ita.adapter.LocalDateAdapter;
 import ua.softserve.ita.adapter.LocalDateDeserializer;
 import ua.softserve.ita.adapter.LocalDateSerializer;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
+@Builder
 @Entity
 @Table(name = "person")
 public class Person implements Serializable {
