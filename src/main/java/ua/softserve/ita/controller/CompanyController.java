@@ -1,36 +1,37 @@
 package ua.softserve.ita.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.model.Claim;
 import ua.softserve.ita.model.Company;
 import ua.softserve.ita.model.Status;
-import ua.softserve.ita.service.GenerateLetter;
-import ua.softserve.ita.service.Service;
+import ua.softserve.ita.service.ClaimService;
+import ua.softserve.ita.service.CompanyService;
+import ua.softserve.ita.service.StatusService;
+import ua.softserve.ita.service.letter.GenerateLetter;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @CrossOrigin
 @RestController
 public class CompanyController {
 
-    @Resource(name = "companyService")
-    private Service<Company> companyService;
+    private final CompanyService companyService;
+    private final ClaimService claimService;
+    private final StatusService statusService;
+    private final GenerateLetter letterService;
 
-    @Resource(name = "claimService")
-    private Service<Claim> claimService;
-
-    @Resource(name = "statusService")
-    private Service<Status> statusService;
-
-    @Autowired
-    GenerateLetter letterService;
+    public CompanyController(CompanyService companyService, ClaimService claimService, StatusService statusService, GenerateLetter letterService) {
+        this.companyService = companyService;
+        this.claimService = claimService;
+        this.statusService = statusService;
+        this.letterService = letterService;
+    }
 
     @GetMapping(value = "/company/{id}")
-    public Company getCompany(@PathVariable("id") long id) {
+    public Optional<Company> getCompany(@PathVariable("id") long id) {
         return companyService.findById(id);
     }
 
@@ -69,7 +70,7 @@ public class CompanyController {
         if(!Company.isValid(company))
             return null;
 
-        return companyService.create(company);
+        return companyService.save(company);
     }
 
     @PostMapping("/createClaim")
@@ -77,7 +78,7 @@ public class CompanyController {
 
         Company company = claim.getCompany();
 
-        claimService.create(claim);
+        claimService.save(claim);
 
         return companyService.update(company);
     }
@@ -95,7 +96,7 @@ public class CompanyController {
 
     @PostMapping("/createStatus")
     public Status createStatus(@RequestBody Status status) {
-        return statusService.create(status);
+        return statusService.save(status);
     }
 
     private String getAppUrl(HttpServletRequest request) {

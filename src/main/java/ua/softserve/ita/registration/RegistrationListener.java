@@ -1,23 +1,27 @@
 package ua.softserve.ita.registration;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 import ua.softserve.ita.model.User;
-import ua.softserve.ita.service.GenerateLetter;
-import ua.softserve.ita.service.token.VerificationTokenIService;
+import ua.softserve.ita.service.letter.GenerateLetter;
+import ua.softserve.ita.service.token.VerificationTokenService;
 
-import javax.annotation.Resource;
 import java.util.UUID;
 
 
 @Component
 public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
 
-    @Resource(name = "tokenService")
-    private VerificationTokenIService tokenService;
+    private final VerificationTokenService tokenService;
+    private final GenerateLetter sendMailService;
 
-    @Resource(name = "generateService")
-    private GenerateLetter sendMailService;
+    @Autowired
+    public RegistrationListener(VerificationTokenService tokenService, GenerateLetter sendMailService) {
+        this.tokenService = tokenService;
+        this.sendMailService = sendMailService;
+    }
+
 
     @Override
     public void onApplicationEvent(final OnRegistrationCompleteEvent event) {

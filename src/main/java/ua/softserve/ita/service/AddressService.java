@@ -1,44 +1,19 @@
 package ua.softserve.ita.service;
 
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-import ua.softserve.ita.dao.Dao;
-import ua.softserve.ita.model.Address;
+import ua.softserve.ita.model.profile.Address;
 
-import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 
-@Component("addressService")
-@org.springframework.stereotype.Service
-@Transactional
-public class AddressService implements Service<Address> {
+public interface AddressService {
 
-    @Resource(name = "addressDao")
-    private Dao<Address> addressDao;
+    Optional<Address> findById(Long id);
 
-    @Override
-    public Address findById(Long id) {
-        return addressDao.findById(id);
-    }
+    List<Address> findAll();
 
-    @Override
-    public List<Address> findAll() {
-        return addressDao.findAll();
-    }
+    Address save(Address address);
 
-    @Override
-    public Address create(Address address) {
-        return addressDao.create(address);
-    }
+    Address update(Address address);
 
-    @Override
-    public Address update(Address address) {
-        return addressDao.update(address);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        addressDao.deleteById(id);
-    }
-
+    void deleteById(Long id);
 }

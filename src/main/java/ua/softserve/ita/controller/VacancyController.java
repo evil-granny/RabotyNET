@@ -1,12 +1,14 @@
 package ua.softserve.ita.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Company;
 import ua.softserve.ita.model.Requirement;
 import ua.softserve.ita.model.Vacancy;
-import ua.softserve.ita.service.Service;
+import ua.softserve.ita.service.RequirementService;
+import ua.softserve.ita.service.VacancyService;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -19,12 +21,15 @@ import java.util.Set;
 @RestController
 @RequestMapping("/vacancies")
 public class VacancyController {
+    private final VacancyService vacancyService;
+    private final RequirementService requirementService;
 
-    @Resource(name = "vacancyService")
-    private Service<Vacancy> vacancyService;
+    @Autowired
+    public VacancyController(VacancyService vacancyService, RequirementService requirementService) {
 
-    @Resource(name = "requirementService")
-    private Service<Requirement> requirementService;
+        this.vacancyService = vacancyService;
+        this.requirementService = requirementService;
+    }
 
     @GetMapping
     public ResponseEntity<List<Vacancy>> getAllVacancies() {
@@ -34,17 +39,13 @@ public class VacancyController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Vacancy> getVacancyById(@PathVariable("id") Long id) {
-        Vacancy vacancy = vacancyService.findById(id);
-        if (vacancy == null) {
-            throw new ResourceNotFoundException("Vacancy not found by id: " + id);
-        }
+        Vacancy vacancy = vacancyService.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("Vacancy with id: %d not found", id)));
         return ResponseEntity.ok().body(vacancy);
-
     }
 
     @PutMapping
     public ResponseEntity<Vacancy> updateVacancy(@Valid @RequestBody Vacancy vacancy) {
-        final Vacancy updatedVacancy = vacancyService.update(vacancy);
+        final Vacancy updatedVacancy = vacancyService.save(vacancy);
         return ResponseEntity.ok(updatedVacancy);
     }
 
@@ -56,8 +57,8 @@ public class VacancyController {
 
         Set<Requirement> requirements = vacancy.getRequirements();
         requirements.forEach(e -> e.setVacancy(vacancy));
-        vacancyService.create(vacancy);
-        requirements.forEach(e -> requirementService.create(e));
+        vacancyService.save(vacancy);
+        requirements.forEach(e -> requirementService.save(e));
 
         return ResponseEntity.ok(vacancy);
     }

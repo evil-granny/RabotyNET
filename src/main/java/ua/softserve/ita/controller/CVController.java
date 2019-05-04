@@ -1,30 +1,34 @@
 package ua.softserve.ita.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.model.CV;
 import ua.softserve.ita.model.Job;
 import ua.softserve.ita.model.Skill;
-import ua.softserve.ita.service.Service;
+import ua.softserve.ita.service.CVService;
+import ua.softserve.ita.service.JobService;
+import ua.softserve.ita.service.SkillService;
 
-import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @CrossOrigin
 @RestController
 public class CVController {
+    private final CVService cvService;
+    private final JobService jobService;
+    private final SkillService skillService;
 
-    @Resource(name = "cvService")
-    private Service<CV> cvService;
-
-    @Resource(name = "jobService")
-    private Service<Job> jobService;
-
-    @Resource(name = "skillService")
-    private Service<Skill> skillService;
+    @Autowired
+    public CVController(CVService cvService, JobService jobService, SkillService skillService) {
+        this.cvService = cvService;
+        this.jobService = jobService;
+        this.skillService = skillService;
+    }
 
     @GetMapping(path = {"/cv/{id}"})
-    public CV findById(@PathVariable("id") long id) {
+    public Optional<CV> findById(@PathVariable("id") long id) {
         return cvService.findById(id);
     }
 
@@ -36,12 +40,12 @@ public class CVController {
     @PostMapping(path = "/createCV")
     public CV insert(@RequestBody CV cv) {
         Set<Skill> skills = cv.getSkills();
-        cvService.create(cv);
+        cvService.save(cv);
         skills.forEach(x -> x.setCv(cv));
-        skills.forEach(x -> skillService.create(x));
+        skills.forEach(x -> skillService.save(x));
         Set<Job> jobs = cv.getJobs();
         jobs.forEach(x -> x.setCv(cv));
-        jobs.forEach(x -> jobService.create(x));
+        jobs.forEach(x -> jobService.save(x));
         return cv;
     }
 

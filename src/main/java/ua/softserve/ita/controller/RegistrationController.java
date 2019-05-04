@@ -1,16 +1,16 @@
 package ua.softserve.ita.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.dto.UserDto;
+import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.User;
 import ua.softserve.ita.model.VerificationToken;
 import ua.softserve.ita.registration.OnRegistrationCompleteEvent;
-import ua.softserve.ita.service.GenerateLetter;
-import ua.softserve.ita.service.UserIService;
-import ua.softserve.ita.service.token.VerificationTokenIService;
+import ua.softserve.ita.service.letter.GenerateLetter;
+import ua.softserve.ita.service.UserService;
+import ua.softserve.ita.service.token.VerificationTokenService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -20,16 +20,13 @@ import java.util.List;
 @RestController
 public class RegistrationController {
 
-    @Autowired
-    GenerateLetter generateService;
-
-    private final UserIService userService;
-
+    private final GenerateLetter generateService;
+    private final UserService userService;
     private final ApplicationEventPublisher eventPublisher;
+    private final VerificationTokenService tokenService;
 
-    private final VerificationTokenIService tokenService;
-
-    public RegistrationController(ApplicationEventPublisher eventPublisher, UserIService userService, VerificationTokenIService tokenService) {
+    public RegistrationController(GenerateLetter generateService, ApplicationEventPublisher eventPublisher, UserService userService, VerificationTokenService tokenService) {
+        this.generateService = generateService;
         this.eventPublisher = eventPublisher;
         this.userService = userService;
         this.tokenService = tokenService;
@@ -37,7 +34,7 @@ public class RegistrationController {
 
     @GetMapping(value = "/user/{id}")
     public ResponseEntity<User> getPerson(@PathVariable("id") long id) {
-        User user = userService.findById(id);
+        User user = userService.findById(id).orElseThrow(()-> new ResourceNotFoundException(String.format("User with id: %d not found", id)));
         return ResponseEntity.ok().body(user);
     }
 
@@ -49,7 +46,7 @@ public class RegistrationController {
 
     @PutMapping("/updateUser/{id}")
     public ResponseEntity<?> update(@PathVariable("id") long id, @Valid @RequestBody User user) {
-        User currentUser = userService.findById(id);
+        User currentUser = userService.findById(id).orElseThrow(()-> new ResourceNotFoundException(String.format("User with id: %d not found", id)));
         currentUser.setLogin(user.getLogin());
         currentUser.setEnabled(user.isEnabled());
         userService.update(currentUser);
@@ -58,7 +55,7 @@ public class RegistrationController {
 
     @DeleteMapping("/deleteUser/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
-        User user = userService.findById(id);
+        User user = userService.findById(id).orElseThrow(()-> new ResourceNotFoundException(String.format("User with id: %d not found", id)));
         VerificationToken verificationToken = tokenService.findByUser(user);
         tokenService.delete(verificationToken);
         userService.deleteById(id);
@@ -67,7 +64,7 @@ public class RegistrationController {
 
     @PostMapping("/registration")
     public ResponseEntity<User> insert(@RequestBody @Valid UserDto userDto, final HttpServletRequest request) {
-        User user = userService.create(userDto);
+        User user = userService.createDTO(userDto);
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, getAppUrl(request)));
         return ResponseEntity.ok().body(user);
     }

@@ -1,44 +1,18 @@
 package ua.softserve.ita.service;
 
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-import ua.softserve.ita.dao.Dao;
 import ua.softserve.ita.model.CV;
 
-import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 
-@Component("cvService")
-@org.springframework.stereotype.Service
-@Transactional
-public class CVService implements Service<CV> {
+public interface CVService {
+    Optional<CV> findById(Long id);
 
-    @Resource(name = "cvDao")
-    private Dao<CV> cvDao;
+    List<CV> findAll();
 
-    @Override
-    public CV findById(Long id) {
-        return cvDao.findById(id);
-    }
+    CV save(CV cv);
 
-    @Override
-    public List<CV> findAll() {
-        return cvDao.findAll();
-    }
+    CV update(CV cv);
 
-    @Override
-    public CV create(CV cv) {
-        return cvDao.create(cv);
-    }
-
-    @Override
-    public CV update(CV cv) {
-        return cvDao.update(cv);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        cvDao.deleteById(id);
-    }
-
+    void deleteById(Long id);
 }

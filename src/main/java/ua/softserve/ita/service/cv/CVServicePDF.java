@@ -4,8 +4,7 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import ua.softserve.ita.model.Person;
-import ua.softserve.ita.service.*;
+import ua.softserve.ita.model.profile.Person;
 
 import java.io.ByteArrayOutputStream;
 
