@@ -83,7 +83,7 @@ class InsertDbRandom {
         address.setCity(cityList.get(random.nextInt(cityList.size())));
         person.setAddress(address);
 
-//        getCvList();
+        getCvList();
 
     }
 
@@ -106,6 +106,7 @@ class InsertDbRandom {
         job.setEnd(LocalDate.parse("2012-03-03"));
         job.setPosition("Developer");
         job.setCompanyName("Google");
+        job.setCv(cv);
         Set<Job> jobs = new HashSet<>();
         jobs.add(job);
         cv.setJobs(jobs);
@@ -132,6 +133,12 @@ class InsertDbRandom {
                 .addAnnotatedClass(Education.class)
                 .addAnnotatedClass(User.class)
                 .addAnnotatedClass(Role.class)
+                .addAnnotatedClass(Claim.class)
+                .addAnnotatedClass(Company.class)
+                .addAnnotatedClass(Requirement.class)
+                .addAnnotatedClass(Status.class)
+                .addAnnotatedClass(Vacancy.class)
+                .addAnnotatedClass(VerificationToken.class)
                 .setProperty("hibernate.connection.driver_class", "org.postgresql.Driver")
                 .setProperty("hibernate.connection.url", "jdbc:postgresql://localhost:5432/rabotyNET")
                 .setProperty("hibernate.connection.username", "postgres")
