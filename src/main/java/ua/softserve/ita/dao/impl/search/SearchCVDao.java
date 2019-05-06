@@ -16,8 +16,12 @@ import java.util.List;
 @Slf4j
 public class SearchCVDao {
 
-    @Autowired
     private SessionFactory sessionFactory;
+
+    @Autowired
+    public SearchCVDao(SessionFactory sessionFactory){
+        this.sessionFactory = sessionFactory;
+    }
 
     public List<Person> searchByName(String searchText) {
         Query query = sessionFactory.createEntityManager().createNativeQuery
