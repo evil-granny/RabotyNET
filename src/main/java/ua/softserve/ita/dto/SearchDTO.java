@@ -1,13 +1,17 @@
-package ua.softserve.ita.model;
+package ua.softserve.ita.dto;
 
 import lombok.Data;
 
 @Data
-public class SearchCV {
+public class SearchDTO {
 
     private String searchText;
 
     private String searchParameter;
 
     private String searchDocument;
+
+    private int resultsOnPage;
+
+    private int firstResultNumber;
 }

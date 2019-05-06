@@ -144,10 +144,10 @@ class InsertDbRandom {
     }
 
     @Test
-    void Insert() throws FileNotFoundException {
+    void insert() throws FileNotFoundException {
         setData();
         Session session = sessionFactory.openSession();
-        for (int i = 1; i < 11; i++) {
+        for (int i = 1; i <= 1000; i++) {
             session.beginTransaction();
             getPerson();
             session.save(person);
