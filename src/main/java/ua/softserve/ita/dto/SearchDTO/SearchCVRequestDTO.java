@@ -1,9 +1,9 @@
-package ua.softserve.ita.dto;
+package ua.softserve.ita.dto.SearchDTO;
 
 import lombok.Data;
 
 @Data
-public class SearchDTO {
+public class SearchCVRequestDTO {
 
     private String searchText;
 

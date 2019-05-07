@@ -24,8 +24,9 @@ class InsertDbRandom {
     private List<String> nameList = new ArrayList<>();
     private List<String> lastNameList = new ArrayList<>();
     private List<String> cityList = new ArrayList<>();
+    private String[] skillList = {"Java", "C#", "C++", "Python"};
     private List<CV> cvList = new ArrayList<>();
-    Random random = new Random();
+    private Random random = new Random();
 
     void setData() throws FileNotFoundException {
         Scanner nameScanner =
@@ -57,7 +58,7 @@ class InsertDbRandom {
 
     User getUser() {
         User user = new User();
-        user.setLogin("login" + random.nextInt() + "@gmail.com");
+        user.setLogin(random.nextInt() + "@gmail.com");
         user.setPassword("password");
         return user;
     }
@@ -101,7 +102,7 @@ class InsertDbRandom {
 
     Set<Skill> getSkills(CV cv){
         Skill skill1 = new Skill();
-        skill1.setTitle("Java");
+        skill1.setTitle(skillList[random.nextInt(skillList.length)]);
         skill1.setDescription("Core");
         skill1.setCv(cv);
         Set<Skill> skills = new HashSet<>();
@@ -176,7 +177,10 @@ class InsertDbRandom {
             Education education = getEducation(person);
             session.save(education);
             List<CV> cvList = getCvList(person, education);
-            session.save(cvList.get(0));
+            for (CV cv : cvList){
+                session.save(cv);
+                log.info("#: " + String.valueOf(i) + " - CV Id = " + String.valueOf(cv.getCvId()));
+            }
             Set<Job> jobs = getJobs(cvList.get(0));
             for (Job job : jobs){
                 session.save(job);
@@ -185,6 +189,7 @@ class InsertDbRandom {
             for (Skill skill : skills){
                 session.save(skill);
             }
+            cvList.clear();
             log.info("#: " + String.valueOf(i) + " - " + person.getFirstName() + " " + person.getLastName());
             session.getTransaction().commit();
         }
