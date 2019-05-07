@@ -1,41 +1,18 @@
 package ua.softserve.ita.service;
 
-import org.springframework.transaction.annotation.Transactional;
-import ua.softserve.ita.dao.RequirementDao;
 import ua.softserve.ita.model.Requirement;
 
-import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 
-@org.springframework.stereotype.Service
-@Transactional
-public class RequirementService implements Service<Requirement> {
+public interface RequirementService {
+    Optional<Requirement> findById(Long id);
 
-    @Resource(name = "requirementDao")
-    private RequirementDao requirementDao;
+    List<Requirement> findAll();
 
-    @Override
-    public Requirement findById(Long id) {
-        return requirementDao.findById(id);
-    }
+    Requirement save(Requirement requirement);
 
-    @Override
-    public List<Requirement> findAll() {
-        return requirementDao.findAll();
-    }
+    Requirement update(Requirement requirement);
 
-    @Override
-    public Requirement create(Requirement requirement) {
-        return requirementDao.create(requirement);
-    }
-
-    @Override
-    public Requirement update(Requirement requirement) {
-        return requirementDao.update(requirement);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        requirementDao.deleteById(id);
-    }
+    void deleteById(Long id);
 }

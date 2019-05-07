@@ -1,44 +1,19 @@
 package ua.softserve.ita.service;
 
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-import ua.softserve.ita.dao.Dao;
+
 import ua.softserve.ita.model.Education;
 
-import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 
-@Component("educationService")
-@org.springframework.stereotype.Service
-@Transactional
-public class EducationService implements Service<Education> {
+public interface EducationService {
+    Optional<Education> findById(Long id);
 
-    @Resource(name = "educationDao")
-    private Dao<Education> educationDao;
+    List<Education> findAll();
 
-    @Override
-    public Education findById(Long id) {
-        return educationDao.findById(id);
-    }
+    Education save(Education education);
 
-    @Override
-    public List<Education> findAll() {
-        return educationDao.findAll();
-    }
+    Education update(Education education);
 
-    @Override
-    public Education create(Education education) {
-        return educationDao.create(education);
-    }
-
-    @Override
-    public Education update(Education education) {
-        return educationDao.update(education);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        educationDao.deleteById(id);
-    }
-
+    void deleteById(Long id);
 }

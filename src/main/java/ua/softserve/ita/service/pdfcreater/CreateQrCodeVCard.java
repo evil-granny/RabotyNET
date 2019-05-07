@@ -1,20 +1,19 @@
 package ua.softserve.ita.service.pdfcreater;
 
 import net.glxn.qrgen.core.image.ImageType;
-        import net.glxn.qrgen.core.vcard.VCard;
-        import net.glxn.qrgen.javase.QRCode;
+import net.glxn.qrgen.core.vcard.VCard;
+import net.glxn.qrgen.javase.QRCode;
 import org.springframework.stereotype.Service;
-import ua.softserve.ita.model.Person;
+import ua.softserve.ita.model.profile.Person;
 
 import java.io.*;
-
 
 @Service("createQR")
 public class CreateQrCodeVCard {
 
-    public void createQRCode(Person person, String url){
+    public void createQRCode(Person person, String url) {
         VCard vCard = new VCard();
-        vCard.setName(person.getFirstName() + " " +person.getLastName());
+        vCard.setName(person.getFirstName() + " " + person.getLastName());
         StringBuffer address = new StringBuffer(person.getAddress().getCountry())
                 .append(", ")
                 .append(person.getAddress().getCity())
@@ -26,7 +25,7 @@ public class CreateQrCodeVCard {
                 .append(person.getAddress().getApartment())
                 .append(", ")
                 .append(person.getAddress().getZipCode());
-       // vCard.setAddress(address.toString());
+        // vCard.setAddress(address.toString());
         //vCard.setCompany("company Inc.");
         vCard.setPhoneNumber(person.getContact().getPhoneNumber());
         //vCard.setTitle("title");
@@ -46,10 +45,11 @@ public class CreateQrCodeVCard {
             out.flush();
             out.close();
 
-        } catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 }

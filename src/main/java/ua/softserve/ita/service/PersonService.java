@@ -1,42 +1,19 @@
 package ua.softserve.ita.service;
 
-import org.springframework.transaction.annotation.Transactional;
-import ua.softserve.ita.dao.Dao;
-import ua.softserve.ita.model.Person;
+import ua.softserve.ita.model.profile.Person;
 
-import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 
-@org.springframework.stereotype.Service("personService")
-@Transactional
-public class PersonService implements Service<Person> {
+public interface PersonService {
 
-    @Resource(name = "personDao")
-    private Dao<Person> personDao;
+    Optional<Person> findById(Long id);
 
-    @Override
-    public Person findById(Long id) {
-        return personDao.findById(id);
-    }
+    List<Person> findAll();
 
-    @Override
-    public List<Person> findAll() {
-        return personDao.findAll();
-    }
+    Person save(Person vacancy);
 
-    @Override
-    public Person create(Person person) {
-        return personDao.create(person);
-    }
+    Person update(Person vacancy);
 
-    @Override
-    public Person update(Person person) {
-        return personDao.update(person);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        personDao.deleteById(id);
-    }
-
+    void deleteById(Long id);
 }
