@@ -25,8 +25,7 @@ class InsertDbRandom {
     private List<String> lastNameList = new ArrayList<>();
     private List<String> cityList = new ArrayList<>();
     private List<CV> cvList = new ArrayList<>();
-    private Person person;
-
+    Random random = new Random();
 
     void setData() throws FileNotFoundException {
         Scanner nameScanner =
@@ -56,51 +55,61 @@ class InsertDbRandom {
         return LocalDate.ofEpochDay(randomDay);
     }
 
-    void getPerson() {
-        Random random = new Random();
-        person = new Person();
+    User getUser() {
+        User user = new User();
+        user.setLogin("login" + random.nextInt() + "@gmail.com");
+        user.setPassword("password");
+        return user;
+    }
+
+    Address getAddress(long id){
+        Address address = new Address();
+        address.setAddressId(id);
+        address.setCountry("USA");
+        address.setCity(cityList.get(random.nextInt(cityList.size())));
+        return address;
+    }
+
+    Contact getContact(long id){
+        Contact contact = new Contact();
+        contact.setContactId(id);
+        contact.setPhoneNumber("+380" + String.format("%09d", random.nextInt(1000000000)));
+        return contact;
+    }
+
+    Person getPerson(long id, Address address, Contact contact) {
+        Person person = new Person();
+        person.setUserId(id);
         person.setFirstName(nameList.get(random.nextInt(nameList.size())));
         person.setLastName(lastNameList.get(random.nextInt(lastNameList.size())));
         person.setBirthday(getLocalDate());
         person.setPhoto("photo");
-
-        Contact contact = new Contact();
-        contact.setContactId(person.getUserId());
-        contact.setPhoneNumber("+380" + String.format("%09d", random.nextInt(1000000000)));
-        contact.setEmail(person.getFirstName() + person.getLastName() + "@gmail.com");
         person.setContact(contact);
-
-        User user = new User();
-        user.setEnabled(true);
-        user.setLogin(contact.getEmail());
-        user.setPassword("password");
-        person.setUserId(user.getUserId());
-        person.setUser(user);
-
-        Address address = new Address();
-        address.setAddressId(person.getUserId());
-        address.setCountry("USA");
-        address.setCity(cityList.get(random.nextInt(cityList.size())));
         person.setAddress(address);
-
-        getCvList();
-
+        return person;
     }
 
-    void getCvList(){
-        CV cv = new CV();
-        cv.setCvId(person.getUserId());
-        cv.setPosition("Junior Java Developer");
-
+    Education getEducation(Person person){
         Education education = new Education();
         education.setDegree("Master");
         education.setGraduation(5);
-        education.setEducationId(cv.getCvId());
+        education.setEducationId(person.getUserId());
         education.setSchool("University of Michigan");
         education.setSpecialty("Computer science");
-        education.setEducationId(cv.getCvId());
-        cv.setEducation(education);
+        return education;
+    }
 
+    Set<Skill> getSkills(CV cv){
+        Skill skill1 = new Skill();
+        skill1.setTitle("Java");
+        skill1.setDescription("Core");
+        skill1.setCv(cv);
+        Set<Skill> skills = new HashSet<>();
+        skills.add(skill1);
+        return skills;
+    }
+
+    Set<Job> getJobs(CV cv){
         Job job = new Job();
         job.setBegin(LocalDate.parse("2005-02-02"));
         job.setEnd(LocalDate.parse("2012-03-03"));
@@ -109,16 +118,16 @@ class InsertDbRandom {
         job.setCv(cv);
         Set<Job> jobs = new HashSet<>();
         jobs.add(job);
-        cv.setJobs(jobs);
+        return jobs;
+    }
 
-        Skill skill1 = new Skill();
-        skill1.setTitle("Java");
-        skill1.setDescription("Core");
-        Set<Skill> skills = new HashSet<>();
-        skills.add(skill1);
-        cv.setSkills(skills);
-
+    List<CV> getCvList(Person person, Education education) {
+        CV cv = new CV();
+        cv.setPosition("Junior Java Developer");
+        cv.setPerson(person);
+        cv.setEducation(education);
         cvList.add(cv);
+        return cvList;
     }
 
     @BeforeEach
@@ -154,15 +163,30 @@ class InsertDbRandom {
     void insert() throws FileNotFoundException {
         setData();
         Session session = sessionFactory.openSession();
-        for (int i = 1; i <= 1000; i++) {
+        for (int i = 1; i <= 10; i++) {
             session.beginTransaction();
-            getPerson();
+            User user = getUser();
+            session.save(user);
+            Address address = getAddress(user.getUserId());
+            session.save(address);
+            Contact contact = getContact(user.getUserId());
+            session.save(contact);
+            Person person = getPerson(user.getUserId(), address, contact);
             session.save(person);
-            for(CV cv : cvList) {
-                session.save(cv);
+            Education education = getEducation(person);
+            session.save(education);
+            List<CV> cvList = getCvList(person, education);
+            session.save(cvList.get(0));
+            Set<Job> jobs = getJobs(cvList.get(0));
+            for (Job job : jobs){
+                session.save(job);
             }
-            session.getTransaction().commit();
+            Set<Skill> skills = getSkills(cvList.get(0));
+            for (Skill skill : skills){
+                session.save(skill);
+            }
             log.info("#: " + String.valueOf(i) + " - " + person.getFirstName() + " " + person.getLastName());
+            session.getTransaction().commit();
         }
         session.close();
     }

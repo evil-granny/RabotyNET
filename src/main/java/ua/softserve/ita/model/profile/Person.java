@@ -21,7 +21,6 @@ import java.time.LocalDate;
 public class Person implements Serializable {
 
     @Id
-    @GeneratedValue
     @Column(name = "user_id")
     private Long userId;
 

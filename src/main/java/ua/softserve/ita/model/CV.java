@@ -1,13 +1,16 @@
 package ua.softserve.ita.model;
 
-import lombok.Data;
+import lombok.*;
 import ua.softserve.ita.model.profile.Person;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
 
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString
 @Entity
 @Table(name = "cv")
 public class CV implements Serializable {
