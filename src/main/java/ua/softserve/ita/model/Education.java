@@ -1,9 +1,12 @@
 package ua.softserve.ita.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
+@Data
 @Entity
 @Table(name = "education")
 public class Education implements Serializable {
@@ -27,46 +30,6 @@ public class Education implements Serializable {
 
     @OneToOne(mappedBy = "education")
     private CV cv;
-
-    public Long getEducationId() {
-        return educationId;
-    }
-
-    public void setEducationId(Long educationId) {
-        this.educationId = educationId;
-    }
-
-    public String getDegree() {
-        return degree;
-    }
-
-    public void setDegree(String degree) {
-        this.degree = degree;
-    }
-
-    public String getSchool() {
-        return school;
-    }
-
-    public void setSchool(String school) {
-        this.school = school;
-    }
-
-    public String getSpecialty() {
-        return specialty;
-    }
-
-    public void setSpecialty(String specialty) {
-        this.specialty = specialty;
-    }
-
-    public Integer getGraduation() {
-        return graduation;
-    }
-
-    public void setGraduation(Integer graduation) {
-        this.graduation = graduation;
-    }
 
     @Override
     public boolean equals(Object o) {

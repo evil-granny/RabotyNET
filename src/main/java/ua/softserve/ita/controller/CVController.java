@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.model.CV;
 import ua.softserve.ita.model.Job;
 import ua.softserve.ita.model.Skill;
+import ua.softserve.ita.model.profile.Person;
 import ua.softserve.ita.service.CVService;
 import ua.softserve.ita.service.JobService;
 import ua.softserve.ita.service.SkillService;
@@ -39,13 +40,18 @@ public class CVController {
 
     @PostMapping(path = "/createCV")
     public CV insert(@RequestBody CV cv) {
+        Person person = new Person();
+        person.setUserId(1L);
+        cv.setPerson(person);
+
         Set<Skill> skills = cv.getSkills();
-        cvService.save(cv);
-        skills.forEach(x -> x.setCv(cv));
-        skills.forEach(x -> skillService.save(x));
         Set<Job> jobs = cv.getJobs();
+        skills.forEach(x -> x.setCv(cv));
         jobs.forEach(x -> x.setCv(cv));
-        jobs.forEach(x -> jobService.save(x));
+
+        cvService.save(cv);
+        skills.forEach(skillService::save);
+        jobs.forEach(jobService::save);
         return cv;
     }
 
