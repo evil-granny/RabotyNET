@@ -49,11 +49,14 @@ public class VacancyController {
         return ResponseEntity.ok(updatedVacancy);
     }
 
-    @PostMapping("/{company_id}")
+    @PostMapping("/createVacancy/{company_id}")
     public ResponseEntity<Vacancy> createVacancy(@Valid @RequestBody Vacancy vacancy, @PathVariable(value = "company_id") Long companyId) {
         Company company = new Company();
         company.setCompanyId(companyId);
         vacancy.setCompany(company);
+
+        System.out.println(vacancy);
+        System.out.println(companyId);
 
         Set<Requirement> requirements = vacancy.getRequirements();
         requirements.forEach(e -> e.setVacancy(vacancy));

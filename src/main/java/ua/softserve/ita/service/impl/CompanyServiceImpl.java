@@ -37,6 +37,11 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
+    public List<Company> findAllWithPagination(int first, int count) {
+        return companyDao.findWithPagination(first, count);
+    }
+
+    @Override
     public Company save(Company company) {
         addressDao.save(company.getAddress());
         contactDao.save(company.getContact());

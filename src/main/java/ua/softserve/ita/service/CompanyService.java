@@ -11,6 +11,8 @@ public interface CompanyService {
 
     List<Company> findAll();
 
+    List<Company> findAllWithPagination(int first, int count);
+
     Company save(Company company);
 
     Company update(Company company);

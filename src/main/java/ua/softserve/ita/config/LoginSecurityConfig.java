@@ -23,9 +23,10 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/admin").access("hasRole('ROLE_ADMIN')")
-                .antMatchers("/company").access("hasRole('ROLE_COWNER')")
-                .antMatchers("/user", "/searchCV").access("hasRole('ROLE_USER')")
+                .anyRequest().permitAll()
+                //.antMatchers("/admin").access("hasRole('ROLE_ADMIN')")
+                //.antMatchers("/company").access("hasRole('ROLE_COWNER')")
+                //.antMatchers("/user", "/searchCV").access("hasRole('ROLE_USER')")
                 .and()
                 .logout().logoutSuccessUrl("/logout")
                 .and().csrf().disable();
