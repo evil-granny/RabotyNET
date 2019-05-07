@@ -25,7 +25,7 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/admin").access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/company").access("hasRole('ROLE_COWNER')")
-                .antMatchers("/user", "/searchCV").access("hasRole('ROLE_USER')")
+                .antMatchers("/users").access("hasRole('ROLE_USER')")
                 .and()
                 .logout().logoutSuccessUrl("/logout")
                 .and().csrf().disable();

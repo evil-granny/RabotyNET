@@ -10,14 +10,14 @@ import java.security.Principal;
 @RestController
 public class LoginController {
 
-    @PostMapping("/loggedUser")
-    public Object userPost() {
+    @PostMapping("/loginUser")
+    public Object userLoginPost() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            String username = ((UserDetails)principal).getUsername();
-        } else {
-            String username = principal.toString();
-        }
         return principal;
+    }
+
+    @PostMapping("/logoutUser")
+    public Object userLogoutPost() {
+        return null;
     }
 }
