@@ -38,8 +38,6 @@ public class Education implements Serializable {
     @Column(name = "graduation")
     private Integer graduation;
 
-    @OneToOne(mappedBy = "education")
-    private CV cv;
 
     @Override
     public boolean equals(Object o) {

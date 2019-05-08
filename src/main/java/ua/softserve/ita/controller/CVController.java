@@ -55,8 +55,8 @@ public class CVController {
         return cv;
     }
 
-    @PutMapping(path = "/updateCV/{id}")
-    public CV update(@RequestBody CV cv, @PathVariable("id") long id) {
+    @PutMapping(path = "/updateCV")
+    public CV update(@RequestBody CV cv) {
         return cvService.update(cv);
     }
 

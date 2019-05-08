@@ -40,8 +40,8 @@ public class CV implements Serializable {
     @NotNull(message = "education must be not null")
     private Education education;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private Person person;
 
 }
