@@ -154,13 +154,16 @@ class InsertDbRandom {
 
     Company getCompany(Contact contact, Address address, User user) {
         Company company = new Company();
-            company.setEdrpou(String.format("%08d", random.nextInt(100000000)));
-            company.setName(companies[next++]);
-            company.setWebsite(company.getName() + ".com");
-            company.setContact(contact);
-            company.setAddress(address);
-            company.setUser(user);
-            return company;
+        company.setEdrpou(String.format("%08d", random.nextInt(100000000)));
+        company.setName(companies[next++]);
+        if (company.getName().equals("Meta Cortex")) {
+            company.setDescription("Wake up.. The Matrix has you...");
+        }
+        company.setWebsite(company.getName().replace(" ", "") + ".com");
+        company.setContact(contact);
+        company.setAddress(address);
+        company.setUser(user);
+        return company;
     }
 
     Vacancy getVacancy(Company company) {
