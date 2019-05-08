@@ -2,7 +2,9 @@ package ua.softserve.ita.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,11 +25,19 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/admin").access("hasRole('ROLE_ADMIN')")
-                .antMatchers("/company").access("hasRole('ROLE_COWNER')")
-                .antMatchers("/users").access("hasRole('ROLE_USER')")
+                .antMatchers("/admin","/person/**").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/searchCV").access("hasRole('ROLE_COWNER')")
+                .antMatchers("/companies").access("hasRole('ROLE_COWNER') or hasRole('ROLE_ADMIN')")
+                .antMatchers("/users", "/searchCV").access("hasRole('ROLE_USER')")
+                .antMatchers("/", "/home", "/loginUser", "/registration").permitAll()
+                .anyRequest().authenticated()
                 .and()
-                .logout().logoutSuccessUrl("/logout")
+                .logout().logoutSuccessUrl("/logoutUser")
                 .and().csrf().disable();
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**");
     }
 }
