@@ -18,9 +18,13 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-//@NamedQuery(name = Vacancy.FIND_BY_COMPANY, query = "select vac from Vacancy vac where vac.company_id = :id")
+@NamedQueries({
+        @NamedQuery(name = Vacancy.FIND_BY_COMPANY, query = "select vac from Vacancy vac where vac.company.companyId = :id"),
+        @NamedQuery(name = Vacancy.FIND_BY_REQUIREMENT, query = "SELECT vac FROM Vacancy vac WHERE vac.vacancyId = (SELECT req.vacancy.vacancyId FROM Requirement req WHERE req.requirementId = :id)")
+})
 public class Vacancy {
-    //public static final String FIND_BY_COMPANY = "Vacancy.findByCompany";
+    public static final String FIND_BY_COMPANY = "Vacancy.findByCompany";
+    public static final String FIND_BY_REQUIREMENT = "Vacancy.findByRequirement";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
