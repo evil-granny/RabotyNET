@@ -251,8 +251,6 @@ class InsertDbRandom {
                 Vacancy vacancy = getVacancy(company);
                 session.save(vacancy);
             }
-
-            log.info("#: " + String.valueOf(i) + " - ");
             session.getTransaction().commit();
         }
     }
