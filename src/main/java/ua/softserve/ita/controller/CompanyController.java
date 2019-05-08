@@ -11,6 +11,7 @@ import ua.softserve.ita.service.StatusService;
 import ua.softserve.ita.service.letter.GenerateLetter;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -49,10 +50,7 @@ public class CompanyController {
     }
 
     @PutMapping("/updateCompany")
-    public Company update(@RequestBody Company company) {
-        if(!Company.isValid(company))
-            return null;
-
+    public Company update(@Valid @RequestBody Company company) {
         if(company.getStatus() != null && company.getStatus().isReadyToDelete()) {
             long status_id = company.getStatus().getStatusId();
             company.setStatus(null);
@@ -78,10 +76,7 @@ public class CompanyController {
     }
 
     @PostMapping("/createCompany")
-    public Company create(@RequestBody Company company) {
-        if(!Company.isValid(company))
-            return null;
-
+    public Company create(@Valid @RequestBody Company company) {
         return companyService.save(company);
     }
 

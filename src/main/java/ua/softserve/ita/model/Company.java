@@ -70,10 +70,6 @@ public class Company implements Serializable {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private User user;
 
-    public static boolean isValid(Company company) {
-        return Validator.validate(company) && Validator.validate(company.address) && Validator.validate(company.contact);
-    }
-
     @Override
     public String toString() {
         return "Company{" +
