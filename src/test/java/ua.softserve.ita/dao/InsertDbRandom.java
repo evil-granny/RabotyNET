@@ -156,7 +156,10 @@ class InsertDbRandom {
         Company company = new Company();
             company.setEdrpou(String.format("%08d", random.nextInt(100000000)));
             company.setName(companies[next++]);
-            company.setWebsite(company.getName() + ".com");
+            if(company.getName().equals("Meta Cortex")){
+                company.setDescription("Wake up.. The Matrix has you...");
+            }
+            company.setWebsite(company.getName().replace(" ", "") + ".com");
             company.setContact(contact);
             company.setAddress(address);
             company.setUser(user);
