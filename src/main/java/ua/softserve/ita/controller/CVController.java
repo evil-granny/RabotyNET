@@ -50,8 +50,6 @@ public class CVController {
         jobs.forEach(x -> x.setCv(cv));
 
         cvService.save(cv);
-        skills.forEach(skillService::save);
-        jobs.forEach(jobService::save);
         return cv;
     }
 
