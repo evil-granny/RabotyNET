@@ -1,5 +1,6 @@
 package ua.softserve.ita.dto.SearchDTO;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -7,6 +8,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@Builder
 public class SearchCVDTO {
 
     private long id;
@@ -23,5 +25,5 @@ public class SearchCVDTO {
 
     private String phoneNumber;
 
-    private String eMail;
+    private String email;
 }

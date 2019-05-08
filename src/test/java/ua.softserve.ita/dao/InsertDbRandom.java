@@ -24,7 +24,12 @@ class InsertDbRandom {
     private List<String> nameList = new ArrayList<>();
     private List<String> lastNameList = new ArrayList<>();
     private List<String> cityList = new ArrayList<>();
-    private String[] skillList = {"Java", "C#", "C++", "Python"};
+    private String[] languages = {"Java", "C#", "C++", "Python", "Angular", "JavaScript", "Fortran", "HTML/CSS", "Scala"};
+    private String[] ranks = {"Junior", "Middle", "Senior"};
+    private String[] positions = {"Developer", "QATC"};
+    private String[] companies = {"Google", "Meta Cortex", "Microsoft", "Apple", "Amazon", "USA Government"};
+    private String[] universities = {"Stanford University", "Massachusetts Institute of Technology",
+    "Harvard University", "Princeton University", "University of Chicago"};
     private List<CV> cvList = new ArrayList<>();
     private Random random = new Random();
 
@@ -58,7 +63,7 @@ class InsertDbRandom {
 
     User getUser() {
         User user = new User();
-        user.setLogin(random.nextInt() + "@gmail.com");
+        user.setLogin((random.nextInt(70000) + 10000)+ "@gmail.com");
         user.setPassword("password");
         return user;
     }
@@ -95,18 +100,26 @@ class InsertDbRandom {
         education.setDegree("Master");
         education.setGraduation(5);
         education.setEducationId(person.getUserId());
-        education.setSchool("University of Michigan");
+        education.setSchool(universities[random.nextInt(universities.length)]);
         education.setSpecialty("Computer science");
         return education;
     }
 
     Set<Skill> getSkills(CV cv){
         Skill skill1 = new Skill();
-        skill1.setTitle(skillList[random.nextInt(skillList.length)]);
+        skill1.setTitle(languages[random.nextInt(languages.length)]);
         skill1.setDescription("Core");
         skill1.setCv(cv);
+        Skill skill2 = new Skill();
+        skill2.setTitle(languages[random.nextInt(languages.length)]);
+        if(skill2.getTitle().equals(skill1.getTitle())){
+            skill2.setTitle(languages[random.nextInt(languages.length)]);
+        }
+        skill2.setDescription("Core");
+        skill2.setCv(cv);
         Set<Skill> skills = new HashSet<>();
         skills.add(skill1);
+        skills.add(skill2);
         return skills;
     }
 
@@ -114,8 +127,8 @@ class InsertDbRandom {
         Job job = new Job();
         job.setBegin(LocalDate.parse("2005-02-02"));
         job.setEnd(LocalDate.parse("2012-03-03"));
-        job.setPosition("Developer");
-        job.setCompanyName("Google");
+        job.setPosition(positions[random.nextInt(positions.length)]);
+        job.setCompanyName(companies[random.nextInt(companies.length)]);
         job.setCv(cv);
         Set<Job> jobs = new HashSet<>();
         jobs.add(job);
@@ -124,7 +137,9 @@ class InsertDbRandom {
 
     List<CV> getCvList(Person person, Education education) {
         CV cv = new CV();
-        cv.setPosition("Junior Java Developer");
+        cv.setPosition(ranks[random.nextInt(ranks.length)]+ " "+
+                languages[random.nextInt(languages.length)]+ " " +
+                positions[random.nextInt(positions.length)]);
         cv.setPerson(person);
         cv.setEducation(education);
         cvList.add(cv);
@@ -164,13 +179,14 @@ class InsertDbRandom {
     void insert() throws FileNotFoundException {
         setData();
         Session session = sessionFactory.openSession();
-        for (int i = 1; i <= 10; i++) {
+        for (int i = 1; i <= 1000; i++) {
             session.beginTransaction();
             User user = getUser();
             session.save(user);
             Address address = getAddress(user.getUserId());
             session.save(address);
             Contact contact = getContact(user.getUserId());
+            contact.setEmail(user.getLogin());
             session.save(contact);
             Person person = getPerson(user.getUserId(), address, contact);
             session.save(person);

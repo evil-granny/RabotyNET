@@ -4,14 +4,15 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Set;
+import java.math.BigInteger;
+import java.util.List;
 
 @Getter
 @Setter
 @ToString
 public class SearchCVResponseDTO {
 
-    private int count;
+    private BigInteger count;
 
-    private Set<SearchCVDTO> SearchCVDTOs;
+    private List<SearchCVDTO> SearchCVDTOs;
 }
