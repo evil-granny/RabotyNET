@@ -74,4 +74,15 @@ public class VacancyController {
         response.put("Vacancy was deleted", Boolean.TRUE);
         return response;
     }
+    @GetMapping("/byCompanyId/{companyId}/{first}/{count}")
+    public ResponseEntity<List<Vacancy>> findAllVacanciesByCompanyIdWithPagination(@PathVariable("companyId") Long companyId,
+                                                                                   @PathVariable("first") int first,
+                                                                                   @PathVariable("count") int count){
+        List<Vacancy> allByCompanyId = vacancyService.findAllByCompanyId(companyId, first, count);
+        return ResponseEntity.ok().body(allByCompanyId);
+    }
+    @GetMapping("count/{companyId}")
+    public ResponseEntity<Long> getCountOfVacancies(@PathVariable("companyId") Long companyId){
+        return ResponseEntity.ok().body(vacancyService.getCountOfVacancies(companyId));
+    }
 }

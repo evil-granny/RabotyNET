@@ -14,10 +14,19 @@ public class VacancyDaoImpl extends AbstractDao<Vacancy, Long> implements Vacanc
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Vacancy> findAllByCompanyId(Long id) {
+    public List<Vacancy> findAllByCompanyIdWithPagination(Long id, int first, int count) {
         return (List<Vacancy>)createNamedQuery(Vacancy.FIND_BY_COMPANY)
                 .setParameter(ID, id)
+                .setFirstResult(first)
+                .setMaxResults(count)
                 .getResultList();
+    }
+
+    @Override
+    public Long getCountOfVacancies(Long id) {
+        return (Long) createNamedQuery(Vacancy.FIND_COUNT_VACANCY)
+                .setParameter(ID, id)
+                .getSingleResult();
     }
 
     @Override
