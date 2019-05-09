@@ -24,6 +24,9 @@ public class Skill implements Serializable {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "print_pdf",nullable = false)
+    private Boolean printPdf;
+
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "cv_id", nullable = false)
@@ -51,6 +54,14 @@ public class Skill implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public Boolean getPrintPdf() {
+        return printPdf;
+    }
+
+    public void setPrintPdf(Boolean printPdf) {
+        this.printPdf = printPdf;
     }
 
     public String getDescription() {

@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @EqualsAndHashCode
-@ToString
+
 public class Person implements Serializable {
 
     @Id

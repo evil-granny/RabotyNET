@@ -33,7 +33,7 @@ public class CV implements Serializable {
     @JoinColumn(name = "education_id", referencedColumnName = "education_id", nullable = false)
     private Education education;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private Person person;
 

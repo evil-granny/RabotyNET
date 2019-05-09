@@ -2,12 +2,14 @@ package ua.softserve.ita.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.CV;
 import ua.softserve.ita.model.Job;
 import ua.softserve.ita.model.Skill;
 import ua.softserve.ita.service.CVService;
 import ua.softserve.ita.service.JobService;
 import ua.softserve.ita.service.SkillService;
+import ua.softserve.ita.service.pdfcreater.TestCVPDF;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,18 +21,26 @@ public class CVController {
     private final CVService cvService;
     private final JobService jobService;
     private final SkillService skillService;
+    private final TestCVPDF pdfService;
+
 
     @Autowired
-    public CVController(CVService cvService, JobService jobService, SkillService skillService) {
+    public CVController(CVService cvService, JobService jobService, SkillService skillService, TestCVPDF pdfService) {
         this.cvService = cvService;
         this.jobService = jobService;
         this.skillService = skillService;
+        this.pdfService = pdfService;
     }
 
     @GetMapping(path = {"/cv/{id}"})
-    public Optional<CV> findById(@PathVariable("id") long id) {
-        return cvService.findById(id);
+    public CV findById(@PathVariable("id") long id) {
+        CV cv = cvService.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("Vacancy with id: %d not found", id)));
+
+        pdfService.createPDF(cv);
+
+        return cv;
     }
+
 
     @GetMapping(path = {"/cvs"})
     public List<CV> findAll() {

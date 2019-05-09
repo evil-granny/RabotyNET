@@ -22,12 +22,14 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.apache.pdfbox.pdmodel.interactive.viewerpreferences.PDViewerPreferences.BOUNDARY.CropBox;
 
 
-@Service("createMyPDF")
+//@Service("createMyPDF")
+@Service
 @Data
 public class TestCVPDF {
 

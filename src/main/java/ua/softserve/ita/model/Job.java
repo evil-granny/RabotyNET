@@ -3,6 +3,7 @@ package ua.softserve.ita.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import lombok.Data;
 import ua.softserve.ita.adapter.LocalDateAdapter;
 import ua.softserve.ita.adapter.LocalDateDeserializer;
 import ua.softserve.ita.adapter.LocalDateSerializer;
@@ -41,6 +42,9 @@ public class Job implements Serializable {
     @Column(name = "description", length = 200)
     private String description;
 
+    @Column(name = "print_pdf",nullable = false)
+    private Boolean printPdf;
+
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "cv_id", nullable = false)
@@ -60,6 +64,14 @@ public class Job implements Serializable {
 
     public void setJobId(Long jobId) {
         this.jobId = jobId;
+    }
+
+    public Boolean getPrintPdf() {
+        return printPdf;
+    }
+
+    public void setPrintPdf(Boolean printPdf) {
+        this.printPdf = printPdf;
     }
 
     public String getPosition() {
