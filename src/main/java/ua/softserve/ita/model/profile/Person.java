@@ -35,8 +35,9 @@ public class Person implements Serializable {
     @Column(name = "birthday")
     private LocalDate birthday;
 
-    @Column(name = "photo")
-    private String photo;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "photo_id", referencedColumnName = "photo_id")
+    private Photo photo;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "contacts_id", referencedColumnName = "contacts_id")

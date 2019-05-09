@@ -1,56 +1,75 @@
 package ua.softserve.ita.service.profile;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.stereotype.Service;
+import org.apache.commons.io.IOUtils;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import ua.softserve.ita.dao.Dao;
+import ua.softserve.ita.model.profile.Photo;
+import ua.softserve.ita.service.Service;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
+import javax.annotation.Resource;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
-@Service
+@Component("photoService")
+@org.springframework.stereotype.Service
 @Transactional
-public class PhotoService {
+public class PhotoService implements Service<Photo> {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+    private static final String uploadDirectory = System.getProperty("user.dir") + "\\uploads";
 
-    private final Path rootLocation = Paths.get("upload-dir");
+    @Resource(name = "photoDao")
+    private Dao<Photo> personDao;
 
-    public void store(MultipartFile photo) {
-        try {
-            Files.copy(photo.getInputStream(), this.rootLocation.resolve(photo.getOriginalFilename()));
-        } catch (IOException ex) {
-            logger.error(ex.getMessage());
-        }
+
+    @Override
+    public Photo findById(Long id) {
+        return personDao.findById(id);
     }
 
-    /* public Resource loadPhoto(String fileName) {
-        System.out.println(rootLocation);
-        try {
-            Path photo = rootLocation.resolve(fileName);
-            Resource resource = new UrlResource(photo.toUri());
-            if (resource.exists() || resource.isReadable()) {
-                return resource;
-            }
-        } catch (MalformedURLException ex) {
-            logger.error(ex.getMessage());
-        }
+    @Override
+    public List<Photo> findAll() {
+        return personDao.findAll();
+    }
 
-        return null;
-    } */
+    @Override
+    public Photo create(Photo photo) {
+        return personDao.create(photo);
+    }
 
-    public void init() {
-        try {
-            Files.createDirectory(rootLocation);
-        } catch (IOException ex) {
-            logger.error(ex.getMessage());
-        }
+    @Override
+    public Photo update(Photo photo) {
+        return personDao.update(photo);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        personDao.deleteById(id);
+    }
+
+    public byte[] load(String fileName) throws Exception {
+        Path photo = Paths.get(uploadDirectory).resolve(fileName);
+
+        InputStream inputStream = new FileInputStream(photo.toFile());
+
+        return IOUtils.toByteArray(inputStream);
+    }
+
+    public void upload(MultipartFile file) throws Exception {
+        Files.createDirectory(Paths.get(uploadDirectory));
+
+        Path path = Paths.get(uploadDirectory, file.getOriginalFilename());
+
+        Files.write(path, file.getBytes());
+
+        Photo photo = new Photo();
+        photo.setName(file.getOriginalFilename());
+        create(photo);
     }
 
 }

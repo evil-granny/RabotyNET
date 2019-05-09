@@ -1,62 +1,84 @@
 package ua.softserve.ita.controller.profile;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ua.softserve.ita.model.profile.Person;
+import ua.softserve.ita.model.profile.Photo;
+import ua.softserve.ita.service.Service;
 
+import javax.annotation.Resource;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Optional;
+import java.util.Base64;
 
 @CrossOrigin
 @RestController
 public class PhotoController {
 
-    //private static String uploadDirectory = System.getProperty("user.dir") + "/uploads";
+    private static final String uploadDirectory = System.getProperty("user.dir") + "\\uploads";
 
     private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
-    private static Path uploadDirectory = Paths.get("C:\\Users\\DeH4uK\\Desktop\\Photo");
+    @Resource(name = "photoService")
+    private Service<Photo> photoService;
 
-    @RequestMapping(value = "/uploadPhoto", method = RequestMethod.POST)
-    public void upload(@RequestParam("file") MultipartFile file) {
-        System.out.println("[upload]");
-        Path path = Paths.get(uploadDirectory.toString(), file.getOriginalFilename());
+    @Resource(name = "personService")
+    private Service<Person> personService;
+
+    @RequestMapping(value = "/uploadPhoto/{userId}", method = RequestMethod.POST)
+    public void upload(@RequestParam("file") MultipartFile file, @PathVariable("userId") Long userId) {
+        try {
+            Files.createDirectory(Paths.get(uploadDirectory));
+        } catch (IOException ex) {
+            logger.error(ex.getMessage());
+        }
+
+        Path path = Paths.get(uploadDirectory, file.getOriginalFilename());
+
         try {
             Files.write(path, file.getBytes());
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+
+        Photo photo = new Photo();
+        photo.setName(file.getOriginalFilename());
+        photoService.create(photo);
+
+        Person person = personService.findById(userId);
+        person.setPhoto(photo);
+        personService.update(person);
     }
 
-    @RequestMapping(value = "/loadPhoto/{fileName}", method = RequestMethod.GET)
-    public Optional<Resource> load(@PathVariable("fileName") String fileName) {
-        System.out.println("[load]");
-        try {
-            Path photo = uploadDirectory.resolve(fileName);
-            Resource resource = new UrlResource(photo.toUri());
-            if (resource.exists() || resource.isReadable()) {
-                return Optional.of(resource);
-            }
-        } catch (MalformedURLException ex) {
-            logger.error(ex.getMessage());
-        }
+    @RequestMapping(value = "/loadPhotoAsByteArray/{fileName}", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
+    public @ResponseBody
+    byte[] loadAsByteArray(@PathVariable("fileName") String fileName) throws IOException {
+        Path photo = Paths.get(uploadDirectory).resolve(fileName + ".jpg");
 
-        return Optional.empty();
+        InputStream inputStream = new FileInputStream(photo.toFile());
+
+        return IOUtils.toByteArray(inputStream);
     }
 
-    public void init() {
-        try {
-            Files.createDirectory(uploadDirectory);
-        } catch (IOException ex) {
-            logger.error(ex.getMessage());
-        }
+    @RequestMapping(value = "/loadAsPhotoObject/{id}", method = RequestMethod.GET)
+    public Photo loadAsPhotoObject(@PathVariable("id") Long id) throws IOException {
+        Photo photo = photoService.findById(id);
+
+        Path file = Paths.get(uploadDirectory).resolve(photo.getName());
+
+        byte[] fileContent = FileUtils.readFileToByteArray(file.toFile());
+        photo.setName(Base64.getEncoder().encodeToString(fileContent));
+
+        return photo;
     }
 
 }
