@@ -49,6 +49,11 @@ public class CompanyController {
         return companyService.findAllWithPagination(first, count);
     }
 
+    @GetMapping(path = {"/companies/count"})
+    public Long getCountOfVacancies(){
+        return companyService.getCompaniesCount();
+    }
+
     @PutMapping("/updateCompany")
     public Company update(@Valid @RequestBody Company company) {
         if(company.getStatus() != null && company.getStatus().isReadyToDelete()) {

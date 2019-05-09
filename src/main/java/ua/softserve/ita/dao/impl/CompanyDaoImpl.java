@@ -18,4 +18,10 @@ public class CompanyDaoImpl extends AbstractDao<Company, Long> implements Compan
                 .setParameter(ID, id)
                 .getSingleResult()));
     }
+
+    @Override
+    public Long getCompaniesCount() {
+        return (Long) createNamedQuery(Company.FIND_COUNT_COMPANY)
+                .getSingleResult();
+    }
 }

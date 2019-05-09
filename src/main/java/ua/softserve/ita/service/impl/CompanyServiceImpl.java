@@ -32,6 +32,11 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
+    public Long getCompaniesCount() {
+        return companyDao.getCompaniesCount();
+    }
+
+    @Override
     public List<Company> findAll() {
         return companyDao.findAll();
     }

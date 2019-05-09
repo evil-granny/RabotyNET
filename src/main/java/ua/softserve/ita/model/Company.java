@@ -19,9 +19,13 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Table(name = "company")
-@NamedQuery(name = Company.FIND_BY_VACANCY_ID,query = "SELECT com FROM Company com WHERE com.companyId = (SELECT vac.company.companyId FROM Vacancy vac WHERE vac.vacancyId = :id)")
+@NamedQueries({
+        @NamedQuery(name = Company.FIND_BY_VACANCY_ID,query = "SELECT com FROM Company com WHERE com.companyId = (SELECT vac.company.companyId FROM Vacancy vac WHERE vac.vacancyId = :id)"),
+        @NamedQuery(name = Company.FIND_COUNT_COMPANY, query = "select count(com.companyId) from Company com")
+})
 public class Company implements Serializable {
     public static final String FIND_BY_VACANCY_ID = "Company.findByVacancyId";
+    public static final String FIND_COUNT_COMPANY= "Company.findCount";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

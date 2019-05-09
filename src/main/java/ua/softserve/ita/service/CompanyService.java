@@ -18,4 +18,6 @@ public interface CompanyService {
     Company update(Company company);
 
     void deleteById(Long id);
+
+    Long getCompaniesCount();
 }
