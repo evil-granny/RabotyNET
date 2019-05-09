@@ -1,4 +1,4 @@
-package ua.softserve.ita.service.profile;
+package ua.softserve.ita.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
