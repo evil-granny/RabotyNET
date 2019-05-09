@@ -31,7 +31,7 @@ public class Status {
         return statusId;
     }
 
-    public boolean isReadToDelete() {
+    public boolean isReadyToDelete() {
         return approved && mailSent && reliable;
     }
 }

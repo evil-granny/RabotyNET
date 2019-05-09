@@ -1,11 +1,10 @@
-package ua.softserve.ita.service.profile;
+package ua.softserve.ita.service.impl.profile;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.softserve.ita.dao.PersonDao;
 import ua.softserve.ita.model.profile.Person;
 import ua.softserve.ita.service.PersonService;
-
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -44,6 +43,7 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public void deleteById(Long id) {
-       personDao.deleteById(id);
+        personDao.deleteById(id);
     }
+
 }

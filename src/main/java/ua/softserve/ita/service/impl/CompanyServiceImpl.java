@@ -32,8 +32,18 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
+    public Long getCompaniesCount() {
+        return companyDao.getCompaniesCount();
+    }
+
+    @Override
     public List<Company> findAll() {
         return companyDao.findAll();
+    }
+
+    @Override
+    public List<Company> findAllWithPagination(int first, int count) {
+        return companyDao.findWithPagination(first, count);
     }
 
     @Override

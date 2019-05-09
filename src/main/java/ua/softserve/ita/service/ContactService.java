@@ -1,4 +1,5 @@
 package ua.softserve.ita.service;
+
 import ua.softserve.ita.model.profile.Contact;
 
 import java.util.List;
@@ -15,4 +16,5 @@ public interface ContactService {
     Contact update(Contact contact);
 
     void deleteById(Long id);
+
 }
