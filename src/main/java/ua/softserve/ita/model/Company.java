@@ -19,7 +19,13 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Table(name = "company")
+@NamedQueries({
+        @NamedQuery(name = Company.FIND_BY_VACANCY_ID,query = "SELECT com FROM Company com WHERE com.companyId = (SELECT vac.company.companyId FROM Vacancy vac WHERE vac.vacancyId = :id)"),
+        @NamedQuery(name = Company.FIND_COUNT_COMPANY, query = "select count(com.companyId) from Company com")
+})
 public class Company implements Serializable {
+    public static final String FIND_BY_VACANCY_ID = "Company.findByVacancyId";
+    public static final String FIND_COUNT_COMPANY= "Company.findCount";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,10 +75,6 @@ public class Company implements Serializable {
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private User user;
-
-    public static boolean isValid(Company company) {
-        return Validator.validate(company) && Validator.validate(company.address) && Validator.validate(company.contact);
-    }
 
     @Override
     public String toString() {

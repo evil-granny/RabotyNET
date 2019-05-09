@@ -1,6 +1,7 @@
 package ua.softserve.ita.controller;
 
 import org.springframework.web.bind.annotation.*;
+import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Claim;
 import ua.softserve.ita.model.Company;
 import ua.softserve.ita.model.Status;
@@ -10,6 +11,7 @@ import ua.softserve.ita.service.StatusService;
 import ua.softserve.ita.service.letter.GenerateLetter;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,8 +33,10 @@ public class CompanyController {
     }
 
     @GetMapping(value = "/company/{id}")
-    public Optional<Company> getCompany(@PathVariable("id") long id) {
-        return companyService.findById(id);
+    public Company getCompany(@PathVariable("id") long id) {
+
+        System.out.println(companyService.findById(id));
+        return companyService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Company not found with id " + id));
     }
 
     @GetMapping(path = {"/companies"})
@@ -40,13 +44,24 @@ public class CompanyController {
         return companyService.findAll();
     }
 
-    @PutMapping("/updateCompany")
-    public Company update(@RequestBody Company company) {
-        if(!Company.isValid(company))
-            return null;
+    @GetMapping(path = {"/companies/{first}/{count}"})
+    public List<Company> getAllWithPagination(@PathVariable("first") int first, @PathVariable("count") int count) {
+        return companyService.findAllWithPagination(first, count);
+    }
 
-        if(company.getStatus().isReadToDelete()) {
-            statusService.deleteById(company.getStatus().getStatusId());
+    @GetMapping(path = {"/companies/count"})
+    public Long getCountOfVacancies(){
+        return companyService.getCompaniesCount();
+    }
+
+    @PutMapping("/updateCompany")
+    public Company update(@Valid @RequestBody Company company) {
+        if(company.getStatus() != null && company.getStatus().isReadyToDelete()) {
+            long status_id = company.getStatus().getStatusId();
+            company.setStatus(null);
+            companyService.update(company);
+            statusService.deleteById(status_id);
+            return company;
         }
 
         return companyService.update(company);
@@ -66,10 +81,7 @@ public class CompanyController {
     }
 
     @PostMapping("/createCompany")
-    public Company create(@RequestBody Company company) {
-        if(!Company.isValid(company))
-            return null;
-
+    public Company create(@Valid @RequestBody Company company) {
         return companyService.save(company);
     }
 
@@ -92,11 +104,6 @@ public class CompanyController {
     @DeleteMapping("/deleteClaim/{id}")
     public void deleteClaim(@PathVariable("id") long id) {
         claimService.deleteById(id);
-    }
-
-    @PostMapping("/createStatus")
-    public Status createStatus(@RequestBody Status status) {
-        return statusService.save(status);
     }
 
     private String getAppUrl(HttpServletRequest request) {

@@ -2,5 +2,10 @@ package ua.softserve.ita.dao;
 
 import ua.softserve.ita.model.Company;
 
+import java.util.Optional;
+
 public interface CompanyDao extends BaseDao<Company,Long> {
+     Optional<Company> findByVacancyId(Long id);
+
+     Long getCompaniesCount();
 }
