@@ -11,7 +11,7 @@ import java.time.ZoneId;
 @Slf4j
 public class SearchCVMapper {
 
-    public SearchCVDTO put(String result) {
+    public SearchCVDTO getSearchCVDTO(String result) {
         String[] resultArray = result.split(",");
         for (int i = 0; i < resultArray.length; i++) {
             resultArray[i] = resultArray[i].replace("[", "");
