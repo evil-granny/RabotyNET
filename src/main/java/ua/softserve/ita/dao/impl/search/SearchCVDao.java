@@ -131,10 +131,8 @@ public class SearchCVDao {
         SearchCVDTO searchCVDTO;
         ObjectMapper objectMapper = new ObjectMapper();
         for (Object object : result) {
-
             try {
                 searchCVDTO = searchCVMapper.getSearchCVDTO(objectMapper.writeValueAsString(object));
-                log.info("searchCVDTO = " + searchCVDTO);
                 dtoList.add(searchCVDTO);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();

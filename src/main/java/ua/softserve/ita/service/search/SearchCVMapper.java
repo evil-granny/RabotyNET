@@ -19,7 +19,7 @@ public class SearchCVMapper {
             resultArray[i] = resultArray[i].replace("\"", "");
         }
 
-        SearchCVDTO searchCVDTO = SearchCVDTO.builder()
+        return SearchCVDTO.builder()
                 .id(Long.valueOf(resultArray[0]))
                 .firstName(resultArray[1].trim())
                 .lastName(resultArray[2].trim())
@@ -30,7 +30,5 @@ public class SearchCVMapper {
                 .email(resultArray[6].trim())
                 .city(resultArray[7].trim())
                 .build();
-        log.info("SearchCVMapper = " + searchCVDTO);
-        return searchCVDTO;
     }
 }

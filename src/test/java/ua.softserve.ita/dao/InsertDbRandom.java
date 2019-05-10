@@ -28,8 +28,8 @@ class InsertDbRandom {
     private String[] languages = {"Java", "C#", "C++", "Python", "Angular", "JavaScript", "Fortran", "HTML/CSS", "Scala"};
     private String[] ranks = {"Junior", "Middle", "Senior"};
     private String[] positions = {"Developer", "QATC"};
-    private String[] companies = {"Google", "MetaCortex", "Microsoft", "Apple", "Amazon", "USAGovernment", "IBM",
-            "Tesla", "GMC", "CyberdyneSystems", "Umbrella", "OmniConsumerProducts"};
+    private String[] companies = {"Google", "Meta Cortex", "Microsoft", "Apple", "Amazon", "USA Government", "IBM",
+            "Tesla", "GMC", "Cyberdyne Systems", "Umbrella", "Omni Consumer Products"};
     private String[] universities = {"Stanford University", "Massachusetts Institute of Technology",
             "Harvard University", "Princeton University", "University of Chicago"};
     private List<Employment> employmentList = new ArrayList<>();
@@ -88,7 +88,7 @@ class InsertDbRandom {
         return contact;
     }
 
-    Person getPerson(long id, Address address, Contact contact) {
+    Person getPerson(long id, Address address, Contact contact, CV cv) {
         Person person = new Person();
         person.setUserId(id);
         person.setFirstName(nameList.get(random.nextInt(nameList.size())));
@@ -97,6 +97,7 @@ class InsertDbRandom {
         person.setPhoto("photo");
         person.setContact(contact);
         person.setAddress(address);
+        person.setCv(cv);
         return person;
     }
 
@@ -152,12 +153,12 @@ class InsertDbRandom {
 
     Company getCompany(Contact contact, Address address, User user) {
         Company company = new Company();
-            company.setEdrpou("2562325814");
+            company.setEdrpou(String.format("%08d", random.nextInt(100000000)));
             company.setName(companies[next++]);
             if(company.getName().equals("Meta Cortex")){
                 company.setDescription("Wake up.. The Matrix has you...");
             }
-            company.setWebsite("http://" + company.getName().replace(" ", "") + ".com");
+            company.setWebsite(company.getName().replace(" ", "") + ".com");
             company.setContact(contact);
             company.setAddress(address);
             company.setUser(user);
@@ -227,7 +228,7 @@ class InsertDbRandom {
             for (Skill skill : skills) {
                 session.save(skill);
             }
-            Person person = getPerson(user.getUserId(), address, contact);
+            Person person = getPerson(user.getUserId(), address, contact, cv);
             session.save(person);
             log.info("#: " + String.valueOf(i) + " - " + person.getFirstName() + " " + person.getLastName());
             session.getTransaction().commit();
@@ -257,7 +258,7 @@ class InsertDbRandom {
     void insert() throws FileNotFoundException {
         setData();
         Session session = sessionFactory.openSession();
-        insertCvs(20, session);
+        insertCvs(1000, session);
         insertVacancies(12, session);
         session.close();
     }
