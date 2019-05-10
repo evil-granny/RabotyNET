@@ -29,10 +29,11 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/users").access("hasRole('ROLE_USER')")
                 .antMatchers("/companies").access("hasRole('ROLE_COWNER') or hasRole('ROLE_ADMIN')")
                 .antMatchers("/searchCV").access("hasRole('ROLE_COWNER') or hasRole('ROLE_USER')")
-                .antMatchers("/", "/home", "/loginUser", "/registration").permitAll()
+                .antMatchers("/", "/vacancies", "/loginUser", "/registration").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .logout().logoutSuccessUrl("/logoutUser")
+//                .and().csrf().ignoringAntMatchers("/", "/home", "/loginUser");
                 .and().csrf().disable();
     }
 
