@@ -88,7 +88,7 @@ class InsertDbRandom {
         return contact;
     }
 
-    Person getPerson(long id, Address address, Contact contact, CV cv) {
+    Person getPerson(long id, Address address, Contact contact) {
         Person person = new Person();
         person.setUserId(id);
         person.setFirstName(nameList.get(random.nextInt(nameList.size())));
@@ -97,7 +97,6 @@ class InsertDbRandom {
         person.setPhoto("photo");
         person.setContact(contact);
         person.setAddress(address);
-        person.setCv(cv);
         return person;
     }
 
@@ -228,7 +227,7 @@ class InsertDbRandom {
             for (Skill skill : skills) {
                 session.save(skill);
             }
-            Person person = getPerson(user.getUserId(), address, contact, cv);
+            Person person = getPerson(user.getUserId(), address, contact);
             session.save(person);
             log.info("#: " + String.valueOf(i) + " - " + person.getFirstName() + " " + person.getLastName());
             session.getTransaction().commit();

@@ -1,6 +1,6 @@
 package ua.softserve.ita.model;
 
-import lombok.Data;
+import lombok.*;
 import ua.softserve.ita.model.profile.Person;
 
 import javax.persistence.*;
@@ -10,7 +10,11 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "cv")
 public class CV implements Serializable {
