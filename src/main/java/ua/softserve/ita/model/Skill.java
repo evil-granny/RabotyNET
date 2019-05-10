@@ -36,7 +36,6 @@ public class Skill implements Serializable {
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "cv_id", nullable = false)
-    @NotNull(message = "cv must be not null")
     private CV cv;
 
     @Override

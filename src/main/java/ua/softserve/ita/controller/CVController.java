@@ -2,6 +2,7 @@ package ua.softserve.ita.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.CV;
 import ua.softserve.ita.model.Job;
 import ua.softserve.ita.model.Skill;
@@ -29,8 +30,8 @@ public class CVController {
     }
 
     @GetMapping(path = {"/cv/{id}"})
-    public Optional<CV> findById(@PathVariable("id") long id) {
-        return cvService.findById(id);
+    public CV findById(@PathVariable("id") long id) {
+        return cvService.findById(id).orElseThrow(()->new ResourceNotFoundException("Not found cv by id"));
     }
 
     @GetMapping(path = {"/cvs"})
@@ -55,6 +56,11 @@ public class CVController {
 
     @PutMapping(path = "/updateCV")
     public CV update(@RequestBody CV cv) {
+        Set<Skill> skills = cv.getSkills();
+        Set<Job> jobs = cv.getJobs();
+        skills.forEach(x -> x.setCv(cv));
+        jobs.forEach(x -> x.setCv(cv));
+
         return cvService.update(cv);
     }
 
