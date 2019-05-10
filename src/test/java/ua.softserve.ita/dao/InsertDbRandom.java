@@ -28,8 +28,8 @@ class InsertDbRandom {
     private String[] languages = {"Java", "C#", "C++", "Python", "Angular", "JavaScript", "Fortran", "HTML/CSS", "Scala"};
     private String[] ranks = {"Junior", "Middle", "Senior"};
     private String[] positions = {"Developer", "QATC"};
-    private String[] companies = {"Google", "Meta Cortex", "Microsoft", "Apple", "Amazon", "USA Government", "IBM",
-            "Tesla", "GMC", "Cyberdyne Systems", "Umbrella", "Omni Consumer Products"};
+    private String[] companies = {"Google", "MetaCortex", "Microsoft", "Apple", "Amazon", "USAGovernment", "IBM",
+            "Tesla", "GMC", "CyberdyneSystems", "Umbrella", "OmniConsumerProducts"};
     private String[] universities = {"Stanford University", "Massachusetts Institute of Technology",
             "Harvard University", "Princeton University", "University of Chicago"};
     private List<Employment> employmentList = new ArrayList<>();
@@ -153,12 +153,12 @@ class InsertDbRandom {
 
     Company getCompany(Contact contact, Address address, User user) {
         Company company = new Company();
-            company.setEdrpou(String.format("%08d", random.nextInt(100000000)));
+            company.setEdrpou("2562325814");
             company.setName(companies[next++]);
             if(company.getName().equals("Meta Cortex")){
                 company.setDescription("Wake up.. The Matrix has you...");
             }
-            company.setWebsite(company.getName().replace(" ", "") + ".com");
+            company.setWebsite("http://" + company.getName().replace(" ", "") + ".com");
             company.setContact(contact);
             company.setAddress(address);
             company.setUser(user);
@@ -258,7 +258,7 @@ class InsertDbRandom {
     void insert() throws FileNotFoundException {
         setData();
         Session session = sessionFactory.openSession();
-        insertCvs(10, session);
+        insertCvs(20, session);
         insertVacancies(12, session);
         session.close();
     }
