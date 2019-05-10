@@ -201,7 +201,7 @@ class InsertDbRandom {
                 .setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect")
                 .setProperty("hibernate.show_sql", "true")
                 .setProperty("hibernate.show_sql", "true")
-                .setProperty("hibernate.hbm2ddl.auto", "create")
+                .setProperty("hibernate.hbm2ddl.auto", "update")
                 .buildSessionFactory();
     }
 

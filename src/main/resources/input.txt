@@ -1,0 +1,96 @@
+
+INSERT INTO public.users(enabled, login, password) VALUES (true, 'admin', '$2a$10$E2.PwtnpF2p6aB3NFM3Qo.TarTYsaiWD0yTZ7qY1U3K.ybKxNvCku');
+INSERT INTO public.users(enabled, login, password) VALUES (true, 'cowner', '$2a$10$DmeWO6UlY/m2QjJaxLGUzezqOotvJmpzbBmZGBr8o/HHeNUuCWcpK');
+INSERT INTO public.users(enabled, login, password) VALUES (true, 'user', '$2a$10$t31PsVNWl8eaWr9/gPwKKeX.4Q2grl12wmiRrN9fEZDMlMGHwA92m');
+
+
+INSERT INTO public.roles(role_id, type)	VALUES (1, 'admin');
+INSERT INTO public.roles(role_id, type)	VALUES (2, 'cowner');
+INSERT INTO public.roles(role_id, type)	VALUES (3, 'user');
+
+
+INSERT INTO public.user_role(user_id, role_id) VALUES (1,1);
+INSERT INTO public.user_role(user_id, role_id) VALUES (2,2);
+INSERT INTO public.user_role(user_id, role_id) VALUES (3,3);
+
+INSERT INTO public.address(
+	apartment, building, city, country, street, zip_code)
+	VALUES ('10', '20', 'Chernivtsi', 'Ukraine', 'Holovna, 10', 58000);
+
+INSERT INTO public.education(
+	 degree, graduation, school, specialty)
+	VALUES ('Master', 2016, 'Chnu', 'SI');
+
+INSERT INTO public.contact(
+	 email, phone_number)
+	VALUES ('den.ohorodnik@gmail.com', '+380973999060');
+
+INSERT INTO public.person(
+	user_id, birthday, first_name, last_name, address_id, contact_id)
+	VALUES (1,'1999-04-06', 'Denys', 'Ohorodnik', 1, 1);
+
+INSERT INTO public.cv(
+	photo, "position", education_id,user_id)
+	VALUES ('http://', 'developer', 1, 1);
+
+INSERT INTO public.skill(
+	description, title, cv_id)
+	VALUES ('MVC', 'Java',1);
+
+INSERT INTO public.job(
+	begin, companyname, description, "end", "position", cv_id)
+	VALUES ('2000-10-10', 'SoftServe', 'java dev', '2009-03-04', 'junior', 1);
+
+
+
+INSERT INTO public.company(
+	description, edrpou, name, website, address_id, contact_id, user_id)
+	VALUES ('First Company', 34345, 'SoftServe', 'http:\\', 1, 1, 1);
+
+INSERT INTO public.vacancy(
+	"position", salary, employment, company_id)
+	VALUES ('junior', 1000, 'FULL',1);
+
+INSERT INTO public.vacancy(
+	"position", salary, employment, company_id)
+	VALUES ('midle', 3000, 'HOURLY',1);
+
+INSERT INTO public.vacancy(
+	"position", salary, employment, company_id)
+	VALUES ('senior', 4000, 'PART_TIME',1);
+
+INSERT INTO public.requirement(
+	description, vacancy_id)
+	VALUES ('Problem-solving skills', 1);
+
+INSERT INTO public.requirement(
+	description, vacancy_id)
+	VALUES ('Good knowledge of PostgreSQL, JUnit, bash, ant, Linux', 1);
+
+INSERT INTO public.requirement(
+	description, vacancy_id)
+	VALUES ('Strong organizational and leadership skills', 2);
+
+INSERT INTO public.requirement(
+	description, vacancy_id)
+	VALUES ('Proven experience as a Java Software Engineer, Java Developer or similar role', 2);
+
+INSERT INTO public.requirement(
+	description, vacancy_id)
+	VALUES ('Strong experience building Java EE applications (preferably using Java 8)', 2);
+
+INSERT INTO public.requirement(
+	description, vacancy_id)
+	VALUES ('Degree in Computer Science, Engineering or relevant field', 2);
+
+INSERT INTO public.requirement(
+	description, vacancy_id)
+	VALUES ('Bachelor’s degree in computer science or related fields', 3);
+
+INSERT INTO public.requirement(
+	description, vacancy_id)
+	VALUES ('Ability to program production-grade applications with Node.js', 3);
+
+INSERT INTO public.requirement(
+	description, vacancy_id)
+	VALUES ('Thorough experience of REST & API practices', 3);
