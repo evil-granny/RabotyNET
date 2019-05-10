@@ -75,16 +75,27 @@ public class VacancyController {
         return response;
     }
 
-    @GetMapping("/byCompanyId/{companyId}/{first}/{count}")
+    @GetMapping("all/{first}/{count}")
+    public ResponseEntity<List<Vacancy>> findAllVacanciesWithPagination(@PathVariable("first") int first,
+                                                                        @PathVariable("count") int count) {
+        List<Vacancy> allByCompanyId = vacancyService.findAllVacanciesWithPagination(first, count);
+        return ResponseEntity.ok().body(allByCompanyId);
+    }
+
+    @GetMapping("/{first}/{count}")
     public ResponseEntity<List<Vacancy>> findAllVacanciesByCompanyIdWithPagination(@PathVariable("companyId") Long companyId,
                                                                                    @PathVariable("first") int first,
-                                                                                   @PathVariable("count") int count){
+                                                                                   @PathVariable("count") int count) {
         List<Vacancy> allByCompanyId = vacancyService.findAllByCompanyId(companyId, first, count);
         return ResponseEntity.ok().body(allByCompanyId);
     }
 
     @GetMapping("count/{companyId}")
-    public ResponseEntity<Long> getCountOfVacancies(@PathVariable("companyId") Long companyId){
+    public ResponseEntity<Long> getCountOfVacancies(@PathVariable("companyId") Long companyId) {
         return ResponseEntity.ok().body(vacancyService.getCountOfVacancies(companyId));
+    }
+    @GetMapping("/countAll")
+    public ResponseEntity<Long> getCountOfAllVacancies() {
+        return ResponseEntity.ok().body(vacancyService.getCountOfAllVacancies());
     }
 }

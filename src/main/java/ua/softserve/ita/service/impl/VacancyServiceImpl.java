@@ -48,6 +48,11 @@ public class VacancyServiceImpl implements VacancyService {
     }
 
     @Override
+    public List<Vacancy> findAllVacanciesWithPagination(int first, int count) {
+        return vacancyDao.findWithPagination(first,count);
+    }
+
+    @Override
     public Vacancy save(Vacancy vacancy) {
         return vacancyDao.save(vacancy);
     }
@@ -72,5 +77,10 @@ public class VacancyServiceImpl implements VacancyService {
     @Override
     public Long getCountOfVacancies(Long id) {
         return vacancyDao.getCountOfVacancies(id);
+    }
+
+    @Override
+    public Long getCountOfAllVacancies() {
+        return vacancyDao.getCountOfAllVacancies();
     }
 }

@@ -30,6 +30,12 @@ public class VacancyDaoImpl extends AbstractDao<Vacancy, Long> implements Vacanc
     }
 
     @Override
+    public Long getCountOfAllVacancies() {
+        return (Long) createNamedQuery(Vacancy.FIND_COUNT_All_VACANCY)
+                .getSingleResult();
+    }
+
+    @Override
     public Optional<Vacancy> findByRequirementId(Long id) {
         return QueryUtility.findOrEmpty(() -> ((Vacancy) createNamedQuery(Vacancy.FIND_BY_REQUIREMENT)
                 .setParameter(ID, id)
