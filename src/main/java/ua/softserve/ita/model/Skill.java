@@ -26,7 +26,7 @@ public class Skill implements Serializable {
     @Column(name = "title", nullable = false, length = 30)
     @NotNull(message = "title must be not null")
     @NotBlank(message = "title must be not blank")
-    @Size(min = 3, max = 30, message = "title length is incorrect")
+    @Size(min = 1, max = 30, message = "title length is incorrect")
     private String title;
 
     @Column(name = "description")
@@ -38,20 +38,20 @@ public class Skill implements Serializable {
     @JoinColumn(name = "cv_id", nullable = false)
     private CV cv;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Skill skill = (Skill) o;
-        return skillId.equals(skill.skillId) &&
-                title.equals(skill.title) &&
-                Objects.equals(description, skill.description);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(skillId, title, description);
-    }
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        Skill skill = (Skill) o;
+//        return skillId.equals(skill.skillId) &&
+//                title.equals(skill.title) &&
+//                Objects.equals(description, skill.description);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(skillId, title, description);
+//    }
 
     @Override
     public String toString() {

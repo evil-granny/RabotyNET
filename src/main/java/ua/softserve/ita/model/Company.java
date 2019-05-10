@@ -36,7 +36,7 @@ public class Company implements Serializable {
     @NotNull(message = "name must be not null")
     @NotBlank(message = "name must be not blank")
     @Size(min = 3, max = 30, message = "name length is incorrect")
-    @Pattern(regexp = "^[A-Za-z0-9]{3,30}$")
+    @Pattern(regexp = "^[A-Za-z0-9? ?A-Za-z0-9]{3,30}$")
     private String name;
 
     @Column(name = "edrpou", nullable = false, length = 10)

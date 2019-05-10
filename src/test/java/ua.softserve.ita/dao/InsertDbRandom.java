@@ -88,7 +88,7 @@ class InsertDbRandom {
         return contact;
     }
 
-    Person getPerson(long id, Address address, Contact contact, CV cv) {
+    Person getPerson(long id, Address address, Contact contact) {
         Person person = new Person();
         person.setUserId(id);
         person.setFirstName(nameList.get(random.nextInt(nameList.size())));
@@ -97,7 +97,6 @@ class InsertDbRandom {
         person.setPhoto("photo");
         person.setContact(contact);
         person.setAddress(address);
-        person.setCv(cv);
         return person;
     }
 
@@ -141,13 +140,14 @@ class InsertDbRandom {
         return jobs;
     }
 
-    CV getCv(long user_id, Education education) {
+    CV getCv(long user_id, Education education, Person person) {
         CV cv = new CV();
         cv.setPosition(ranks[random.nextInt(ranks.length)] + " " +
                 languages[random.nextInt(languages.length)] + " " +
                 positions[random.nextInt(positions.length)]);
         cv.setEducation(education);
         cv.setCvId(user_id);
+        cv.setPerson(person);
         return cv;
     }
 
@@ -217,7 +217,9 @@ class InsertDbRandom {
             session.save(contact);
             Education education = getEducation(user.getUserId());
             session.save(education);
-            CV cv = getCv(user.getUserId(), education);
+            Person person = getPerson(user.getUserId(), address, contact);
+            session.save(person);
+            CV cv = getCv(user.getUserId(), education, person);
                 session.save(cv);
                 log.info("#: " + String.valueOf(i) + " - CV Id = " + String.valueOf(cv.getCvId()));
             Set<Job> jobs = getJobs(cv);
@@ -228,8 +230,6 @@ class InsertDbRandom {
             for (Skill skill : skills) {
                 session.save(skill);
             }
-            Person person = getPerson(user.getUserId(), address, contact, cv);
-            session.save(person);
             log.info("#: " + String.valueOf(i) + " - " + person.getFirstName() + " " + person.getLastName());
             session.getTransaction().commit();
         }

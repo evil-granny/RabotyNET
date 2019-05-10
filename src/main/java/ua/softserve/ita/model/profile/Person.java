@@ -51,8 +51,4 @@ public class Person implements Serializable {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cv_id", referencedColumnName = "cv_id")
-    private CV cv;
-
 }
