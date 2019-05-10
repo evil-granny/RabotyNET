@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
 import ua.softserve.ita.adapter.LocalDateDeserializer;
 import ua.softserve.ita.adapter.LocalDateSerializer;
+import ua.softserve.ita.model.CV;
 import ua.softserve.ita.model.User;
 
 import javax.persistence.*;
@@ -49,5 +50,9 @@ public class Person implements Serializable {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cv_id", referencedColumnName = "cv_id")
+    private CV cv;
 
 }
