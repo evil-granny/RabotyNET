@@ -42,7 +42,7 @@ public class User implements Serializable, UserDetails {
         this.enabled=false;
     }
 
-
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));

@@ -39,26 +39,30 @@ public class VacancyController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Vacancy> getVacancyById(@PathVariable("id") Long id) {
-        Vacancy vacancy = vacancyService.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("Vacancy with id: %d not found", id)));
+        Vacancy vacancy = vacancyService.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Vacancy with id: %d not found", id)));
         return ResponseEntity.ok().body(vacancy);
     }
 
     @PutMapping
     public ResponseEntity<Vacancy> updateVacancy(@Valid @RequestBody Vacancy vacancy) {
-        final Vacancy updatedVacancy = vacancyService.save(vacancy);
+        final Vacancy updatedVacancy = vacancyService.update(vacancy);
         return ResponseEntity.ok(updatedVacancy);
     }
 
-    @PostMapping("/{company_id}")
+    @PostMapping("/createVacancy/{company_id}")
     public ResponseEntity<Vacancy> createVacancy(@Valid @RequestBody Vacancy vacancy, @PathVariable(value = "company_id") Long companyId) {
         Company company = new Company();
         company.setCompanyId(companyId);
         vacancy.setCompany(company);
 
+        System.out.println(vacancy);
+        System.out.println(companyId);
+
         Set<Requirement> requirements = vacancy.getRequirements();
         requirements.forEach(e -> e.setVacancy(vacancy));
         vacancyService.save(vacancy);
-        requirements.forEach(e -> requirementService.save(e));
+        requirements.forEach(requirementService::save);
 
         return ResponseEntity.ok(vacancy);
     }
@@ -67,7 +71,20 @@ public class VacancyController {
     public Map<String, Boolean> deleteVacancy(@PathVariable("id") Long id) {
         vacancyService.deleteById(id);
         Map<String, Boolean> response = new HashMap<>();
-        response.put("deleted", Boolean.TRUE);
+        response.put("Vacancy was deleted", Boolean.TRUE);
         return response;
+    }
+
+    @GetMapping("/byCompanyId/{companyId}/{first}/{count}")
+    public ResponseEntity<List<Vacancy>> findAllVacanciesByCompanyIdWithPagination(@PathVariable("companyId") Long companyId,
+                                                                                   @PathVariable("first") int first,
+                                                                                   @PathVariable("count") int count){
+        List<Vacancy> allByCompanyId = vacancyService.findAllByCompanyId(companyId, first, count);
+        return ResponseEntity.ok().body(allByCompanyId);
+    }
+
+    @GetMapping("count/{companyId}")
+    public ResponseEntity<Long> getCountOfVacancies(@PathVariable("companyId") Long companyId){
+        return ResponseEntity.ok().body(vacancyService.getCountOfVacancies(companyId));
     }
 }

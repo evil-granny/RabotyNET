@@ -5,14 +5,11 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
 import ua.softserve.ita.adapter.LocalDateDeserializer;
 import ua.softserve.ita.adapter.LocalDateSerializer;
-import ua.softserve.ita.model.CV;
 import ua.softserve.ita.model.User;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "person")
@@ -53,6 +50,4 @@ public class Person implements Serializable {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
 
-    /*@OneToMany(mappedBy = "person",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<CV> cvs;*/
 }
