@@ -37,4 +37,5 @@ public class Education implements Serializable {
     @OneToOne(mappedBy = "education")
     private CV cv;
 
+
 }

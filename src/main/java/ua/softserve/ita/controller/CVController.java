@@ -41,7 +41,6 @@ public class CVController {
         return cv;
     }
 
-
     @GetMapping(path = {"/cvs"})
     public List<CV> findAll() {
         return cvService.findAll();
