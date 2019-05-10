@@ -1,4 +1,4 @@
-package ua.softserve.ita.service.impl;
+package ua.softserve.ita.service.impl.profile;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,4 +45,5 @@ public class AddressServiceImpl implements AddressService {
     public void deleteById(Long id) {
         addressDao.deleteById(id);
     }
+
 }
