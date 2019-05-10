@@ -1,11 +1,11 @@
 package ua.softserve.ita.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 
 @Getter
@@ -23,17 +23,24 @@ public class Claim implements Serializable {
     private long claimId;
 
     @Column(name = "title", nullable = false, length = 50)
+    @NotNull
+    @NotBlank
     private String title;
 
     @Column(name = "description", length = 500)
+    @NotNull
+    @NotBlank
+    @Pattern(regexp = "^[\\s\\S]{0,500}$")
     private String description;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
+    @NotNull
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "company_id", referencedColumnName = "company_id", nullable = false)
+    @NotNull
     private Company company;
 
     @Override

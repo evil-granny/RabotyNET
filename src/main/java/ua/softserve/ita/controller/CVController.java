@@ -6,6 +6,7 @@ import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.CV;
 import ua.softserve.ita.model.Job;
 import ua.softserve.ita.model.Skill;
+import ua.softserve.ita.model.profile.Person;
 import ua.softserve.ita.service.CVService;
 import ua.softserve.ita.service.JobService;
 import ua.softserve.ita.service.SkillService;
@@ -39,6 +40,7 @@ public class CVController {
         pdfService.createPDF(cv);
 
         return cv;
+
     }
 
     @GetMapping(path = {"/cvs"})
@@ -48,18 +50,26 @@ public class CVController {
 
     @PostMapping(path = "/createCV")
     public CV insert(@RequestBody CV cv) {
+        Person person = new Person();
+        person.setUserId(1L);
+        cv.setPerson(person);
+
         Set<Skill> skills = cv.getSkills();
-        cvService.save(cv);
-        skills.forEach(x -> x.setCv(cv));
-        skills.forEach(x -> skillService.save(x));
         Set<Job> jobs = cv.getJobs();
+        skills.forEach(x -> x.setCv(cv));
         jobs.forEach(x -> x.setCv(cv));
-        jobs.forEach(x -> jobService.save(x));
+
+        cvService.save(cv);
         return cv;
     }
 
-    @PutMapping(path = "/updateCV/{id}")
-    public CV update(@RequestBody CV cv, @PathVariable("id") long id) {
+    @PutMapping(path = "/updateCV")
+    public CV update(@RequestBody CV cv) {
+        Set<Skill> skills = cv.getSkills();
+        Set<Job> jobs = cv.getJobs();
+        skills.forEach(x -> x.setCv(cv));
+        jobs.forEach(x -> x.setCv(cv));
+
         return cvService.update(cv);
     }
 

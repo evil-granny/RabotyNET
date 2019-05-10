@@ -4,13 +4,17 @@ import lombok.*;
 import ua.softserve.ita.model.profile.Person;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Set;
 
-@NoArgsConstructor
 @Getter
 @Setter
-@ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "cv")
 public class CV implements Serializable {
@@ -24,6 +28,9 @@ public class CV implements Serializable {
     private String photo;
 
     @Column(name = "position", nullable = false, length = 50)
+    @NotNull(message = "position must be not null")
+    @NotBlank(message = "position must be not blank")
+    @Size(min = 3, max = 50, message = "position length is incorrect")
     private String position;
 
     @OneToMany(mappedBy = "cv",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -34,10 +41,11 @@ public class CV implements Serializable {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "education_id", referencedColumnName = "education_id", nullable = false)
+    @NotNull(message = "education must be not null")
     private Education education;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private Person person;
 
 }
