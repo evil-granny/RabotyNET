@@ -258,7 +258,7 @@ class InsertDbRandom {
     void insert() throws FileNotFoundException {
         setData();
         Session session = sessionFactory.openSession();
-        insertCvs(10, session);
+        insertCvs(1000, session);
         insertVacancies(12, session);
         session.close();
     }
