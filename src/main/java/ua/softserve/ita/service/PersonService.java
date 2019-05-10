@@ -11,9 +11,9 @@ public interface PersonService {
 
     List<Person> findAll();
 
-    Person save(Person vacancy);
+    Person save(Person person);
 
-    Person update(Person vacancy);
+    Person update(Person person);
 
     void deleteById(Long id);
 

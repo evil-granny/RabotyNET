@@ -1,3 +1,4 @@
+/*
 package ua.softserve.ita.dao;
 
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ import ua.softserve.ita.model.enumtype.Employment;
 import ua.softserve.ita.model.profile.Address;
 import ua.softserve.ita.model.profile.Contact;
 import ua.softserve.ita.model.profile.Person;
+import ua.softserve.ita.model.profile.Photo;
 
 import java.io.*;
 import java.time.LocalDate;
@@ -89,7 +91,7 @@ class InsertDbRandom {
         return contact;
     }
 
-    Person getPerson(long id, Address address, Contact contact) {
+    Person getPerson(long id, Photo photo, Address address, Contact contact) {
         Person person = new Person();
         person.setUserId(id);
         person.setFirstName(nameList.get(random.nextInt(nameList.size())));
@@ -270,3 +272,4 @@ class InsertDbRandom {
     }
 
 }
+*/
