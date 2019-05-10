@@ -10,5 +10,7 @@ public interface VacancyDao extends BaseDao<Vacancy,Long> {
 
     Long getCountOfVacancies(Long id);
 
+    Long getCountOfAllVacancies();
+
     Optional<Vacancy> findByRequirementId(Long id);
 }

@@ -13,6 +13,8 @@ public interface VacancyService {
 
     List<Vacancy> findAllByCompanyId(Long companyId, int first, int count);
 
+    List<Vacancy> findAllVacanciesWithPagination(int first, int count);
+
     Vacancy save(Vacancy vacancy);
 
     Vacancy update(Vacancy vacancy);
@@ -20,4 +22,7 @@ public interface VacancyService {
     void deleteById(Long id);
 
     Long getCountOfVacancies(Long id);
+
+    Long getCountOfAllVacancies();
+
 }
