@@ -3,11 +3,11 @@ package ua.softserve.ita.model;
 import lombok.*;
 import ua.softserve.ita.model.profile.Address;
 import ua.softserve.ita.model.profile.Contact;
-import ua.softserve.ita.validation.Validator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Set;
@@ -36,30 +36,36 @@ public class Company implements Serializable {
     @NotNull(message = "name must be not null")
     @NotBlank(message = "name must be not blank")
     @Size(min = 3, max = 30, message = "name length is incorrect")
+    @Pattern(regexp = "^[A-Za-z0-9? ?A-Za-z0-9]{3,30}$")
     private String name;
 
     @Column(name = "edrpou", nullable = false, length = 10)
     @NotNull(message = "edrpou must be not null")
     @NotBlank(message = "edrpou must be not blank")
     @Size(min = 8, max = 10, message = "edrpou length is incorrect")
+    @Pattern(regexp = "^[0-9]{8,10}$")
     private String edrpou;
 
     @Column(name = "description", length = 2000)
     @Size(max = 2000, message = "description is too long")
+    @Pattern(regexp = "^[\\s\\S]{0,2000}$")
     private String description;
 
     @Column(name = "website", nullable = false, length = 50)
     @NotNull(message = "website must be not null")
     @NotBlank(message = "website must be not blank")
     @Size(max = 50, message = "website url length is too long")
+    @Pattern(regexp = "^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?#[\\\\]@!\\$&'\\(\\)\\*\\+,;=.]+$")
     private String website;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "contact_id", referencedColumnName = "contact_id", nullable = false)
+    @NotNull
     private Contact contact;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false)
+    @NotNull
     private Address address;
 
     @Column(name = "logo")
@@ -74,6 +80,7 @@ public class Company implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
+    @NotNull
     private User user;
 
     @Override
