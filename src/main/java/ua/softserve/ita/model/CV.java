@@ -44,7 +44,7 @@ public class CV implements Serializable {
     @NotNull(message = "education must be not null")
     private Education education;
 
-    @ManyToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private Person person;
 
