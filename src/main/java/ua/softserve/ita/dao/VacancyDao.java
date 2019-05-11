@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface VacancyDao extends BaseDao<Vacancy,Long> {
-    List<Vacancy> findAllByCompanyIdWithPagination(Long id, int first, int count);
+    List<Vacancy> findAllVacanciesByCompanyIdWithPagination(Long id, int first, int count);
 
-    Long getCountOfVacancies(Long id);
+    Long getCountOfVacanciesByCompanyId(Long companyId);
 
     Long getCountOfAllVacancies();
 

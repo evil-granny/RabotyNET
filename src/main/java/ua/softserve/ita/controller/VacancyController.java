@@ -1,6 +1,7 @@
 package ua.softserve.ita.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.exception.ResourceNotFoundException;
@@ -10,12 +11,9 @@ import ua.softserve.ita.model.Vacancy;
 import ua.softserve.ita.service.RequirementService;
 import ua.softserve.ita.service.VacancyService;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @CrossOrigin
 @RestController
@@ -26,7 +24,6 @@ public class VacancyController {
 
     @Autowired
     public VacancyController(VacancyService vacancyService, RequirementService requirementService) {
-
         this.vacancyService = vacancyService;
         this.requirementService = requirementService;
     }
@@ -51,14 +48,11 @@ public class VacancyController {
     }
 
     @PostMapping("/createVacancy/{company_id}")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Vacancy> createVacancy(@Valid @RequestBody Vacancy vacancy, @PathVariable(value = "company_id") Long companyId) {
         Company company = new Company();
         company.setCompanyId(companyId);
         vacancy.setCompany(company);
-
-        System.out.println(vacancy);
-        System.out.println(companyId);
-
         Set<Requirement> requirements = vacancy.getRequirements();
         requirements.forEach(e -> e.setVacancy(vacancy));
         vacancyService.save(vacancy);
@@ -68,6 +62,7 @@ public class VacancyController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public Map<String, Boolean> deleteVacancy(@PathVariable("id") Long id) {
         vacancyService.deleteById(id);
         Map<String, Boolean> response = new HashMap<>();
@@ -75,26 +70,26 @@ public class VacancyController {
         return response;
     }
 
-    @GetMapping("all/{first}/{count}")
-    public ResponseEntity<List<Vacancy>> findAllVacanciesWithPagination(@PathVariable("first") int first,
-                                                                        @PathVariable("count") int count) {
-        List<Vacancy> allByCompanyId = vacancyService.findAllVacanciesWithPagination(first, count);
-        return ResponseEntity.ok().body(allByCompanyId);
+    @GetMapping("/{first}/{count}")
+    public ResponseEntity<List<Vacancy>> findAllVacanciesWithPagination(@PathVariable("first") int first, @PathVariable("count") int count) {
+        List<Vacancy> allVacanciesByCompanyId = vacancyService.findAllVacanciesWithPagination(first, count);
+        return ResponseEntity.ok().body(allVacanciesByCompanyId);
     }
 
-    @GetMapping("/byCompanyId/{companyId}/{first}/{count}")
+    @GetMapping("/{companyId}/{first}/{count}")
     public ResponseEntity<List<Vacancy>> findAllVacanciesByCompanyIdWithPagination(@PathVariable("companyId") Long companyId,
                                                                                    @PathVariable("first") int first,
                                                                                    @PathVariable("count") int count) {
-        List<Vacancy> allByCompanyId = vacancyService.findAllByCompanyId(companyId, first, count);
+        List<Vacancy> allByCompanyId = vacancyService.findAllVacanciesByCompanyIdWithPagination(companyId, first, count);
         return ResponseEntity.ok().body(allByCompanyId);
     }
 
-    @GetMapping("count/{companyId}")
-    public ResponseEntity<Long> getCountOfVacancies(@PathVariable("companyId") Long companyId) {
-        return ResponseEntity.ok().body(vacancyService.getCountOfVacancies(companyId));
+    @GetMapping("getCount/{companyId}")
+    public ResponseEntity<Long> getCountOfVacanciesByCompanyId(@PathVariable("companyId") Long companyId) {
+        return ResponseEntity.ok().body(vacancyService.getCountOfVacanciesByCompanyId(companyId));
     }
-    @GetMapping("/countAll")
+
+    @GetMapping("/getCountAll")
     public ResponseEntity<Long> getCountOfAllVacancies() {
         return ResponseEntity.ok().body(vacancyService.getCountOfAllVacancies());
     }

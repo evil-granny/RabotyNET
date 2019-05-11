@@ -24,7 +24,6 @@ import java.util.Set;
         @NamedQuery(name = Vacancy.FIND_COUNT_VACANCY, query = "select count(vac.vacancyId) from Vacancy vac where vac.company.companyId = :id"),
         @NamedQuery(name = Vacancy.FIND_COUNT_All_VACANCY, query = "select count(vac.vacancyId) from Vacancy vac")
 })
-
 public class Vacancy {
     public static final String FIND_BY_COMPANY = "Vacancy.findByCompany";
     public static final String FIND_BY_REQUIREMENT = "Vacancy.findByRequirement";

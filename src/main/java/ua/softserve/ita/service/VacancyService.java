@@ -11,17 +11,17 @@ public interface VacancyService {
 
     List<Vacancy> findAll();
 
-    List<Vacancy> findAllByCompanyId(Long companyId, int first, int count);
-
-    List<Vacancy> findAllVacanciesWithPagination(int first, int count);
-
     Vacancy save(Vacancy vacancy);
 
     Vacancy update(Vacancy vacancy);
 
     void deleteById(Long id);
 
-    Long getCountOfVacancies(Long id);
+    List<Vacancy> findAllVacanciesByCompanyIdWithPagination(Long companyId, int first, int count);
+
+    List<Vacancy> findAllVacanciesWithPagination(int first, int count);
+
+    Long getCountOfVacanciesByCompanyId(Long companyId);
 
     Long getCountOfAllVacancies();
 
