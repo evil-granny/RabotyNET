@@ -82,7 +82,7 @@ public class VacancyController {
         return ResponseEntity.ok().body(allByCompanyId);
     }
 
-    @GetMapping("/{first}/{count}")
+    @GetMapping("/byCompanyId/{companyId}/{first}/{count}")
     public ResponseEntity<List<Vacancy>> findAllVacanciesByCompanyIdWithPagination(@PathVariable("companyId") Long companyId,
                                                                                    @PathVariable("first") int first,
                                                                                    @PathVariable("count") int count) {
