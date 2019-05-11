@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 @CrossOrigin
 @RestController
+@RequestMapping("/companies")
 public class CompanyController {
 
     private final CompanyService companyService;
@@ -32,29 +33,29 @@ public class CompanyController {
         this.letterService = letterService;
     }
 
-    @GetMapping(value = "/company/{id}")
+    @GetMapping(value = "/{id}")
     public Company getCompany(@PathVariable("id") long id) {
 
         System.out.println(companyService.findById(id));
         return companyService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Company not found with id " + id));
     }
 
-    @GetMapping(path = {"/companies"})
+    @GetMapping
     public List<Company> getAll() {
         return companyService.findAll();
     }
 
-    @GetMapping(path = {"/companies/{first}/{count}"})
+    @GetMapping(path = {"/{first}/{count}"})
     public List<Company> getAllWithPagination(@PathVariable("first") int first, @PathVariable("count") int count) {
         return companyService.findAllWithPagination(first, count);
     }
 
-    @GetMapping(path = {"/companies/count"})
+    @GetMapping(path = {"/count"})
     public Long getCountOfVacancies(){
         return companyService.getCompaniesCount();
     }
 
-    @PutMapping("/updateCompany")
+    @PutMapping
     public Company update(@Valid @RequestBody Company company) {
         if(company.getStatus() != null && company.getStatus().isReadyToDelete()) {
             long status_id = company.getStatus().getStatusId();
@@ -67,7 +68,7 @@ public class CompanyController {
         return companyService.update(company);
     }
 
-    @PutMapping("/approveCompany")
+    @PutMapping("/approve")
     public Company approve(@RequestBody Company company, final HttpServletRequest request) {
         letterService.sendCompanyApprove(company, getAppUrl(request) + "/approveCompany/" + company.getCompanyId());
         company.getStatus().setMailSent(true);
@@ -75,35 +76,14 @@ public class CompanyController {
         return companyService.update(company);
     }
 
-    @DeleteMapping("/deleteCompany/{id}")
+    @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") long id) {
         companyService.deleteById(id);
     }
 
-    @PostMapping("/createCompany")
+    @PostMapping
     public Company create(@Valid @RequestBody Company company) {
         return companyService.save(company);
-    }
-
-    @PostMapping("/createClaim")
-    public Company createClaim(@RequestBody Claim claim) {
-
-        Company company = claim.getCompany();
-
-        claimService.save(claim);
-
-        return companyService.update(company);
-    }
-
-    @GetMapping(value = {"/findClaims/{companyId}"})
-    public List<Claim> findClaims(@PathVariable("companyId") long companyId) {
-        List<Claim> res = claimService.findAll().stream().filter((c) -> c.getCompany().getCompanyId().equals(companyId)).collect(Collectors.toList());
-        return res;
-    }
-
-    @DeleteMapping("/deleteClaim/{id}")
-    public void deleteClaim(@PathVariable("id") long id) {
-        claimService.deleteById(id);
     }
 
     private String getAppUrl(HttpServletRequest request) {
