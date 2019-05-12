@@ -242,7 +242,7 @@ public class TestCVPDF {
 
     }
 
-    public Path createPDF(CV cv) {
+    public byte[] createPDF(CV cv) {
         try {
 
             this.document = new PDDocument();
@@ -476,7 +476,13 @@ public class TestCVPDF {
             document.close();
             System.out.println(tempCVFile.toAbsolutePath());
 
-            return tempCVFile;
+
+            byte[] fileContent = Files.readAllBytes(tempCVFile.toRealPath());
+
+            System.out.println(fileContent);
+
+
+            return fileContent;
 
         } catch (IOException e) {
             e.printStackTrace();

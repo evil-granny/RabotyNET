@@ -70,6 +70,7 @@ public class CVController {
         skills.forEach(x -> x.setCv(cv));
         jobs.forEach(x -> x.setCv(cv));
 
+
         return cvService.update(cv);
     }
 

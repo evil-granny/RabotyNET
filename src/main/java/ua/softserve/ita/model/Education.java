@@ -1,5 +1,6 @@
 package ua.softserve.ita.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -41,8 +42,5 @@ public class Education implements Serializable {
 
     @Column(name = "graduation")
     private Integer graduation;
-
-    @OneToOne(mappedBy = "education")
-    private CV cv;
 
 }
