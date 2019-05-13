@@ -19,9 +19,9 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @NamedQueries({
-        @NamedQuery(name = Vacancy.FIND_BY_COMPANY, query = "select vac from Vacancy vac where vac.company.companyId = :id"),
+        @NamedQuery(name = Vacancy.FIND_BY_COMPANY, query = "select vac from Vacancy vac where vac.company.name = :name"),
         @NamedQuery(name = Vacancy.FIND_BY_REQUIREMENT, query = "SELECT vac FROM Vacancy vac WHERE vac.vacancyId = (SELECT req.vacancy.vacancyId FROM Requirement req WHERE req.requirementId = :id)"),
-        @NamedQuery(name = Vacancy.FIND_COUNT_VACANCY, query = "select count(vac.vacancyId) from Vacancy vac where vac.company.companyId = :id"),
+        @NamedQuery(name = Vacancy.FIND_COUNT_VACANCY, query = "select count(vac.vacancyId) from Vacancy vac where vac.company.name = :name"),
         @NamedQuery(name = Vacancy.FIND_COUNT_All_VACANCY, query = "select count(vac.vacancyId) from Vacancy vac")
 })
 

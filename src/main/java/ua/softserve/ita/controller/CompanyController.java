@@ -1,6 +1,7 @@
 package ua.softserve.ita.controller;
 
 import org.springframework.web.bind.annotation.*;
+import ua.softserve.ita.exception.CompanyAlreadyExistException;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Claim;
 import ua.softserve.ita.model.Company;
@@ -33,11 +34,16 @@ public class CompanyController {
         this.letterService = letterService;
     }
 
-    @GetMapping(value = "/{id}")
-    public Company getCompany(@PathVariable("id") long id) {
+//    @GetMapping(value = "/{id}")
+//    public Company getCompany(@PathVariable("id") long id) {
+//
+//        System.out.println(companyService.findById(id));
+//        return companyService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Company not found with id " + id));
+//    }
 
-        System.out.println(companyService.findById(id));
-        return companyService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Company not found with id " + id));
+    @GetMapping(value = "/{name}")
+    public Company getCompanyByName(@PathVariable("name") String name) {
+        return companyService.findByName(name).orElseThrow(() -> new ResourceNotFoundException("Company not found with name " + name));
     }
 
     @GetMapping
@@ -70,7 +76,7 @@ public class CompanyController {
 
     @PutMapping("/approve")
     public Company approve(@RequestBody Company company, final HttpServletRequest request) {
-        letterService.sendCompanyApprove(company, getAppUrl(request) + "/approveCompany/" + company.getCompanyId());
+        letterService.sendCompanyApprove(company, getAppUrl(request) + "/approveCompany/" + company.getName());
         company.getStatus().setMailSent(true);
 
         return companyService.update(company);
@@ -83,7 +89,8 @@ public class CompanyController {
 
     @PostMapping
     public Company create(@Valid @RequestBody Company company) {
-        return companyService.save(company);
+
+        return companyService.save(company).orElseThrow(() -> new CompanyAlreadyExistException("Company already exists with name " + company.getName()));
     }
 
     private String getAppUrl(HttpServletRequest request) {

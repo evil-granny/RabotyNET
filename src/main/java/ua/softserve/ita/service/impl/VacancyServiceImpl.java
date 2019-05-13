@@ -43,8 +43,8 @@ public class VacancyServiceImpl implements VacancyService {
     }
 
     @Override
-    public List<Vacancy> findAllByCompanyId(Long companyId, int first, int count) {
-        return vacancyDao.findAllByCompanyIdWithPagination(companyId, first, count);
+    public List<Vacancy> findAllByCompanyName(String companyName, int first, int count) {
+        return vacancyDao.findAllByCompanyNameWithPagination(companyName, first, count);
     }
 
     @Override
@@ -75,8 +75,8 @@ public class VacancyServiceImpl implements VacancyService {
     }
 
     @Override
-    public Long getCountOfVacancies(Long id) {
-        return vacancyDao.getCountOfVacancies(id);
+    public Long getCountOfVacancies(String name) {
+        return vacancyDao.getCountOfVacancies(name);
     }
 
     @Override

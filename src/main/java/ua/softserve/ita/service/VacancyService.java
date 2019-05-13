@@ -11,7 +11,7 @@ public interface VacancyService {
 
     List<Vacancy> findAll();
 
-    List<Vacancy> findAllByCompanyId(Long companyId, int first, int count);
+    List<Vacancy> findAllByCompanyName(String companyName, int first, int count);
 
     List<Vacancy> findAllVacanciesWithPagination(int first, int count);
 
@@ -21,7 +21,7 @@ public interface VacancyService {
 
     void deleteById(Long id);
 
-    Long getCountOfVacancies(Long id);
+    Long getCountOfVacancies(String name);
 
     Long getCountOfAllVacancies();
 

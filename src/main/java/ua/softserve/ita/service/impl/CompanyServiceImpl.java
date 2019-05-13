@@ -47,10 +47,17 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public Company save(Company company) {
-        addressDao.save(company.getAddress());
-        contactDao.save(company.getContact());
-        return companyDao.save(company);
+    public Optional<Company> save(Company company) {
+        Optional<Company> com = companyDao.findByName(company.getName());
+        Company result = null;
+
+        if(!com.isPresent()) {
+            addressDao.save(company.getAddress());
+            contactDao.save(company.getContact());
+            result = companyDao.save(company);
+        }
+
+        return Optional.ofNullable(result);
     }
 
     @Override
@@ -64,5 +71,10 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public void deleteById(Long id) {
         companyDao.deleteById(id);
+    }
+
+    @Override
+    public Optional<Company> findByName(String name) {
+        return companyDao.findByName(name);
     }
 }
