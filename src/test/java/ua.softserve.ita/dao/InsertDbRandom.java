@@ -1,4 +1,3 @@
-/*
 package ua.softserve.ita.dao;
 
 import lombok.extern.slf4j.Slf4j;
@@ -90,13 +89,19 @@ class InsertDbRandom {
         return contact;
     }
 
-    Person getPerson(long id, Photo photo, Address address, Contact contact) {
+    Photo getPhoto(long id){
+        Photo photo = new Photo();
+        photo.setPhotoId(id);
+        return photo;
+    }
+
+    Person getPerson(long id, Address address, Contact contact, Photo photo) {
         Person person = new Person();
         person.setUserId(id);
         person.setFirstName(nameList.get(random.nextInt(nameList.size())));
         person.setLastName(lastNameList.get(random.nextInt(lastNameList.size())));
         person.setBirthday(getLocalDate());
-        person.setPhoto("photo");
+        person.setPhoto(photo);
         person.setContact(contact);
         person.setAddress(address);
         return person;
@@ -178,12 +183,62 @@ class InsertDbRandom {
         return vacancy;
     }
 
+    void insertRegisteredUsers(Session session){
+
+        session.beginTransaction();
+
+        User adminUser = new User();
+        adminUser.setLogin("admin@gmail.com");
+        adminUser.setPassword("$2a$10$E2.PwtnpF2p6aB3NFM3Qo.TarTYsaiWD0yTZ7qY1U3K.ybKxNvCku");
+        adminUser.setEnabled(true);
+        session.save(adminUser);
+        Role adminRole = new Role();
+        adminRole.setType("admin");
+        adminRole.setRoleId(adminUser.getUserId());
+        session.save(adminRole);
+        List<Role> adminRoleList = new ArrayList<>();
+        adminRoleList.add(adminRole);
+        adminUser.setRoles(adminRoleList);
+        session.update(adminUser);
+
+        User userUser = new User();
+        userUser.setLogin("user@gmail.com");
+        userUser.setPassword("$2a$10$t31PsVNWl8eaWr9/gPwKKeX.4Q2grl12wmiRrN9fEZDMlMGHwA92m");
+        userUser.setEnabled(true);
+        session.save(userUser);
+        Role userRole = new Role();
+        userRole.setType("user");
+        userRole.setRoleId(userUser.getUserId());
+        session.save(userRole);
+        List<Role> userRoleList = new ArrayList<>();
+        userRoleList.add(userRole);
+        userUser.setRoles(userRoleList);
+        session.update(userUser);
+
+        User cownerUser = new User();
+        cownerUser.setLogin("cowner@gmail.com");
+        cownerUser.setPassword("$2a$10$DmeWO6UlY/m2QjJaxLGUzezqOotvJmpzbBmZGBr8o/HHeNUuCWcpK");
+        cownerUser.setEnabled(true);
+        session.save(cownerUser);
+        Role cownerRole = new Role();
+        cownerRole.setType("cowner");
+        cownerRole.setRoleId(cownerUser.getUserId());
+        session.save(cownerRole);
+        List<Role> cownerRoleList = new ArrayList<>();
+        cownerRoleList.add(cownerRole);
+        cownerUser.setRoles(cownerRoleList);
+        session.update(cownerUser);
+
+        session.getTransaction().commit();
+    }
+
     @BeforeEach
     void getSessionFactory() {
         sessionFactory = new Configuration()
                 .addAnnotatedClass(Person.class)
                 .addAnnotatedClass(Address.class)
                 .addAnnotatedClass(Contact.class)
+                .addAnnotatedClass(Photo.class)
                 .addAnnotatedClass(CV.class)
                 .addAnnotatedClass(Job.class)
                 .addAnnotatedClass(Skill.class)
@@ -219,7 +274,9 @@ class InsertDbRandom {
             session.save(contact);
             Education education = getEducation(user.getUserId());
             session.save(education);
-            Person person = getPerson(user.getUserId(), address, contact);
+            Photo photo = getPhoto(user.getUserId());
+            session.save(photo);
+            Person person = getPerson(user.getUserId(), address, contact, photo);
             session.save(person);
             CV cv = getCv(user.getUserId(), education, person);
                 session.save(cv);
@@ -243,6 +300,7 @@ class InsertDbRandom {
             User user = getUser();
             session.save(user);
             Contact contact = getContact(user.getUserId());
+            contact.setEmail(user.getLogin());
             session.save(contact);
             Address address = getAddress(user.getUserId());
             session.save(address);
@@ -262,8 +320,9 @@ class InsertDbRandom {
         Session session = sessionFactory.openSession();
         insertCvs(1000, session);
         insertVacancies(12, session);
+        insertRegisteredUsers(session);
         session.close();
     }
 
 }
-*/
+
