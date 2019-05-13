@@ -75,7 +75,7 @@ public class GenerateLetter {
 
         letter.setEMail(person.getContact().getEmail());
         letter.setSubject("Your new cv from RabotyNET");
-        String content = "Thank you for using our PDA designer, your CV in attached";
+        String content = "Thank you for using our PDF designer, your CV in attached";
         letter.setContent(content);
         letter.setWithAttachment(true);
         letter.setLinkForAttachment(path);
