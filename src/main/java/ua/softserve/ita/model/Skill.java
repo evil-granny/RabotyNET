@@ -33,6 +33,9 @@ public class Skill implements Serializable {
     @Size(max = 255, message = "description length is incorrect")
     private String description;
 
+    @Column(name = "print_pdf",nullable = false)
+    private Boolean printPdf;
+
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "cv_id", nullable = false)

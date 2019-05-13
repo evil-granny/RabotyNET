@@ -69,7 +69,10 @@ public class MailServiceImpl implements MailService {
                 helper.setTo(letter.getEMail());
                 helper.setText(letter.getContent());
                 FileSystemResource file = new FileSystemResource(new File(letter.getLinkForAttachment()));
-                helper.addAttachment("attacment", file);
+                String fileName = file.getFilename();
+
+
+                helper.addAttachment(fileName,file);
             }
         };
         return preparator;
