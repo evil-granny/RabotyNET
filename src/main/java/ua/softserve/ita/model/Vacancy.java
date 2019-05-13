@@ -25,7 +25,7 @@ import java.util.Set;
         @NamedQuery(name = Vacancy.FIND_COUNT_VACANCY, query = "select count(vac.vacancyId) from Vacancy vac where vac.company.companyId = :id"),
         @NamedQuery(name = Vacancy.FIND_COUNT_All_VACANCY, query = "select count(vac.vacancyId) from Vacancy vac")
 })
-public class Vacancy implements Comparator<Vacancy> {
+public class Vacancy {
     public static final String FIND_BY_COMPANY = "Vacancy.findByCompany";
     public static final String FIND_BY_REQUIREMENT = "Vacancy.findByRequirement";
     public static final String FIND_COUNT_VACANCY = "Vacancy.findCountVacancy";
@@ -49,8 +49,8 @@ public class Vacancy implements Comparator<Vacancy> {
     @Column(name = "salary")
     private Integer salary;
 
-    @Column(name = "hot")
-    private Boolean hot;
+    @Column(name = "hot_vacancy")
+    private Boolean hotVacancy;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -68,13 +68,9 @@ public class Vacancy implements Comparator<Vacancy> {
                 ", position='" + position + '\'' +
                 ", employment=" + employment +
                 ", salary=" + salary +
-                ", hot=" + hot +
+                ", hot=" + hotVacancy +
                 ", requirement=" + requirements +
                 '}';
     }
 
-    @Override
-    public int compare(Vacancy o1, Vacancy o2) {
-        return o1.getVacancyId().compareTo(o2.getVacancyId());
-    }
 }

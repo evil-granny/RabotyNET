@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/vacancies")
 public class VacancyController {
-    private static List<Vacancy> vacancies = new ArrayList<>();
     private final VacancyService vacancyService;
     private final RequirementService requirementService;
 
@@ -32,8 +31,7 @@ public class VacancyController {
     @GetMapping
     public ResponseEntity<List<Vacancy>> getAllVacancies() {
         List<Vacancy> vacancyList = vacancyService.findAll();
-        List<Vacancy> collect = vacancyList.stream().sorted(Comparator.comparing(Vacancy::getVacancyId)).collect(Collectors.toList());
-        return ResponseEntity.ok().body(collect);
+        return ResponseEntity.ok().body(vacancyList);
     }
 
     @GetMapping("/{id}")
@@ -75,7 +73,8 @@ public class VacancyController {
     @GetMapping("/{first}/{count}")
     public ResponseEntity<List<Vacancy>> findAllVacanciesWithPagination(@PathVariable("first") int first, @PathVariable("count") int count) {
         List<Vacancy> allVacanciesByCompanyId = vacancyService.findAllVacanciesWithPagination(first, count);
-        return ResponseEntity.ok().body(allVacanciesByCompanyId);
+        List<Vacancy> collect = allVacanciesByCompanyId.stream().sorted(Comparator.comparing(Vacancy::getVacancyId)).collect(Collectors.toList());
+        return ResponseEntity.ok().body(collect);
     }
 
     @GetMapping("/{companyId}/{first}/{count}")
