@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 
 @Service("createMyPDF")
 
-public class TestCVPDF {
+public class  TestCVPDF {
 
     @Autowired
     CreateQrCodeVCard createQR;
