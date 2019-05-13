@@ -9,6 +9,7 @@ import ua.softserve.ita.dao.UserDao;
 import ua.softserve.ita.model.User;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 @Repository
@@ -29,7 +30,15 @@ public class UserDaoImpl extends AbstractDao<User, Long> implements UserDao {
     @Override
     public List<User> findByEmail(String email) {
         Session session = sessionFactory.getCurrentSession();
-        Query query = session.createQuery("from User where login = '" + email + "'");
+        Query query = session.createQuery("from User where login like '" + email + "%'");
         return query.getResultList();
     }
+
+        @Override
+        public Optional<User> findById(Long id) {
+            Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("from User where id = id");
+        return Optional.ofNullable((User) query.getResultList().get(0));
+    }
+
 }
