@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/vacancies")
 public class VacancyController {
+    private static List<Vacancy> vacancies = new ArrayList<>();
     private final VacancyService vacancyService;
     private final RequirementService requirementService;
 
@@ -31,7 +32,8 @@ public class VacancyController {
     @GetMapping
     public ResponseEntity<List<Vacancy>> getAllVacancies() {
         List<Vacancy> vacancyList = vacancyService.findAll();
-        return ResponseEntity.ok().body(vacancyList);
+        List<Vacancy> collect = vacancyList.stream().sorted(Comparator.comparing(Vacancy::getVacancyId)).collect(Collectors.toList());
+        return ResponseEntity.ok().body(collect);
     }
 
     @GetMapping("/{id}")
