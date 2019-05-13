@@ -27,6 +27,22 @@ public class GenerateLetter {
 
     }
 
+    public void sendRestoreForgotPasswordEmail(User user, String linkOfValidation){
+        Letter letter = new Letter();
+
+        letter.setEMail(user.getLogin());
+        letter.setSubject("Restore password on website RabotyNet");
+        String validationLink=linkOfValidation;
+        String content = "Your mail has been specified for restore password on the site of RabotyNET " +
+                "to complete the restore password by clicking on the link:" + validationLink +
+                " If you do not know about this, ignore this message;";
+        letter.setContent(content);
+        letter.setWithAttachment(false);
+
+        letterService.sendLetter(letter);
+
+    }
+
     public void sendPersonEmail(Person person){
         Letter letter = new Letter();
 
