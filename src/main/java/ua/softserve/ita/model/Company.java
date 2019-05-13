@@ -1,5 +1,6 @@
 package ua.softserve.ita.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import ua.softserve.ita.model.profile.Address;
 import ua.softserve.ita.model.profile.Contact;
@@ -21,11 +22,13 @@ import java.util.Set;
 @Table(name = "company")
 @NamedQueries({
         @NamedQuery(name = Company.FIND_BY_VACANCY_ID,query = "SELECT com FROM Company com WHERE com.companyId = (SELECT vac.company.companyId FROM Vacancy vac WHERE vac.vacancyId = :id)"),
-        @NamedQuery(name = Company.FIND_COUNT_COMPANY, query = "select count(com.companyId) from Company com")
+        @NamedQuery(name = Company.FIND_COUNT_COMPANY, query = "select count(com.companyId) from Company com"),
+        @NamedQuery(name = Company.FIND_BY_COMPANY_NAME, query = "select com from Company com where com.name = :name"),
 })
 public class Company implements Serializable {
     public static final String FIND_BY_VACANCY_ID = "Company.findByVacancyId";
     public static final String FIND_COUNT_COMPANY= "Company.findCount";
+    public static final String FIND_BY_COMPANY_NAME = "Company.findByName";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -73,6 +76,10 @@ public class Company implements Serializable {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "company", cascade = CascadeType.REMOVE)
     private Set<Vacancy> vacancies;
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "company", cascade = CascadeType.REMOVE)
+    private Set<Claim> claims;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "status_id", referencedColumnName = "status_id")

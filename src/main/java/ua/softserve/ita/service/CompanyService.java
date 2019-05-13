@@ -13,11 +13,13 @@ public interface CompanyService {
 
     List<Company> findAllWithPagination(int first, int count);
 
-    Company save(Company company);
+    Optional<Company> save(Company company);
 
     Company update(Company company);
 
     void deleteById(Long id);
 
     Long getCompaniesCount();
+
+    Optional<Company> findByName(String name);
 }

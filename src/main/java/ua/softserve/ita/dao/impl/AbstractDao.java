@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public abstract class AbstractDao <T, PK extends Serializable> implements BaseDao<T, PK> {
+public abstract class AbstractDao<T, PK extends Serializable> implements BaseDao<T, PK> {
 
     final protected Class<T> clazz;
 

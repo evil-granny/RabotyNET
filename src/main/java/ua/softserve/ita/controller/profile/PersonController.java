@@ -29,9 +29,9 @@ public class PersonController {
     }
 
     @GetMapping(path = {"/{id}"})
-    @ApiOperation(value = "Get the person with specific id")
+    @ApiOperation(value = "Get person by specific id")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = Person.class)})
-    public Optional<Person> findById(@PathVariable("id") long id) {
+    public Optional<Person> findById(@PathVariable("id") Long id) {
         return personService.findById(id);
     }
 
@@ -61,7 +61,7 @@ public class PersonController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Delete the person with specific id")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
-    public void deleteById(@PathVariable("id") long id) {
+    public void deleteById(@PathVariable("id") Long id) {
         personService.deleteById(id);
     }
 

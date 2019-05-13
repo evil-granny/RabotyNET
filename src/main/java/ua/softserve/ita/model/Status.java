@@ -1,5 +1,6 @@
 package ua.softserve.ita.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -27,10 +28,7 @@ public class Status {
     @Column(name = "reliable")
     private boolean reliable;
 
-    public long getStatusId() {
-        return statusId;
-    }
-
+    @JsonIgnore
     public boolean isReadyToDelete() {
         return approved && mailSent && reliable;
     }
