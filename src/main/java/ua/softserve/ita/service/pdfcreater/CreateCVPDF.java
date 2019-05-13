@@ -5,7 +5,6 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
-import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,16 +21,13 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
-
-import static org.apache.pdfbox.pdmodel.interactive.viewerpreferences.PDViewerPreferences.BOUNDARY.CropBox;
 
 
 //@Service("createMyPDF")
 @Service
 @Data
-public class TestCVPDF {
+public class CreateCVPDF {
 
     @Autowired
     CreateQrCodeVCard createQR;
@@ -209,7 +205,7 @@ public class TestCVPDF {
         String pathLogo = null;
 
         try {
-            pathLogo = Paths.get(TestCVPDF.class.getClassLoader().getResource("linux-icon.png").toURI()).toString();
+            pathLogo = Paths.get(CreateCVPDF.class.getClassLoader().getResource("linux-icon.png").toURI()).toString();
             PDImageXObject pdLogo = PDImageXObject.createFromFile(pathLogo, document);
             float scaleLogo = (float) LOGO_SIZE_HEIGHT / pdLogo.getHeight();
             this.yCoordinate = page.getMediaBox().getLowerLeftY();

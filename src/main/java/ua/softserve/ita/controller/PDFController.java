@@ -8,12 +8,11 @@ import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.CV;
 
-import ua.softserve.ita.model.Education;
 import ua.softserve.ita.model.Job;
 import ua.softserve.ita.model.Skill;
 import ua.softserve.ita.service.*;
 import ua.softserve.ita.service.letter.GenerateLetter;
-import ua.softserve.ita.service.pdfcreater.TestCVPDF;
+import ua.softserve.ita.service.pdfcreater.CreateCVPDF;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,10 +27,10 @@ import java.util.Set;
 public class PDFController {
     private final CVService cvService;
     private final GenerateLetter generateService;
-    private final TestCVPDF pdfService;
+    private final CreateCVPDF pdfService;
 
 
-    public PDFController(CVService cvService,GenerateLetter generateService, TestCVPDF pdfService) {
+    public PDFController(CVService cvService, GenerateLetter generateService, CreateCVPDF pdfService) {
         this.cvService = cvService;
         this.generateService = generateService;
         this.pdfService = pdfService;
