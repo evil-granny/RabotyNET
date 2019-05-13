@@ -18,19 +18,22 @@ import ua.softserve.ita.service.pdfcreater.TestCVPDF;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Set;
 
 @CrossOrigin
 @RestController
 public class PDFController {
     private final CVService cvService;
-    private final GenerateLetter letterService;
+    private final GenerateLetter generateService;
     private final TestCVPDF pdfService;
 
 
-    public PDFController(CVService cvService,GenerateLetter letterService, TestCVPDF pdfService) {
+    public PDFController(CVService cvService,GenerateLetter generateService, TestCVPDF pdfService) {
         this.cvService = cvService;
-        this.letterService = letterService;
+        this.generateService = generateService;
         this.pdfService = pdfService;
     }
 
@@ -51,20 +54,37 @@ public class PDFController {
 
     }
 
-    @RequestMapping(value = "/createPdf", method = RequestMethod.GET, produces = "application/pdf")
-    public ResponseEntity<byte[]> createPdf(HttpServletResponse response) {
+    @RequestMapping(value = "/createPdf/{id}", method = RequestMethod.GET, produces = "application/pdf")
+    public ResponseEntity<byte[]> createPdf(@PathVariable("id") long id,HttpServletResponse response) {
 
         response.setContentType("application/pdf");
 
-        long id=1;
         CV cv = cvService.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("Vacancy with id: %d not found", id)));
-        byte[] contents = pdfService.createPDF(cv);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType("application/pdf"));
-        headers.set("Content-Disposition", "inline");
+        Path pathToPdf = pdfService.createPDF(cv);
+        byte[] fileContent;
 
-        return new ResponseEntity<>(contents, headers, HttpStatus.OK);
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.parseMediaType("application/pdf"));
+            headers.set("Content-Disposition", "inline");
+            fileContent = Files.readAllBytes(pathToPdf.toRealPath());
+            generateService.sendPersonPDF(cv.getPerson(), pathToPdf.toRealPath().toString());
+            return new ResponseEntity<>(fileContent, headers, HttpStatus.OK);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+        //byte[] contents = pdfService.createPDF(cv);
+
+        //HttpHeaders headers = new HttpHeaders();
+       // headers.setContentType(MediaType.parseMediaType("application/pdf"));
+       // headers.set("Content-Disposition", "inline");
+
+        return null;
     }
 
     private String getAppUrl(HttpServletRequest request) {

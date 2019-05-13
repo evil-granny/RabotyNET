@@ -242,7 +242,7 @@ public class TestCVPDF {
 
     }
 
-    public byte[] createPDF(CV cv) {
+    public Path createPDF(CV cv) {
         try {
 
             this.document = new PDDocument();
@@ -335,8 +335,7 @@ public class TestCVPDF {
 
             //createQR.createQRCode(cv, "");
 
-            PDImageXObject pdQR = PDImageXObject.createFromByteArray(document,createQR.createQRCode(cv, "").toByteArray(),"" );
-
+            PDImageXObject pdQR = PDImageXObject.createFromByteArray(document, createQR.createQRCode(cv, "").toByteArray(), "");
 
 
             this.yCoordinate = Y_COORDINAT_SUBTITLE_EDUCATION;
@@ -348,8 +347,6 @@ public class TestCVPDF {
 
 
             contentStream.drawImage(pdQR, this.xCoordinate, this.yCoordinate, qrSize, qrSize);
-
-
 
 
             //loop for education
@@ -379,42 +376,50 @@ public class TestCVPDF {
 
             drawDoubleLine();
 
-
+            int countLineForBlock = 4;
             for (Job job : jobs) {
-                yCoordinate -= LEADING_LINE;
+                if (job.getPrintPdf()) {
+                    yCoordinate -= LEADING_LINE;
+                    countLineForBlock += countDescriptionLine(job.getDescription());
+                    float countSizeForBlock = countLineForBlock * INFO_LEADING;
+                    if (((this.yCoordinate - countSizeForBlock) < BORDER_LOWER + LOGO_SIZE_HEIGHT)) {
+                        this.contentStream.close();
+                        createNewPage();
+                    }
 
-                int countLineForBlock = 4;
+                    yCoordinate -= INFO_LEADING;
+                    xCoordinate = BORDER_LEFT;
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(xCoordinate, yCoordinate);
+                    contentStream.setLeading(INFO_LEADING);
+                    printContext("Position", job.getPosition());
 
-                countLineForBlock += countDescriptionLine(job.getDescription());
-                float countSizeForBlock = countLineForBlock * INFO_LEADING;
-                if (((this.yCoordinate - countSizeForBlock) < BORDER_LOWER + LOGO_SIZE_HEIGHT)) {
-                    this.contentStream.close();
-                    createNewPage();
+                    printContext("Period", job.getBegin(), job.getEnd());
 
+                    printContext("Company", job.getCompanyName());
+
+                    printContext("Description", job.getDescription());
+
+                    yCoordinate -= INFO_LEADING;
+                    xCoordinate = BORDER_LEFT;
+                    contentStream.endText();
+                    drawLine();
                 }
-
-                yCoordinate -= INFO_LEADING;
-                xCoordinate = BORDER_LEFT;
-                contentStream.beginText();
-                contentStream.newLineAtOffset(xCoordinate, yCoordinate);
-                contentStream.setLeading(INFO_LEADING);
-                printContext("Position", job.getPosition());
-
-                printContext("Period", job.getBegin(), job.getEnd());
-
-                printContext("Company", job.getCompanyName());
-
-                printContext("Description", job.getDescription());
-
-                yCoordinate -= INFO_LEADING;
-                xCoordinate = BORDER_LEFT;
-                contentStream.endText();
-                drawLine();
             }
+
 
             yCoordinate -= LEADING_LINE;
             yCoordinate -= SUBTITLE_LEADING;
             xCoordinate = BORDER_LEFT;
+
+            float checkYCoordinate = yCoordinate;
+            checkYCoordinate -= LEADING_LINE;
+            checkYCoordinate -= LEADING_LINE / 4;
+
+            if (((checkYCoordinate) < BORDER_LOWER + LOGO_SIZE_HEIGHT)) {
+                this.contentStream.close();
+                createNewPage();
+            }
 
             contentStream.beginText();
             contentStream.newLineAtOffset(xCoordinate, yCoordinate);
@@ -427,62 +432,64 @@ public class TestCVPDF {
 
             drawDoubleLine();
 
+            countLineForBlock = 2;
             for (Skill skill : skills) {
-                yCoordinate -= LEADING_LINE;
+                if (skill.getPrintPdf()) {
 
-                int countLineForBlock = 2;
 
-                countLineForBlock += countDescriptionLine(skill.getDescription());
+                    yCoordinate -= LEADING_LINE;
 
-                float countSizeForBlock = countLineForBlock * INFO_LEADING;
+                    countLineForBlock += countDescriptionLine(skill.getDescription());
 
-                if (((this.yCoordinate - countSizeForBlock) < BORDER_LOWER + LOGO_SIZE_HEIGHT)) {
-                    this.contentStream.close();
-                    createNewPage();
+                    float countSizeForBlock = countLineForBlock * INFO_LEADING;
+
+                    if (((this.yCoordinate - countSizeForBlock) < BORDER_LOWER + LOGO_SIZE_HEIGHT)) {
+                        this.contentStream.close();
+                        createNewPage();
+                    }
+
+                    yCoordinate -= INFO_LEADING;
+
+                    xCoordinate = BORDER_LEFT;
+
+                    contentStream.beginText();
+
+                    contentStream.newLineAtOffset(xCoordinate, yCoordinate);
+
+                    contentStream.setLeading(INFO_LEADING);
+
+                    printContext("Title", skill.getTitle());
+
+                    printContext("Description", skill.getDescription());
+
+                    yCoordinate -= INFO_LEADING;
+
+                    xCoordinate = BORDER_LEFT;
+
+                    contentStream.endText();
+
+                    drawLine();
                 }
-
-                yCoordinate -= INFO_LEADING;
-
-                xCoordinate = BORDER_LEFT;
-
-                contentStream.beginText();
-
-                contentStream.newLineAtOffset(xCoordinate, yCoordinate);
-
-                contentStream.setLeading(INFO_LEADING);
-
-                printContext("Title", skill.getTitle());
-
-                printContext("Description", skill.getDescription());
-
-                yCoordinate -= INFO_LEADING;
-
-                xCoordinate = BORDER_LEFT;
-
-                contentStream.endText();
-
-                drawLine();
             }
 
             contentStream.close();
 
-            Path tempCVFile = Files.createTempFile("pdfCV",".pdf");
+            Path tempCVFile = Files.createTempFile("pdfCV", ".pdf");
 
             document.save(tempCVFile.toFile());
             System.out.println(tempCVFile.toFile());
-
 
 
             document.close();
             System.out.println(tempCVFile.toAbsolutePath());
 
 
-            byte[] fileContent = Files.readAllBytes(tempCVFile.toRealPath());
+            //byte[] fileContent = Files.readAllBytes(tempCVFile.toRealPath());
 
-            System.out.println(fileContent);
+            //System.out.println(fileContent);
 
-
-            return fileContent;
+return tempCVFile;
+            //return fileContent;
 
         } catch (IOException e) {
             e.printStackTrace();
