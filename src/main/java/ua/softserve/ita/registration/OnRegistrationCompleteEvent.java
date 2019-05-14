@@ -1,7 +1,5 @@
 package ua.softserve.ita.registration;
 
-import java.util.Locale;
-
 import org.springframework.context.ApplicationEvent;
 import ua.softserve.ita.model.User;
 
