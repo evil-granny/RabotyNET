@@ -1,5 +1,6 @@
 package ua.softserve.ita.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,6 +13,7 @@ import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.User;
 import ua.softserve.ita.model.VerificationToken;
 import ua.softserve.ita.registration.OnRegistrationCompleteEvent;
+import ua.softserve.ita.registration.RegistrationListener;
 import ua.softserve.ita.service.UserService;
 import ua.softserve.ita.service.token.VerificationTokenService;
 
@@ -19,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 @CrossOrigin
@@ -28,14 +29,16 @@ public class RegistrationController {
 
     private final VerificationTokenService verificationTokenService;
     private final UserService userService;
+    private final RegistrationListener registrationListener;
     private final ApplicationEventPublisher eventPublisher;
     private final VerificationTokenService tokenService;
 
-    public RegistrationController(ApplicationEventPublisher eventPublisher, UserService userService, VerificationTokenService tokenService, VerificationTokenService verificationTokenService) {
+    public RegistrationController(ApplicationEventPublisher eventPublisher, UserService userService, VerificationTokenService tokenService, VerificationTokenService verificationTokenService, RegistrationListener registrationListener) {
         this.eventPublisher = eventPublisher;
         this.userService = userService;
         this.tokenService = tokenService;
         this.verificationTokenService = verificationTokenService;
+        this.registrationListener = registrationListener;
     }
 
     @GetMapping(value = "/user/{id}")
@@ -80,13 +83,13 @@ public class RegistrationController {
     @PostMapping("/registration")
     public ResponseEntity<User> insert(@RequestBody @Valid UserDto userDto, final HttpServletRequest request) {
         User user = userService.createDTO(userDto);
-        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, getAppUrl(request)));
+        //eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, getAppUrl(request)));
+        registrationListener.onApplicationEvent(new OnRegistrationCompleteEvent(user, getAppUrl(request)));
         return ResponseEntity.ok().body(user);
     }
 
     @RequestMapping(value = "/registrationConfirm", method = RequestMethod.GET)
-    public String confirmRegistration(final HttpServletRequest request, final Model model, @RequestParam("token") final String token) throws UnsupportedEncodingException {
-        Locale locale = request.getLocale();
+    public String confirmRegistration(final Model model, @RequestParam("token") final String token) throws UnsupportedEncodingException {
         final String result = verificationTokenService.validateVerificationToken(token);
         if (result.equals("valid")) {
             final Optional<User> user = userService.findByToken(token);
