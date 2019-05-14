@@ -5,8 +5,8 @@ import ua.softserve.ita.dto.CompanyDTO.CompanyPaginationDTO;
 import ua.softserve.ita.exception.CompanyAlreadyExistException;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Company;
+import ua.softserve.ita.model.enumtype.Status;
 import ua.softserve.ita.service.CompanyService;
-import ua.softserve.ita.service.StatusService;
 import ua.softserve.ita.service.letter.GenerateLetter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,12 +19,10 @@ import java.util.List;
 public class CompanyController {
 
     private final CompanyService companyService;
-    private final StatusService statusService;
     private final GenerateLetter letterService;
 
-    public CompanyController(CompanyService companyService, StatusService statusService, GenerateLetter letterService) {
+    public CompanyController(CompanyService companyService, GenerateLetter letterService) {
         this.companyService = companyService;
-        this.statusService = statusService;
         this.letterService = letterService;
     }
 
@@ -45,21 +43,13 @@ public class CompanyController {
 
     @PutMapping
     public Company update(@Valid @RequestBody Company company) {
-        if(company.getStatus() != null && company.getStatus().isReadyToDelete()) {
-            long status_id = company.getStatus().getStatusId();
-            company.setStatus(null);
-            companyService.update(company);
-            statusService.deleteById(status_id);
-            return company;
-        }
-
         return companyService.update(company);
     }
 
     @PutMapping("/approve")
     public Company approve(@RequestBody Company company, final HttpServletRequest request) {
         letterService.sendCompanyApprove(company, getAppUrl(request) + "/approveCompany/" + company.getName());
-        company.getStatus().setMailSent(true);
+        company.setStatus(Status.MAIL_SENT);
 
         return companyService.update(company);
     }

@@ -2,6 +2,7 @@ package ua.softserve.ita.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import ua.softserve.ita.model.enumtype.Status;
 import ua.softserve.ita.model.profile.Address;
 import ua.softserve.ita.model.profile.Contact;
 
@@ -61,6 +62,11 @@ public class Company implements Serializable {
     @Pattern(regexp = "^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?#[\\\\]@!\\$&'\\(\\)\\*\\+,;=.]+$")
     private String website;
 
+    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private Status status;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "contact_id", referencedColumnName = "contact_id", nullable = false)
     @NotNull
@@ -80,10 +86,6 @@ public class Company implements Serializable {
     @JsonIgnore
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "company", cascade = CascadeType.REMOVE)
     private Set<Claim> claims;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "status_id", referencedColumnName = "status_id")
-    private Status status;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
