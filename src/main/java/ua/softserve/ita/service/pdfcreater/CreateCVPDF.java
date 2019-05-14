@@ -10,6 +10,8 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.softserve.ita.model.*;
+import ua.softserve.ita.service.CronJob;
+import ua.softserve.ita.service.MyTask;
 
 import java.awt.*;
 import java.io.IOException;
@@ -22,6 +24,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.Timer;
 
 
 //@Service("createMyPDF")
@@ -64,7 +67,7 @@ public class CreateCVPDF {
 
     final float LEADING_LINE = 10f;
 
-    final String SAVE_DIRECTORY_FOR_PDF_DOC = "pdf/cvPDF/cvPDFdocument.pdf";
+    final String SAVE_DIRECTORY_FOR_PDF_DOC = "pdf/cvPDF/";
 
     private PDDocument document;
     private PDPage page;
@@ -205,7 +208,7 @@ public class CreateCVPDF {
         String pathLogo = null;
 
         try {
-            pathLogo = Paths.get(CreateCVPDF.class.getClassLoader().getResource("linux-icon.png").toURI()).toString();
+            pathLogo = Paths.get(CreateCVPDF.class.getClassLoader().getResource("logo.png").toURI()).toString();
             PDImageXObject pdLogo = PDImageXObject.createFromFile(pathLogo, document);
             float scaleLogo = (float) LOGO_SIZE_HEIGHT / pdLogo.getHeight();
             this.yCoordinate = page.getMediaBox().getLowerLeftY();
@@ -241,6 +244,10 @@ public class CreateCVPDF {
     public Path createPDF(CV cv) {
         try {
 
+
+
+
+
             this.document = new PDDocument();
 //        this.page = new PDPage(PDRectangle.A4);
 //        this.document.addPage(this.page);
@@ -254,13 +261,50 @@ public class CreateCVPDF {
             createNewPage();
 
             //photo
+
             //  String pathImage = "/home/oleksandr/Documents/images.jpeg";
-            PDImageXObject pdImage = PDImageXObject.createFromFile(pathImage, this.document);
-            float scale = (float) PHOTO_SIZE / pdImage.getWidth();
-            this.yCoordinate -= pdImage.getHeight() * scale;
-            this.xCoordinate -= pdImage.getWidth() * scale;
-            this.contentStream.drawImage(pdImage, this.xCoordinate, this.yCoordinate,
-                    pdImage.getWidth() * scale, pdImage.getHeight() * scale);
+            //changeShowPhoto
+
+            String pathNoPhoto = null;
+            try {
+                pathNoPhoto = Paths.get(CreateCVPDF.class.getClassLoader().getResource("noPhoto.png").toURI()).toString();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+
+
+            try {
+
+                PDImageXObject pdImage = PDImageXObject.createFromFile(cv.getPerson().getPhoto(), this.document);
+
+                float scale = (float) PHOTO_SIZE / pdImage.getWidth();
+                this.yCoordinate -= pdImage.getHeight() * scale;
+                this.xCoordinate -= pdImage.getWidth() * scale;
+                this.contentStream.drawImage(pdImage, this.xCoordinate, this.yCoordinate,
+                        pdImage.getWidth() * scale, pdImage.getHeight() * scale);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+                PDImageXObject pdImage = PDImageXObject.createFromFile(pathNoPhoto, this.document);
+                float scale = (float) PHOTO_SIZE / pdImage.getWidth();
+                this.yCoordinate -= pdImage.getHeight() * scale;
+                this.xCoordinate -= pdImage.getWidth() * scale;
+                this.contentStream.drawImage(pdImage, this.xCoordinate, this.yCoordinate,
+                        pdImage.getWidth() * scale, pdImage.getHeight() * scale);
+
+            }
+           // PDImageXObject pdLogo = PDImageXObject.createFromFile(pathNewPhoto, document);
+            //
+
+
+
+//            PDImageXObject pdImage = PDImageXObject.createFromFile(pathImage, this.document);
+//            float scale = (float) PHOTO_SIZE / pdImage.getWidth();
+//            this.yCoordinate -= pdImage.getHeight() * scale;
+//            this.xCoordinate -= pdImage.getWidth() * scale;
+//            this.contentStream.drawImage(pdImage, this.xCoordinate, this.yCoordinate,
+//                    pdImage.getWidth() * scale, pdImage.getHeight() * scale);
 
             //line
             final float X_CORDINAT_PHOTO = this.xCoordinate;
@@ -470,7 +514,9 @@ public class CreateCVPDF {
 
             contentStream.close();
 
-            Path tempCVFile = Files.createTempFile("pdfCV", ".pdf");
+           Path tempCVFile = Files.createTempFile("pdfCV", ".pdf");
+
+            CronJob.cronStart(tempCVFile,10000);
 
             document.save(tempCVFile.toFile());
             System.out.println(tempCVFile.toFile());
