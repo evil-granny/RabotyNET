@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ua.softserve.ita.dao.AddressDao;
 import ua.softserve.ita.dao.CompanyDao;
 import ua.softserve.ita.dao.ContactDao;
+import ua.softserve.ita.dto.CompanyDTO.CompanyPaginationDTO;
 import ua.softserve.ita.model.Company;
 import ua.softserve.ita.service.CompanyService;
 
@@ -32,18 +33,13 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public Long getCompaniesCount() {
-        return companyDao.getCompaniesCount();
-    }
-
-    @Override
     public List<Company> findAll() {
         return companyDao.findAll();
     }
 
     @Override
-    public List<Company> findAllWithPagination(int first, int count) {
-        return companyDao.findWithPagination(first, count);
+    public CompanyPaginationDTO findAllWithPagination(int first, int count) {
+        return new CompanyPaginationDTO(companyDao.getCompaniesCount(), companyDao.findWithPagination(first, count));
     }
 
     @Override
