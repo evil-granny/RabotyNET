@@ -1,4 +1,4 @@
-package ua.softserve.ita.dto;
+package ua.softserve.ita.dto.VacancyDTO;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ua.softserve.ita.dto.VacancyDTO.VacancyPaginationDTO;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Company;
 import ua.softserve.ita.model.Requirement;
@@ -13,8 +14,10 @@ import ua.softserve.ita.service.RequirementService;
 import ua.softserve.ita.service.VacancyService;
 
 import javax.validation.Valid;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @CrossOrigin
 @RestController
@@ -52,14 +55,13 @@ public class VacancyController {
 
     @PostMapping("/createVacancy/{companyName}")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Vacancy> createVacancy(@Valid @RequestBody Vacancy vacancy,  @PathVariable(value = "companyName") String companyName) {
+    public ResponseEntity<Vacancy> createVacancy(@Valid @RequestBody Vacancy vacancy, @PathVariable(value = "companyName") String companyName) {
         Company company = companyService.findByName(companyName).orElseThrow(() -> new ResourceNotFoundException("Company not found with name " + companyName));
         vacancy.setCompany(company);
         Set<Requirement> requirements = vacancy.getRequirements();
         requirements.forEach(e -> e.setVacancy(vacancy));
         vacancyService.save(vacancy);
         requirements.forEach(requirementService::save);
-
         return ResponseEntity.ok(vacancy);
     }
 
@@ -73,27 +75,15 @@ public class VacancyController {
     }
 
     @GetMapping("/{first}/{count}")
-    public ResponseEntity<List<Vacancy>> findAllVacanciesWithPagination(@PathVariable("first") int first, @PathVariable("count") int count) {
-        List<Vacancy> allVacanciesByCompanyId = vacancyService.findAllVacanciesWithPagination(first, count);
-        List<Vacancy> collect = allVacanciesByCompanyId.stream().sorted(Comparator.comparing(Vacancy::getVacancyId)).collect(Collectors.toList());
-        return ResponseEntity.ok().body(collect);
+    public ResponseEntity<VacancyPaginationDTO> findAllVacanciesWithPagination(@PathVariable("first") int first, @PathVariable("count") int count) {
+        return ResponseEntity.ok().body(vacancyService.findAllVacanciesWithPagination(first, count));
     }
 
     @GetMapping("/{companyName}/{first}/{count}")
-    public ResponseEntity<List<Vacancy>> findAllVacanciesByCompanyNameWithPagination(@PathVariable("companyName") String companyName,
-                                                                                   @PathVariable("first") int first,
-                                                                                   @PathVariable("count") int count) {
-        List<Vacancy> allByCompanyId = vacancyService.findAllByCompanyName(companyName, first, count);
-        return ResponseEntity.ok().body(allByCompanyId);
+    public ResponseEntity<VacancyPaginationDTO> findAllVacanciesByCompanyNameWithPagination(@PathVariable("companyName") String companyName,
+                                                                                            @PathVariable("first") int first,
+                                                                                            @PathVariable("count") int count) {
+        return ResponseEntity.ok().body(vacancyService.findAllByCompanyName(companyName, first, count));
     }
 
-    @GetMapping("getCount/{companyName}")
-    public ResponseEntity<Long> getCountOfVacanciesByCompanyId(@PathVariable("companyName") String companyName) {
-        return ResponseEntity.ok().body(vacancyService.getCountOfVacancies(companyName));
-    }
-
-    @GetMapping("/getCountAll")
-    public ResponseEntity<Long> getCountOfAllVacancies() {
-        return ResponseEntity.ok().body(vacancyService.getCountOfAllVacancies());
-    }
 }
