@@ -1,5 +1,6 @@
 package ua.softserve.ita.resetpassword.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import ua.softserve.ita.service.token.VerificationTokenService;
 
 import javax.servlet.http.HttpServletRequest;
 
+@Slf4j
 @CrossOrigin
 @RestController
 public class PasswordResetController {
@@ -26,9 +28,10 @@ public class PasswordResetController {
         this.tokenService = tokenService;
     }
 
-    @PostMapping("/user/resetPassword")
+    @PostMapping("/resetPassword")
     @ResponseBody
     public ResponseEntity<?> resetPassword(@RequestBody String userLogin, final HttpServletRequest request) throws UserNotFoundException {
+        log.info("userLogin = " + userLogin);
         User user = userDao.findUserByUsername(userLogin);
         if (user == null) {
             throw new UserNotFoundException();
@@ -41,7 +44,7 @@ public class PasswordResetController {
         return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
     }
 
-    @GetMapping(value = "/user/changePassword")
+    @GetMapping(value = "/changePassword")
     public RedirectView showChangePasswordPage(@RequestParam("token") String token) {
         String result = tokenService.validateVerificationToken(token);
         RedirectView redirectConfirmPassword = new RedirectView();

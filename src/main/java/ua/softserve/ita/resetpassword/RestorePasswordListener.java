@@ -33,7 +33,7 @@ public class RestorePasswordListener implements ApplicationListener<OnRestorePas
         final User user = event.getUser();
         final String token = UUID.randomUUID().toString();
         tokenService.createVerificationTokenForUser(user, token);
-        final String confirmationUrl = event.getAppUrl() + "/user/changePassword?token=" + token;
+        final String confirmationUrl = event.getAppUrl() + "/changePassword?user=" + event.getUser().getLogin() + "&token=" + token;
         sendMailService.sendRestoreForgotPasswordEmail(user, confirmationUrl);
     }
 }
