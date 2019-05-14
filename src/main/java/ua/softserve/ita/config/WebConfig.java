@@ -65,6 +65,7 @@ public class WebConfig implements WebMvcConfigurer {
         list.add(MediaType.IMAGE_JPEG);
         list.add(MediaType.IMAGE_PNG);
         list.add(MediaType.APPLICATION_OCTET_STREAM);
+        list.add(MediaType.APPLICATION_PDF);
 
         return list;
     }
