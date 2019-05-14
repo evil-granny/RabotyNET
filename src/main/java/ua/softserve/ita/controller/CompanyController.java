@@ -3,10 +3,7 @@ package ua.softserve.ita.controller;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.exception.CompanyAlreadyExistException;
 import ua.softserve.ita.exception.ResourceNotFoundException;
-import ua.softserve.ita.model.Claim;
 import ua.softserve.ita.model.Company;
-import ua.softserve.ita.model.Status;
-import ua.softserve.ita.service.ClaimService;
 import ua.softserve.ita.service.CompanyService;
 import ua.softserve.ita.service.StatusService;
 import ua.softserve.ita.service.letter.GenerateLetter;
@@ -14,8 +11,6 @@ import ua.softserve.ita.service.letter.GenerateLetter;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @CrossOrigin
 @RestController
@@ -23,23 +18,14 @@ import java.util.stream.Collectors;
 public class CompanyController {
 
     private final CompanyService companyService;
-    private final ClaimService claimService;
     private final StatusService statusService;
     private final GenerateLetter letterService;
 
-    public CompanyController(CompanyService companyService, ClaimService claimService, StatusService statusService, GenerateLetter letterService) {
+    public CompanyController(CompanyService companyService, StatusService statusService, GenerateLetter letterService) {
         this.companyService = companyService;
-        this.claimService = claimService;
         this.statusService = statusService;
         this.letterService = letterService;
     }
-
-//    @GetMapping(value = "/{id}")
-//    public Company getCompany(@PathVariable("id") long id) {
-//
-//        System.out.println(companyService.findById(id));
-//        return companyService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Company not found with id " + id));
-//    }
 
     @GetMapping(value = "/{name}")
     public Company getCompanyByName(@PathVariable("name") String name) {
