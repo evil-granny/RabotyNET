@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import ua.softserve.ita.service.CronJob;
 
 import static org.hibernate.cfg.AvailableSettings.*;
 
@@ -28,6 +29,8 @@ public class AppConfig {
 
     @Autowired
     private Environment environment;
+
+
 
     @Bean
     public LocalSessionFactoryBean getSessionFactory() {

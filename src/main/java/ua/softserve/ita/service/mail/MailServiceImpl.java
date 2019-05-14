@@ -50,7 +50,7 @@ public class MailServiceImpl implements MailService {
                 String content = letter.getContent();
 
                 helper.setText("<html><body><p>" + content + "</p><img src='cid:company-logo'></body></html>", true);
-                helper.addInline("company-logo", new ClassPathResource("linux-icon.png"));
+                helper.addInline("company-logo", new ClassPathResource("logo.png"));
 
             }
         };
