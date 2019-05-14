@@ -4,34 +4,33 @@ import net.glxn.qrgen.core.image.ImageType;
 import net.glxn.qrgen.core.vcard.VCard;
 import net.glxn.qrgen.javase.QRCode;
 import org.springframework.stereotype.Service;
-import ua.softserve.ita.model.profile.Person;
+import ua.softserve.ita.model.CV;
 
 import java.io.*;
 
 @Service("createQR")
 public class CreateQrCodeVCard {
 
-    public void createQRCode(Person person, String url) {
+    public ByteArrayOutputStream createQRCode(CV cv, String url){
         VCard vCard = new VCard();
-        vCard.setName(person.getFirstName() + " " + person.getLastName());
-        StringBuffer address = new StringBuffer(person.getAddress().getCountry())
+        vCard.setName(cv.getPerson().getFirstName() + " " +cv.getPerson().getLastName());
+        StringBuffer address = new StringBuffer(cv.getPerson().getAddress().getCountry())
                 .append(", ")
-                .append(person.getAddress().getCity())
+                .append(cv.getPerson().getAddress().getCity())
                 .append(", ")
-                .append(person.getAddress().getStreet())
+                .append(cv.getPerson().getAddress().getStreet())
                 .append(", ")
-                .append(person.getAddress().getBuilding())
+                .append(cv.getPerson().getAddress().getBuilding())
                 .append(", ")
-                .append(person.getAddress().getApartment())
+                .append(cv.getPerson().getAddress().getApartment())
                 .append(", ")
-                .append(person.getAddress().getZipCode());
+                .append(cv.getPerson().getAddress().getZipCode());
         // vCard.setAddress(address.toString());
         //vCard.setCompany("company Inc.");
-        vCard.setPhoneNumber(person.getContact().getPhoneNumber());
-        //vCard.setTitle("title");
-        vCard.setEmail(person.getContact().getEmail());
+        vCard.setPhoneNumber(cv.getPerson().getContact().getPhoneNumber());
+        vCard.setTitle(cv.getPosition());
+        vCard.setEmail(cv.getPerson().getContact().getEmail());
         vCard.setWebsite(url);
-
 
         ByteArrayOutputStream bout =
                 QRCode.from(vCard)
@@ -39,17 +38,9 @@ public class CreateQrCodeVCard {
                         .to(ImageType.PNG)
                         .stream();
 
-        try {
-            OutputStream out = new FileOutputStream("/home/oleksandr/Documents/TestWithPDFBox/TESTCVqrcode.png");
-            bout.writeTo(out);
-            out.flush();
-            out.close();
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return bout;
+
     }
 
 }

@@ -1,6 +1,7 @@
 package ua.softserve.ita.model;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -9,7 +10,11 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Objects;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
+@NoArgsConstructor
 @Entity
 @Table(name = "education")
 public class Education implements Serializable {
@@ -37,34 +42,5 @@ public class Education implements Serializable {
 
     @Column(name = "graduation")
     private Integer graduation;
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Education education = (Education) o;
-        return educationId.equals(education.educationId) &&
-                degree.equals(education.degree) &&
-                school.equals(education.school) &&
-                Objects.equals(specialty, education.specialty) &&
-                Objects.equals(graduation, education.graduation);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(educationId, degree, school, specialty, graduation);
-    }
-
-    @Override
-    public String toString() {
-        return "Education{" +
-                "educationId=" + educationId +
-                ", degree='" + degree + '\'' +
-                ", school='" + school + '\'' +
-                ", specialty='" + specialty + '\'' +
-                ", graduation=" + graduation +
-                '}';
-    }
 
 }
