@@ -6,6 +6,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ua.softserve.ita.dao.impl.search.SearchCVDao;
+import ua.softserve.ita.dto.SearchDTO.SearchCVDTO;
+import ua.softserve.ita.dto.SearchDTO.SearchCVResponseDTO;
 import ua.softserve.ita.model.*;
 import ua.softserve.ita.model.enumtype.Employment;
 import ua.softserve.ita.model.profile.Address;
@@ -18,8 +21,10 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @Slf4j
-class InsertDbRandom {
+class SearchCVDaoTest {
 
     private SessionFactory sessionFactory;
 
@@ -37,7 +42,7 @@ class InsertDbRandom {
     private int next = 0;
     private Random random = new Random();
 
-    void setData() throws FileNotFoundException {
+    private void setData() throws FileNotFoundException {
         Scanner nameScanner =
                 new Scanner(new File("src\\test\\resources\\names.txt")).useDelimiter("\\s");
         Scanner lastNameScanner =
@@ -60,21 +65,21 @@ class InsertDbRandom {
         employmentList = Arrays.asList(Employment.values());
     }
 
-    LocalDate getLocalDate() {
+    private LocalDate getLocalDate() {
         long minDay = LocalDate.of(1970, 1, 1).toEpochDay();
         long maxDay = LocalDate.of(2000, 12, 31).toEpochDay();
         long randomDay = ThreadLocalRandom.current().nextLong(minDay, maxDay);
         return LocalDate.ofEpochDay(randomDay);
     }
 
-    User getUser() {
+    private User getUser() {
         User user = new User();
         user.setLogin((random.nextInt(70000) + 10000) + "@gmail.com");
         user.setPassword("password");
         return user;
     }
 
-    Address getAddress(long id) {
+    private Address getAddress(long id) {
         Address address = new Address();
         address.setAddressId(id);
         address.setCountry("USA");
@@ -82,20 +87,20 @@ class InsertDbRandom {
         return address;
     }
 
-    Contact getContact(long id) {
+    private Contact getContact(long id) {
         Contact contact = new Contact();
         contact.setContactId(id);
         contact.setPhoneNumber("+380" + String.format("%09d", random.nextInt(1000000000)));
         return contact;
     }
 
-    Photo getPhoto(long id){
+    private Photo getPhoto(long id) {
         Photo photo = new Photo();
         photo.setPhotoId(id);
         return photo;
     }
 
-    Person getPerson(long id, Address address, Contact contact, Photo photo) {
+    private Person getPerson(long id, Address address, Contact contact, Photo photo) {
         Person person = new Person();
         person.setUserId(id);
         person.setFirstName(nameList.get(random.nextInt(nameList.size())));
@@ -107,7 +112,7 @@ class InsertDbRandom {
         return person;
     }
 
-    Education getEducation(long id) {
+    private Education getEducation(long id) {
         Education education = new Education();
         education.setDegree("Master");
         education.setGraduation(5);
@@ -117,7 +122,7 @@ class InsertDbRandom {
         return education;
     }
 
-    Set<Skill> getSkills(CV cv) {
+    private Set<Skill> getSkills(CV cv) {
         Skill skill1 = new Skill();
         skill1.setTitle(languages[random.nextInt(languages.length)]);
         skill1.setDescription("Core");
@@ -135,7 +140,7 @@ class InsertDbRandom {
         return skills;
     }
 
-    Set<Job> getJobs(CV cv) {
+    private Set<Job> getJobs(CV cv) {
         Job job = new Job();
         job.setBegin(LocalDate.parse("2005-02-02"));
         job.setEnd(LocalDate.parse("2012-03-03"));
@@ -147,7 +152,7 @@ class InsertDbRandom {
         return jobs;
     }
 
-    CV getCv(long user_id, Education education, Person person) {
+    private CV getCv(long user_id, Education education, Person person) {
         CV cv = new CV();
         cv.setPosition(ranks[random.nextInt(ranks.length)] + " " +
                 languages[random.nextInt(languages.length)] + " " +
@@ -158,21 +163,21 @@ class InsertDbRandom {
         return cv;
     }
 
-    Company getCompany(Contact contact, Address address, User user) {
+    private Company getCompany(Contact contact, Address address, User user) {
         Company company = new Company();
-            company.setEdrpou(String.format("%08d", random.nextInt(100000000)));
-            company.setName(companies[next++]);
-            if(company.getName().equals("Meta Cortex")){
-                company.setDescription("Wake up.. The Matrix has you...");
-            }
-            company.setWebsite(company.getName().replace(" ", "") + ".com");
-            company.setContact(contact);
-            company.setAddress(address);
-            company.setUser(user);
-            return company;
+        company.setEdrpou(String.format("%08d", random.nextInt(100000000)));
+        company.setName(companies[next++]);
+        if (company.getName().equals("Meta Cortex")) {
+            company.setDescription("Wake up.. The Matrix has you...");
+        }
+        company.setWebsite(company.getName().replace(" ", "") + ".com");
+        company.setContact(contact);
+        company.setAddress(address);
+        company.setUser(user);
+        return company;
     }
 
-    Vacancy getVacancy(Company company) {
+    private Vacancy getVacancy(Company company) {
         Vacancy vacancy = new Vacancy();
         vacancy.setPosition(ranks[random.nextInt(ranks.length)] + " " +
                 languages[random.nextInt(languages.length)] + " " +
@@ -183,7 +188,7 @@ class InsertDbRandom {
         return vacancy;
     }
 
-    void insertRegisteredUsers(Session session){
+    private void insertRegisteredUsers(Session session) {
 
         session.beginTransaction();
 
@@ -232,8 +237,68 @@ class InsertDbRandom {
         session.getTransaction().commit();
     }
 
+    private void insertCvs(int count, Session session) {
+        for (int i = 1; i <= count; i++) {
+            session.beginTransaction();
+            User user = getUser();
+            session.save(user);
+            Address address = getAddress(user.getUserId());
+            session.save(address);
+            Contact contact = getContact(user.getUserId());
+            contact.setEmail(user.getLogin());
+            session.save(contact);
+            Education education = getEducation(user.getUserId());
+            session.save(education);
+            Photo photo = getPhoto(user.getUserId());
+            session.save(photo);
+            Person person = getPerson(user.getUserId(), address, contact, photo);
+            session.save(person);
+            CV cv = getCv(user.getUserId(), education, person);
+            session.save(cv);
+            log.info("#: " + String.valueOf(i) + " - CV Id = " + String.valueOf(cv.getCvId()));
+            Set<Job> jobs = getJobs(cv);
+            for (Job job : jobs) {
+                session.save(job);
+            }
+            Set<Skill> skills = getSkills(cv);
+            for (Skill skill : skills) {
+                session.save(skill);
+            }
+            log.info("#: " + String.valueOf(i) + " - " + person.getFirstName() + " " + person.getLastName());
+            session.getTransaction().commit();
+        }
+    }
+
+    private void insertVacancies(int count, Session session) {
+        for (int i = 1; i <= count; i++) {
+            session.beginTransaction();
+            User user = getUser();
+            session.save(user);
+            Contact contact = getContact(user.getUserId());
+            contact.setEmail(user.getLogin());
+            session.save(contact);
+            Address address = getAddress(user.getUserId());
+            session.save(address);
+            Company company = getCompany(contact, address, user);
+            session.save(company);
+            for (int j = 0; j < 8; j++) {
+                Vacancy vacancy = getVacancy(company);
+                session.save(vacancy);
+            }
+            session.getTransaction().commit();
+        }
+    }
+
+    private void insert() throws FileNotFoundException {
+        setData();
+        Session session = sessionFactory.openSession();
+        insertCvs(1000, session);
+        insertVacancies(12, session);
+        insertRegisteredUsers(session);
+    }
+
     @BeforeEach
-    void getSessionFactory() {
+    void setUp() throws FileNotFoundException {
         sessionFactory = new Configuration()
                 .addAnnotatedClass(Person.class)
                 .addAnnotatedClass(Address.class)
@@ -260,69 +325,16 @@ class InsertDbRandom {
                 .setProperty("hibernate.show_sql", "true")
                 .setProperty("hibernate.hbm2ddl.auto", "update")
                 .buildSessionFactory();
-    }
-
-    void insertCvs(int count, Session session) {
-        for (int i = 1; i <= count; i++) {
-            session.beginTransaction();
-            User user = getUser();
-            session.save(user);
-            Address address = getAddress(user.getUserId());
-            session.save(address);
-            Contact contact = getContact(user.getUserId());
-            contact.setEmail(user.getLogin());
-            session.save(contact);
-            Education education = getEducation(user.getUserId());
-            session.save(education);
-            Photo photo = getPhoto(user.getUserId());
-            session.save(photo);
-            Person person = getPerson(user.getUserId(), address, contact, photo);
-            session.save(person);
-            CV cv = getCv(user.getUserId(), education, person);
-                session.save(cv);
-                log.info("#: " + String.valueOf(i) + " - CV Id = " + String.valueOf(cv.getCvId()));
-            Set<Job> jobs = getJobs(cv);
-            for (Job job : jobs) {
-                session.save(job);
-            }
-            Set<Skill> skills = getSkills(cv);
-            for (Skill skill : skills) {
-                session.save(skill);
-            }
-            log.info("#: " + String.valueOf(i) + " - " + person.getFirstName() + " " + person.getLastName());
-            session.getTransaction().commit();
-        }
-    }
-
-    void insertVacancies(int count, Session session) {
-        for (int i = 1; i <= count; i++) {
-            session.beginTransaction();
-            User user = getUser();
-            session.save(user);
-            Contact contact = getContact(user.getUserId());
-            contact.setEmail(user.getLogin());
-            session.save(contact);
-            Address address = getAddress(user.getUserId());
-            session.save(address);
-            Company company = getCompany(contact, address, user);
-            session.save(company);
-            for (int j = 0; j < 8; j++) {
-                Vacancy vacancy = getVacancy(company);
-                session.save(vacancy);
-            }
-            session.getTransaction().commit();
-        }
+        insert();
     }
 
     @Test
-    void insert() throws FileNotFoundException {
-        setData();
-        Session session = sessionFactory.openSession();
-        insertCvs(1000, session);
-        insertVacancies(12, session);
-        insertRegisteredUsers(session);
-        session.close();
+    void search() {
+        SearchCVDao searchCVDao = new SearchCVDao(sessionFactory);
+        SearchCVResponseDTO searchCVResponseDTO = searchCVDao.search("name", "jo", 2000, 0);
+        assertEquals(searchCVResponseDTO.getCount().intValue(), searchCVResponseDTO.getSearchCVDTOs().size());
     }
+
 
 }
 
