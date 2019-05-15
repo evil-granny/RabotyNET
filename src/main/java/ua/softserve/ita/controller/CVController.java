@@ -6,7 +6,6 @@ import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.CV;
 import ua.softserve.ita.model.Job;
 import ua.softserve.ita.model.Skill;
-import ua.softserve.ita.model.User;
 import ua.softserve.ita.model.profile.Person;
 import ua.softserve.ita.service.CVService;
 import ua.softserve.ita.service.pdfcreater.CreateCvPdf;
