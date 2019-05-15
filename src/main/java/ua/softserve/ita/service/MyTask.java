@@ -12,17 +12,12 @@ public class MyTask extends TimerTask {
 
     public MyTask(Path path){
 
-        this.path = path.getParent();
+        this.path = path;
 
+    }
 
-
-
-
-
-
-
-
-
+    @Override
+    public void run() {
         System.out.println(path.toAbsolutePath());
         try (DirectoryStream<Path> newDirectoryStream = Files.newDirectoryStream(this.path, "pdfCV" + "*")) {
             for (final Path newDirectoryStreamItem : newDirectoryStream) {
@@ -30,12 +25,10 @@ public class MyTask extends TimerTask {
                 System.out.println("clean");
             }
         } catch (final Exception e) {
-            System.out.println("problem");
-        }
-    }
+            System.out.println("problem");       }
 
-    @Override
-    public void run() {
+
+
         System.out.println("Hi see you after 10 seconds");
     }
 
