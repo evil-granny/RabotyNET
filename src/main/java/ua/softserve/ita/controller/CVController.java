@@ -10,7 +10,7 @@ import ua.softserve.ita.model.profile.Person;
 import ua.softserve.ita.service.CVService;
 import ua.softserve.ita.service.JobService;
 import ua.softserve.ita.service.SkillService;
-import ua.softserve.ita.service.pdfcreater.CreateCVPDF;
+import ua.softserve.ita.service.pdfcreater.CreateCvPdf;
 
 import java.util.List;
 import java.util.Set;
@@ -21,11 +21,11 @@ public class CVController {
     private final CVService cvService;
     private final JobService jobService;
     private final SkillService skillService;
-    private final CreateCVPDF pdfService;
+    private final CreateCvPdf pdfService;
 
 
     @Autowired
-    public CVController(CVService cvService, JobService jobService, SkillService skillService, CreateCVPDF pdfService) {
+    public CVController(CVService cvService, JobService jobService, SkillService skillService, CreateCvPdf pdfService) {
         this.cvService = cvService;
         this.jobService = jobService;
         this.skillService = skillService;
