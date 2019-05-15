@@ -8,11 +8,8 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import ua.softserve.ita.model.*;
-import ua.softserve.ita.service.CronJob;
-import ua.softserve.ita.service.MyTask;
 
 import java.awt.*;
 import java.io.IOException;
@@ -25,16 +22,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.Timer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-
-//@Service("createMyPDF")
 @Service
 @Data
-public class CreateCVPDF {
+public class CreateCvPdf {
 
-    //@Autowired
-    //Path cronStart;
+    private static final Logger LOGGER = Logger.getLogger(CreateCvPdf.class.getName());
 
     @Autowired
     CreateQrCodeVCard createQR;
@@ -80,60 +75,103 @@ public class CreateCVPDF {
     private float xCoordinate;
 
     public int countDescriptionLine(String description) {
+
         try {
+
             int descriptionLength = description.length();
+
             int countLineForDescription = 1;
+
             float size = CONTEXT_FONT_SIZE * CONTEXT_FONT.getStringWidth(("Description" + description)) / 1000;
+
             float maxSize = page.getMediaBox().getWidth();
+
             maxSize -= BORDER_LEFT;
+
             maxSize -= BORDER_RIGHT;
+
             if (size < maxSize) {
+
                 return countLineForDescription;
+
             } else {
+
                 float sizeLongDescription = CONTEXT_FONT_SIZE * CONTEXT_FONT.getStringWidth(description) / 1000;
+
                 float sizeOneChar = size / descriptionLength;
+
                 int maxLength = (int) (maxSize / sizeOneChar);
+
                 if ((descriptionLength % maxLength) == 0) {
+
                     return countLineForDescription += descriptionLength / maxLength;
+
                 } else {
+
                     return countLineForDescription += (descriptionLength / maxLength) + 1;
+
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+
+            LOGGER.log(Level.SEVERE, e.toString(), e);
         }
         return 0;
     }
 
 
     public void printContext(String formTitle, String context) {
+
         try {
+
             this.contentStream.setFont(INFO_FONT, INFO_FONT_SIZE);
+
             this.contentStream.setNonStrokingColor(CV_FORM_FONT_COLOR);
+
             this.contentStream.setLeading(INFO_LEADING);
+
             this.contentStream.showText(formTitle + ": ");
+
             this.contentStream.setNonStrokingColor(Color.BLACK);
+
             this.contentStream.setFont(CONTEXT_FONT, CONTEXT_FONT_SIZE);
+
             int contextLength = context.length();
+
             int formTitleLength = formTitle.length();
+
             float size = CONTEXT_FONT_SIZE * CONTEXT_FONT.getStringWidth((context + formTitle)) / 1000;
+
             float maxSize = page.getMediaBox().getWidth();
+
             maxSize -= BORDER_LEFT;
+
             maxSize -= BORDER_RIGHT;
+
             if (size < maxSize) {
+
                 this.contentStream.showText(context);
+
                 this.contentStream.newLine();
+
                 this.yCoordinate -= INFO_LEADING;
+
             } else {
+
                 this.contentStream.newLine();
+
                 this.yCoordinate -= INFO_LEADING;
+
                 float sizeNewLine = CONTEXT_FONT_SIZE * CONTEXT_FONT.getStringWidth(context) / 1000;
+
                 float sizeOneChar = sizeNewLine / contextLength;
+
                 int maxLength = (int) (maxSize / sizeOneChar);
 
                 String[] contextArr = context.split(" ");
 
                 List<String> listContext = new ArrayList<String>();
+
                 StringBuilder buildLine = new StringBuilder();
 
                 for (String word : contextArr) {
@@ -141,43 +179,62 @@ public class CreateCVPDF {
                     if (word.length() + buildLine.length() < maxLength) {
                         buildLine.append(word)
                                 .append(" ");
+
                     } else {
+
                         listContext.add(buildLine.toString());
+
                         buildLine.delete(0, buildLine.length() - 1);
                     }
-                    ;
                 }
 
                 for (String line : listContext) {
+
                     this.contentStream.showText(line);
+
                     this.contentStream.newLine();
+
                     this.yCoordinate -= LEADING_LINE;
                 }
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+
         }
 
     }
 
 
     public void printContext(String formTitle, LocalDate beginDate, LocalDate endDate) {
+
         try {
 
             this.contentStream.setFont(INFO_FONT, INFO_FONT_SIZE);
+
             this.contentStream.setNonStrokingColor(CV_FORM_FONT_COLOR);
+
             this.contentStream.showText(formTitle + ": ");
+
             this.contentStream.setNonStrokingColor(Color.BLACK);
+
             this.contentStream.setFont(CONTEXT_FONT, CONTEXT_FONT_SIZE);
+
             StringBuffer educationPeriod = new StringBuffer(beginDate.format(DateTimeFormatter.ISO_LOCAL_DATE))
                     .append(" : ")
                     .append(endDate.format(DateTimeFormatter.ISO_LOCAL_DATE));
+
             this.contentStream.showText(educationPeriod.toString());
+
             this.contentStream.newLine();
+
             this.yCoordinate -= INFO_LEADING;
+
         } catch (IOException e) {
-            e.printStackTrace();
+
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+
         }
 
     }
@@ -185,12 +242,19 @@ public class CreateCVPDF {
     public void drawLine() {
 
         try {
+
             this.contentStream.moveTo(xCoordinate, yCoordinate);
-            xCoordinate += page.getMediaBox().getUpperRightX() - BORDER_LEFT - BORDER_RIGHT;
+
+            this.xCoordinate += page.getMediaBox().getUpperRightX() - BORDER_LEFT - BORDER_RIGHT;
+
             this.contentStream.lineTo(xCoordinate, yCoordinate);
+
             this.contentStream.stroke();
+
         } catch (IOException e) {
-            e.printStackTrace();
+
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+
         }
 
     }
@@ -200,6 +264,7 @@ public class CreateCVPDF {
         drawLine();
 
         this.yCoordinate -= LEADING_LINE / 4;
+
         this.xCoordinate = BORDER_LEFT;
 
         drawLine();
@@ -208,226 +273,288 @@ public class CreateCVPDF {
 
     public void drawLogo() {
 
-
         String pathLogo = null;
 
         try {
-            pathLogo = Paths.get(CreateCVPDF.class.getClassLoader().getResource("logo.png").toURI()).toString();
-            PDImageXObject pdLogo = PDImageXObject.createFromFile(pathLogo, document);
-            float scaleLogo = (float) LOGO_SIZE_HEIGHT / pdLogo.getHeight();
-            this.yCoordinate = page.getMediaBox().getLowerLeftY();
-            this.yCoordinate += BORDER_LOWER;
-            this.xCoordinate = page.getMediaBox().getLowerLeftX();
-            this.xCoordinate += BORDER_LEFT;
 
+            pathLogo = Paths.get(CreateCvPdf.class.getClassLoader().getResource("logo.png").toURI()).toString();
+
+            PDImageXObject pdLogo = PDImageXObject.createFromFile(pathLogo, document);
+
+            float scaleLogo = (float) LOGO_SIZE_HEIGHT / pdLogo.getHeight();
+
+            this.yCoordinate = page.getMediaBox().getLowerLeftY();
+
+            this.yCoordinate += BORDER_LOWER;
+
+            this.xCoordinate = page.getMediaBox().getLowerLeftX();
+
+            this.xCoordinate += BORDER_LEFT;
 
             contentStream.drawImage(pdLogo, this.xCoordinate, this.yCoordinate,
                     pdLogo.getWidth() * scaleLogo, LOGO_SIZE_HEIGHT);
 
-
         } catch (URISyntaxException | IOException e) {
-            e.printStackTrace();
+
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+
         }
 
     }
 
     public void createNewPage() {
+
         try {
+
             this.page = new PDPage(PDRectangle.A4);
+
             this.document.addPage(this.page);
+
             this.contentStream = new PDPageContentStream(this.document, this.page);
+
             drawLogo();
+
             this.yCoordinate = this.page.getMediaBox().getUpperRightY() - BORDER_UPPER;
+
             this.xCoordinate = this.page.getMediaBox().getUpperRightX() - BORDER_RIGHT;
+
         } catch (IOException e) {
-            e.printStackTrace();
+
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+
         }
 
     }
 
-    public Path createPDF(CV cv) {
+    public void experienceHeader(int countLineForBlock) {
+
         try {
 
+            float countSizeForBlock = countLineForBlock * INFO_LEADING;
+
+            if (((this.yCoordinate - countSizeForBlock) < BORDER_LOWER + LOGO_SIZE_HEIGHT)) {
+
+                this.contentStream.close();
+
+                createNewPage();
+            }
+
+            this.yCoordinate -= INFO_LEADING;
+
+            this.xCoordinate = BORDER_LEFT;
+
+            this.contentStream.beginText();
+
+            this.contentStream.newLineAtOffset(this.xCoordinate, this.yCoordinate);
+
+            this.contentStream.setLeading(INFO_LEADING);
+
+        } catch (IOException e) {
+
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+
+        }
+
+    }
+
+
+    public Path createPDF(CV cv) {
+
+        try {
 
             this.document = new PDDocument();
-//        this.page = new PDPage(PDRectangle.A4);
-//        this.document.addPage(this.page);
-//        drawLogo();
-//        this.contentStream = new PDPageContentStream(this.document, this.page);
-//        this.yCoordinate = this.page.getMediaBox().getUpperRightY() - BORDER_UPPER;
-//        this.xCoordinate = this.page.getMediaBox().getUpperRightX() - BORDER_RIGHT;
-
-            String pathImage = "/home/oleksandr/Documents/images.jpeg";
 
             createNewPage();
-
-            //photo
-
-            //  String pathImage = "/home/oleksandr/Documents/images.jpeg";
-            //changeShowPhoto
 
             try {
 
                 PDImageXObject pdImage = PDImageXObject.createFromFile(cv.getPerson().getPhoto(), this.document);
 
                 float scale = (float) PHOTO_SIZE / pdImage.getWidth();
+
                 this.yCoordinate -= pdImage.getHeight() * scale;
+
                 this.xCoordinate -= pdImage.getWidth() * scale;
+
                 this.contentStream.drawImage(pdImage, this.xCoordinate, this.yCoordinate,
                         pdImage.getWidth() * scale, pdImage.getHeight() * scale);
 
             } catch (Exception e) {
-                e.printStackTrace();
+
                 this.yCoordinate -= PHOTO_SIZE;
+
                 this.xCoordinate -= PHOTO_SIZE;
             }
-            // PDImageXObject pdLogo = PDImageXObject.createFromFile(pathNewPhoto, document);
-            //
-
-
-//            PDImageXObject pdImage = PDImageXObject.createFromFile(pathImage, this.document);
-//            float scale = (float) PHOTO_SIZE / pdImage.getWidth();
-//            this.yCoordinate -= pdImage.getHeight() * scale;
-//            this.xCoordinate -= pdImage.getWidth() * scale;
-//            this.contentStream.drawImage(pdImage, this.xCoordinate, this.yCoordinate,
-//                    pdImage.getWidth() * scale, pdImage.getHeight() * scale);
 
             //line
             final float X_CORDINAT_PHOTO = this.xCoordinate;
+
             final float Y_CORDINAT_PHOTO = this.yCoordinate;
 
             this.yCoordinate -= LEADING_LINE;
+
             this.xCoordinate = BORDER_LEFT;
 
             drawDoubleLine();
 
             final float Y_CORDINAT_TITLE_BORDER_LINE = this.yCoordinate;
 
-//TITLE
-            contentStream.beginText();
-            yCoordinate = Y_CORDINAT_PHOTO + TITLE_FONT_SIZE + TITLE_LEADING;
-            xCoordinate = BORDER_LEFT;
-            contentStream.newLineAtOffset(xCoordinate, yCoordinate);
-            contentStream.setFont(TITLE_FONT, TITLE_FONT_SIZE);
-            contentStream.setLeading(TITLE_LEADING);
-            contentStream.showText(cv.getPerson().getFirstName());
-            contentStream.newLine();
-            contentStream.showText(cv.getPerson().getLastName());
-            contentStream.endText();
+            //TITLE
+            this.contentStream.beginText();
+
+            this.yCoordinate = Y_CORDINAT_PHOTO + TITLE_FONT_SIZE + TITLE_LEADING;
+
+            this.xCoordinate = BORDER_LEFT;
+
+            this.contentStream.newLineAtOffset(this.xCoordinate, this.yCoordinate);
+
+            this.contentStream.setFont(TITLE_FONT, TITLE_FONT_SIZE);
+
+            this.contentStream.setLeading(TITLE_LEADING);
+
+            this.contentStream.showText(cv.getPerson().getFirstName());
+
+            this.contentStream.newLine();
+
+            this.contentStream.showText(cv.getPerson().getLastName());
+
+            this.contentStream.endText();
 
             //info
-            contentStream.beginText();
-            yCoordinate = Y_CORDINAT_TITLE_BORDER_LINE - LEADING_LINE - INFO_LEADING;
-            xCoordinate = X_CORDINAT_PHOTO - PHOTO_SIZE;
+            this.contentStream.beginText();
 
-            contentStream.newLineAtOffset(xCoordinate, yCoordinate);
-            contentStream.setFont(INFO_FONT, INFO_FONT_SIZE);
-            contentStream.setLeading(INFO_LEADING);
-            contentStream.showText(cv.getPosition());
-            contentStream.newLine();
+            this.yCoordinate = Y_CORDINAT_TITLE_BORDER_LINE - LEADING_LINE - INFO_LEADING;
+
+            this.xCoordinate = X_CORDINAT_PHOTO - PHOTO_SIZE;
+
+            this.contentStream.newLineAtOffset(this.xCoordinate, this.yCoordinate);
+
+            this.contentStream.setFont(INFO_FONT, INFO_FONT_SIZE);
+
+            this.contentStream.setLeading(INFO_LEADING);
+
+            this.contentStream.showText(cv.getPosition());
+
+            this.contentStream.newLine();
+
             String phoneNumber = cv.getPerson().getContact().getPhoneNumber();
+
             printContext("Phone", phoneNumber);
+
             String eMail = cv.getPerson().getContact().getEmail();
+
             printContext("EMail", eMail);
-            contentStream.endText();
+
+            this.contentStream.endText();
 
             //Context
-
             Education education = cv.getEducation();
+
             Set<Job> jobs = cv.getJobs();
+
             Set<Skill> skills = cv.getSkills();
 
             float startContext = (float) 2 / 3;
-            yCoordinate = page.getMediaBox().getHeight() * startContext;
-            xCoordinate = BORDER_LEFT;
 
-            contentStream.beginText();
-            contentStream.newLineAtOffset(xCoordinate, yCoordinate);
-            contentStream.setFont(SUBTITLE_FONT, SUBTITLE_FONT_SIZE);
-            contentStream.showText("EDUCATION");
-            contentStream.endText();
-            final float Y_COORDINAT_SUBTITLE_EDUCATION = yCoordinate;
-            yCoordinate -= LEADING_LINE;
-            xCoordinate = BORDER_LEFT;
+            this.yCoordinate = page.getMediaBox().getHeight() * startContext;
+
+            this.xCoordinate = BORDER_LEFT;
+
+            this.contentStream.beginText();
+
+            this.contentStream.newLineAtOffset(this.xCoordinate, this.yCoordinate);
+
+            this.contentStream.setFont(SUBTITLE_FONT, SUBTITLE_FONT_SIZE);
+
+            this.contentStream.showText("EDUCATION");
+
+            this.contentStream.endText();
+
+            final float Y_COORDINAT_SUBTITLE_EDUCATION = this.yCoordinate;
+
+            this.yCoordinate -= LEADING_LINE;
+
+            this.xCoordinate = BORDER_LEFT;
 
             drawDoubleLine();
 
-            final float Y_CORDINAT_EDUCATION_BORDER_LINE = yCoordinate;
+            final float Y_CORDINAT_EDUCATION_BORDER_LINE = this.yCoordinate;
 
-            //createQR.createQRCode(cv, "");
-/////
-            //String pathQR = "CVqrcode.png";
-            //Path pathQR = createQR.createQRCode(cv, "");
-
-            //createQR.createQRCode(cv, "");
-
-            PDImageXObject pdQR = PDImageXObject.createFromByteArray(document, createQR.createQRCode(cv, "").toByteArray(), "");
-
+            PDImageXObject pdQR = PDImageXObject.createFromByteArray(this.document, createQR.createQRCode(cv, "").toByteArray(), "");
 
             this.yCoordinate = Y_COORDINAT_SUBTITLE_EDUCATION;
+
             this.yCoordinate += SUBTITLE_FONT_SIZE;
 
             this.xCoordinate = BORDER_LEFT;
+
             float endQrCode = Y_CORDINAT_TITLE_BORDER_LINE - LEADING_LINE;
+
             float qrSize = endQrCode - this.yCoordinate;
 
+            this.contentStream.drawImage(pdQR, this.xCoordinate, this.yCoordinate, qrSize, qrSize);
 
-            contentStream.drawImage(pdQR, this.xCoordinate, this.yCoordinate, qrSize, qrSize);
+            this.yCoordinate = Y_CORDINAT_EDUCATION_BORDER_LINE;
 
+            this.yCoordinate -= LEADING_LINE;
 
-            //loop for education
-            yCoordinate = Y_CORDINAT_EDUCATION_BORDER_LINE;
-            yCoordinate -= LEADING_LINE;
-            yCoordinate -= INFO_LEADING;
-            xCoordinate = BORDER_LEFT;
-            contentStream.beginText();
-            contentStream.newLineAtOffset(xCoordinate, yCoordinate);
-            contentStream.setLeading(INFO_LEADING);
+            this.yCoordinate -= INFO_LEADING;
+
+            this.xCoordinate = BORDER_LEFT;
+
+            this.contentStream.beginText();
+
+            this.contentStream.newLineAtOffset(this.xCoordinate, this.yCoordinate);
+
+            this.contentStream.setLeading(INFO_LEADING);
+
             printContext("Degree", education.getDegree());
-            printContext("School", education.getSchool());
-            printContext("Graduation", education.getGraduation().toString());
-            contentStream.endText();
 
+            printContext("School", education.getSchool());
+
+            printContext("Graduation", education.getGraduation().toString());
+
+            this.contentStream.endText();
 
             boolean printExistsJob = jobs.stream()
                     .anyMatch(t -> t.getPrintPdf().equals(true));
 
-
             if (printExistsJob) {
 
+                this.xCoordinate = BORDER_LEFT;
 
+                this.yCoordinate -= LEADING_LINE;
 
-            xCoordinate = BORDER_LEFT;
-            yCoordinate -= LEADING_LINE;
-            yCoordinate -= SUBTITLE_LEADING;
-            contentStream.beginText();
-            contentStream.newLineAtOffset(xCoordinate, yCoordinate);
-            contentStream.setFont(SUBTITLE_FONT, SUBTITLE_FONT_SIZE);
-            contentStream.showText("JOBS");
-            contentStream.endText();
+                this.yCoordinate -= SUBTITLE_LEADING;
 
-            yCoordinate -= LEADING_LINE;
-            xCoordinate = BORDER_LEFT;
+                this.contentStream.beginText();
 
-            drawDoubleLine();
+                this.contentStream.newLineAtOffset(this.xCoordinate, this.yCoordinate);
 
+                this.contentStream.setFont(SUBTITLE_FONT, SUBTITLE_FONT_SIZE);
+
+                this.contentStream.showText("JOBS");
+
+                this.contentStream.endText();
+
+                this.yCoordinate -= LEADING_LINE;
+
+                this.xCoordinate = BORDER_LEFT;
+
+                drawDoubleLine();
 //
                 int countLineForBlock = 4;
-                for (Job job : jobs) {
-                    if (job.getPrintPdf()) {
-                        yCoordinate -= LEADING_LINE;
-                        countLineForBlock += countDescriptionLine(job.getDescription());
-                        float countSizeForBlock = countLineForBlock * INFO_LEADING;
-                        if (((this.yCoordinate - countSizeForBlock) < BORDER_LOWER + LOGO_SIZE_HEIGHT)) {
-                            this.contentStream.close();
-                            createNewPage();
-                        }
 
-                        yCoordinate -= INFO_LEADING;
-                        xCoordinate = BORDER_LEFT;
-                        contentStream.beginText();
-                        contentStream.newLineAtOffset(xCoordinate, yCoordinate);
-                        contentStream.setLeading(INFO_LEADING);
+                for (Job job : jobs) {
+
+                    if (job.getPrintPdf()) {
+
+                        this.yCoordinate -= LEADING_LINE;
+
+                        countLineForBlock += countDescriptionLine(job.getDescription());
+
+                        experienceHeader(countLineForBlock);
+
                         printContext("Position", job.getPosition());
 
                         printContext("Period", job.getBegin(), job.getEnd());
@@ -436,122 +563,107 @@ public class CreateCVPDF {
 
                         printContext("Description", job.getDescription());
 
-                        yCoordinate -= INFO_LEADING;
-                        xCoordinate = BORDER_LEFT;
-                        contentStream.endText();
+                        this.yCoordinate -= INFO_LEADING;
+
+                        this.xCoordinate = BORDER_LEFT;
+
+                        this.contentStream.endText();
+
                         drawLine();
                     }
                 }
             }
 //
 
-            yCoordinate -= LEADING_LINE;
-            yCoordinate -= SUBTITLE_LEADING;
-            xCoordinate = BORDER_LEFT;
+            this.yCoordinate -= LEADING_LINE;
 
-            float checkYCoordinate = yCoordinate;
+            this.yCoordinate -= SUBTITLE_LEADING;
+
+            this.xCoordinate = BORDER_LEFT;
+
+            float checkYCoordinate = this.yCoordinate;
+
             checkYCoordinate -= LEADING_LINE;
+
             checkYCoordinate -= LEADING_LINE / 4;
 
             if (((checkYCoordinate) < BORDER_LOWER + LOGO_SIZE_HEIGHT)) {
+
                 this.contentStream.close();
+
                 createNewPage();
             }
 
-
-
-
             boolean printExistsSkill = skills.stream()
                     .anyMatch(t -> t.getPrintPdf().equals(true));
-
             //
-            if(printExistsSkill){
+            if (printExistsSkill) {
 
+                this.contentStream.beginText();
 
-            contentStream.beginText();
-            contentStream.newLineAtOffset(xCoordinate, yCoordinate);
-            contentStream.setFont(SUBTITLE_FONT, SUBTITLE_FONT_SIZE);
-            contentStream.showText("SKILLS");
-            contentStream.endText();
-            final float Y_COORDINAT_SUBTITLE_SKILLS = yCoordinate;
-            yCoordinate -= LEADING_LINE;
-            xCoordinate = BORDER_LEFT;
+                this.contentStream.newLineAtOffset(this.xCoordinate, this.yCoordinate);
 
-            drawDoubleLine();
+                this.contentStream.setFont(SUBTITLE_FONT, SUBTITLE_FONT_SIZE);
 
+                this.contentStream.showText("SKILLS");
 
+                this.contentStream.endText();
 
-            int countLineForBlock = 2;
-            for (Skill skill : skills) {
-                if (skill.getPrintPdf()) {
+                final float Y_COORDINAT_SUBTITLE_SKILLS = this.yCoordinate;
 
+                this.yCoordinate -= LEADING_LINE;
 
-                    yCoordinate -= LEADING_LINE;
+                this.xCoordinate = BORDER_LEFT;
 
-                    countLineForBlock += countDescriptionLine(skill.getDescription());
+                drawDoubleLine();
 
-                    float countSizeForBlock = countLineForBlock * INFO_LEADING;
+                int countLineForBlock = 2;
 
-                    if (((this.yCoordinate - countSizeForBlock) < BORDER_LOWER + LOGO_SIZE_HEIGHT)) {
-                        this.contentStream.close();
-                        createNewPage();
+                for (Skill skill : skills) {
+
+                    if (skill.getPrintPdf()) {
+
+                        this.yCoordinate -= LEADING_LINE;
+
+                        countLineForBlock += countDescriptionLine(skill.getDescription());
+
+                        experienceHeader(countLineForBlock);
+
+                        printContext("Title", skill.getTitle());
+
+                        printContext("Description", skill.getDescription());
+
+                        this.yCoordinate -= INFO_LEADING;
+
+                        this.xCoordinate = BORDER_LEFT;
+
+                        this.contentStream.endText();
+
+                        drawLine();
                     }
-
-                    yCoordinate -= INFO_LEADING;
-
-                    xCoordinate = BORDER_LEFT;
-
-                    contentStream.beginText();
-
-                    contentStream.newLineAtOffset(xCoordinate, yCoordinate);
-
-                    contentStream.setLeading(INFO_LEADING);
-
-                    printContext("Title", skill.getTitle());
-
-                    printContext("Description", skill.getDescription());
-
-                    yCoordinate -= INFO_LEADING;
-
-                    xCoordinate = BORDER_LEFT;
-
-                    contentStream.endText();
-
-                    drawLine();
                 }
             }
-        }
 
             //
 
-            contentStream.close();
+            this.contentStream.close();
 
             Path saveDir = Paths.get(SAVE_DIRECTORY_FOR_PDF_DOC);
 
             Path tempCVFile = Files.createTempFile(saveDir, "pdfCV", ".pdf");
 
-            //CronJob.cronStart(tempCVFile,10000);
+            this.document.save(tempCVFile.toFile());
 
-            document.save(tempCVFile.toFile());
-            System.out.println(tempCVFile.toFile());
+            this.document.close();
 
-
-            document.close();
-            System.out.println(tempCVFile.toAbsolutePath());
-
-
-            //byte[] fileContent = Files.readAllBytes(tempCVFile.toRealPath());
-
-            //System.out.println(fileContent);
-
-return tempCVFile;
-            //return fileContent;
+            return tempCVFile;
 
         } catch (IOException e) {
-            e.printStackTrace();
+
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+
         }
         return null;
     }
-
 
 }
