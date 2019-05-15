@@ -13,10 +13,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import ua.softserve.ita.service.CronJob;
+import ua.softserve.ita.service.MyTask;
 
 import static org.hibernate.cfg.AvailableSettings.*;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
+import java.util.Timer;
 
 @Configuration
 
@@ -91,5 +97,48 @@ public class AppConfig {
 
         return mailSender;
     }
+
+    @Bean
+    public Path cronStart(){
+
+        String dirPath ="pdf/tempPDFdir";
+
+        Path dirPathObj = Paths.get(dirPath);
+
+        try {
+            System.out.println(dirPathObj.toRealPath());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        boolean dirExists = Files.exists(dirPathObj);
+        if(dirExists) {
+            try {
+                System.out.println("! Directory Already Exists !" + dirPathObj.toRealPath() );
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } else {
+            try {
+                // Creating The New Directory Structure
+                Files.createDirectories(dirPathObj);
+                System.out.println("! New Directory Successfully Created !");
+            } catch (IOException ioExceptionObj) {
+                System.out.println("Problem Occured While Creating The Directory Structure= " + ioExceptionObj.getMessage());
+            }
+        }
+
+        Timer t = new Timer();
+        MyTask mTask = new MyTask(dirPathObj);
+        // This task is scheduled to run every 10 seconds
+        t.scheduleAtFixedRate(mTask, 0, 300000);
+
+
+        return dirPathObj;
+    }
+
+
 
 }

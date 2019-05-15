@@ -8,6 +8,7 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import ua.softserve.ita.model.*;
 import ua.softserve.ita.service.CronJob;
@@ -31,6 +32,9 @@ import java.util.Timer;
 @Service
 @Data
 public class CreateCVPDF {
+
+    //@Autowired
+    //Path cronStart;
 
     @Autowired
     CreateQrCodeVCard createQR;
@@ -67,7 +71,7 @@ public class CreateCVPDF {
 
     final float LEADING_LINE = 10f;
 
-    final String SAVE_DIRECTORY_FOR_PDF_DOC = "pdf/cvPDF/";
+    final String SAVE_DIRECTORY_FOR_PDF_DOC = "pdf/tempPDFdir";
 
     private PDDocument document;
     private PDPage page;
@@ -245,9 +249,6 @@ public class CreateCVPDF {
         try {
 
 
-
-
-
             this.document = new PDDocument();
 //        this.page = new PDPage(PDRectangle.A4);
 //        this.document.addPage(this.page);
@@ -265,14 +266,6 @@ public class CreateCVPDF {
             //  String pathImage = "/home/oleksandr/Documents/images.jpeg";
             //changeShowPhoto
 
-            String pathNoPhoto = null;
-            try {
-                pathNoPhoto = Paths.get(CreateCVPDF.class.getClassLoader().getResource("noPhoto.png").toURI()).toString();
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-
-
             try {
 
                 PDImageXObject pdImage = PDImageXObject.createFromFile(cv.getPerson().getPhoto(), this.document);
@@ -285,18 +278,11 @@ public class CreateCVPDF {
 
             } catch (Exception e) {
                 e.printStackTrace();
-
-                PDImageXObject pdImage = PDImageXObject.createFromFile(pathNoPhoto, this.document);
-                float scale = (float) PHOTO_SIZE / pdImage.getWidth();
-                this.yCoordinate -= pdImage.getHeight() * scale;
-                this.xCoordinate -= pdImage.getWidth() * scale;
-                this.contentStream.drawImage(pdImage, this.xCoordinate, this.yCoordinate,
-                        pdImage.getWidth() * scale, pdImage.getHeight() * scale);
-
+                this.yCoordinate -= PHOTO_SIZE;
+                this.xCoordinate -= PHOTO_SIZE;
             }
-           // PDImageXObject pdLogo = PDImageXObject.createFromFile(pathNewPhoto, document);
+            // PDImageXObject pdLogo = PDImageXObject.createFromFile(pathNewPhoto, document);
             //
-
 
 
 //            PDImageXObject pdImage = PDImageXObject.createFromFile(pathImage, this.document);
@@ -402,6 +388,15 @@ public class CreateCVPDF {
             printContext("Graduation", education.getGraduation().toString());
             contentStream.endText();
 
+
+            boolean printExistsJob = jobs.stream()
+                    .anyMatch(t -> t.getPrintPdf().equals(true));
+
+
+            if (printExistsJob) {
+
+
+
             xCoordinate = BORDER_LEFT;
             yCoordinate -= LEADING_LINE;
             yCoordinate -= SUBTITLE_LEADING;
@@ -416,37 +411,39 @@ public class CreateCVPDF {
 
             drawDoubleLine();
 
-            int countLineForBlock = 4;
-            for (Job job : jobs) {
-                if (job.getPrintPdf()) {
-                    yCoordinate -= LEADING_LINE;
-                    countLineForBlock += countDescriptionLine(job.getDescription());
-                    float countSizeForBlock = countLineForBlock * INFO_LEADING;
-                    if (((this.yCoordinate - countSizeForBlock) < BORDER_LOWER + LOGO_SIZE_HEIGHT)) {
-                        this.contentStream.close();
-                        createNewPage();
+//
+                int countLineForBlock = 4;
+                for (Job job : jobs) {
+                    if (job.getPrintPdf()) {
+                        yCoordinate -= LEADING_LINE;
+                        countLineForBlock += countDescriptionLine(job.getDescription());
+                        float countSizeForBlock = countLineForBlock * INFO_LEADING;
+                        if (((this.yCoordinate - countSizeForBlock) < BORDER_LOWER + LOGO_SIZE_HEIGHT)) {
+                            this.contentStream.close();
+                            createNewPage();
+                        }
+
+                        yCoordinate -= INFO_LEADING;
+                        xCoordinate = BORDER_LEFT;
+                        contentStream.beginText();
+                        contentStream.newLineAtOffset(xCoordinate, yCoordinate);
+                        contentStream.setLeading(INFO_LEADING);
+                        printContext("Position", job.getPosition());
+
+                        printContext("Period", job.getBegin(), job.getEnd());
+
+                        printContext("Company", job.getCompanyName());
+
+                        printContext("Description", job.getDescription());
+
+                        yCoordinate -= INFO_LEADING;
+                        xCoordinate = BORDER_LEFT;
+                        contentStream.endText();
+                        drawLine();
                     }
-
-                    yCoordinate -= INFO_LEADING;
-                    xCoordinate = BORDER_LEFT;
-                    contentStream.beginText();
-                    contentStream.newLineAtOffset(xCoordinate, yCoordinate);
-                    contentStream.setLeading(INFO_LEADING);
-                    printContext("Position", job.getPosition());
-
-                    printContext("Period", job.getBegin(), job.getEnd());
-
-                    printContext("Company", job.getCompanyName());
-
-                    printContext("Description", job.getDescription());
-
-                    yCoordinate -= INFO_LEADING;
-                    xCoordinate = BORDER_LEFT;
-                    contentStream.endText();
-                    drawLine();
                 }
             }
-
+//
 
             yCoordinate -= LEADING_LINE;
             yCoordinate -= SUBTITLE_LEADING;
@@ -461,6 +458,16 @@ public class CreateCVPDF {
                 createNewPage();
             }
 
+
+
+
+            boolean printExistsSkill = skills.stream()
+                    .anyMatch(t -> t.getPrintPdf().equals(true));
+
+            //
+            if(printExistsSkill){
+
+
             contentStream.beginText();
             contentStream.newLineAtOffset(xCoordinate, yCoordinate);
             contentStream.setFont(SUBTITLE_FONT, SUBTITLE_FONT_SIZE);
@@ -472,7 +479,9 @@ public class CreateCVPDF {
 
             drawDoubleLine();
 
-            countLineForBlock = 2;
+
+
+            int countLineForBlock = 2;
             for (Skill skill : skills) {
                 if (skill.getPrintPdf()) {
 
@@ -511,12 +520,17 @@ public class CreateCVPDF {
                     drawLine();
                 }
             }
+        }
+
+            //
 
             contentStream.close();
 
-           Path tempCVFile = Files.createTempFile("pdfCV", ".pdf");
+            Path saveDir = Paths.get(SAVE_DIRECTORY_FOR_PDF_DOC);
 
-            CronJob.cronStart(tempCVFile,10000);
+            Path tempCVFile = Files.createTempFile(saveDir, "pdfCV", ".pdf");
+
+            //CronJob.cronStart(tempCVFile,10000);
 
             document.save(tempCVFile.toFile());
             System.out.println(tempCVFile.toFile());
