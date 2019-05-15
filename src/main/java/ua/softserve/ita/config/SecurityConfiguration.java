@@ -24,6 +24,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .httpBasic()
                 .and()
+                .cors()
+                .and()
                 .authorizeRequests()
                 .antMatchers("/admin","/person/**").access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/users").access("hasRole('ROLE_USER')")
