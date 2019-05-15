@@ -24,4 +24,5 @@ public interface UserService {
     void deleteById(Long id);
 
     Optional<User> findByToken(String token);
+
 }

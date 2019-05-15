@@ -1,7 +1,7 @@
 package ua.softserve.ita.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -13,7 +13,12 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "skill")
 public class Skill implements Serializable {
@@ -41,28 +46,5 @@ public class Skill implements Serializable {
     @JoinColumn(name = "cv_id", nullable = false)
     private CV cv;
 
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (o == null || getClass() != o.getClass()) return false;
-//        Skill skill = (Skill) o;
-//        return skillId.equals(skill.skillId) &&
-//                title.equals(skill.title) &&
-//                Objects.equals(description, skill.description);
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        return Objects.hash(skillId, title, description);
-//    }
-
-    @Override
-    public String toString() {
-        return "Skill{" +
-                "skillId=" + skillId +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                '}';
-    }
 
 }

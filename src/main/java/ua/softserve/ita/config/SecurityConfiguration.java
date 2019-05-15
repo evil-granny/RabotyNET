@@ -11,7 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
-public class LoginSecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -24,22 +24,26 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .httpBasic()
                 .and()
+                .cors()
+                .and()
                 .authorizeRequests()
                 .antMatchers("/admin","/person/**").access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/users").access("hasRole('ROLE_USER')")
+                .antMatchers("/createCV").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
                 .antMatchers("/companies").access("hasRole('ROLE_COWNER') or hasRole('ROLE_ADMIN')")
                 .antMatchers("/searchCV").access("hasRole('ROLE_COWNER')")
-                .antMatchers("/", "/vacancies", "/loginUser", "/registration").permitAll()
+                .antMatchers("/","/vacancies/**" , "/loginUser", "/registration").permitAll()
+                .antMatchers("/","/pdf/**" , "/updatePDF", "/createPdf/**").permitAll()
                 .antMatchers("/v2/api-docs",
                         "/configuration/ui",
                         "/swagger-resources",
                         "/configuration/security",
                         "/swagger-ui.html",
                         "/webjars/**").permitAll()
+
                 .anyRequest().authenticated()
                 .and()
-                .logout().logoutSuccessUrl("/logoutUser")
-//                .and().csrf().ignoringAntMatchers("/", "/home", "/loginUser");
+                .logout().logoutSuccessUrl("/logout")
                 .and().csrf().disable();
     }
 
