@@ -14,7 +14,7 @@ import org.springframework.web.servlet.view.JstlView;
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = {"ua.softserve.ita.*"})
-@Import(value = {LoginSecurityConfig.class})
+@Import(value = {SecurityConfiguration.class})
 public class WebConfig implements WebMvcConfigurer {
 
     @Bean

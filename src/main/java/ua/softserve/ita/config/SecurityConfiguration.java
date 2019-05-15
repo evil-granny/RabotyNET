@@ -11,7 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
-public class LoginSecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -32,8 +32,7 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "/vacancies", "/loginUser", "/registration").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .logout().logoutSuccessUrl("/logoutUser")
-//                .and().csrf().ignoringAntMatchers("/", "/home", "/loginUser");
+                .logout().logoutSuccessUrl("/logout")
                 .and().csrf().disable();
     }
 

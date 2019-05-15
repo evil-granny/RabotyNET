@@ -11,12 +11,13 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.softserve.ita.dao.UserDao;
 import ua.softserve.ita.model.Role;
 import ua.softserve.ita.model.User;
+import ua.softserve.ita.model.UserPrincipal;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Logger;
 
-@Service/*("userDetailsService")*/
+@Service
 @Transactional
 public class UserDetailsServiceImp implements UserDetailsService {
 
@@ -39,12 +40,16 @@ public class UserDetailsServiceImp implements UserDetailsService {
             authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getType().toUpperCase()));
         }
         if (user != null) {
-            lOGGER.severe("Our user is - " + user);
-            return new org.springframework.security.core.userdetails.User(
+            lOGGER.severe("Our user is - " + user.getUserId());
+            UserPrincipal principal = new UserPrincipal(
                     user.getUsername(),
                     user.getPassword(),
-                    authorities
+                    authorities,
+                    user.getUserId()
             );
+            lOGGER.severe("PRINCIPAL is " + principal);
+            lOGGER.severe("PRINCIPAL ID is " + principal.getUserID());
+            return principal;
         } else {
             throw new UsernameNotFoundException("User not found.");
         }
