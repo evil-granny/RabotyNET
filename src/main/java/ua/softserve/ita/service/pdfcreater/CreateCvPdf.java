@@ -368,7 +368,7 @@ public class CreateCvPdf {
 
             try {
 
-                PDImageXObject pdImage = PDImageXObject.createFromFile(cv.getPerson().getPhoto(), this.document);
+                PDImageXObject pdImage = PDImageXObject.createFromFile(cv.getPhoto(), this.document);
 
                 float scale = (float) PHOTO_SIZE / pdImage.getWidth();
 
