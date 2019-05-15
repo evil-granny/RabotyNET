@@ -23,7 +23,6 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
         this.sendMailService = sendMailService;
     }
 
-
     @Override
     public void onApplicationEvent(final OnRegistrationCompleteEvent event) {
         this.confirmRegistration(event);

@@ -24,12 +24,14 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .httpBasic()
                 .and()
+                .cors()
+                .and()
                 .authorizeRequests()
                 .antMatchers("/admin","/person/**").access("hasRole('ROLE_ADMIN')")
-                .antMatchers("/users").access("hasRole('ROLE_USER')")
+             //   .antMatchers("/users").access("hasRole('ROLE_USER')")
                 .antMatchers("/companies").access("hasRole('ROLE_COWNER') or hasRole('ROLE_ADMIN')")
                 .antMatchers("/searchCV").access("hasRole('ROLE_COWNER')")
-                .antMatchers("/", "/vacancies", "/loginUser", "/registration").permitAll()
+                .antMatchers("/", "/vacancies", "/login","/registrationConfirm/**", "/registration", "/users/**").permitAll()
                 .antMatchers("/v2/api-docs",
                         "/configuration/ui",
                         "/swagger-resources",

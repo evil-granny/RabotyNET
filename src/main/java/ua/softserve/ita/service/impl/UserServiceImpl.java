@@ -9,9 +9,11 @@ import ua.softserve.ita.dao.UserDao;
 import ua.softserve.ita.dao.VerificationTokenDao;
 import ua.softserve.ita.dto.UserDto;
 import ua.softserve.ita.exception.UserAlreadyExistException;
+import ua.softserve.ita.model.Role;
 import ua.softserve.ita.model.User;
 import ua.softserve.ita.service.UserService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,6 +58,9 @@ public class UserServiceImpl implements UserService {
         try {
             user.setLogin(userDto.getLogin());
             user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+            List<Role> roles = new ArrayList<>();
+            roles.add(new Role ("ROLE_USER"));
+            user.setRoles(roles);
             return userDao.save(user);
         }catch (UserAlreadyExistException e){
              e.getMessage();

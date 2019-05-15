@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class LoginController {
 
-    @PostMapping("/loginUser")
+    @PostMapping("/login")
     public Object userLoginPost() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return principal;
