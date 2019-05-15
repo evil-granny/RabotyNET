@@ -21,7 +21,7 @@ public class Photo {
     @Column(name = "name")
     private String name;
 
-    @Transient
-    private String base64Image;
+    @Column(name = "image")
+    private byte[] image;
 
 }

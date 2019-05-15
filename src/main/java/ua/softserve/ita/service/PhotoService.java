@@ -3,7 +3,6 @@ package ua.softserve.ita.service;
 import org.springframework.web.multipart.MultipartFile;
 import ua.softserve.ita.model.profile.Photo;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,11 +12,11 @@ public interface PhotoService {
 
     List<Photo> findAll();
 
-    byte[] loadAsByteArray(String name) throws IOException;
+    byte[] loadAsByteArray(String name);
 
     Photo save(Photo photo);
 
-    Photo upload(MultipartFile file, Long userId) throws IOException;
+    Photo upload(MultipartFile file, Long userId);
 
     Photo update(Photo photo);
 

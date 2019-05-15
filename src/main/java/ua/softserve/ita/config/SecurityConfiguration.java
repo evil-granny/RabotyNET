@@ -15,8 +15,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        return bCryptPasswordEncoder;
+        return new BCryptPasswordEncoder();
     }
 
     @Override
@@ -27,13 +26,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .cors()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/admin","/person/**").access("hasRole('ROLE_ADMIN')")
-                .antMatchers("/users").access("hasRole('ROLE_USER')")
+                .antMatchers("/admin", "/person/**").access("hasRole('ROLE_ADMIN')")
+//                .antMatchers("/users").access("hasRole('ROLE_USER')")
                 .antMatchers("/createCV").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
                 .antMatchers("/companies").access("hasRole('ROLE_COWNER') or hasRole('ROLE_ADMIN')")
                 .antMatchers("/searchCV").access("hasRole('ROLE_COWNER')")
-                .antMatchers("/","/vacancies/**" , "/loginUser", "/registration").permitAll()
-                .antMatchers("/","/pdf/**" , "/updatePDF", "/createPdf/**").permitAll()
+                .antMatchers("/", "/vacancies", "/login", "/registrationConfirm/**", "/registration", "/users/**").permitAll()
+                .antMatchers("/", "/vacancies/**", "/loginUser", "/registration").permitAll()
+                .antMatchers("/", "/pdf/**", "/updatePDF", "/createPdf/**").permitAll()
                 .antMatchers("/v2/api-docs",
                         "/configuration/ui",
                         "/swagger-resources",
@@ -48,7 +48,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**");
     }
+
 }
