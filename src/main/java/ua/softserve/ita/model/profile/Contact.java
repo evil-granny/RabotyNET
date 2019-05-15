@@ -19,10 +19,10 @@ public class Contact implements Serializable {
     @Column(name = "contact_id")
     private Long contactId;
 
-    @Column(name = "email", length = 50)
+    @Column(name = "email", nullable = false, length = 50)
     private String email;
 
-    @Column(name = "phone_number", length = 13)
+    @Column(name = "phone_number", nullable = false, length = 13)
     private String phoneNumber;
 
 }

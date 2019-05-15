@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
-public interface BaseDao <T, PK extends Serializable>{
+public interface BaseDao<T, PK extends Serializable> {
 
     Optional<T> findById(PK pk);
 
@@ -18,7 +18,7 @@ public interface BaseDao <T, PK extends Serializable>{
 
     List<T> findAll();
 
-    List<T> findWithPagination(int first,int count);
+    List<T> findWithPagination(int first, int count);
 
     boolean existsById(PK pk);
 }

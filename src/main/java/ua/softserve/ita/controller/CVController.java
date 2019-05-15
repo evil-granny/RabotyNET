@@ -10,9 +10,9 @@ import ua.softserve.ita.model.profile.Person;
 import ua.softserve.ita.service.CVService;
 import ua.softserve.ita.service.JobService;
 import ua.softserve.ita.service.SkillService;
+import ua.softserve.ita.service.pdfcreater.CreateCVPDF;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @CrossOrigin
@@ -21,17 +21,25 @@ public class CVController {
     private final CVService cvService;
     private final JobService jobService;
     private final SkillService skillService;
+    private final CreateCVPDF pdfService;
+
 
     @Autowired
-    public CVController(CVService cvService, JobService jobService, SkillService skillService) {
+    public CVController(CVService cvService, JobService jobService, SkillService skillService, CreateCVPDF pdfService) {
         this.cvService = cvService;
         this.jobService = jobService;
         this.skillService = skillService;
+        this.pdfService = pdfService;
     }
 
     @GetMapping(path = {"/cv/{id}"})
     public CV findById(@PathVariable("id") long id) {
-        return cvService.findById(id).orElseThrow(()->new ResourceNotFoundException("Not found cv by id"));
+        CV cv = cvService.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("Vacancy with id: %d not found", id)));
+
+        pdfService.createPDF(cv);
+
+        return cv;
+
     }
 
     @GetMapping(path = {"/cvs"})
@@ -60,6 +68,7 @@ public class CVController {
         Set<Job> jobs = cv.getJobs();
         skills.forEach(x -> x.setCv(cv));
         jobs.forEach(x -> x.setCv(cv));
+
 
         return cvService.update(cv);
     }
