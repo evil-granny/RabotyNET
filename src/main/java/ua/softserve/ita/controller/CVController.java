@@ -8,9 +8,7 @@ import ua.softserve.ita.model.Job;
 import ua.softserve.ita.model.Skill;
 import ua.softserve.ita.model.profile.Person;
 import ua.softserve.ita.service.CVService;
-import ua.softserve.ita.service.JobService;
-import ua.softserve.ita.service.SkillService;
-import ua.softserve.ita.service.pdfcreater.CreateCvPdf;
+import ua.softserve.ita.service.pdfcreater.CreateCVPDF;
 
 import java.util.List;
 import java.util.Set;
@@ -19,16 +17,12 @@ import java.util.Set;
 @RestController
 public class CVController {
     private final CVService cvService;
-    private final JobService jobService;
-    private final SkillService skillService;
-    private final CreateCvPdf pdfService;
+    private final CreateCVPDF pdfService;
 
 
     @Autowired
-    public CVController(CVService cvService, JobService jobService, SkillService skillService, CreateCvPdf pdfService) {
+    public CVController(CVService cvService, CreateCVPDF pdfService) {
         this.cvService = cvService;
-        this.jobService = jobService;
-        this.skillService = skillService;
         this.pdfService = pdfService;
     }
 
@@ -49,6 +43,7 @@ public class CVController {
 
     @PostMapping(path = "/createCV")
     public CV insert(@RequestBody CV cv) {
+
         Person person = new Person();
         person.setUserId(1L);
         cv.setPerson(person);

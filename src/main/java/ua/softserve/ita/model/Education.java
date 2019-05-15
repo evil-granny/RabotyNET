@@ -1,6 +1,5 @@
 package ua.softserve.ita.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -15,6 +14,7 @@ import java.util.Objects;
 @EqualsAndHashCode
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "education")
 public class Education implements Serializable {
@@ -37,10 +37,11 @@ public class Education implements Serializable {
     private String school;
 
     @Column(name = "specialty", length = 100)
-    @Size(min = 3, max = 100, message = "name length is incorrect")
+    @Size(min = 3, max = 100, message = "specialty length is incorrect")
     private String specialty;
 
     @Column(name = "graduation")
     private Integer graduation;
+
 
 }
