@@ -15,4 +15,6 @@ public interface ClaimService {
     Claim update(Claim claim);
 
     void deleteById(Long id);
+
+    List<Claim> findAllByCompanyId(Long id);
 }

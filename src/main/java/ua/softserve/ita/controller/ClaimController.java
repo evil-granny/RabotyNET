@@ -34,8 +34,7 @@ public class ClaimController {
 
     @GetMapping(value = {"/{companyId}"})
     public List<Claim> findClaims(@PathVariable("companyId") long companyId) {
-        List<Claim> res = claimService.findAll().stream().filter((c) -> c.getCompany().getCompanyId().equals(companyId)).collect(Collectors.toList());
-        return res;
+        return claimService.findAllByCompanyId(companyId);
     }
 
     @DeleteMapping("/{id}")
