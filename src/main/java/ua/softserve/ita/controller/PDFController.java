@@ -89,7 +89,7 @@ public class PDFController {
 
             fileContent = Files.readAllBytes(pathToPdf.toRealPath());
 
-            generateService.sendPersonPDF(cv.getPerson(), pathToPdf.toRealPath().toString());
+            //generateService.sendPersonPDF(cv.getPerson(), pathToPdf.toRealPath().toString());
 
             return new ResponseEntity<>(fileContent, headers, HttpStatus.OK);
 
