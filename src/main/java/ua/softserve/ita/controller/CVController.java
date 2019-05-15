@@ -6,9 +6,12 @@ import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.CV;
 import ua.softserve.ita.model.Job;
 import ua.softserve.ita.model.Skill;
+import ua.softserve.ita.model.User;
 import ua.softserve.ita.model.profile.Person;
 import ua.softserve.ita.service.CVService;
-import ua.softserve.ita.service.pdfcreater.CreateCVPDF;
+import ua.softserve.ita.service.pdfcreater.CreateCvPdf;
+
+import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 
 import java.util.List;
 import java.util.Set;
@@ -17,11 +20,11 @@ import java.util.Set;
 @RestController
 public class CVController {
     private final CVService cvService;
-    private final CreateCVPDF pdfService;
+    private final CreateCvPdf pdfService;
 
 
     @Autowired
-    public CVController(CVService cvService, CreateCVPDF pdfService) {
+    public CVController(CVService cvService, CreateCvPdf pdfService) {
         this.cvService = cvService;
         this.pdfService = pdfService;
     }
@@ -44,8 +47,10 @@ public class CVController {
     @PostMapping(path = "/createCV")
     public CV insert(@RequestBody CV cv) {
 
+        Long userID = getLoggedUser().get().getUserID();
+
         Person person = new Person();
-        person.setUserId(1L);
+        person.setUserId(userID);
         cv.setPerson(person);
 
         Set<Skill> skills = cv.getSkills();
