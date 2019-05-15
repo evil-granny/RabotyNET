@@ -83,7 +83,6 @@ public class RegistrationController {
     @PostMapping("/registration")
     public ResponseEntity<User> insert(@RequestBody @Valid UserDto userDto, final HttpServletRequest request) {
         User user = userService.createDTO(userDto);
-        //eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, getAppUrl(request)));
         registrationListener.onApplicationEvent(new OnRegistrationCompleteEvent(user, getAppUrl(request)));
         return ResponseEntity.ok().body(user);
     }
