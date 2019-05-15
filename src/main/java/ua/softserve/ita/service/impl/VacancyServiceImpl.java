@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ua.softserve.ita.dao.CompanyDao;
 import ua.softserve.ita.dao.RequirementDao;
 import ua.softserve.ita.dao.VacancyDao;
+import ua.softserve.ita.dto.VacancyDTO.VacancyPaginationDTO;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Company;
 import ua.softserve.ita.model.Requirement;
@@ -45,13 +46,15 @@ public class VacancyServiceImpl implements VacancyService {
     }
 
     @Override
-    public List<Vacancy> findAllByCompanyName(String companyName, int first, int count) {
-        return vacancyDao.findAllByCompanyNameWithPagination(companyName, first, count);
+    public VacancyPaginationDTO findAllByCompanyName(String companyName, int first, int count) {
+        return new VacancyPaginationDTO(vacancyDao.getCountOfVacancies(companyName),
+                vacancyDao.findAllByCompanyNameWithPagination(companyName,first,count));
     }
 
     @Override
-    public List<Vacancy> findAllVacanciesWithPagination(int first, int count) {
-        return vacancyDao.findWithPagination(first, count);
+    public VacancyPaginationDTO findAllVacanciesWithPagination(int first, int count) {
+        return new VacancyPaginationDTO(vacancyDao.getCountOfAllVacancies(),
+                vacancyDao.findWithPagination(first, count));
     }
 
     @Override
@@ -73,15 +76,5 @@ public class VacancyServiceImpl implements VacancyService {
     @Override
     public void deleteById(Long id) {
         vacancyDao.deleteById(id);
-    }
-
-    @Override
-    public Long getCountOfVacancies(String name) {
-        return vacancyDao.getCountOfVacancies(name);
-    }
-
-    @Override
-    public Long getCountOfAllVacancies() {
-        return vacancyDao.getCountOfAllVacancies();
     }
 }

@@ -73,12 +73,12 @@ public class SearchCVDao {
             "SELECT DISTINCT COUNT(person.user_id) FROM person " +
                     "JOIN address ON person.user_id = address.address_id " +
                     "WHERE address.city ILIKE :searchText";
-    private static final String SKILL_QUERY_CONT =
+    private static final String SKILL_QUERY_COUNT =
             "SELECT DISTINCT COUNT(person.user_id) FROM person " +
                     "JOIN cv ON person.user_id = cv.cv_id " +
                     "JOIN skill ON cv.cv_id = skill.cv_id " +
                     "WHERE skill.title ILIKE :searchText OR skill.description ILIKE :searchText";
-    private static final String POSITION_QUERY_CONT =
+    private static final String POSITION_QUERY_COUNT =
             "SELECT DISTINCT COUNT(person.user_id) FROM person " +
                     "JOIN cv ON person.user_id = cv.cv_id " +
                     "WHERE cv.position ILIKE :searchText";
@@ -110,11 +110,11 @@ public class SearchCVDao {
                 break;
             case "skill":
                 nativeQuery = SKILL_QUERY;
-                countQuery = SKILL_QUERY_CONT;
+                countQuery = SKILL_QUERY_COUNT;
                 break;
             default:
                 nativeQuery = POSITION_QUERY;
-                countQuery = POSITION_QUERY_CONT;
+                countQuery = POSITION_QUERY_COUNT;
 
         }
         Query getMathes = session.createNativeQuery(countQuery);
@@ -133,6 +133,7 @@ public class SearchCVDao {
         for (Object object : result) {
             try {
                 searchCVDTO = searchCVMapper.getSearchCVDTO(objectMapper.writeValueAsString(object));
+                log.info("DTO = " + searchCVDTO);
                 dtoList.add(searchCVDTO);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();

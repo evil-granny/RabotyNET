@@ -1,5 +1,6 @@
 package ua.softserve.ita.service;
 
+import ua.softserve.ita.dto.VacancyDTO.VacancyPaginationDTO;
 import ua.softserve.ita.model.Vacancy;
 
 import java.util.List;
@@ -11,18 +12,14 @@ public interface VacancyService {
 
     List<Vacancy> findAll();
 
-    List<Vacancy> findAllByCompanyName(String companyName, int first, int count);
+    VacancyPaginationDTO findAllByCompanyName(String companyName, int first, int count);
 
-    List<Vacancy> findAllVacanciesWithPagination(int first, int count);
+    VacancyPaginationDTO findAllVacanciesWithPagination(int first, int count);
 
     Vacancy save(Vacancy vacancy);
 
     Vacancy update(Vacancy vacancy);
 
     void deleteById(Long id);
-
-    Long getCountOfVacancies(String name);
-
-    Long getCountOfAllVacancies();
 
 }

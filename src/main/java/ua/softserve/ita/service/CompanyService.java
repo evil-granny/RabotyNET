@@ -1,5 +1,6 @@
 package ua.softserve.ita.service;
 
+import ua.softserve.ita.dto.CompanyDTO.CompanyPaginationDTO;
 import ua.softserve.ita.model.Company;
 
 import java.util.List;
@@ -11,15 +12,13 @@ public interface CompanyService {
 
     List<Company> findAll();
 
-    List<Company> findAllWithPagination(int first, int count);
+    CompanyPaginationDTO findAllWithPagination(int first, int count);
 
     Optional<Company> save(Company company);
 
     Company update(Company company);
 
     void deleteById(Long id);
-
-    Long getCompaniesCount();
 
     Optional<Company> findByName(String name);
 }

@@ -44,4 +44,9 @@ public class ClaimServiceImpl implements ClaimService {
     public void deleteById(Long id) {
       claimDao.deleteById(id);
     }
+
+    @Override
+    public List<Claim> findAllByCompanyId(Long id) {
+        return claimDao.findAllByCompanyId(id);
+    }
 }

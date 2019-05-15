@@ -3,7 +3,7 @@ package ua.softserve.ita.dto.SearchDTO;
 import lombok.Data;
 
 @Data
-public class SearchCVRequestDTO {
+public class SearchRequestDTO {
 
     private String searchText;
 
