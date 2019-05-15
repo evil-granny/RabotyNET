@@ -12,7 +12,7 @@ import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 @RestController
 public class LoginController {
 
-    @PostMapping("/loginUser")
+    @PostMapping("/login")
     public UserPrincipal userLoginPost() {
         return getLoggedUser().orElse(UNKNOWN_USER);
     }
