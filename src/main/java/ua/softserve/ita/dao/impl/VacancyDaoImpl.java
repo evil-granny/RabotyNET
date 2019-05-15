@@ -11,21 +11,22 @@ import java.util.Optional;
 @Repository
 public class VacancyDaoImpl extends AbstractDao<Vacancy, Long> implements VacancyDao {
     private static final String ID = "id";
+    private static final String NAME = "name";
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Vacancy> findAllByCompanyIdWithPagination(Long id, int first, int count) {
+    public List<Vacancy> findAllByCompanyNameWithPagination(String name, int first, int count) {
         return (List<Vacancy>)createNamedQuery(Vacancy.FIND_BY_COMPANY)
-                .setParameter(ID, id)
+                .setParameter(NAME, name)
                 .setFirstResult(first)
                 .setMaxResults(count)
                 .getResultList();
     }
 
     @Override
-    public Long getCountOfVacancies(Long id) {
+    public Long getCountOfVacancies(String name) {
         return (Long) createNamedQuery(Vacancy.FIND_COUNT_VACANCY)
-                .setParameter(ID, id)
+                .setParameter(NAME, name)
                 .getSingleResult();
     }
 

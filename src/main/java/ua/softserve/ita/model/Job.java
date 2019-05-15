@@ -22,6 +22,7 @@ import java.util.Objects;
 @EqualsAndHashCode
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "job")
 public class Job implements Serializable {
@@ -54,6 +55,9 @@ public class Job implements Serializable {
     @Column(name = "description", length = 200)
     @Size(min = 3, max = 200, message = "description length is incorrect")
     private String description;
+
+    @Column(name = "print_pdf",nullable = false)
+    private Boolean printPdf;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

@@ -14,5 +14,5 @@ public class SearchCVResponseDTO {
 
     private BigInteger count;
 
-    private List<SearchCVDTO> SearchCVDTOs;
+    private List<SearchCVDTO> searchCVDTOs;
 }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ua.softserve.ita.dao.AddressDao;
 import ua.softserve.ita.dao.CompanyDao;
 import ua.softserve.ita.dao.ContactDao;
+import ua.softserve.ita.dto.CompanyDTO.CompanyPaginationDTO;
 import ua.softserve.ita.model.Company;
 import ua.softserve.ita.service.CompanyService;
 
@@ -32,25 +33,27 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public Long getCompaniesCount() {
-        return companyDao.getCompaniesCount();
-    }
-
-    @Override
     public List<Company> findAll() {
         return companyDao.findAll();
     }
 
     @Override
-    public List<Company> findAllWithPagination(int first, int count) {
-        return companyDao.findWithPagination(first, count);
+    public CompanyPaginationDTO findAllWithPagination(int first, int count) {
+        return new CompanyPaginationDTO(companyDao.getCompaniesCount(), companyDao.findWithPagination(first, count));
     }
 
     @Override
-    public Company save(Company company) {
-        addressDao.save(company.getAddress());
-        contactDao.save(company.getContact());
-        return companyDao.save(company);
+    public Optional<Company> save(Company company) {
+        Optional<Company> com = companyDao.findByName(company.getName());
+        Company result = null;
+
+        if(!com.isPresent()) {
+            addressDao.save(company.getAddress());
+            contactDao.save(company.getContact());
+            result = companyDao.save(company);
+        }
+
+        return Optional.ofNullable(result);
     }
 
     @Override
@@ -64,5 +67,10 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public void deleteById(Long id) {
         companyDao.deleteById(id);
+    }
+
+    @Override
+    public Optional<Company> findByName(String name) {
+        return companyDao.findByName(name);
     }
 }

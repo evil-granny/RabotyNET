@@ -24,7 +24,7 @@ import java.util.List;
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = {"ua.softserve.ita.*"})
-@Import(value = {LoginSecurityConfig.class})
+@Import(value = {SecurityConfiguration.class})
 public class WebConfig implements WebMvcConfigurer {
 
     private static final int MAX_UPLOAD_SIZE = 1000000;
@@ -70,6 +70,7 @@ public class WebConfig implements WebMvcConfigurer {
         list.add(MediaType.IMAGE_JPEG);
         list.add(MediaType.IMAGE_PNG);
         list.add(MediaType.APPLICATION_OCTET_STREAM);
+        list.add(MediaType.APPLICATION_PDF);
 
         return list;
     }

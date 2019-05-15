@@ -1,109 +1,68 @@
 package ua.softserve.ita.controller;
 
 import org.springframework.web.bind.annotation.*;
+import ua.softserve.ita.dto.CompanyDTO.CompanyPaginationDTO;
+import ua.softserve.ita.exception.CompanyAlreadyExistException;
 import ua.softserve.ita.exception.ResourceNotFoundException;
-import ua.softserve.ita.model.Claim;
 import ua.softserve.ita.model.Company;
-import ua.softserve.ita.model.Status;
-import ua.softserve.ita.service.ClaimService;
+import ua.softserve.ita.model.enumtype.Status;
 import ua.softserve.ita.service.CompanyService;
-import ua.softserve.ita.service.StatusService;
 import ua.softserve.ita.service.letter.GenerateLetter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @CrossOrigin
 @RestController
+@RequestMapping("/companies")
 public class CompanyController {
 
     private final CompanyService companyService;
-    private final ClaimService claimService;
-    private final StatusService statusService;
     private final GenerateLetter letterService;
 
-    public CompanyController(CompanyService companyService, ClaimService claimService, StatusService statusService, GenerateLetter letterService) {
+    public CompanyController(CompanyService companyService, GenerateLetter letterService) {
         this.companyService = companyService;
-        this.claimService = claimService;
-        this.statusService = statusService;
         this.letterService = letterService;
     }
 
-    @GetMapping(value = "/company/{id}")
-    public Company getCompany(@PathVariable("id") long id) {
-
-        System.out.println(companyService.findById(id));
-        return companyService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Company not found with id " + id));
+    @GetMapping(value = "/{name}")
+    public Company getCompanyByName(@PathVariable("name") String name) {
+        return companyService.findByName(name).orElseThrow(() -> new ResourceNotFoundException("Company not found with name " + name));
     }
 
-    @GetMapping(path = {"/companies"})
+    @GetMapping
     public List<Company> getAll() {
         return companyService.findAll();
     }
 
-    @GetMapping(path = {"/companies/{first}/{count}"})
-    public List<Company> getAllWithPagination(@PathVariable("first") int first, @PathVariable("count") int count) {
+    @GetMapping(path = {"/{first}/{count}"})
+    public CompanyPaginationDTO getAllWithPagination(@PathVariable("first") int first, @PathVariable("count") int count) {
         return companyService.findAllWithPagination(first, count);
     }
 
-    @GetMapping(path = {"/companies/count"})
-    public Long getCountOfVacancies(){
-        return companyService.getCompaniesCount();
-    }
-
-    @PutMapping("/updateCompany")
+    @PutMapping
     public Company update(@Valid @RequestBody Company company) {
-        if(company.getStatus() != null && company.getStatus().isReadyToDelete()) {
-            long status_id = company.getStatus().getStatusId();
-            company.setStatus(null);
-            companyService.update(company);
-            statusService.deleteById(status_id);
-            return company;
-        }
-
         return companyService.update(company);
     }
 
-    @PutMapping("/approveCompany")
+    @PutMapping("/approve")
     public Company approve(@RequestBody Company company, final HttpServletRequest request) {
-        letterService.sendCompanyApprove(company, getAppUrl(request) + "/approveCompany/" + company.getCompanyId());
-        company.getStatus().setMailSent(true);
+        letterService.sendCompanyApprove(company, getAppUrl(request) + "/approveCompany/" + company.getName());
+        company.setStatus(Status.MAIL_SENT);
 
         return companyService.update(company);
     }
 
-    @DeleteMapping("/deleteCompany/{id}")
+    @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") long id) {
         companyService.deleteById(id);
     }
 
-    @PostMapping("/createCompany")
+    @PostMapping
     public Company create(@Valid @RequestBody Company company) {
-        return companyService.save(company);
-    }
 
-    @PostMapping("/createClaim")
-    public Company createClaim(@RequestBody Claim claim) {
-
-        Company company = claim.getCompany();
-
-        claimService.save(claim);
-
-        return companyService.update(company);
-    }
-
-    @GetMapping(value = {"/findClaims/{companyId}"})
-    public List<Claim> findClaims(@PathVariable("companyId") long companyId) {
-        List<Claim> res = claimService.findAll().stream().filter((c) -> c.getCompany().getCompanyId().equals(companyId)).collect(Collectors.toList());
-        return res;
-    }
-
-    @DeleteMapping("/deleteClaim/{id}")
-    public void deleteClaim(@PathVariable("id") long id) {
-        claimService.deleteById(id);
+        return companyService.save(company).orElseThrow(() -> new CompanyAlreadyExistException("Company already exists with name " + company.getName()));
     }
 
     private String getAppUrl(HttpServletRequest request) {

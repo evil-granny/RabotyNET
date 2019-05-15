@@ -8,4 +8,6 @@ public interface CompanyDao extends BaseDao<Company,Long> {
      Optional<Company> findByVacancyId(Long id);
 
      Long getCompaniesCount();
+
+     Optional<Company> findByName(String name);
 }

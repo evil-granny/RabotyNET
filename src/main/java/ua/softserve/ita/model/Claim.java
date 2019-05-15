@@ -15,7 +15,12 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Entity
 @Table(name = "claim")
+@NamedQueries({
+        @NamedQuery(name = Claim.FIND_BY_COMPANY_ID, query = "select claim from Claim claim where claim.company.companyId =:id order by claim.claimId"),
+})
 public class Claim implements Serializable {
+
+    public final static String FIND_BY_COMPANY_ID = "Claim.findByCompanyId";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

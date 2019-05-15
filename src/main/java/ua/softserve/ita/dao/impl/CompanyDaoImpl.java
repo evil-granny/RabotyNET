@@ -11,6 +11,7 @@ import java.util.Optional;
 @Repository
 public class CompanyDaoImpl extends AbstractDao<Company, Long> implements CompanyDao {
     private static final String ID = "id";
+    private static final String NAME = "name";
 
     @Override
     public Optional<Company> findByVacancyId(Long id) {
@@ -23,5 +24,12 @@ public class CompanyDaoImpl extends AbstractDao<Company, Long> implements Compan
     public Long getCompaniesCount() {
         return (Long) createNamedQuery(Company.FIND_COUNT_COMPANY)
                 .getSingleResult();
+    }
+
+    @Override
+    public Optional<Company> findByName(String name) {
+        return QueryUtility.findOrEmpty(() -> ((Company) createNamedQuery(Company.FIND_BY_COMPANY_NAME)
+                .setParameter(NAME, name)
+                .getSingleResult()));
     }
 }
