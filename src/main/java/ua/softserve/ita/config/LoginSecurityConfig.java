@@ -15,8 +15,7 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        return bCryptPasswordEncoder;
+        return new BCryptPasswordEncoder();
     }
 
     @Override
@@ -25,20 +24,28 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/admin","/person/**").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/admin", "/person/**").access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/users").access("hasRole('ROLE_USER')")
                 .antMatchers("/companies").access("hasRole('ROLE_COWNER') or hasRole('ROLE_ADMIN')")
+                .antMatchers("/people").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
                 .antMatchers("/searchCV").access("hasRole('ROLE_COWNER')")
-                .antMatchers("/", "/vacancies", "/loginUser", "/registration").permitAll()
+                .antMatchers("/", "/vacancies/**", "/loginUser", "/registration").permitAll()
+                .antMatchers("/v2/api-docs",
+                        "/configuration/ui",
+                        "/swagger-resources",
+                        "/configuration/security",
+                        "/swagger-ui.html",
+                        "/webjars/**").permitAll()
                 .anyRequest().authenticated()
+                .anyRequest().permitAll()
                 .and()
                 .logout().logoutSuccessUrl("/logoutUser")
-//                .and().csrf().ignoringAntMatchers("/", "/home", "/loginUser");
                 .and().csrf().disable();
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**");
     }
+
 }
