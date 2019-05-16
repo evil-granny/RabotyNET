@@ -26,15 +26,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .cors()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/admin", "/person/**").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/admin").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/companies").access("hasRole('ROLE_COWNER')")
                 .antMatchers("/users").access("hasRole('ROLE_USER')")
-                .antMatchers("/company-controller").access("hasRole('ROLE_COWNER')")
-                .antMatchers("/companies").access("hasRole('ROLE_COWNER') or hasRole('ROLE_ADMIN')")
-                .antMatchers("/searchCV").access("hasRole('ROLE_COWNER')")
-                .antMatchers("/", "/vacancies/**", "/login", "/registration").permitAll()
+                .antMatchers("/", "/vacancies/**","/login", "/registration").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .logout().logoutSuccessUrl("/logout").deleteCookies("JSESSIONID").invalidateHttpSession(true).clearAuthentication(true)
+                .logout().logoutSuccessUrl("/logout")
                 .and().csrf().disable();
     }
 
