@@ -14,6 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class VacancyDTO {
     private Long vacancyId;
+    private String description;
     private String position;
     private Employment employment;
     private Integer salary;
