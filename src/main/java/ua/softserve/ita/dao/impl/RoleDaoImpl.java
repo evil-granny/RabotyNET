@@ -4,6 +4,7 @@ import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import ua.softserve.ita.dao.RoleDao;
 import ua.softserve.ita.model.Role;
+import ua.softserve.ita.model.User;
 
 @Repository
 public class RoleDaoImpl extends AbstractDao<Role, Long> implements RoleDao {
@@ -15,4 +16,10 @@ public class RoleDaoImpl extends AbstractDao<Role, Long> implements RoleDao {
         //return (Role) query.getSingleResult();
         return new Role(USER_ROLE);
     }
+
+    public void addRoleToUser(User user, String typeRole){
+        Session session = sessionFactory.getCurrentSession();
+
+    }
+
 }

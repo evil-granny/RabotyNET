@@ -1,5 +1,6 @@
 package ua.softserve.ita.config;
 
+import javassist.bytecode.stackmap.TypeData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
@@ -12,10 +13,18 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import ua.softserve.ita.service.pdfcreater.CleanTempCvPdf;
 
 import static org.hibernate.cfg.AvailableSettings.*;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
+import java.util.Timer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Configuration
 
@@ -28,6 +37,7 @@ public class AppConfig {
 
     @Autowired
     private Environment environment;
+
 
     @Bean
     public LocalSessionFactoryBean getSessionFactory() {
@@ -66,22 +76,26 @@ public class AppConfig {
 
 
     @Bean
-    public JavaMailSender getMailSender(){
-
+    public JavaMailSender getMailSender() {
 
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 
         mailSender.setHost(environment.getProperty("mail.host"));
 
         mailSender.setPort(Integer.parseInt(environment.getProperty("mail.port")));
+
         mailSender.setUsername(environment.getProperty("mail.username"));
+
         mailSender.setPassword(environment.getProperty("mail.password"));
 
         Properties javaMailProperties = new Properties();
 
         javaMailProperties.put("mail.smtp.starttls.enable", environment.getProperty("mail.smtp.starttls.enable"));
+
         javaMailProperties.put("mail.smtp.auth", environment.getProperty("mail.smtp.auth"));
+
         javaMailProperties.put("mail.transport.protocol", environment.getProperty("mail.transport.protocol"));
+
         javaMailProperties.put("mail.debug", environment.getProperty("mail.debug"));
 
         mailSender.setJavaMailProperties(javaMailProperties);
@@ -89,4 +103,34 @@ public class AppConfig {
         return mailSender;
     }
 
+    @Bean
+    public Path cronStart() {
+
+        final Logger LOGGER = Logger.getLogger(AppConfig.class.getName());
+
+        final String dirPath = "pdf/tempPDFdir";
+
+        Path dirPathObj = Paths.get(dirPath);
+
+        boolean dirExists = Files.exists(dirPathObj);
+
+        if (!dirExists) {
+
+            try {
+                Files.createDirectories(dirPathObj);
+
+            } catch (IOException e) {
+
+                LOGGER.log(Level.SEVERE, e.toString(), e);
+            }
+        }
+
+        Timer t = new Timer();
+
+        CleanTempCvPdf mTask = new CleanTempCvPdf(dirPathObj);
+
+        t.scheduleAtFixedRate(mTask, 0, 300000);
+
+        return dirPathObj;
+    }
 }

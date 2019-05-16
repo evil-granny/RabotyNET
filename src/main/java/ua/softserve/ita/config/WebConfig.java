@@ -27,6 +27,8 @@ import java.util.List;
 @Import(value = {SecurityConfiguration.class})
 public class WebConfig implements WebMvcConfigurer {
 
+    private static final int MAX_UPLOAD_SIZE = 1000000;
+
     @Bean
     public InternalResourceViewResolver viewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
@@ -49,7 +51,10 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Bean
     public CommonsMultipartResolver multipartResolver() {
-        return new CommonsMultipartResolver();
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+        multipartResolver.setMaxUploadSize(MAX_UPLOAD_SIZE);
+
+        return multipartResolver;
     }
 
     @Bean
@@ -65,6 +70,7 @@ public class WebConfig implements WebMvcConfigurer {
         list.add(MediaType.IMAGE_JPEG);
         list.add(MediaType.IMAGE_PNG);
         list.add(MediaType.APPLICATION_OCTET_STREAM);
+        list.add(MediaType.APPLICATION_PDF);
 
         return list;
     }

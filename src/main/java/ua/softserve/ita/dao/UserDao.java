@@ -8,5 +8,6 @@ public interface UserDao extends BaseDao<User, Long> {
 
     User findUserByUsername(String username);
 
-    public List<User> findByEmail(String email);
+    List findByEmail(String email);
+
 }

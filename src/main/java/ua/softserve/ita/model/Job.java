@@ -22,6 +22,7 @@ import java.util.Objects;
 @EqualsAndHashCode
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "job")
 public class Job implements Serializable {

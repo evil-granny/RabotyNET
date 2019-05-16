@@ -9,12 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.profile.Photo;
 import ua.softserve.ita.service.PhotoService;
 
 import javax.validation.Valid;
-import java.io.IOException;
-import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -32,16 +31,9 @@ public class PhotoController {
     @GetMapping(path = {"/{id}"})
     @ApiOperation(value = "Get photo by specific id")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = Photo.class)})
-    public Optional<Photo> findById(@PathVariable("id") Long id) {
-        return photoService.findById(id);
-    }
-
-    @GetMapping(produces = MediaType.IMAGE_JPEG_VALUE)
-    @ApiOperation(value = "Load photo by specific name")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = byte[].class)})
-    public @ResponseBody
-    byte[] loadAsByteArray(@RequestParam("name") String name) throws IOException {
-        return photoService.loadAsByteArray(name);
+    public Photo findById(@PathVariable("id") Long id) {
+        return photoService.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Photo with id: %d was not found", id)));
     }
 
     @PostMapping()
@@ -55,7 +47,7 @@ public class PhotoController {
     @PostMapping(path = "/{user_id}")
     @ApiOperation(value = "Upload photo for user with specific id")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
-    public Photo upload(@RequestParam("file") MultipartFile file, @PathVariable("user_id") Long userId) throws IOException {
+    public Photo upload(@RequestParam("file") MultipartFile file, @PathVariable("user_id") Long userId) {
         return photoService.upload(file, userId);
     }
 
