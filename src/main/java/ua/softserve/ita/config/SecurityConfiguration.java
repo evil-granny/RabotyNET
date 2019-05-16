@@ -34,7 +34,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "/vacancies/**", "/login", "/registration").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .logout().logoutSuccessUrl("/logout")
+                .logout().logoutSuccessUrl("/logout").deleteCookies("JSESSIONID").invalidateHttpSession(true).clearAuthentication(true)
                 .and().csrf().disable();
     }
 
