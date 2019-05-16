@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ua.softserve.ita.dao.PersonDao;
 import ua.softserve.ita.dao.PhotoDao;
+import ua.softserve.ita.exception.NotSupportedExtensionException;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.enumtype.Extension;
 import ua.softserve.ita.model.profile.Person;
@@ -61,7 +62,7 @@ public class PhotoServiceImpl implements PhotoService {
             logger.error(ex.getMessage());
         }
 
-        throw new RuntimeException("An error has occurred while loading photo?!");
+        throw new RuntimeException("An error has occurred while loading photo?! Try again.");
     }
 
     @Override
@@ -115,10 +116,12 @@ public class PhotoServiceImpl implements PhotoService {
                 return savedPhoto;
             } catch (IOException ex) {
                 logger.error(ex.getMessage());
+
+                throw new RuntimeException("An error has occurred while uploading photo?! Try again.");
             }
         }
 
-        throw new RuntimeException("An error has occurred while uploading photo?!");
+        throw new NotSupportedExtensionException("An error has occurred while uploading photo?! Check please your file extension and try again.");
     }
 
     @Override
