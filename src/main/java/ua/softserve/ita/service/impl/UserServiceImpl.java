@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
             user.setLogin(userDto.getLogin());
             user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
             List<Role> roles = new ArrayList<>();
-            roles.add(new Role ("ROLE_USER"));
+            roles.add(new Role ("user"));
             user.setRoles(roles);
             return userDao.save(user);
         }catch (UserAlreadyExistException e){
