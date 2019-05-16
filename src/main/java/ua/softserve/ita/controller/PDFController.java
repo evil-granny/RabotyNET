@@ -25,6 +25,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
+
 @CrossOrigin
 @RestController
 public class PDFController {
@@ -49,7 +51,9 @@ public class PDFController {
     @GetMapping(value = "/pdf/{id}")
     public CV getCV(@PathVariable("id") long id) {
 
-        return cvService.findById(id).orElseThrow(() -> new ResourceNotFoundException("cv not found with id " + id));
+        Long userID = getLoggedUser().get().getUserID();
+
+      return cvService.findById(id).orElseThrow(() -> new ResourceNotFoundException("cv not found with id " + id));
 
     }
 
@@ -70,6 +74,10 @@ public class PDFController {
 
     @RequestMapping(value = "/createPdf/{id}", method = RequestMethod.GET, produces = "application/pdf")
     public ResponseEntity<byte[]> createPdf(@PathVariable("id") long id, HttpServletResponse response) {
+
+        Long userID = getLoggedUser().get().getUserID();
+
+        System.out.println("user id is " + userID);
 
         response.setContentType("application/pdf");
 
