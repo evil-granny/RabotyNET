@@ -7,16 +7,15 @@ import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.ApiKey;
+import springfox.documentation.service.AuthorizationScope;
 import springfox.documentation.service.BasicAuth;
-import springfox.documentation.service.SecurityScheme;
+import springfox.documentation.service.SecurityReference;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 @Configuration
 @EnableSwagger2
@@ -27,16 +26,15 @@ public class SwaggerConfig {
     private static final String DESCRIPTION = "RESTful API Documentation";
     private static final String VERSION = "1.0";
 
-    @Bean
-    public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(apiInfo())
-                .securitySchemes(Collections.singletonList(new BasicAuth("basicAuth")))
-                .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.any())
-                .build();
-    }
+//    @Bean
+//    public Docket api() {
+//        return new Docket(DocumentationType.SWAGGER_2)
+//                .apiInfo(apiInfo())
+//                .select()
+//                .apis(RequestHandlerSelectors.any())
+//                .paths(PathSelectors.any())
+//                .build();
+//    }
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
@@ -46,4 +44,22 @@ public class SwaggerConfig {
                 .build();
     }
 
+    @Bean
+    public Docket basicAuthSecuredApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(apiInfo())
+                .groupName("basicAuthGroup")
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("ua.softserve.ita.controller"))
+                .paths(PathSelectors.any())
+                .build()
+                .securitySchemes(Collections.singletonList(new BasicAuth("xBasic")))
+                .securityContexts(Collections.singletonList(xBasicSecurityContext()));
+    }
+
+    private SecurityContext xBasicSecurityContext() {
+        return SecurityContext.builder()
+                .securityReferences(Collections.singletonList(new SecurityReference("xBasic", new AuthorizationScope[0])))
+                .build();
+    }
 }

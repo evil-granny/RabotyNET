@@ -1,5 +1,6 @@
 package ua.softserve.ita.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -9,6 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import ua.softserve.ita.service.CompanyService;
+import ua.softserve.ita.service.letter.GenerateLetter;
 
 @Configuration
 @EnableWebSecurity
@@ -33,13 +36,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/company-controller").access("hasRole('ROLE_COWNER')")
                 .antMatchers("/companies").access("hasRole('ROLE_COWNER') or hasRole('ROLE_ADMIN')")
                 .antMatchers("/searchCV").access("hasRole('ROLE_COWNER')")
-                .antMatchers("/","/vacancies/**" , "/loginUser", "/registration").permitAll()
-                .antMatchers("/v2/api-docs",
-                        "/configuration/ui",
-                        "/swagger-resources",
-                        "/configuration/security",
-                        "/swagger-ui.html",
-                        "/webjars/**").permitAll()
+                .antMatchers("/","/vacancies/**" , "/login", "/registration").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .logout().logoutSuccessUrl("/logout")
@@ -53,10 +50,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     private static final String[] AUTH_WHITELIST = {
-            "/swagger-resources/**",
+            "/swagger**/**",
             "/configuration/ui",
-            "/swagger-ui.html",
+            "/swagger-ui.html#/",
             "/v2/api-docs",
-            "/webjars/**"
+            "/webjars/**",
+            "/configuration/security",
+            "/csrf"
     };
 }
