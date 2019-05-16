@@ -8,6 +8,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import org.springframework.context.annotation.Bean;
@@ -18,9 +21,11 @@ import ua.softserve.ita.service.pdfcreater.CleanTempCvPdf;
 import static org.hibernate.cfg.AvailableSettings.*;
 
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Date;
 import java.util.Properties;
 import java.util.Timer;
 import java.util.logging.Level;
@@ -30,7 +35,11 @@ import java.util.logging.Logger;
 
 @PropertySource("classpath:database.properties")
 @PropertySource("classpath:mail.properties")
+@PropertySource("classpath:cronCleanTask.properties")
 @EnableTransactionManagement(proxyTargetClass = true)
+
+//@EnableAsync
+@EnableScheduling
 
 @ComponentScan(basePackages = "ua.softserve.ita")
 public class AppConfig {
@@ -104,7 +113,7 @@ public class AppConfig {
     }
 
     @Bean
-    public Path cronStart() {
+    public Path createDirectoryForCvPdf() {
 
         final Logger LOGGER = Logger.getLogger(AppConfig.class.getName());
 
@@ -125,12 +134,36 @@ public class AppConfig {
             }
         }
 
-        Timer t = new Timer();
-
-        CleanTempCvPdf mTask = new CleanTempCvPdf(dirPathObj);
-
-        t.scheduleAtFixedRate(mTask, 0, 300000);
-
         return dirPathObj;
     }
+
+    @Scheduled(cron = "${cron.expression}")
+    public void cleanTempFile() {
+
+        final String SAVE_DIRECTORY_FOR_PDF_DOC = "pdf/tempPDFdir";
+
+        final Logger LOGGER = Logger.getLogger(CleanTempCvPdf.class.getName());
+
+        final String PREFIX_FILE_NAME = "pdfCV";
+
+        Path path = Paths.get(SAVE_DIRECTORY_FOR_PDF_DOC);
+
+        try (DirectoryStream<Path> newDirectoryStream = Files.newDirectoryStream(path, "pdfCV" + "*")) {
+
+            for (final Path newDirectoryStreamItem : newDirectoryStream) {
+
+                Files.delete(newDirectoryStreamItem);
+
+                System.out.println("hello my cron");
+
+            }
+
+        } catch (final Exception e) {
+
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+
+        }
+    }
+
+
 }
