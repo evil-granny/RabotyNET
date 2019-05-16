@@ -48,7 +48,6 @@ public class RequirementServiceImpl implements RequirementService {
     public Requirement update(Requirement requirement) {
         Vacancy vacancy = vacancyDao.findByRequirementId(requirement.getRequirementId())
                 .orElseThrow(() -> new ResourceNotFoundException("Vacancy not found"));
-        System.out.println(vacancy);
         requirement.setVacancy(vacancy);
         return requirementDao.update(requirement);
     }

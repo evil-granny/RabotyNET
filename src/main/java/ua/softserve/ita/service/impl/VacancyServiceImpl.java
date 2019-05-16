@@ -52,9 +52,15 @@ public class VacancyServiceImpl implements VacancyService {
     }
 
     @Override
+    public VacancyPaginationDTO findAllHotVacanciesWithPagination(int first, int count) {
+        return new VacancyPaginationDTO(vacancyDao.getCountAllHotVacancies(),
+                vacancyDao.findAllHotVacanciesWithPagination(first,count));
+    }
+
+    @Override
     public VacancyPaginationDTO findAllVacanciesWithPagination(int first, int count) {
         return new VacancyPaginationDTO(vacancyDao.getCountOfAllVacancies(),
-                vacancyDao.findWithPagination(first, count));
+                vacancyDao.findAllVacanciesWithPagination(first, count));
     }
 
     @Override

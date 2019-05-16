@@ -29,7 +29,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin").access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/companies").access("hasRole('ROLE_COWNER')")
                // .antMatchers("/users").access("hasRole('ROLE_USER')")
-                .antMatchers("/", "/users/**","/vacancies/**","/login", "/registration","/registrationConfirm/**").permitAll()
+                .antMatchers("/", "/users/**","/vacancies/**","/login", "/registration","/registrationConfirm/**","/hotVacancies/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .logout().logoutSuccessUrl("/logout")
