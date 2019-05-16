@@ -9,7 +9,7 @@ import ua.softserve.ita.model.enumtype.Employment;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.Comparator;
+import javax.validation.constraints.Pattern;
 import java.util.Set;
 
 @Entity
@@ -36,9 +36,16 @@ public class Vacancy {
     @Column(name = "vacancy_id")
     private Long vacancyId;
 
+    @NotNull(message = "Description must be not null")
+    @NotBlank(message = "Description can't be blank")
+    @Column(name = "description", nullable = false, length = 60)
+    @Pattern(regexp = "^[A-Za-z0-9\\s\\S]*")
+    private String description;
+
     @NotNull(message = "Position must be not null")
     @NotBlank(message = "Position can't be blank")
     @Column(name = "position", nullable = false, length = 40)
+    @Pattern(regexp = "^[a-zA-Z0-9_,.\\- &]*")
     private String position;
 
     @NotNull

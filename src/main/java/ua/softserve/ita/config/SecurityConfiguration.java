@@ -15,8 +15,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        return bCryptPasswordEncoder;
+        return new BCryptPasswordEncoder();
     }
 
     @Override
@@ -27,21 +26,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .cors()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/admin","/person/**").access("hasRole('ROLE_ADMIN')")
-              //  .antMatchers("/users").access("hasRole('ROLE_USER')")
-                .antMatchers("/createCV").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
-                .antMatchers("/companies").access("hasRole('ROLE_COWNER') or hasRole('ROLE_ADMIN')")
-                .antMatchers("/searchCV").access("hasRole('ROLE_COWNER')")
-                .antMatchers("/", "/vacancies", "/login","/registrationConfirm/**", "/registration", "/users/**").permitAll()
-                .antMatchers("/","/vacancies/**" , "/loginUser", "/registration").permitAll()
-                .antMatchers("/","/pdf/**" , "/updatePDF", "/createPdf/**").permitAll()
-                .antMatchers("/v2/api-docs",
-                        "/configuration/ui",
-                        "/swagger-resources",
-                        "/configuration/security",
-                        "/swagger-ui.html",
-                        "/webjars/**").permitAll()
-
+                .antMatchers("/admin").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/companies").access("hasRole('ROLE_COWNER')")
+               // .antMatchers("/users").access("hasRole('ROLE_USER')")
+                .antMatchers("/", "/users/**","/vacancies/**","/login", "/registration","/registrationConfirm/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .logout().logoutSuccessUrl("/logout")
@@ -49,7 +37,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**");
+        web.ignoring().antMatchers(AUTH_WHITELIST);
     }
+
+    private static final String[] AUTH_WHITELIST = {
+            "/swagger**/**",
+            "/configuration/ui",
+            "/swagger-ui.html#/",
+            "/v2/api-docs",
+            "/webjars/**",
+            "/configuration/security",
+            "/csrf"
+    };
 }
