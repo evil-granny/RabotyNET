@@ -92,8 +92,7 @@ public class RegistrationController {
     }
 
     @RequestMapping(value = "/registrationConfirm", method = RequestMethod.GET)
-    public String confirmRegistration(final Model model, @RequestParam("token") final String token) {
-    public String confirmRegistration(@RequestParam("token") final String token)   {
+    public String confirmRegistration(@RequestParam("token") final String token) {
         final String result = verificationTokenService.validateVerificationToken(token);
         if (result.equals("valid")) {
             final Optional<User> user = userService.findByToken(token);
@@ -102,6 +101,7 @@ public class RegistrationController {
         }
         return "expired";
     }
+
 
     public void authWithoutPassword(Optional<User> user) {
 
