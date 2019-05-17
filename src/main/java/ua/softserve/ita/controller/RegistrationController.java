@@ -20,7 +20,6 @@ import ua.softserve.ita.service.token.VerificationTokenService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,15 +45,12 @@ public class RegistrationController {
 
     @GetMapping(value = "/user/{id}")
     public ResponseEntity<User> getPerson(@PathVariable("id") long id) {
-        User user = userService.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("User with id: %d not found", id)));
+        User user = userService.findById(id).orElseThrow(()-> new ResourceNotFoundException(String.format("User with id: %d not found", id)));
         return ResponseEntity.ok().body(user);
     }
 
     @GetMapping(value = "/users/{login}/")
-    public ResponseEntity<?> getByLogin(@PathVariable("login") String login) {
-//        if (!userService.findByEmail(login).isEmpty()){
-//            return ResponseEntity.ok(userService.findByEmail(login));
-//        }
+    public ResponseEntity<?> getByLogin(@PathVariable("login") String login){
         List<User> users = userService.findByEmail(login);
         return ResponseEntity.ok().body(users);
     }
@@ -97,19 +93,14 @@ public class RegistrationController {
 
     @RequestMapping(value = "/registrationConfirm", method = RequestMethod.GET)
     public String confirmRegistration(final Model model, @RequestParam("token") final String token) {
+    public String confirmRegistration(@RequestParam("token") final String token)   {
         final String result = verificationTokenService.validateVerificationToken(token);
         if (result.equals("valid")) {
             final Optional<User> user = userService.findByToken(token);
-
             authWithoutPassword(user);
-            model.addAttribute("message", "account verified!");
-            return "redirect:/login";
+            return "confirmed";
         }
-
-        model.addAttribute("message", "failed");
-        model.addAttribute("expired", "expired".equals(result));
-        model.addAttribute("token", token);
-        return "redirect:/badUser";
+        return "expired";
     }
 
     public void authWithoutPassword(Optional<User> user) {
