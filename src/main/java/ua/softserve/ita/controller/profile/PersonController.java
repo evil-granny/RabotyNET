@@ -15,6 +15,8 @@ import ua.softserve.ita.service.PersonService;
 import javax.validation.Valid;
 import java.util.List;
 
+import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
+
 @CrossOrigin
 @RestController
 @RequestMapping("/people")
@@ -32,8 +34,15 @@ public class PersonController {
     @ApiOperation(value = "Get person by specific id")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = Person.class)})
     public Person findById(@PathVariable("id") Long id) {
-        return personService.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(String.format("Person with id: %d was not found", id)));
+        if (getLoggedUser().isPresent()) {
+            Long loggedUserId = getLoggedUser().get().getUserID();
+            if (id.equals(loggedUserId)) {
+                return personService.findById(loggedUserId)
+                        .orElseThrow(() -> new ResourceNotFoundException(String.format("Person with id: %d was not found", id)));
+            }
+        }
+
+        throw new ResourceNotFoundException(String.format("Person with id: %d was not found", id));
     }
 
     @GetMapping()

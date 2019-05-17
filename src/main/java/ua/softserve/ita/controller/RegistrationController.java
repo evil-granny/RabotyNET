@@ -1,6 +1,5 @@
 package ua.softserve.ita.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -48,10 +47,7 @@ public class RegistrationController {
     }
 
     @GetMapping(value = "/users/{login}/")
-    public ResponseEntity<?> getByLogin(@PathVariable("login") String login) {
-//        if (!userService.findByEmail(login).isEmpty()){
-//            return ResponseEntity.ok(userService.findByEmail(login));
-//        }
+    public ResponseEntity<?> getByLogin(@PathVariable("login") String login){
         List<User> users = userService.findByEmail(login);
         return ResponseEntity.ok().body(users);
     }
@@ -78,7 +74,7 @@ public class RegistrationController {
         tokenService.delete(verificationToken);
         userService.deleteById(id);
         return ResponseEntity.ok().body(user);
-    }
+}
 
     @PostMapping("/registration")
     public ResponseEntity<User> insert(@RequestBody @Valid UserDto userDto, final HttpServletRequest request) {
@@ -88,20 +84,14 @@ public class RegistrationController {
     }
 
     @RequestMapping(value = "/registrationConfirm", method = RequestMethod.GET)
-    public String confirmRegistration(final Model model, @RequestParam("token") final String token) throws UnsupportedEncodingException {
+    public String confirmRegistration(@RequestParam("token") final String token)   {
         final String result = verificationTokenService.validateVerificationToken(token);
         if (result.equals("valid")) {
             final Optional<User> user = userService.findByToken(token);
-
             authWithoutPassword(user);
-            model.addAttribute("message", "account verified!");
-            return "redirect:/login";
+            return "confirmed";
         }
-
-        model.addAttribute("message", "failed");
-        model.addAttribute("expired", "expired".equals(result));
-        model.addAttribute("token", token);
-        return "redirect:/badUser";
+        return "expired";
     }
 
     public void authWithoutPassword(Optional<User> user) {

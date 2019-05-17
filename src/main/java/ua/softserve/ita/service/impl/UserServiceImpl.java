@@ -11,6 +11,7 @@ import ua.softserve.ita.dto.UserDto;
 import ua.softserve.ita.exception.UserAlreadyExistException;
 import ua.softserve.ita.model.Role;
 import ua.softserve.ita.model.User;
+import ua.softserve.ita.service.RoleService;
 import ua.softserve.ita.service.UserService;
 
 import java.util.ArrayList;
@@ -23,15 +24,18 @@ public class UserServiceImpl implements UserService {
 
     private final UserDao userDao;
     private final VerificationTokenDao verificationTokenDao;
+    private final RoleService roleService;
+
 
     private final
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserDao userDao, RoleDao roleDao, UserDao uDao, BCryptPasswordEncoder bCryptPasswordEncoder, VerificationTokenDao verificationTokenDao) {
+    public UserServiceImpl(UserDao userDao, RoleDao roleDao, UserDao uDao, BCryptPasswordEncoder bCryptPasswordEncoder, VerificationTokenDao verificationTokenDao, RoleService roleService) {
         this.userDao = userDao;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.verificationTokenDao = verificationTokenDao;
+        this.roleService = roleService;
     }
 
     @Override
@@ -50,7 +54,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User createDTO(UserDto userDto) throws UserAlreadyExistException{
+    public User createDTO(UserDto userDto) throws UserAlreadyExistException {
         if (emailExists(userDto.getLogin())) {
             throw new UserAlreadyExistException("There is an account with that email address: " + userDto.getLogin());
         }
@@ -58,13 +62,15 @@ public class UserServiceImpl implements UserService {
         try {
             user.setLogin(userDto.getLogin());
             user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
-            List<Role> roles = new ArrayList<>();
-            roles.add(new Role ("ROLE_USER"));
+            Role role = roleService.findByType("user");
+            List < Role > roles = new ArrayList<>();
+            roles.add(role);
             user.setRoles(roles);
             return userDao.save(user);
-        }catch (UserAlreadyExistException e){
-             e.getMessage();
-        }return user;
+        } catch (UserAlreadyExistException e) {
+            e.getMessage();
+        }
+        return user;
     }
 
     @Override
@@ -79,7 +85,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> findByToken(String token) {
-        Long userId =verificationTokenDao.findByToken(token).getUser().getUserId();
+        Long userId = verificationTokenDao.findByToken(token).getUser().getUserId();
         return userDao.findById(userId);
     }
 
