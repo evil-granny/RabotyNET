@@ -5,6 +5,7 @@ import ua.softserve.ita.dto.CompanyDTO.CompanyPaginationDTO;
 import ua.softserve.ita.exception.CompanyAlreadyExistException;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Company;
+import ua.softserve.ita.model.User;
 import ua.softserve.ita.model.enumtype.Status;
 import ua.softserve.ita.service.CompanyService;
 import ua.softserve.ita.service.letter.GenerateLetter;
@@ -12,6 +13,8 @@ import ua.softserve.ita.service.letter.GenerateLetter;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
+
+import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 
 @CrossOrigin
 @RestController
@@ -41,6 +44,11 @@ public class CompanyController {
         return companyService.findAllWithPagination(first, count);
     }
 
+    @GetMapping(value = "/my")
+    public List<Company> getAllByUser() {
+        return companyService.findByUserId(getLoggedUser().get().getUserID());
+    }
+
     @PutMapping
     public Company update(@Valid @RequestBody Company company) {
         return companyService.update(company);
@@ -61,6 +69,10 @@ public class CompanyController {
 
     @PostMapping
     public Company create(@Valid @RequestBody Company company) {
+
+        User user = new User();
+        user.setUserId(getLoggedUser().get().getUserID());
+        company.setUser(user);
 
         return companyService.save(company).orElseThrow(() -> new CompanyAlreadyExistException("Company already exists with name " + company.getName()));
     }

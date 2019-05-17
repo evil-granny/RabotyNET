@@ -25,11 +25,13 @@ import java.util.Set;
         @NamedQuery(name = Company.FIND_BY_VACANCY_ID,query = "SELECT com FROM Company com WHERE com.companyId = (SELECT vac.company.companyId FROM Vacancy vac WHERE vac.vacancyId = :id)"),
         @NamedQuery(name = Company.FIND_COUNT_COMPANY, query = "select count(com.companyId) from Company com"),
         @NamedQuery(name = Company.FIND_BY_COMPANY_NAME, query = "select com from Company com where com.name = :name"),
+        @NamedQuery(name = Company.FIND_BY_USER_ID, query = "select com from Company com where com.user.userId = :id"),
 })
 public class Company implements Serializable {
     public static final String FIND_BY_VACANCY_ID = "Company.findByVacancyId";
-    public static final String FIND_COUNT_COMPANY= "Company.findCount";
+    public static final String FIND_COUNT_COMPANY = "Company.findCount";
     public static final String FIND_BY_COMPANY_NAME = "Company.findByName";
+    public static final String FIND_BY_USER_ID = "Company.findByUserId";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

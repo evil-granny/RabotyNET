@@ -6,6 +6,7 @@ import ua.softserve.ita.model.Company;
 import ua.softserve.ita.model.Vacancy;
 import ua.softserve.ita.utility.QueryUtility;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -31,5 +32,13 @@ public class CompanyDaoImpl extends AbstractDao<Company, Long> implements Compan
         return QueryUtility.findOrEmpty(() -> ((Company) createNamedQuery(Company.FIND_BY_COMPANY_NAME)
                 .setParameter(NAME, name)
                 .getSingleResult()));
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Company> findByUserId(Long id) {
+        return (List<Company>) createNamedQuery(Company.FIND_BY_USER_ID)
+                .setParameter(ID, id)
+                .getResultList();
     }
 }

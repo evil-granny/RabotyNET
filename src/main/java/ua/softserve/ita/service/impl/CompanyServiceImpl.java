@@ -73,4 +73,9 @@ public class CompanyServiceImpl implements CompanyService {
     public Optional<Company> findByName(String name) {
         return companyDao.findByName(name);
     }
+
+    @Override
+    public List<Company> findByUserId(Long id) {
+        return companyDao.findByUserId(id);
+    }
 }
