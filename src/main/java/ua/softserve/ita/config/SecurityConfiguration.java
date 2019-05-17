@@ -32,7 +32,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/companies").access("hasRole('ROLE_COWNER') or hasRole('ROLE_ADMIN')")
                 .antMatchers("/searchCV").access("hasRole('ROLE_COWNER')")
                 .antMatchers("/", "/vacancies", "/login", "/registrationConfirm/**", "/registration", "/users/**").permitAll()
-                .antMatchers("/", "/vacancies/**", "/loginUser", "/registration").permitAll()
                 .antMatchers("/", "/pdf/**", "/updatePDF", "/createPdf/**").permitAll()
                 .antMatchers("/v2/api-docs",
                         "/configuration/ui",

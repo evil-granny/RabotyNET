@@ -30,9 +30,7 @@ public class CVController {
 
     @GetMapping(path = {"/cv/{id}"})
     public CV findById(@PathVariable("id") long id) {
-        CV cv = cvService.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("Vacancy with id: %d not found", id)));
-
-        pdfService.createPDF(cv);
+        CV cv = cvService.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("CV with id: %d not found", id)));
 
         return cv;
 
@@ -46,10 +44,10 @@ public class CVController {
     @PostMapping(path = "/createCV")
     public CV insert(@RequestBody CV cv) {
 
-        Long userID = getLoggedUser().get().getUserID();
+        Long userId = getLoggedUser().get().getUserID();
 
         Person person = new Person();
-        person.setUserId(userID);
+        person.setUserId(userId);
         cv.setPerson(person);
 
         Set<Skill> skills = cv.getSkills();
