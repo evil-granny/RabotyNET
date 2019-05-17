@@ -13,6 +13,7 @@ import java.util.UUID;
 @Component
 public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
 
+    private static String FRONT_URL = "http://localhost:4200";
     private final VerificationTokenService tokenService;
     private final GenerateLetter sendMailService;
 
@@ -21,7 +22,6 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
         this.tokenService = tokenService;
         this.sendMailService = sendMailService;
     }
-
 
     @Override
     public void onApplicationEvent(final OnRegistrationCompleteEvent event) {
@@ -32,7 +32,7 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
         final User user = event.getUser();
         final String token = UUID.randomUUID().toString();
         tokenService.createVerificationTokenForUser(user, token);
-        final String confirmationUrl = event.getAppUrl() + "/profile?token=" + token;
+        final String confirmationUrl = FRONT_URL + "/registrationConfirm?token=" + token;
         sendMailService.sendValidationEmail(user, confirmationUrl);
     }
 

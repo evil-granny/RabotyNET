@@ -8,12 +8,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import ua.softserve.ita.exception.ResourceNotFoundException;
+import ua.softserve.ita.model.Role;
+import ua.softserve.ita.model.User;
 import ua.softserve.ita.model.profile.Person;
 import ua.softserve.ita.service.PersonService;
+import ua.softserve.ita.service.UserService;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
+import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 
 @CrossOrigin
 @RestController
@@ -22,17 +28,26 @@ import java.util.Optional;
 public class PersonController {
 
     private final PersonService personService;
+    private final UserService userService;
 
     @Autowired
-    public PersonController(PersonService personService) {
+    public PersonController(PersonService personService, UserService userService) {
         this.personService = personService;
+        this.userService = userService;
     }
 
     @GetMapping(path = {"/{id}"})
     @ApiOperation(value = "Get person by specific id")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = Person.class)})
-    public Optional<Person> findById(@PathVariable("id") Long id) {
-        return personService.findById(id);
+    public Person findById(@PathVariable("id") Long id) {
+        if (getLoggedUser().isPresent()) {
+            Long loggedUserId = getLoggedUser().get().getUserID();
+            if (id.equals(loggedUserId)) {
+                return personService.findById(loggedUserId)
+                        .orElseThrow(() -> new ResourceNotFoundException(String.format("Person with id: %d was not found", id)));
+            }
+        }
+        throw new ResourceNotFoundException(String.format("Person with id: %d was not found", id));
     }
 
     @GetMapping()
