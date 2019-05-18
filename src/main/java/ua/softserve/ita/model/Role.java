@@ -1,9 +1,12 @@
 package ua.softserve.ita.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
+@Data
 @Entity
 @Table(name = "roles")
 public class Role {
@@ -16,28 +19,13 @@ public class Role {
     @Column(name = "type", nullable = false, length = 10)
     private String type;
 
-    public Role() {
-    }
-
-    public Role(String type) {
-        this.type = type;
-    }
-
-    public Long getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            },
+            mappedBy = "roles")
+    private List<User> users;
 
     @Override
     public boolean equals(Object o) {

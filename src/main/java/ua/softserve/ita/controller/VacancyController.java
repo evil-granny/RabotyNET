@@ -86,4 +86,11 @@ public class VacancyController {
         return ResponseEntity.ok().body(vacancyService.findAllByCompanyName(companyName, first, count));
     }
 
+    @GetMapping("hotVacancies/{first}/{count}")
+    public ResponseEntity<VacancyPaginationDTO> findAllHotVacanciesWithPagination(@PathVariable("first") int first,
+                                                                                            @PathVariable("count") int count) {
+        return ResponseEntity.ok().body(vacancyService.findAllHotVacanciesWithPagination(first, count));
+    }
+
+
 }
