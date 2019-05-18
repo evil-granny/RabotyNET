@@ -7,10 +7,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ua.softserve.ita.dao.CompanyDao;
 import ua.softserve.ita.dao.PersonDao;
 import ua.softserve.ita.dao.PhotoDao;
 import ua.softserve.ita.exception.NotSupportedExtensionException;
 import ua.softserve.ita.exception.ResourceNotFoundException;
+import ua.softserve.ita.model.Company;
 import ua.softserve.ita.model.enumtype.Extension;
 import ua.softserve.ita.model.profile.Person;
 import ua.softserve.ita.model.profile.Photo;
@@ -39,11 +41,13 @@ public class PhotoServiceImpl implements PhotoService {
     private final PhotoDao photoDao;
 
     private final PersonDao personDao;
+    private final CompanyDao companyDao;
 
     @Autowired
-    public PhotoServiceImpl(PhotoDao photoDao, PersonDao personDao) {
+    public PhotoServiceImpl(PhotoDao photoDao, PersonDao personDao, CompanyDao companyDao) {
         this.photoDao = photoDao;
         this.personDao = personDao;
+        this.companyDao = companyDao;
     }
 
     @Override
@@ -108,6 +112,55 @@ public class PhotoServiceImpl implements PhotoService {
                 }
                 person.setPhoto(savedPhoto);
                 personDao.update(person);
+
+                if (deletedPhotoId != -1) {
+                    photoDao.deleteById(deletedPhotoId);
+                }
+
+                return savedPhoto;
+            } catch (IOException ex) {
+                logger.error(ex.getMessage());
+
+                throw new RuntimeException("An error has occurred while uploading photo?! Try again.");
+            }
+        }
+
+        throw new NotSupportedExtensionException("An error has occurred while uploading photo?! Check please your file extension and try again.");
+    }
+
+    @Override
+    public Photo upload(MultipartFile file, String companyName) {
+        String extension = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf("."));
+
+        if (extension.equals(Extension.JPG.getType()) || extension.equals(Extension.JPEG.getType()) || extension.equals(Extension.PNG.getType())) {
+            try {
+                if (!Files.exists(Paths.get(UPLOAD_DIRECTORY)) || !Files.isDirectory(Paths.get(UPLOAD_DIRECTORY))) {
+                    Files.createDirectory(Paths.get(UPLOAD_DIRECTORY));
+                }
+
+                UUID uuid = UUID.randomUUID();
+
+                Path path = Paths.get(UPLOAD_DIRECTORY, uuid.toString() + extension);
+                Files.write(path, file.getBytes());
+
+                Photo photo = new Photo();
+                photo.setName(uuid.toString() + extension);
+                byte[] image = FileUtils.readFileToByteArray(Paths.get(UPLOAD_DIRECTORY).resolve(uuid.toString() + extension).toFile());
+                photo.setImage(image);
+
+                Photo savedPhoto = photoDao.save(photo);
+
+                Company company = companyDao.findByName(companyName).orElseThrow(() -> new ResourceNotFoundException(String.format("Company with name: %s was not found", companyName)));
+
+                long deletedPhotoId = -1;
+
+                if (company.getPhoto() != null) {
+                    Files.delete(Paths.get(UPLOAD_DIRECTORY).resolve(company.getPhoto().getName()));
+
+                    deletedPhotoId = company.getPhoto().getPhotoId();
+                }
+                company.setPhoto(savedPhoto);
+                companyDao.update(company);
 
                 if (deletedPhotoId != -1) {
                     photoDao.deleteById(deletedPhotoId);

@@ -5,6 +5,7 @@ import lombok.*;
 import ua.softserve.ita.model.enumtype.Status;
 import ua.softserve.ita.model.profile.Address;
 import ua.softserve.ita.model.profile.Contact;
+import ua.softserve.ita.model.profile.Photo;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -79,8 +80,9 @@ public class Company implements Serializable {
     @NotNull
     private Address address;
 
-    @Column(name = "logo")
-    private String logo;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "photo_id", referencedColumnName = "photo_id")
+    private Photo photo;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "company", cascade = CascadeType.REMOVE)
     private Set<Vacancy> vacancies;
@@ -104,7 +106,6 @@ public class Company implements Serializable {
                 ", website='" + website + '\'' +
                 ", contact=" + contact +
                 ", address=" + address +
-                ", logo='" + logo + '\'' +
                 ", vacancies=" + vacancies +
                 ", user=" + user +
                 '}';
