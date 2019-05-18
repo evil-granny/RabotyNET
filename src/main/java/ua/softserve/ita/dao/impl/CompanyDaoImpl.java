@@ -6,8 +6,11 @@ import ua.softserve.ita.model.Company;
 import ua.softserve.ita.model.Vacancy;
 import ua.softserve.ita.utility.QueryUtility;
 
+import javax.persistence.NoResultException;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Repository
 public class CompanyDaoImpl extends AbstractDao<Company, Long> implements CompanyDao {
@@ -29,9 +32,17 @@ public class CompanyDaoImpl extends AbstractDao<Company, Long> implements Compan
 
     @Override
     public Optional<Company> findByName(String name) {
-        return QueryUtility.findOrEmpty(() -> ((Company) createNamedQuery(Company.FIND_BY_COMPANY_NAME)
-                .setParameter(NAME, name)
-                .getSingleResult()));
+        return QueryUtility.findOrEmpty(() -> {
+            Company result = null;
+            try {
+                result = (Company) createNamedQuery(Company.FIND_BY_COMPANY_NAME)
+                        .setParameter(NAME, name)
+                        .getSingleResult();
+            } catch (NoResultException ex) {
+                Logger.getLogger(CompanyDaoImpl.NAME).log(Level.WARNING, "Company not found with name " + name);
+            }
+            return result;
+        });
     }
 
     @Override

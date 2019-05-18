@@ -29,17 +29,17 @@ public class CompanyController {
         this.letterService = letterService;
     }
 
-    @GetMapping(value = "/{name}")
+    @GetMapping(value = "/byName/{name}")
     public Company getCompanyByName(@PathVariable("name") String name) {
         return companyService.findByName(name).orElseThrow(() -> new ResourceNotFoundException("Company not found with name " + name));
     }
 
-    @GetMapping
+    @GetMapping(value = "/all")
     public List<Company> getAll() {
         return companyService.findAll();
     }
 
-    @GetMapping(path = {"/{first}/{count}"})
+    @GetMapping(path = {"/all/{first}/{count}"})
     public CompanyPaginationDTO getAllWithPagination(@PathVariable("first") int first, @PathVariable("count") int count) {
         return companyService.findAllWithPagination(first, count);
     }
@@ -49,7 +49,7 @@ public class CompanyController {
         return companyService.findByUserId(getLoggedUser().get().getUserID());
     }
 
-    @PutMapping
+    @PutMapping(value = "/update")
     public Company update(@Valid @RequestBody Company company) {
         return companyService.update(company);
     }
@@ -62,18 +62,13 @@ public class CompanyController {
         return companyService.update(company);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public void delete(@PathVariable("id") long id) {
         companyService.deleteById(id);
     }
 
-    @PostMapping
+    @PostMapping(value = "/create")
     public Company create(@Valid @RequestBody Company company) {
-
-        User user = new User();
-        user.setUserId(getLoggedUser().get().getUserID());
-        company.setUser(user);
-
         return companyService.save(company).orElseThrow(() -> new CompanyAlreadyExistException("Company already exists with name " + company.getName()));
     }
 
