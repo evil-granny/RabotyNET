@@ -37,6 +37,30 @@ public class VacancyDaoImpl extends AbstractDao<Vacancy, Long> implements Vacanc
     }
 
     @Override
+    public Long getCountAllHotVacancies() {
+        return (Long) createNamedQuery(Vacancy.FIND_COUNT_HOT_VACANCIES)
+                .getSingleResult();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Vacancy> findAllVacanciesWithPagination(int first, int count) {
+        return (List<Vacancy>)createNamedQuery(Vacancy.FIND_VACANCIES)
+                .setFirstResult(first)
+                .setMaxResults(count)
+                .getResultList();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Vacancy> findAllHotVacanciesWithPagination(int first, int count) {
+        return (List<Vacancy>)createNamedQuery(Vacancy.FIND_ALL_HOT_VACANCIES)
+                .setFirstResult(first)
+                .setMaxResults(count)
+                .getResultList();
+    }
+
+    @Override
     public Optional<Vacancy> findByRequirementId(Long id) {
         return QueryUtility.findOrEmpty(() -> ((Vacancy) createNamedQuery(Vacancy.FIND_BY_REQUIREMENT)
                 .setParameter(ID, id)

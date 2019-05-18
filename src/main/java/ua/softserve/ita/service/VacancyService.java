@@ -14,6 +14,8 @@ public interface VacancyService {
 
     VacancyPaginationDTO findAllByCompanyName(String companyName, int first, int count);
 
+    VacancyPaginationDTO findAllHotVacanciesWithPagination(int first, int count);
+
     VacancyPaginationDTO findAllVacanciesWithPagination(int first, int count);
 
     Vacancy save(Vacancy vacancy);
