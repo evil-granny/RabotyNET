@@ -15,7 +15,7 @@ public class LoggedUserUtil {
     public static Optional<UserPrincipal> getLoggedUser(){
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal != null && principal instanceof UserPrincipal) {
+        if (principal instanceof UserPrincipal) {
             return Optional.of((UserPrincipal) principal);
         }
         return Optional.of(UNKNOWN_USER);

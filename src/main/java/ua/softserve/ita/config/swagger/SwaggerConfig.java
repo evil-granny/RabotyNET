@@ -52,4 +52,5 @@ public class SwaggerConfig {
                 .securityReferences(Collections.singletonList(new SecurityReference("BasicAuth", new AuthorizationScope[0])))
                 .build();
     }
+
 }
