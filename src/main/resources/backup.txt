@@ -1,6 +1,6 @@
-INSERT INTO public.users(enabled, login, password) VALUES (true, 'admin', '$2a$10$E2.PwtnpF2p6aB3NFM3Qo.TarTYsaiWD0yTZ7qY1U3K.ybKxNvCku');
-INSERT INTO public.users(enabled, login, password) VALUES (true, 'cowner', '$2a$10$DmeWO6UlY/m2QjJaxLGUzezqOotvJmpzbBmZGBr8o/HHeNUuCWcpK');
-INSERT INTO public.users(enabled, login, password) VALUES (true, 'user', '$2a$10$t31PsVNWl8eaWr9/gPwKKeX.4Q2grl12wmiRrN9fEZDMlMGHwA92m');
+INSERT INTO public.users(enabled, login, password) VALUES (true, 'admin@admin.com', '$2a$10$E2.PwtnpF2p6aB3NFM3Qo.TarTYsaiWD0yTZ7qY1U3K.ybKxNvCku');
+INSERT INTO public.users(enabled, login, password) VALUES (true, 'cowner@cowner.com', '$2a$10$DmeWO6UlY/m2QjJaxLGUzezqOotvJmpzbBmZGBr8o/HHeNUuCWcpK');
+INSERT INTO public.users(enabled, login, password) VALUES (true, 'user@user.com', '$2a$10$t31PsVNWl8eaWr9/gPwKKeX.4Q2grl12wmiRrN9fEZDMlMGHwA92m');
 
 
 INSERT INTO public.roles(role_id, type)  VALUES (1, 'admin');

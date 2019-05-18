@@ -8,10 +8,17 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import ua.softserve.ita.filter.CustomCsrfFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    private static final String[] CSRF_IGNORE = {"/login/**", "/registration/**"};
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -26,14 +33,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .cors()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/admin").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/admin", "/vacancies/search").access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/companies").access("hasRole('ROLE_COWNER')")
                // .antMatchers("/users").access("hasRole('ROLE_USER')")
-                .antMatchers("/", "/users/**","/vacancies/**","/login", "/registration","/registrationConfirm/**").permitAll()
+                .antMatchers("/","/vacancies", "/users/**","/login", "/registration","/registrationConfirm/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .logout().logoutSuccessUrl("/logout")
-                .and().csrf().disable();
+                .and()
+                .csrf()
+//                .ignoringAntMatchers(CSRF_IGNORE) // URI where CSRF check will not be applied
+//                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()); // defines a repository where tokens are stored
+//                .and()
+//                .addFilterBefore(new CustomCsrfFilter(), CsrfFilter.class);
+                .disable();
     }
 
     @Override
@@ -51,4 +64,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/configuration/security",
             "/csrf"
     };
+
+    private CsrfTokenRepository csrfTokenRepository() {
+        HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
+        repository.setHeaderName(CustomCsrfFilter.CSRF_COOKIE_NAME);
+        return repository;
+    }
 }
