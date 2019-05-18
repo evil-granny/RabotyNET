@@ -72,12 +72,10 @@ public class PDFController {
 
     }
 
-    @RequestMapping(value = "/createPdf/{id}", method = RequestMethod.GET, produces = "application/pdf")
-    public ResponseEntity<byte[]> createPdf(@PathVariable("id") long id, HttpServletResponse response) {
+    @RequestMapping(value = "/createPdf/{id}&{send}", method = RequestMethod.GET, produces = "application/pdf")
+    //public ResponseEntity<byte[]> createPdf(@PathVariable("id") long id, HttpServletResponse response) {
 
-        Long userID = getLoggedUser().get().getUserID();
-
-        System.out.println("user id is " + userID);
+    public ResponseEntity<byte[]> createPdf(@PathVariable("id") long id, @PathVariable("send") boolean send, HttpServletResponse response) {
 
         response.setContentType("application/pdf");
 
@@ -97,7 +95,7 @@ public class PDFController {
 
             fileContent = Files.readAllBytes(pathToPdf.toRealPath());
 
-            //generateService.sendPersonPDF(cv.getPerson(), pathToPdf.toRealPath().toString());
+            if (send) generateService.sendPersonPDF(cv.getPerson(), pathToPdf.toRealPath().toString());
 
             return new ResponseEntity<>(fileContent, headers, HttpStatus.OK);
 
