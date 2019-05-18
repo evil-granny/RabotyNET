@@ -57,7 +57,7 @@ public class PDFController {
 
     }
 
-    @PutMapping("/updatePDF")
+    @PutMapping("/pdf/updatePDF")
     public CV update(@Valid @RequestBody CV cv) {
 
         Set<Skill> skills = cv.getSkills();
@@ -72,7 +72,7 @@ public class PDFController {
 
     }
 
-    @RequestMapping(value = "/createPdf/{id}&{send}", method = RequestMethod.GET, produces = "application/pdf")
+    @RequestMapping(value = "/pdf/createPdf/{id}&{send}", method = RequestMethod.GET, produces = "application/pdf")
     //public ResponseEntity<byte[]> createPdf(@PathVariable("id") long id, HttpServletResponse response) {
 
     public ResponseEntity<byte[]> createPdf(@PathVariable("id") long id, @PathVariable("send") boolean send, HttpServletResponse response) {

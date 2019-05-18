@@ -137,7 +137,7 @@ public class AppConfig {
         return dirPathObj;
     }
 
-    @Scheduled(cron = "${cron.expression}")
+    @Scheduled(cron = "${cron.cleanTempFileCvPdf}")
     public void cleanTempFile() {
 
         final String SAVE_DIRECTORY_FOR_PDF_DOC = "pdf/tempPDFdir";

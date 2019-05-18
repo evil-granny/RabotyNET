@@ -19,7 +19,7 @@ public class TokensPurgeTask {
         this.verificationTokenService = verificationTokenService;
     }
 
-    @Scheduled(cron = "${purge.cron.expression}")
+    @Scheduled(cron = "${purge.cron.cleanOldTokens}")
     public void purgeExpired() {
 
         Date now = Date.from(Instant.now());
