@@ -5,7 +5,6 @@ import ua.softserve.ita.dto.CompanyDTO.CompanyPaginationDTO;
 import ua.softserve.ita.exception.CompanyAlreadyExistException;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Company;
-import ua.softserve.ita.model.User;
 import ua.softserve.ita.model.enumtype.Status;
 import ua.softserve.ita.service.CompanyService;
 import ua.softserve.ita.service.letter.GenerateLetter;
@@ -54,12 +53,17 @@ public class CompanyController {
         return companyService.update(company);
     }
 
-    @PutMapping("/approve")
-    public Company approve(@RequestBody Company company, final HttpServletRequest request) {
+    @PutMapping("/sendMail")
+    public Company sendMail(@RequestBody Company company, final HttpServletRequest request) {
         letterService.sendCompanyApprove(company, getAppUrl(request) + "/approveCompany/" + company.getName());
         company.setStatus(Status.MAIL_SENT);
 
         return companyService.update(company);
+    }
+
+    @PutMapping("/approve")
+    public Company approve(@RequestBody Company company) {
+        return companyService.approve(company).orElseThrow(() -> new ResourceNotFoundException("Company not found with name " + company.getName()));
     }
 
     @DeleteMapping("/delete/{id}")
@@ -70,6 +74,11 @@ public class CompanyController {
     @PostMapping(value = "/create")
     public Company create(@Valid @RequestBody Company company) {
         return companyService.save(company).orElseThrow(() -> new CompanyAlreadyExistException("Company already exists with name " + company.getName()));
+    }
+
+    @GetMapping(value = "/exists/{companyName}")
+    public boolean exists(@PathVariable("companyName") String companyName) {
+        return companyService.findByName(companyName).isPresent();
     }
 
     private String getAppUrl(HttpServletRequest request) {

@@ -23,4 +23,6 @@ public interface CompanyService {
     Optional<Company> findByName(String name);
 
     List<Company> findByUserId(Long id);
+
+    Optional<Company> approve(Company company);
 }

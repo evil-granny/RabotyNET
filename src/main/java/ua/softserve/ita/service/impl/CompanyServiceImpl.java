@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import ua.softserve.ita.dao.*;
 import ua.softserve.ita.dto.CompanyDTO.CompanyPaginationDTO;
 import ua.softserve.ita.model.Company;
-import ua.softserve.ita.model.Role;
 import ua.softserve.ita.model.User;
+import ua.softserve.ita.model.enumtype.Status;
 import ua.softserve.ita.service.CompanyService;
 
 import javax.transaction.Transactional;
@@ -62,14 +62,6 @@ public class CompanyServiceImpl implements CompanyService {
             addressDao.save(company.getAddress());
             contactDao.save(company.getContact());
             result = companyDao.save(company);
-
-            User user = result.getUser();
-
-            if(user.getRoles().stream().noneMatch(role -> role.getType().equals("cowner"))) {
-                user.getRoles().add(roleDao.findByType("cowner"));
-
-                userDao.update(user);
-            }
         }
 
         return Optional.ofNullable(result);
@@ -96,5 +88,29 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public List<Company> findByUserId(Long id) {
         return companyDao.findByUserId(id);
+    }
+
+    @Override
+    public Optional<Company> approve(Company company) {
+        Optional<Company> res = companyDao.findByName(company.getName());
+
+        if(res.isPresent()) {
+            company = res.get();
+
+            if (company.getUser().getUserId().equals(getLoggedUser().get().getUserID())) {
+                company.setStatus(Status.APPROVED);
+
+                User user = company.getUser();
+
+                if (user.getRoles().stream().noneMatch(role -> role.getType().equals("cowner"))) {
+                    user.getRoles().add(roleDao.findByType("cowner"));
+
+                    userDao.update(user);
+                }
+                companyDao.update(company);
+            }
+        }
+
+        return res;
     }
 }
