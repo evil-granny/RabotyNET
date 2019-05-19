@@ -1,12 +1,16 @@
 package ua.softserve.ita.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.exception.ResourceNotFoundException;
+import ua.softserve.ita.model.Company;
 import ua.softserve.ita.model.Requirement;
 import ua.softserve.ita.model.Vacancy;
 import ua.softserve.ita.service.RequirementService;
+import ua.softserve.ita.service.VacancyService;
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -19,10 +23,12 @@ import java.util.Map;
 public class RequirementController {
 
     private final RequirementService requirementService;
+    private final VacancyService vacancyService;
 
     @Autowired
-    public RequirementController(RequirementService requirementService) {
+    public RequirementController(RequirementService requirementService,VacancyService vacancyService) {
         this.requirementService = requirementService;
+        this.vacancyService = vacancyService;
     }
 
     @GetMapping
@@ -32,35 +38,36 @@ public class RequirementController {
     }
 
     @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Requirement> getVacancyById(@PathVariable("id") Long id) {
-        Requirement requirement = requirementService.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("Requirement with id: %d not found", id)));
-        if (requirement == null) {
-            throw new ResourceNotFoundException("Requirement not found by id: " + id);
-        }
+        Requirement requirement = requirementService.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Requirement with id: %d not found", id)));
         return ResponseEntity.ok().body(requirement);
     }
 
     @PutMapping
+    @PreAuthorize("hasRole('ROLE_COWNER')")
     public ResponseEntity<Requirement> updateRequirement(@Valid @RequestBody Requirement requirement) {
         final Requirement updatedVacancy = requirementService.update(requirement);
         return ResponseEntity.ok(updatedVacancy);
     }
 
     @PostMapping("/{vacancy_id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ROLE_COWNER')")
     public ResponseEntity<Requirement> createRequirement(@Valid @RequestBody Requirement requirement, @PathVariable(value = "vacancy_id") Long vacancy_id) {
-        Vacancy vacancy = new Vacancy();
-        vacancy.setVacancyId(vacancy_id);
+        Vacancy vacancy = vacancyService.findById(vacancy_id)
+                .orElseThrow(() -> new ResourceNotFoundException("Vacancy not found with id " + vacancy_id));
         requirement.setVacancy(vacancy);
         requirementService.save(requirement);
         return ResponseEntity.ok(requirement);
     }
 
     @DeleteMapping("/{id}")
-    public Map<String, Boolean> deleteRequirement(@PathVariable("id") Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ROLE_COWNER')")
+    public void deleteRequirement(@PathVariable("id") Long id) {
         requirementService.deleteById(id);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("deleted", Boolean.TRUE);
-        return response;
     }
 
 }
