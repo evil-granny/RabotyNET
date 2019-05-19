@@ -1,23 +1,18 @@
 package ua.softserve.ita.dto.VacancyDTO;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ua.softserve.ita.model.Company;
-import ua.softserve.ita.model.Requirement;
-import ua.softserve.ita.model.enumtype.Employment;
+import ua.softserve.ita.model.Vacancy;
 
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class VacancyDTO {
-    private Long vacancyId;
-    private String description;
-    private String position;
-    private Employment employment;
-    private Integer salary;
-    private Company company;
-    private Set<Requirement> requirements;
+    private Long count;
+    private List<Vacancy> vacancies;
 }
