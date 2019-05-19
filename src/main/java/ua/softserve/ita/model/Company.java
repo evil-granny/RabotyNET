@@ -70,12 +70,12 @@ public class Company implements Serializable {
     @NotNull
     private Status status;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "contact_id", referencedColumnName = "contact_id", nullable = false)
     @NotNull
     private Contact contact;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false)
     @NotNull
     private Address address;
