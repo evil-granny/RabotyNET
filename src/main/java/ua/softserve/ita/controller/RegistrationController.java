@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.dto.UserDto;
 import ua.softserve.ita.exception.ResourceNotFoundException;
@@ -45,12 +44,12 @@ public class RegistrationController {
 
     @GetMapping(value = "/user/{id}")
     public ResponseEntity<User> getPerson(@PathVariable("id") long id) {
-        User user = userService.findById(id).orElseThrow(()-> new ResourceNotFoundException(String.format("User with id: %d not found", id)));
+        User user = userService.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("User with id: %d not found", id)));
         return ResponseEntity.ok().body(user);
     }
 
     @GetMapping(value = "/users/{login}/")
-    public ResponseEntity<?> getByLogin(@PathVariable("login") String login){
+    public ResponseEntity<?> getByLogin(@PathVariable("login") String login) {
         List<User> users = userService.findByEmail(login);
         return ResponseEntity.ok().body(users);
     }
