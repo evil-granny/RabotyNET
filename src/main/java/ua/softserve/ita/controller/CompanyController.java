@@ -1,5 +1,6 @@
 package ua.softserve.ita.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.dto.CompanyDTO.CompanyPaginationDTO;
 import ua.softserve.ita.exception.CompanyAlreadyExistException;
@@ -45,7 +46,7 @@ public class CompanyController {
 
     @GetMapping(value = "/my")
     public List<Company> getAllByUser() {
-        return companyService.findByUserId(getLoggedUser().get().getUserID());
+        return companyService.findByUserId(getLoggedUser().get().getUserId());
     }
 
     @PutMapping(value = "/update")

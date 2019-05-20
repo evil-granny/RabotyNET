@@ -2,6 +2,8 @@ package ua.softserve.ita.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import ua.softserve.ita.model.enumtype.Status;
 import ua.softserve.ita.model.profile.Address;
 import ua.softserve.ita.model.profile.Contact;
@@ -72,11 +74,13 @@ public class Company implements Serializable {
 
     @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "contact_id", referencedColumnName = "contact_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @NotNull
     private Contact contact;
 
     @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @NotNull
     private Address address;
 

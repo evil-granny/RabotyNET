@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
+
 @Service
 @Transactional
 public class VacancyServiceImpl implements VacancyService {
@@ -69,16 +71,22 @@ public class VacancyServiceImpl implements VacancyService {
     public Vacancy update(Vacancy vacancy) {
         Company company = companyDao.findByVacancyId(vacancy.getVacancyId())
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Company by vacancy id: %d not found", vacancy.getVacancyId())));
-        vacancy.setCompany(company);
-        Set<Requirement> requirements = vacancy.getRequirements();
-        requirements.forEach(e -> e.setVacancy(vacancy));
-        requirements.stream().filter(requirement -> requirement.getRequirementId() == null).forEach(requirementDao::save);
-        requirements.forEach(requirementDao::update);
+        if(company.getUser().getUserId().equals(getLoggedUser().get().getUserId())) {
+            vacancy.setCompany(company);
+            Set<Requirement> requirements = vacancy.getRequirements();
+            requirements.forEach(e -> e.setVacancy(vacancy));
+            requirements.stream().filter(requirement -> requirement.getRequirementId() == null).forEach(requirementDao::save);
+            requirements.forEach(requirementDao::update);
+        }
         return vacancyDao.update(vacancy);
     }
 
     @Override
     public void deleteById(Long id) {
-        vacancyDao.deleteById(id);
+        Company company = companyDao.findByVacancyId(id)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Company by vacancy id: %d not found", id)));
+        if(company.getUser().getUserId().equals(getLoggedUser().get().getUserId())) {
+            vacancyDao.deleteById(id);
+        }
     }
 }

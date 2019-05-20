@@ -39,7 +39,7 @@ public class CompanyDaoImpl extends AbstractDao<Company, Long> implements Compan
                         .setParameter(NAME, name)
                         .getSingleResult();
             } catch (NoResultException ex) {
-                Logger.getLogger(CompanyDaoImpl.NAME).log(Level.WARNING, "Company not found with name " + name);
+                Logger.getLogger(CompanyDaoImpl.class.getName()).log(Level.WARNING, "Company not found with name " + name);
             }
             return result;
         });

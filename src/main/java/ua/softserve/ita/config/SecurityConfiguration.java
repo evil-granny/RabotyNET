@@ -49,10 +49,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/companies/approve").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
                 .antMatchers("/companies/delete/**").access("hasRole('ROLE_COWNER')")
 
+
                 .antMatchers("/photo/**").permitAll()
 
                 .antMatchers("/claims").permitAll()
-                .antMatchers("/companies/delete/**").access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/companies/byCompany/**").permitAll()
 
                 .antMatchers("/searchCV").access("hasRole('ROLE_COWNER')")
