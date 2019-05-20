@@ -12,13 +12,13 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
-import ua.softserve.ita.filter.CustomCsrfFilter;
+//import ua.softserve.ita.filter.CustomCsrfFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private static final String[] CSRF_IGNORE = {"/login/**", "/registration/**"};
+//    private static final String[] CSRF_IGNORE = {"/login/**", "/registration/**"};
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -39,7 +39,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/companies").access("hasRole('ROLE_COWNER') or hasRole('ROLE_ADMIN')")
                 .antMatchers("/searchCV").access("hasRole('ROLE_COWNER')")
                 .antMatchers("/", "/vacancies", "/login", "/registrationConfirm/**", "/registration", "/users/**").permitAll()
-                .antMatchers("/", "/vacancies/**", "/loginUser", "/registration").permitAll()
+                .antMatchers("/", "/vacancies/**", "/registration").permitAll()
                 .antMatchers("/people", "/people/*", "people/**").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
                 .antMatchers("/", "/pdf/**", "/updatePDF", "/createPdf/**").permitAll()
                 .anyRequest().permitAll()
@@ -71,9 +71,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/csrf"
     };
 
-    private CsrfTokenRepository csrfTokenRepository() {
-        HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
-        repository.setHeaderName(CustomCsrfFilter.CSRF_COOKIE_NAME);
-        return repository;
-    }
+//    private CsrfTokenRepository csrfTokenRepository() {
+//        HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
+//        repository.setHeaderName(CustomCsrfFilter.CSRF_COOKIE_NAME);
+//        return repository;
+//    }
 }
