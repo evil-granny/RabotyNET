@@ -46,12 +46,12 @@ public class RegistrationController {
 
     @GetMapping(value = "/user/{id}")
     public ResponseEntity<User> getPerson(@PathVariable("id") long id) {
-        User user = userService.findById(id).orElseThrow(()-> new ResourceNotFoundException(String.format("User with id: %d not found", id)));
+        User user = userService.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("User with id: %d not found", id)));
         return ResponseEntity.ok().body(user);
     }
 
     @GetMapping(value = "/users/{login}/")
-    public ResponseEntity<?> getByLogin(@PathVariable("login") String login){
+    public ResponseEntity<?> getByLogin(@PathVariable("login") String login) {
         List<User> users = userService.findByEmail(login);
         System.out.println(getLoggedUser().get().getUserID());
         return ResponseEntity.ok().body(users);

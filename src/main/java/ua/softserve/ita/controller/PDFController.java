@@ -51,7 +51,7 @@ public class PDFController {
     @GetMapping(value = "/pdf/{id}")
     public CV getCV(@PathVariable("id") long id) {
 
-        Long userID = getLoggedUser().get().getUserID();
+        Long userID = getLoggedUser().get().getUserId();
 
       return cvService.findById(id).orElseThrow(() -> new ResourceNotFoundException("cv not found with id " + id));
 

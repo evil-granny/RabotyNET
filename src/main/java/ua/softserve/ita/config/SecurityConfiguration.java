@@ -38,7 +38,23 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin").access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/users").access("hasRole('ROLE_USER')")
                 .antMatchers("/createCV").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
-                .antMatchers("/companies").access("hasRole('ROLE_COWNER') or hasRole('ROLE_ADMIN')")
+
+                .antMatchers("/companies/all").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/companies/all/**").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/companies/byName/**").permitAll()
+                .antMatchers("/companies/my").access("hasRole('ROLE_COWNER')")
+                .antMatchers("/companies/update").access("hasRole('ROLE_COWNER')")
+                .antMatchers("/companies/create").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
+                .antMatchers("/companies/sendMail").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/companies/approve").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
+                .antMatchers("/companies/delete/**").access("hasRole('ROLE_COWNER')")
+
+
+                .antMatchers("/photo/**").permitAll()
+
+                .antMatchers("/claims").permitAll()
+                .antMatchers("/companies/byCompany/**").permitAll()
+
                 .antMatchers("/searchCV").access("hasRole('ROLE_COWNER')")
                 .antMatchers("/", "/vacancies", "user/**", "/login/**","/login", "/registrationConfirm/**", "/registration/**", "/users/**").permitAll()
                 .antMatchers("/", "/vacancies/**", "/loginUser", "/registration").permitAll()

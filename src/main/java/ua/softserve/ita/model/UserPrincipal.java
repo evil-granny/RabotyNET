@@ -7,16 +7,17 @@ import java.util.Collections;
 
 public class UserPrincipal extends org.springframework.security.core.userdetails.User {
 
-    public final static UserPrincipal UNKNOWN_USER = new UserPrincipal("anonymous", "", Collections.EMPTY_LIST, -1L);
+    public static final UserPrincipal UNKNOWN_USER = new UserPrincipal("anonymous", "", Collections.EMPTY_LIST, -1L);
 
-    private long userID;
+    private Long userId;
 
-    public UserPrincipal(String username, String password, Collection<? extends GrantedAuthority> authorities, long userID) {
+    public UserPrincipal(String username, String password, Collection<? extends GrantedAuthority> authorities, Long userId) {
         super(username, password, authorities);
-        this.userID = userID;
+        this.userId = userId;
     }
 
-    public long getUserID() {
-        return userID;
+    public Long getUserId() {
+        return userId;
     }
+
 }

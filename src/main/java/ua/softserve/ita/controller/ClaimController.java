@@ -7,7 +7,6 @@ import ua.softserve.ita.service.ClaimService;
 import ua.softserve.ita.service.CompanyService;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @CrossOrigin
 @RestController
@@ -22,7 +21,7 @@ public class ClaimController {
         this.claimService = claimService;
     }
 
-    @PostMapping
+    @PostMapping(value = "/create")
     public Company createClaim(@RequestBody Claim claim) {
 
         Company company = claim.getCompany();
@@ -32,12 +31,12 @@ public class ClaimController {
         return companyService.update(company);
     }
 
-    @GetMapping(value = {"/{companyId}"})
+    @GetMapping(value = {"/byCompany/{companyId}"})
     public List<Claim> findClaims(@PathVariable("companyId") long companyId) {
         return claimService.findAllByCompanyId(companyId);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public void deleteClaim(@PathVariable("id") long id) {
         claimService.deleteById(id);
     }
