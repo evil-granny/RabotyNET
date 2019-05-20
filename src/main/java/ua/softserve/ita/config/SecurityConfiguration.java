@@ -30,39 +30,27 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .httpBasic()
                 .and()
+
                 .cors()
                 .and()
+
                 .authorizeRequests()
-                .antMatchers("/admin").access("hasRole('ROLE_ADMIN')")
-                .antMatchers("/users").access("hasRole('ROLE_USER')")
-                .antMatchers("/createCV").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
-
-                .antMatchers("/companies/all").access("hasRole('ROLE_ADMIN')")
-                .antMatchers("/companies/all/**").access("hasRole('ROLE_ADMIN')")
-                .antMatchers("/companies/byName/**").permitAll()
-                .antMatchers("/companies/my").access("hasRole('ROLE_COWNER')")
-                .antMatchers("/companies/update").access("hasRole('ROLE_COWNER')")
-                .antMatchers("/companies/create").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
-                .antMatchers("/companies/sendMail").access("hasRole('ROLE_ADMIN')")
-                .antMatchers("/companies/approve").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
-                .antMatchers("/companies/delete/**").access("hasRole('ROLE_COWNER')")
-
-
-                .antMatchers("/photo/**").permitAll()
-
-                .antMatchers("/claims").permitAll()
-                .antMatchers("/companies/byCompany/**").permitAll()
-
-                .antMatchers("/searchCV").access("hasRole('ROLE_COWNER')")
-                .antMatchers("/", "/vacancies", "/login", "/registrationConfirm/**", "/registration", "/users/**").permitAll()
-                .antMatchers("/", "/vacancies/**", "/registration").permitAll()
-                .antMatchers("/people", "/people/*", "people/**").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
-                .antMatchers("/", "/pdf/**", "/updatePDF", "/createPdf/**").permitAll()
-                .anyRequest().permitAll()
-                .anyRequest().authenticated()
+                        .antMatchers("/companies/byName/**","/companies/byCompany/**","/claims","/photo/**","/users/**").permitAll()
+                        .antMatchers("/","/vacancies/**", "/login", "/registrationConfirm/**", "/registration").permitAll()
+                        .antMatchers("/pdf/**", "/updatePDF", "/createPdf/**").permitAll()
+                        .anyRequest().authenticated()
+                        .antMatchers("/companies/all/**","/companies/sendMail").access("hasRole('ROLE_ADMIN')")
+                        .antMatchers("/companies/my","/companies/update","/companies/delete/**","/searchCV").access("hasRole('ROLE_COWNER')")
+                        .antMatchers("/users").access("hasRole('ROLE_USER')")
+                        .antMatchers("/createCV","/companies/create","/companies/approve","/people", "/people/*", "people/**").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
                 .and()
-                .logout().logoutSuccessUrl("/logout").clearAuthentication(true).deleteCookies("JSESSIONID")
+
+                .logout()
+                        .logoutSuccessUrl("/logout")
+                        .clearAuthentication(true)
+                        .deleteCookies("JSESSIONID")
                 .and()
+
                 .csrf()
 //                .ignoringAntMatchers(CSRF_IGNORE) // URI where CSRF check will not be applied
 //                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()); // defines a repository where tokens are stored
