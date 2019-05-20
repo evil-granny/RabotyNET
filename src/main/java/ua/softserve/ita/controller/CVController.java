@@ -32,7 +32,7 @@ public class CVController {
     public CV findById(@PathVariable("id") long id) {
         CV cv = cvService.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("Vacancy with id: %d not found", id)));
 
-        pdfService.createPDF(cv);
+
 
         return cv;
 
