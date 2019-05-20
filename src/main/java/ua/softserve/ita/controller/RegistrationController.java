@@ -101,6 +101,7 @@ public class RegistrationController {
         return "expired";
     }
 
+
     public void authWithoutPassword(Optional<User> user) {
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(user, null);

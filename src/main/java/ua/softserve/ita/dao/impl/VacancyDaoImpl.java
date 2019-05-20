@@ -14,19 +14,25 @@ public class VacancyDaoImpl extends AbstractDao<Vacancy, Long> implements Vacanc
     private static final String NAME = "name";
 
     @Override
+    public Optional<Vacancy> findByRequirementId(Long id) {
+        return QueryUtility.findOrEmpty(() -> ((Vacancy) createNamedQuery(Vacancy.FIND_BY_REQUIREMENT)
+                .setParameter(ID, id)
+                .getSingleResult()));
+    }
+    @Override
     @SuppressWarnings("unchecked")
-    public List<Vacancy> findAllByCompanyNameWithPagination(String name, int first, int count) {
+    public List<Vacancy> findAllByCompanyNameWithPagination(String companyName, int first, int count) {
         return (List<Vacancy>)createNamedQuery(Vacancy.FIND_BY_COMPANY)
-                .setParameter(NAME, name)
+                .setParameter(NAME, companyName)
                 .setFirstResult(first)
                 .setMaxResults(count)
                 .getResultList();
     }
 
     @Override
-    public Long getCountOfVacancies(String name) {
-        return (Long) createNamedQuery(Vacancy.FIND_COUNT_VACANCY)
-                .setParameter(NAME, name)
+    public Long getCountOfVacanciesByCompanyName(String companyName) {
+        return (Long) createNamedQuery(Vacancy.FIND_COUNT_VACANCIES_BY_COMPANY_NAME)
+                .setParameter(NAME, companyName)
                 .getSingleResult();
     }
 
@@ -37,10 +43,26 @@ public class VacancyDaoImpl extends AbstractDao<Vacancy, Long> implements Vacanc
     }
 
     @Override
-    public Optional<Vacancy> findByRequirementId(Long id) {
-        return QueryUtility.findOrEmpty(() -> ((Vacancy) createNamedQuery(Vacancy.FIND_BY_REQUIREMENT)
-                .setParameter(ID, id)
-                .getSingleResult()));
+    public Long getCountAllHotVacancies() {
+        return (Long) createNamedQuery(Vacancy.FIND_COUNT_HOT_VACANCIES)
+                .getSingleResult();
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Vacancy> findAllVacanciesWithPagination(int first, int count) {
+        return (List<Vacancy>)createNamedQuery(Vacancy.FIND_VACANCIES)
+                .setFirstResult(first)
+                .setMaxResults(count)
+                .getResultList();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Vacancy> findAllHotVacanciesWithPagination(int first, int count) {
+        return (List<Vacancy>)createNamedQuery(Vacancy.FIND_ALL_HOT_VACANCIES)
+                .setFirstResult(first)
+                .setMaxResults(count)
+                .getResultList();
+    }
 }
