@@ -2,30 +2,24 @@ package ua.softserve.ita.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ua.softserve.ita.dao.UserDao;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.CV;
-import ua.softserve.ita.model.Job;
-import ua.softserve.ita.model.Skill;
-import ua.softserve.ita.model.profile.Person;
 import ua.softserve.ita.service.CVService;
-import ua.softserve.ita.service.pdfcreater.CreateCvPdf;
-
-import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 
 import java.util.List;
-import java.util.Set;
 
 @CrossOrigin
 @RestController
 public class CVController {
     private final CVService cvService;
-    private final CreateCvPdf pdfService;
+    private final UserDao userDao;
 
 
     @Autowired
-    public CVController(CVService cvService, CreateCvPdf pdfService) {
+    public CVController(CVService cvService, UserDao userDao) {
         this.cvService = cvService;
-        this.pdfService = pdfService;
+        this.userDao = userDao;
     }
 
     @GetMapping(path = {"/cv/{id}"})
@@ -33,7 +27,6 @@ public class CVController {
         CV cv = cvService.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("CV with id: %d not found", id)));
 
         return cv;
-
     }
 
     @GetMapping(path = {"/cvs"})
@@ -43,30 +36,11 @@ public class CVController {
 
     @PostMapping(path = "/createCV")
     public CV insert(@RequestBody CV cv) {
-
-        Long userId = getLoggedUser().get().getUserID();
-
-        Person person = new Person();
-        person.setUserId(userId);
-        cv.setPerson(person);
-
-        Set<Skill> skills = cv.getSkills();
-        Set<Job> jobs = cv.getJobs();
-        skills.forEach(x -> x.setCv(cv));
-        jobs.forEach(x -> x.setCv(cv));
-
-        cvService.save(cv);
-        return cv;
+        return cvService.save(cv);
     }
 
     @PutMapping(path = "/updateCV")
     public CV update(@RequestBody CV cv) {
-        Set<Skill> skills = cv.getSkills();
-        Set<Job> jobs = cv.getJobs();
-        skills.forEach(x -> x.setCv(cv));
-        jobs.forEach(x -> x.setCv(cv));
-
-
         return cvService.update(cv);
     }
 
