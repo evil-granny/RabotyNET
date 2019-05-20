@@ -3,8 +3,9 @@ package ua.softserve.ita.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ua.softserve.ita.dto.VacancyDTO.VacancyPaginationDTO;
+import ua.softserve.ita.dto.VacancyDTO.VacancyDTO;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Company;
 import ua.softserve.ita.model.Requirement;
@@ -14,9 +15,7 @@ import ua.softserve.ita.service.RequirementService;
 import ua.softserve.ita.service.VacancyService;
 
 import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 @CrossOrigin
@@ -41,6 +40,7 @@ public class VacancyController {
     }
 
     @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Vacancy> getVacancyById(@PathVariable("id") Long id) {
         Vacancy vacancy = vacancyService.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Vacancy with id: %d not found", id)));
@@ -48,6 +48,7 @@ public class VacancyController {
     }
 
     @PutMapping
+    @PreAuthorize("hasRole('ROLE_COWNER')")
     public ResponseEntity<Vacancy> updateVacancy(@Valid @RequestBody Vacancy vacancy) {
         final Vacancy updatedVacancy = vacancyService.update(vacancy);
         return ResponseEntity.ok(updatedVacancy);
@@ -55,8 +56,10 @@ public class VacancyController {
 
     @PostMapping("/createVacancy/{companyName}")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ROLE_COWNER')")
     public ResponseEntity<Vacancy> createVacancy(@Valid @RequestBody Vacancy vacancy, @PathVariable(value = "companyName") String companyName) {
-        Company company = companyService.findByName(companyName).orElseThrow(() -> new ResourceNotFoundException("Company not found with name " + companyName));
+        Company company = companyService.findByName(companyName)
+                .orElseThrow(() -> new ResourceNotFoundException("Company not found with name " + companyName));
         vacancy.setCompany(company);
         Set<Requirement> requirements = vacancy.getRequirements();
         requirements.forEach(e -> e.setVacancy(vacancy));
@@ -67,23 +70,28 @@ public class VacancyController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Map<String, Boolean> deleteVacancy(@PathVariable("id") Long id) {
+    @PreAuthorize("hasRole('ROLE_COWNER')")
+    public void deleteVacancy(@PathVariable("id") Long id) {
         vacancyService.deleteById(id);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("Vacancy was deleted", Boolean.TRUE);
-        return response;
     }
 
     @GetMapping("/{first}/{count}")
-    public ResponseEntity<VacancyPaginationDTO> findAllVacanciesWithPagination(@PathVariable("first") int first, @PathVariable("count") int count) {
+    public ResponseEntity<VacancyDTO> findAllVacanciesWithPagination(@PathVariable("first") int first, @PathVariable("count") int count) {
         return ResponseEntity.ok().body(vacancyService.findAllVacanciesWithPagination(first, count));
     }
 
     @GetMapping("/{companyName}/{first}/{count}")
-    public ResponseEntity<VacancyPaginationDTO> findAllVacanciesByCompanyNameWithPagination(@PathVariable("companyName") String companyName,
-                                                                                            @PathVariable("first") int first,
-                                                                                            @PathVariable("count") int count) {
+    public ResponseEntity<VacancyDTO> findAllVacanciesByCompanyNameWithPagination(@PathVariable("companyName") String companyName,
+                                                                                  @PathVariable("first") int first,
+                                                                                  @PathVariable("count") int count) {
         return ResponseEntity.ok().body(vacancyService.findAllByCompanyName(companyName, first, count));
     }
+
+    @GetMapping("hotVacancies/{first}/{count}")
+    public ResponseEntity<VacancyDTO> findAllHotVacanciesWithPagination(@PathVariable("first") int first,
+                                                                        @PathVariable("count") int count) {
+        return ResponseEntity.ok().body(vacancyService.findAllHotVacanciesWithPagination(first, count));
+    }
+
 
 }

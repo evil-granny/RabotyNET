@@ -1,6 +1,7 @@
 package ua.softserve.ita.controller;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ua.softserve.ita.model.UserPrincipal;
@@ -22,7 +23,7 @@ public class LoginController {
         return getLoggedUser().orElse(UNKNOWN_USER);
     }
 
-    @PostMapping("/logout")
+    @GetMapping("/logout")
     public void logout(HttpServletRequest request,
                        HttpServletResponse response) {
         HttpSession session = request.getSession(false);
