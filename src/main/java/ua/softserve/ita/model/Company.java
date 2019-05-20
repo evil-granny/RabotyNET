@@ -5,6 +5,7 @@ import lombok.*;
 import ua.softserve.ita.model.enumtype.Status;
 import ua.softserve.ita.model.profile.Address;
 import ua.softserve.ita.model.profile.Contact;
+import ua.softserve.ita.model.profile.Photo;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -25,11 +26,13 @@ import java.util.Set;
         @NamedQuery(name = Company.FIND_BY_VACANCY_ID,query = "SELECT com FROM Company com WHERE com.companyId = (SELECT vac.company.companyId FROM Vacancy vac WHERE vac.vacancyId = :id)"),
         @NamedQuery(name = Company.FIND_COUNT_COMPANY, query = "select count(com.companyId) from Company com"),
         @NamedQuery(name = Company.FIND_BY_COMPANY_NAME, query = "select com from Company com where com.name = :name"),
+        @NamedQuery(name = Company.FIND_BY_USER_ID, query = "select com from Company com where com.user.userId = :id"),
 })
 public class Company implements Serializable {
     public static final String FIND_BY_VACANCY_ID = "Company.findByVacancyId";
-    public static final String FIND_COUNT_COMPANY= "Company.findCount";
+    public static final String FIND_COUNT_COMPANY = "Company.findCount";
     public static final String FIND_BY_COMPANY_NAME = "Company.findByName";
+    public static final String FIND_BY_USER_ID = "Company.findByUserId";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,18 +70,19 @@ public class Company implements Serializable {
     @NotNull
     private Status status;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "contact_id", referencedColumnName = "contact_id", nullable = false)
     @NotNull
     private Contact contact;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false)
     @NotNull
     private Address address;
 
-    @Column(name = "logo")
-    private String logo;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "photo_id", referencedColumnName = "photo_id")
+    private Photo photo;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "company", cascade = CascadeType.REMOVE)
     private Set<Vacancy> vacancies;
@@ -102,7 +106,6 @@ public class Company implements Serializable {
                 ", website='" + website + '\'' +
                 ", contact=" + contact +
                 ", address=" + address +
-                ", logo='" + logo + '\'' +
                 ", vacancies=" + vacancies +
                 ", user=" + user +
                 '}';
