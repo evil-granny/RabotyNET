@@ -23,11 +23,10 @@ public class UserDetailsServiceImp implements UserDetailsService {
 
     private static final Logger lOGGER = Logger.getLogger(UserDetailsServiceImp.class.getName());
 
-
     private final UserDao userDao;
 
     @Autowired
-    public UserDetailsServiceImp(UserDao userDao){
+    public UserDetailsServiceImp(UserDao userDao) {
         this.userDao = userDao;
     }
 
@@ -48,7 +47,7 @@ public class UserDetailsServiceImp implements UserDetailsService {
                     user.getUserId()
             );
             lOGGER.severe("PRINCIPAL is " + principal);
-            lOGGER.severe("PRINCIPAL ID is " + principal.getUserID());
+            lOGGER.severe("PRINCIPAL ID is " + principal.getUserId());
             return principal;
         } else {
             throw new UsernameNotFoundException("User not found.");
