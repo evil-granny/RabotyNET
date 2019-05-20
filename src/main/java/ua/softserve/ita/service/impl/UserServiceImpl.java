@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> findByToken(String token) {
         Long userId = verificationTokenDao.findByToken(token).getUser().getUserId();
-        return userDao.findById(userId);
+        return  userDao.findById(userId);
     }
 
     @Override

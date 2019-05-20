@@ -1,14 +1,18 @@
 package ua.softserve.ita.controller;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.sun.xml.internal.ws.developer.StreamingAttachment;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import ua.softserve.ita.model.User;
 import ua.softserve.ita.model.UserPrincipal;
+import ua.softserve.ita.service.UserService;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import java.util.Optional;
 
 import static ua.softserve.ita.model.UserPrincipal.UNKNOWN_USER;
 import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
@@ -16,6 +20,13 @@ import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 @CrossOrigin
 @RestController
 public class LoginController {
+
+    private final UserService userService;
+
+    public LoginController(UserService userService) {
+        this.userService = userService;
+    }
+
 
     @PostMapping("/login")
     public UserPrincipal userLoginPost() {
@@ -37,5 +48,13 @@ public class LoginController {
             cookie.setPath("/");
             response.addCookie(cookie);
         }
+    }
+
+    @RequestMapping(value = "/login/enabled/{email}/", method = RequestMethod.GET)
+    public boolean enabledUser(@PathVariable("email") String email) {
+        User user = userService.findByEmail(email).get(0);
+        if(user.isEnabled()){
+            return true;
+        }else return false;
     }
 }

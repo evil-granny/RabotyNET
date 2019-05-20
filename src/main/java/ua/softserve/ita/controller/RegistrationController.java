@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.dto.UserDto;
 import ua.softserve.ita.exception.ResourceNotFoundException;
@@ -22,6 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
+
+import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 
 @CrossOrigin
 @RestController
@@ -52,6 +53,7 @@ public class RegistrationController {
     @GetMapping(value = "/users/{login}/")
     public ResponseEntity<?> getByLogin(@PathVariable("login") String login){
         List<User> users = userService.findByEmail(login);
+        System.out.println(getLoggedUser().get().getUserID());
         return ResponseEntity.ok().body(users);
     }
 
@@ -102,6 +104,19 @@ public class RegistrationController {
         return "expired";
     }
 
+    @RequestMapping(value = "/user/resendRegistrationToken", method = RequestMethod.POST)
+    public ResponseEntity<String> resendRegistrationToken(
+            HttpServletRequest request, @RequestBody String email) {
+
+        List<User> user = userService.findByEmail(email);
+        if(user.isEmpty()){
+            return ResponseEntity.badRequest().body("Email not found!");
+        }else {
+            verificationTokenService.deleteByUserId(user.get(0).getUserId());
+            registrationListener.onApplicationEvent(new OnRegistrationCompleteEvent(user.get(0), getAppUrl(request)));
+            return ResponseEntity.ok().body("Successful!");
+        }
+    }
 
     public void authWithoutPassword(Optional<User> user) {
 

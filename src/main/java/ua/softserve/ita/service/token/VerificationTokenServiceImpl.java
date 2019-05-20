@@ -50,8 +50,8 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     }
 
     @Override
-    public void deleteByExpiryDateLessThan(Date now) {
-        verificationTokenDao.deleteByExpiryDateLessThan(now);
+    public void deleteByExpiryDateLessThan(Date expiredDate) {
+        verificationTokenDao.deleteByExpiryDateLessThan(expiredDate);
     }
 
     @Override

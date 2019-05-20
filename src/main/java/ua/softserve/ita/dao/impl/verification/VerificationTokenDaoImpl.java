@@ -86,6 +86,8 @@ public class VerificationTokenDaoImpl extends AbstractDao<VerificationToken,Long
 
     @Override
     public void deleteByUserId(Long userId) {
-        //
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("delete  VerificationToken where user_id ="+ userId);
+        query.executeUpdate();
     }
 }
