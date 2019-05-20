@@ -15,9 +15,14 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "users")
+@NamedQueries({
+        @NamedQuery(name = User.FIND_USER_BY_ID, query = "select user from User user where user.userId = :id")
+}
+)
 public class User implements Serializable, UserDetails {
 
     private static final long serialVersionUID = 1L;
+    public static final String FIND_USER_BY_ID = "User.findUserById";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

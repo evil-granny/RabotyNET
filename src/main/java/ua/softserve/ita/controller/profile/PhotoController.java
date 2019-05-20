@@ -51,6 +51,13 @@ public class PhotoController {
         return photoService.upload(file, userId);
     }
 
+    @PostMapping(path = "/logo/{companyName}")
+    @ApiOperation(value = "Upload photo for company with specific name")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
+    public Photo uploadLogo(@RequestParam("file") MultipartFile file, @PathVariable("companyName") String companyName) {
+        return photoService.upload(file, companyName);
+    }
+
     @PutMapping()
     @ApiOperation(value = "Update photo")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = Photo.class)})
