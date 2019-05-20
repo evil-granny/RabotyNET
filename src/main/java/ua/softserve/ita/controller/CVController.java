@@ -2,7 +2,6 @@ package ua.softserve.ita.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ua.softserve.ita.dao.UserDao;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.CV;
 import ua.softserve.ita.service.CVService;
@@ -24,13 +23,12 @@ public class CVController {
 
     @GetMapping(path = {"/cv/{id}"})
     public CV findById(@PathVariable("id") long id) {
-        CV cv = cvService.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("CV with id: %d not found", id)));
-        return cv;
+        return cvService.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("CV with id: %d not found", id)));
     }
 
     @GetMapping(value = "/user/cv/{id}")
     public CV getCVByUser(@PathVariable("id") long id) {
-        return cvService.findByUserId(getLoggedUser().get().getUserId());
+        return cvService.findByUserId(getLoggedUser().get().getUserId()).orElseThrow(() -> new ResourceNotFoundException(String.format("CV with id: %d not found", id)));
     }
 
     @GetMapping(path = {"/cvs"})

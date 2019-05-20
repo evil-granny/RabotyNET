@@ -2,7 +2,9 @@ package ua.softserve.ita.dao;
 
 import ua.softserve.ita.model.CV;
 
+import java.util.Optional;
+
 public interface CVDao extends BaseDao<CV,Long> {
 
-    CV findByUserId(Long id);
+    Optional<CV> findByUserId(Long id);
 }

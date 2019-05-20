@@ -83,7 +83,7 @@ public class CVServiceImpl implements CVService {
     }
 
     @Override
-    public CV findByUserId(Long id) {
+    public Optional<CV> findByUserId(Long id) {
         return cvDao.findByUserId(id);
     }
 }

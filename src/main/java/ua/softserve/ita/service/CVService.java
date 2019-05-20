@@ -16,5 +16,5 @@ public interface CVService {
 
     void deleteById(Long id);
 
-    CV findByUserId(Long id);
+    Optional<CV> findByUserId(Long id);
 }
