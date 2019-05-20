@@ -10,10 +10,10 @@ import ua.softserve.ita.model.profile.Person;
 import ua.softserve.ita.service.CVService;
 import ua.softserve.ita.service.pdfcreater.CreateCvPdf;
 
-import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
-
 import java.util.List;
 import java.util.Set;
+
+import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 
 @CrossOrigin
 @RestController
@@ -46,7 +46,7 @@ public class CVController {
     @PostMapping(path = "/createCV")
     public CV insert(@RequestBody CV cv) {
 
-        Long userID = getLoggedUser().get().getUserID();
+        Long userID = getLoggedUser().get().getUserId();
 
         Person person = new Person();
         person.setUserId(userID);
