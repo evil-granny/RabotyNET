@@ -10,6 +10,8 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.softserve.ita.model.*;
+import ua.softserve.ita.model.profile.Photo;
+import ua.softserve.ita.service.PhotoService;
 
 import java.awt.*;
 import java.io.IOException;
@@ -357,7 +359,6 @@ public class CreateCvPdf {
 
     }
 
-
     public Path createPDF(CV cv) {
 
         try {
@@ -368,7 +369,7 @@ public class CreateCvPdf {
 
             try {
 
-                PDImageXObject pdImage = PDImageXObject.createFromFile(cv.getPhoto(), this.document);
+                PDImageXObject pdImage = PDImageXObject.createFromByteArray(this.document,cv.getPerson().getPhoto().getImage(),"");
 
                 float scale = (float) PHOTO_SIZE / pdImage.getWidth();
 
@@ -592,6 +593,11 @@ public class CreateCvPdf {
                 this.contentStream.close();
 
                 createNewPage();
+
+                this.xCoordinate = this.page.getMediaBox().getLowerLeftX() + BORDER_LEFT;
+
+                this.yCoordinate -=  SUBTITLE_LEADING;
+
             }
 
             boolean printExistsSkill = skills.stream()

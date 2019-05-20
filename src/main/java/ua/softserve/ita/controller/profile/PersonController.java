@@ -9,10 +9,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.exception.ResourceNotFoundException;
+import ua.softserve.ita.model.Role;
+import ua.softserve.ita.model.User;
 import ua.softserve.ita.model.profile.Person;
 import ua.softserve.ita.service.PersonService;
+import ua.softserve.ita.service.UserService;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
@@ -24,10 +28,12 @@ import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 public class PersonController {
 
     private final PersonService personService;
+    private final UserService userService;
 
     @Autowired
-    public PersonController(PersonService personService) {
+    public PersonController(PersonService personService, UserService userService) {
         this.personService = personService;
+        this.userService = userService;
     }
 
     @GetMapping(path = {"/{id}"})
@@ -41,7 +47,6 @@ public class PersonController {
                         .orElseThrow(() -> new ResourceNotFoundException(String.format("Person with id: %d was not found", id)));
             }
         }
-
         throw new ResourceNotFoundException(String.format("Person with id: %d was not found", id));
     }
 

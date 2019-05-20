@@ -3,6 +3,7 @@ package ua.softserve.ita.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Data
@@ -17,6 +18,14 @@ public class Role {
 
     @Column(name = "type", nullable = false, length = 10)
     private String type;
+
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            },
+            mappedBy = "roles")
+    private List<User> users;
 
     @Override
     public boolean equals(Object o) {
