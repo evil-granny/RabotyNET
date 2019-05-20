@@ -29,6 +29,14 @@ INSERT INTO public.person(
    user_id, birthday, first_name, last_name, address_id, contact_id, photo_id)
   VALUES (1,' 1999-04-06', 'Denys', 'Ohorodnik', 1, 1, null);
 
+INSERT INTO public.person(
+   user_id)
+  VALUES (2);
+
+INSERT INTO public.person(
+   user_id)
+  VALUES (3);
+
 INSERT INTO public.cv(
   photo, "position", education_id,user_id)
   VALUES ('http://', 'developer', 1, 1);
@@ -43,7 +51,7 @@ INSERT INTO public.job(
 
 INSERT INTO public.company(
   description, edrpou, name, website, status,address_id, contact_id, user_id)
-  VALUES ('First Company', 34345, 'SoftServe', 'http:\\','CREATED', 1, 1, 1);
+  VALUES ('First Company', 34345, 'SoftServe', vk.com','CREATED', 1, 1, 2);
 
 INSERT INTO public.vacancy(
    description, "position", salary, employment, company_id)
@@ -51,11 +59,11 @@ INSERT INTO public.vacancy(
 
 INSERT INTO public.vacancy(
    description, "position", salary, employment, company_id)
-  VALUES ('Middle', 'Middle C++ Developer', 3000, 'HOURLY', 1);
+  VALUES ('Middle', 'Middle React Developer', 3000, 'HOURLY', 1);
 
 INSERT INTO public.vacancy(
    description, "position", salary, hot_vacancy ,employment, company_id)
-  VALUES ('Senior', 'Senior Angluar Developer', 4000, true, 'PART_TIME', 1);
+  VALUES ('Senior', 'Senior Angular Developer', 4000, true, 'PART_TIME', 1);
 
 INSERT INTO public.requirement(
    description, vacancy_id)

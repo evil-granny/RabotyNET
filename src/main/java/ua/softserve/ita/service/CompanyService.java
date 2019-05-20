@@ -21,4 +21,8 @@ public interface CompanyService {
     void deleteById(Long id);
 
     Optional<Company> findByName(String name);
+
+    List<Company> findByUserId(Long id);
+
+    Optional<Company> approve(Company company);
 }
