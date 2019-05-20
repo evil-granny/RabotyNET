@@ -1,7 +1,5 @@
 package ua.softserve.ita.service.impl;
 
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.softserve.ita.dao.RequirementDao;
@@ -21,7 +19,6 @@ public class RequirementServiceImpl implements RequirementService {
 
     private final RequirementDao requirementDao;
     private final VacancyDao vacancyDao;
-
 
     @Autowired
     public RequirementServiceImpl(RequirementDao requirementDao, VacancyDao vacancyDao) {
@@ -48,7 +45,6 @@ public class RequirementServiceImpl implements RequirementService {
     public Requirement update(Requirement requirement) {
         Vacancy vacancy = vacancyDao.findByRequirementId(requirement.getRequirementId())
                 .orElseThrow(() -> new ResourceNotFoundException("Vacancy not found"));
-        System.out.println(vacancy);
         requirement.setVacancy(vacancy);
         return requirementDao.update(requirement);
     }
