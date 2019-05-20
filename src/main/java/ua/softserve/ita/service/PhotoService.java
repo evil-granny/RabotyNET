@@ -18,6 +18,8 @@ public interface PhotoService {
 
     Photo upload(MultipartFile file, Long userId);
 
+    Photo upload(MultipartFile file, String companyName);
+
     Photo update(Photo photo);
 
     void deleteById(Long id);

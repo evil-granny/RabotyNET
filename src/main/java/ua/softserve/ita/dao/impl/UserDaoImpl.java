@@ -6,10 +6,14 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ua.softserve.ita.dao.UserDao;
+import ua.softserve.ita.model.Company;
 import ua.softserve.ita.model.User;
+import ua.softserve.ita.utility.QueryUtility;
 
+import javax.persistence.NoResultException;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Repository
@@ -17,6 +21,7 @@ import java.util.logging.Logger;
 @Transactional
 public class UserDaoImpl extends AbstractDao<User, Long> implements UserDao {
     private static final Logger lOGGER = Logger.getLogger(UserDao.class.getName());
+    private static final String ID = "id";
 
     @Override
     public User findUserByUsername(String username) {
@@ -36,9 +41,17 @@ public class UserDaoImpl extends AbstractDao<User, Long> implements UserDao {
 
         @Override
         public Optional<User> findById(Long id) {
-            Session session = sessionFactory.getCurrentSession();
-        Query query = session.createQuery("from User where id = id");
-        return Optional.ofNullable((User) query.getResultList().get(0));
+            return QueryUtility.findOrEmpty(() -> {
+                User result = null;
+                try {
+                    result = (User) createNamedQuery(User.FIND_USER_BY_ID)
+                            .setParameter(ID, id)
+                            .getSingleResult();
+                } catch (NoResultException ex) {
+                    Logger.getLogger(UserDaoImpl.class.getName()).log(Level.WARNING, "User not found with name " + id);
+                }
+                return result;
+            });
     }
 
 }
