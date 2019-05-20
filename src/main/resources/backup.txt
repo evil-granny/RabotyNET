@@ -51,7 +51,7 @@ INSERT INTO public.job(
 
 INSERT INTO public.company(
   description, edrpou, name, website, status,address_id, contact_id, user_id)
-  VALUES ('First Company', 34345, 'SoftServe', vk.com','CREATED', 1, 1, 2);
+  VALUES ('First Company', 34345, 'SoftServe', 'vk.com','CREATED', 1, 1, 2);
 
 INSERT INTO public.vacancy(
    description, "position", salary, employment, company_id)
