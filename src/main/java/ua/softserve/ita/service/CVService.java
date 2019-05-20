@@ -15,4 +15,6 @@ public interface CVService {
     CV update(CV cv);
 
     void deleteById(Long id);
+
+    CV findByUserId(Long id);
 }

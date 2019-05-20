@@ -9,24 +9,28 @@ import ua.softserve.ita.service.CVService;
 
 import java.util.List;
 
+import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
+
 @CrossOrigin
 @RestController
 public class CVController {
     private final CVService cvService;
-    private final UserDao userDao;
 
 
     @Autowired
-    public CVController(CVService cvService, UserDao userDao) {
+    public CVController(CVService cvService) {
         this.cvService = cvService;
-        this.userDao = userDao;
     }
 
     @GetMapping(path = {"/cv/{id}"})
     public CV findById(@PathVariable("id") long id) {
         CV cv = cvService.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("CV with id: %d not found", id)));
-
         return cv;
+    }
+
+    @GetMapping(value = "/user/cv/{id}")
+    public CV getCVByUser(@PathVariable("id") long id) {
+        return cvService.findByUserId(getLoggedUser().get().getUserId());
     }
 
     @GetMapping(path = {"/cvs"})

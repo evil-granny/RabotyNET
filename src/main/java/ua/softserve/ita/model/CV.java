@@ -17,7 +17,11 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Table(name = "cv")
+@NamedQueries({
+        @NamedQuery(name = Company.FIND_BY_USER_ID, query = "select cv from CV cv where cv.person.userId = :id"),
+})
 public class CV implements Serializable {
+    public static final String FIND_BY_USER_ID = "CV.findByUserId";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -45,7 +45,7 @@ public class CVServiceImpl implements CVService {
     @Override
     public CV save(CV cv) {
 
-        Long userId = getLoggedUser().get().getUserID();
+        Long userId = getLoggedUser().get().getUserId();
 
         Person person = new Person();
         person.setUserId(userId);
@@ -64,7 +64,7 @@ public class CVServiceImpl implements CVService {
     public CV update(CV cv) {
 
         if (getLoggedUser().isPresent()) {
-            User user = userDao.findById(getLoggedUser().get().getUserID()).orElseThrow(() -> new ResourceNotFoundException("Person with id: %d was not found"));
+            User user = userDao.findById(getLoggedUser().get().getUserId()).orElseThrow(() -> new ResourceNotFoundException("Person with id: %d was not found"));
             cv.getPerson().setUser(user);
         }
 
@@ -80,5 +80,10 @@ public class CVServiceImpl implements CVService {
     @Override
     public void deleteById(Long id) {
         cvDao.deleteById(id);
+    }
+
+    @Override
+    public CV findByUserId(Long id) {
+        return cvDao.findByUserId(id);
     }
 }
