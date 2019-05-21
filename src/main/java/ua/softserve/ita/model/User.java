@@ -16,13 +16,15 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 @NamedQueries({
-        @NamedQuery(name = User.FIND_USER_BY_ID, query = "select user from User user where user.userId = :id")
+        @NamedQuery(name = User.FIND_USER_BY_ID, query = "select user from User user where user.userId = :id"),
+        @NamedQuery(name = User.FIND_USER_BY_EMAIL, query = "select user from User user where user.login = :login")
 }
 )
 public class User implements Serializable, UserDetails {
 
     private static final long serialVersionUID = 1L;
     public static final String FIND_USER_BY_ID = "User.findUserById";
+    public static final String FIND_USER_BY_EMAIL = "User.findUserByEmail";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -26,9 +26,9 @@ public class CVController {
         return cvService.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("CV with id: %d not found", id)));
     }
 
-    @GetMapping(value = "/userCV/{id}")
-    public CV getCVByUser(@PathVariable("id") long id) {
-        return cvService.findByUserId(getLoggedUser().get().getUserId()).orElseThrow(() -> new ResourceNotFoundException(String.format("CV with id: %d not found", id)));
+    @GetMapping(value = "/userCV")
+    public CV getCVByUser() {
+        return cvService.findByUserId(getLoggedUser().get().getUserId()).orElseThrow(() -> new ResourceNotFoundException(String.format("CV with id: %d not found")));
     }
 
     @GetMapping(path = {"/cvs"})
