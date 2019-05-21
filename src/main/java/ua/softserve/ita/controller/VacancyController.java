@@ -34,6 +34,7 @@ public class VacancyController {
     }
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<Vacancy>> getAllVacancies() {
         List<Vacancy> vacancyList = vacancyService.findAll();
         return ResponseEntity.ok().body(vacancyList);
@@ -48,6 +49,7 @@ public class VacancyController {
     }
 
     @PutMapping
+    @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_COWNER')")
     public ResponseEntity<Vacancy> updateVacancy(@Valid @RequestBody Vacancy vacancy) {
         final Vacancy updatedVacancy = vacancyService.update(vacancy);
@@ -76,11 +78,13 @@ public class VacancyController {
     }
 
     @GetMapping("/{first}/{count}")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<VacancyDTO> findAllVacanciesWithPagination(@PathVariable("first") int first, @PathVariable("count") int count) {
         return ResponseEntity.ok().body(vacancyService.findAllVacanciesWithPagination(first, count));
     }
 
     @GetMapping("/{companyName}/{first}/{count}")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<VacancyDTO> findAllVacanciesByCompanyNameWithPagination(@PathVariable("companyName") String companyName,
                                                                                   @PathVariable("first") int first,
                                                                                   @PathVariable("count") int count) {
@@ -88,6 +92,7 @@ public class VacancyController {
     }
 
     @GetMapping("hotVacancies/{first}/{count}")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<VacancyDTO> findAllHotVacanciesWithPagination(@PathVariable("first") int first,
                                                                         @PathVariable("count") int count) {
         return ResponseEntity.ok().body(vacancyService.findAllHotVacanciesWithPagination(first, count));

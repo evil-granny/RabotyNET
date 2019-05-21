@@ -6,9 +6,15 @@ import java.util.Date;
 import javax.persistence.*;
 
 @Entity
+@NamedQueries({
+        @NamedQuery(name = VerificationToken.FIND_TOKEN_BY_USER,
+                query = "select verifikationtoken from VerificationToken verifikationtoken where verifikationtoken.user.userId = :id"),
+}
+)
 public class VerificationToken {
 
     private static final int EXPIRATION = 60 * 24;
+    public static final String FIND_TOKEN_BY_USER = "VerificationToken.findTokenByUser";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
