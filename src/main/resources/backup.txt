@@ -38,8 +38,8 @@ INSERT INTO public.person(
   VALUES (3);
 
 INSERT INTO public.cv(
-  photo, "position", education_id,user_id)
-  VALUES ('http://', 'developer', 1, 1);
+ "position", education_id,user_id)
+  VALUES ('developer', 1, 3);
 
 INSERT INTO public.skill(
   description, title,print_pdf, cv_id)

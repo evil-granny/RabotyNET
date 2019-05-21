@@ -2,11 +2,11 @@ package ua.softserve.ita.model.enumtype;
 
 public enum Extension {
 
-    JPG(".jpg"),
+    JPG("jpg"),
 
-    JPEG(".jpeg"),
+    JPEG("jpeg"),
 
-    PNG(".png");
+    PNG("png");
 
     private String type;
 

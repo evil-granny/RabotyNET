@@ -1,6 +1,5 @@
 package ua.softserve.ita.controller;
 
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -9,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.dto.UserDto;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.User;
-import ua.softserve.ita.model.VerificationToken;
 import ua.softserve.ita.model.profile.Person;
 import ua.softserve.ita.registration.OnRegistrationCompleteEvent;
 import ua.softserve.ita.registration.RegistrationListener;
@@ -30,11 +28,11 @@ public class RegistrationController {
     private final UserService userService;
     private final PersonService personService;
     private final RegistrationListener registrationListener;
-    private final ApplicationEventPublisher eventPublisher;
     private final VerificationTokenService tokenService;
 
-    public RegistrationController(ApplicationEventPublisher eventPublisher, UserService userService, PersonService personService, VerificationTokenService tokenService, VerificationTokenService verificationTokenService, RegistrationListener registrationListener) {
-        this.eventPublisher = eventPublisher;
+    public RegistrationController( UserService userService, PersonService personService,
+                                   VerificationTokenService tokenService, VerificationTokenService verificationTokenService,
+                                   RegistrationListener registrationListener) {
         this.userService = userService;
         this.personService = personService;
         this.tokenService = tokenService;
@@ -44,7 +42,8 @@ public class RegistrationController {
 
     @GetMapping(value = "/user/{id}")
     public ResponseEntity<User> getPerson(@PathVariable("id") long id) {
-        User user = userService.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("User with id: %d not found", id)));
+        User user = userService.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException(String.format("User with id: %d not found", id)));
         return ResponseEntity.ok().body(user);
     }
 
@@ -61,7 +60,8 @@ public class RegistrationController {
 
     @PutMapping("/updateUser/{id}")
     public ResponseEntity<?> update(@PathVariable("id") long id, @Valid @RequestBody User user) {
-        User currentUser = userService.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("User with id: %d not found", id)));
+        User currentUser = userService.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException(String.format("User with id: %d not found", id)));
         currentUser.setLogin(user.getLogin());
         currentUser.setEnabled(user.isEnabled());
         userService.update(currentUser);
@@ -70,7 +70,8 @@ public class RegistrationController {
 
     @DeleteMapping("/deleteUser/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
-        User user = userService.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("User with id: %d not found", id)));
+        User user = userService.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException(String.format("User with id: %d not found", id)));
         tokenService.findByUser(user).ifPresent(tokenService::delete);
         userService.deleteById(id);
         return ResponseEntity.ok().body(user);
@@ -113,7 +114,7 @@ public class RegistrationController {
 
     @RequestMapping(value = "/user/resendRegistrationToken", method = RequestMethod.POST)
     public ResponseEntity<String> resendRegistrationToken(
-            HttpServletRequest request, @RequestBody String email) {
+            HttpServletRequest request, @RequestParam String email) {
 
         Optional<User> user = userService.findByEmail(email);
         if(!user.isPresent()){
@@ -121,7 +122,7 @@ public class RegistrationController {
         }else {
             verificationTokenService.deleteByUserId(user.get().getUserId());
             registrationListener.onApplicationEvent(new OnRegistrationCompleteEvent(user.get(), getAppUrl(request)));
-            return ResponseEntity.ok().body("Successful!");
+            return ResponseEntity.ok().body("Successfully!");
         }
     }
 

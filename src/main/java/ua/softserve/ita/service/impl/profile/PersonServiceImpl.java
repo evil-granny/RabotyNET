@@ -20,7 +20,6 @@ import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 public class PersonServiceImpl implements PersonService {
 
     private final PersonDao personDao;
-
     private final UserDao userDao;
 
     @Autowired
@@ -38,7 +37,7 @@ public class PersonServiceImpl implements PersonService {
             }
         }
 
-        throw new ResourceNotFoundException(String.format("Person with id: %d was not found", id));
+        throw new ResourceNotFoundException(String.format("Person with id %d was not found?!", id));
     }
 
     @Override
@@ -54,8 +53,9 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public Person update(Person person) {
         if (getLoggedUser().isPresent()) {
-            User user = userDao.findById(getLoggedUser().get().getUserId())
-                    .orElseThrow(() -> new ResourceNotFoundException(String.format("User with id: %d was not found", getLoggedUser().get().getUserId())));
+            Long loggedUserId = getLoggedUser().get().getUserId();
+            User user = userDao.findById(loggedUserId)
+                    .orElseThrow(() -> new ResourceNotFoundException(String.format("User with id %d was not found?!", loggedUserId)));
             person.setUser(user);
         }
 
