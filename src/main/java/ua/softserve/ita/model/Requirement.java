@@ -26,7 +26,7 @@ public class Requirement {
     private Long requirementId;
 
     @NotNull
-    //@Pattern(regexp = "^[A-Z]?[a-z]*(?:-[A-Z][a-z]*)?$")
+    @Pattern(regexp = "^[a-zA-Z0-9_,.\\- &]*")
     @NotBlank(message = "description can't be blank")
     @Column(name = "description", length = 100, nullable = false)
     private String description;
