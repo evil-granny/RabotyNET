@@ -1,17 +1,14 @@
 package ua.softserve.ita.dao.impl;
 
-import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ua.softserve.ita.dao.UserDao;
-import ua.softserve.ita.model.Company;
 import ua.softserve.ita.model.User;
 import ua.softserve.ita.utility.QueryUtility;
 
 import javax.persistence.NoResultException;
-import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,6 +19,7 @@ import java.util.logging.Logger;
 public class UserDaoImpl extends AbstractDao<User, Long> implements UserDao {
     private static final Logger lOGGER = Logger.getLogger(UserDao.class.getName());
     private static final String ID = "id";
+    private static final String LOGIN = "login";
 
     @Override
     public User findUserByUsername(String username) {
@@ -33,10 +31,18 @@ public class UserDaoImpl extends AbstractDao<User, Long> implements UserDao {
 
 
     @Override
-    public List<User> findByEmail(String email) {
-        Session session = sessionFactory.getCurrentSession();
-        Query query = session.createQuery("from User where login like '" + email + "%'");
-        return query.getResultList();
+    public Optional<User> findByEmail(String email) {
+        return QueryUtility.findOrEmpty(() -> {
+            User result = null;
+            try {
+                result = (User) createNamedQuery(User.FIND_USER_BY_EMAIL)
+                        .setParameter(LOGIN, email)
+                        .getSingleResult();
+            } catch (NoResultException ex) {
+                Logger.getLogger(UserDaoImpl.class.getName()).log(Level.WARNING, "User not found with email " + email);
+            }
+            return result;
+        });
     }
 
         @Override
@@ -48,7 +54,7 @@ public class UserDaoImpl extends AbstractDao<User, Long> implements UserDao {
                             .setParameter(ID, id)
                             .getSingleResult();
                 } catch (NoResultException ex) {
-                    Logger.getLogger(UserDaoImpl.class.getName()).log(Level.WARNING, "User not found with name " + id);
+                    Logger.getLogger(UserDaoImpl.class.getName()).log(Level.WARNING, "User not found with id " + id);
                 }
                 return result;
             });

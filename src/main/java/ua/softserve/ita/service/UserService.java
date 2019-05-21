@@ -13,7 +13,7 @@ public interface UserService {
 
     List<User> findAll();
 
-    List<User> findByEmail(String email);
+    Optional<User> findByEmail(String email);
 
     User createDTO(UserDto userDto) throws UserAlreadyExistException;
 
@@ -25,4 +25,5 @@ public interface UserService {
 
     Optional<User> findByToken(String token);
 
+    boolean emailExists(String email);
 }

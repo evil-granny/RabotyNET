@@ -4,13 +4,14 @@ import ua.softserve.ita.model.User;
 import ua.softserve.ita.model.VerificationToken;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public interface VerificationTokenService {
 
     VerificationToken findByToken(String token);
 
-    VerificationToken findByUser(User user);
+    Optional<VerificationToken> findByUser(User user);
 
     Stream<VerificationToken> findAllByExpiryDateLessThan(Date now);
 

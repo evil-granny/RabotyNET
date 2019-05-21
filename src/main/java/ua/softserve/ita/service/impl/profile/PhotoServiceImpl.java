@@ -1,7 +1,6 @@
 package ua.softserve.ita.service.impl.profile;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +18,7 @@ import ua.softserve.ita.model.profile.Photo;
 import ua.softserve.ita.service.PhotoService;
 
 import javax.transaction.Transactional;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -34,12 +31,12 @@ import java.util.UUID;
 @Transactional
 public class PhotoServiceImpl implements PhotoService {
 
-    private static final String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "\\uploads";
+    private static final String UPLOAD_DIRECTORY_FOR_AVATARS = System.getProperty("user.dir") + "\\uploads\\avatars";
+    private static final String UPLOAD_DIRECTORY_FOR_LOGOS = System.getProperty("user.dir") + "\\uploads\\logos";
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final PhotoDao photoDao;
-
     private final PersonDao personDao;
     private final CompanyDao companyDao;
 
@@ -56,20 +53,6 @@ public class PhotoServiceImpl implements PhotoService {
     }
 
     @Override
-    public byte[] loadAsByteArray(String name) {
-        try {
-            Path photo = Paths.get(UPLOAD_DIRECTORY).resolve(name);
-            InputStream inputStream = new FileInputStream(photo.toFile());
-
-            return IOUtils.toByteArray(inputStream);
-        } catch (IOException ex) {
-            logger.error(ex.getMessage());
-        }
-
-        throw new RuntimeException("An error has occurred while loading photo?! Try again.");
-    }
-
-    @Override
     public List<Photo> findAll() {
         return photoDao.findAll();
     }
@@ -80,42 +63,22 @@ public class PhotoServiceImpl implements PhotoService {
     }
 
     @Override
-    public Photo upload(MultipartFile file, Long userId) {
-        String extension = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf("."));
+    public Photo uploadAvatar(MultipartFile file, Long userId) {
+        String extension = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf(".") + 1);
 
         if (extension.equals(Extension.JPG.getType()) || extension.equals(Extension.JPEG.getType()) || extension.equals(Extension.PNG.getType())) {
             try {
-                if (!Files.exists(Paths.get(UPLOAD_DIRECTORY)) || !Files.isDirectory(Paths.get(UPLOAD_DIRECTORY))) {
-                    Files.createDirectory(Paths.get(UPLOAD_DIRECTORY));
-                }
+                Photo savedPhoto = uploadPhoto(file, Paths.get(UPLOAD_DIRECTORY_FOR_AVATARS));
 
-                UUID uuid = UUID.randomUUID();
+                Person person = personDao.findById(userId)
+                        .orElseThrow(() -> new ResourceNotFoundException(String.format("Person with id %d was not found?!", userId)));
 
-                Path path = Paths.get(UPLOAD_DIRECTORY, uuid.toString() + extension);
-                Files.write(path, file.getBytes());
+                Photo deletedPhoto = person.getPhoto();
 
-                Photo photo = new Photo();
-                photo.setName(uuid.toString() + extension);
-                byte[] image = FileUtils.readFileToByteArray(Paths.get(UPLOAD_DIRECTORY).resolve(uuid.toString() + extension).toFile());
-                photo.setImage(image);
-
-                Photo savedPhoto = photoDao.save(photo);
-
-                Person person = personDao.findById(userId).orElseThrow(() -> new ResourceNotFoundException(String.format("Person with id: %d was not found", userId)));
-
-                long deletedPhotoId = -1;
-
-                if (person.getPhoto() != null) {
-                    Files.delete(Paths.get(UPLOAD_DIRECTORY).resolve(person.getPhoto().getName()));
-
-                    deletedPhotoId = person.getPhoto().getPhotoId();
-                }
                 person.setPhoto(savedPhoto);
                 personDao.update(person);
 
-                if (deletedPhotoId != -1) {
-                    photoDao.deleteById(deletedPhotoId);
-                }
+                deletePhoto(deletedPhoto, Paths.get(UPLOAD_DIRECTORY_FOR_AVATARS));
 
                 return savedPhoto;
             } catch (IOException ex) {
@@ -129,42 +92,22 @@ public class PhotoServiceImpl implements PhotoService {
     }
 
     @Override
-    public Photo upload(MultipartFile file, String companyName) {
-        String extension = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf("."));
+    public Photo uploadLogo(MultipartFile file, String companyName) {
+        String extension = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf(".") + 1);
 
         if (extension.equals(Extension.JPG.getType()) || extension.equals(Extension.JPEG.getType()) || extension.equals(Extension.PNG.getType())) {
             try {
-                if (!Files.exists(Paths.get(UPLOAD_DIRECTORY)) || !Files.isDirectory(Paths.get(UPLOAD_DIRECTORY))) {
-                    Files.createDirectory(Paths.get(UPLOAD_DIRECTORY));
-                }
+                Photo savedPhoto = uploadPhoto(file, Paths.get(UPLOAD_DIRECTORY_FOR_LOGOS));
 
-                UUID uuid = UUID.randomUUID();
+                Company company = companyDao.findByName(companyName)
+                        .orElseThrow(() -> new ResourceNotFoundException(String.format("Company with name %s was not found?!", companyName)));
 
-                Path path = Paths.get(UPLOAD_DIRECTORY, uuid.toString() + extension);
-                Files.write(path, file.getBytes());
+                Photo deletedPhoto = company.getPhoto();
 
-                Photo photo = new Photo();
-                photo.setName(uuid.toString() + extension);
-                byte[] image = FileUtils.readFileToByteArray(Paths.get(UPLOAD_DIRECTORY).resolve(uuid.toString() + extension).toFile());
-                photo.setImage(image);
-
-                Photo savedPhoto = photoDao.save(photo);
-
-                Company company = companyDao.findByName(companyName).orElseThrow(() -> new ResourceNotFoundException(String.format("Company with name: %s was not found", companyName)));
-
-                long deletedPhotoId = -1;
-
-                if (company.getPhoto() != null) {
-                    Files.delete(Paths.get(UPLOAD_DIRECTORY).resolve(company.getPhoto().getName()));
-
-                    deletedPhotoId = company.getPhoto().getPhotoId();
-                }
                 company.setPhoto(savedPhoto);
                 companyDao.update(company);
 
-                if (deletedPhotoId != -1) {
-                    photoDao.deleteById(deletedPhotoId);
-                }
+                deletePhoto(deletedPhoto, Paths.get(UPLOAD_DIRECTORY_FOR_LOGOS));
 
                 return savedPhoto;
             } catch (IOException ex) {
@@ -185,6 +128,39 @@ public class PhotoServiceImpl implements PhotoService {
     @Override
     public void deleteById(Long id) {
         photoDao.deleteById(id);
+    }
+
+    private Photo uploadPhoto(MultipartFile file, Path pathForUpload) throws IOException {
+        if (!Files.exists(pathForUpload) || !Files.isDirectory(pathForUpload)) {
+            Files.createDirectories(pathForUpload);
+        }
+
+        String extension = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf(".") - 1);
+        UUID uuid = UUID.randomUUID();
+
+        Path path = Paths.get(pathForUpload.toString(), uuid.toString() + extension);
+        Files.write(path, file.getBytes());
+
+        Photo photo = new Photo();
+        photo.setName(uuid.toString() + extension);
+        byte[] image = FileUtils.readFileToByteArray(pathForUpload.resolve(uuid.toString() + extension).toFile());
+        photo.setImage(image);
+
+        return photoDao.save(photo);
+    }
+
+    private void deletePhoto(Photo photo, Path path) throws IOException {
+        long deletedPhotoId = -1;
+
+        if (photo != null) {
+            Files.delete(path.resolve(photo.getName()));
+
+            deletedPhotoId = photo.getPhotoId();
+        }
+
+        if (deletedPhotoId != -1) {
+            photoDao.deleteById(deletedPhotoId);
+        }
     }
 
 }
