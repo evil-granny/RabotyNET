@@ -588,22 +588,22 @@ public class CreateCvPdf {
 
             checkYCoordinate -= LEADING_LINE / 4;
 
-            if (((checkYCoordinate) < BORDER_LOWER + LOGO_SIZE_HEIGHT)) {
-
-                this.contentStream.close();
-
-                createNewPage();
-
-                this.xCoordinate = this.page.getMediaBox().getLowerLeftX() + BORDER_LEFT;
-
-                this.yCoordinate -=  SUBTITLE_LEADING;
-
-            }
-
             boolean printExistsSkill = skills.stream()
                     .anyMatch(t -> t.getPrintPdf().equals(true));
             //
             if (printExistsSkill) {
+
+                if (((checkYCoordinate) < BORDER_LOWER + LOGO_SIZE_HEIGHT)) {
+
+                    this.contentStream.close();
+
+                    createNewPage();
+
+                    this.xCoordinate = this.page.getMediaBox().getLowerLeftX() + BORDER_LEFT;
+
+                    this.yCoordinate -=  SUBTITLE_LEADING;
+
+                }
 
                 this.contentStream.beginText();
 

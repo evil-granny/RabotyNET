@@ -86,16 +86,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> findByToken(String token) {
         Long userId = verificationTokenDao.findByToken(token).getUser().getUserId();
-        return userDao.findById(userId);
+        return  userDao.findById(userId);
     }
 
     @Override
-    public List<User> findByEmail(String email) {
+    public Optional<User> findByEmail(String email) {
         return userDao.findByEmail(email);
     }
 
-    private boolean emailExists(final String email) {
-        return !findByEmail(email).isEmpty();
+    public boolean emailExists(final String email) {
+        return findByEmail(email).isPresent();
     }
 
 }

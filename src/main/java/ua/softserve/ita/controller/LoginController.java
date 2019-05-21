@@ -1,10 +1,14 @@
 package ua.softserve.ita.controller;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import ua.softserve.ita.model.User;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ua.softserve.ita.model.UserPrincipal;
+import ua.softserve.ita.service.UserService;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +21,13 @@ import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 @CrossOrigin
 @RestController
 public class LoginController {
+
+    private final UserService userService;
+
+    public LoginController(UserService userService) {
+        this.userService = userService;
+    }
+
 
     @PostMapping("/login")
     public UserPrincipal userLoginPost() {
@@ -37,5 +48,13 @@ public class LoginController {
             cookie.setPath("/");
             response.addCookie(cookie);
         }
+    }
+
+    @RequestMapping(value = "/login/enabled/{email}/", method = RequestMethod.GET)
+    public ResponseEntity<?> enabledUser(@PathVariable("email") String email) {
+        if(userService.findByEmail(email).isPresent()){
+            User user = userService.findByEmail(email).get();
+            return ResponseEntity.ok(user.isEnabled());
+        }else return ResponseEntity.ok().body("User not found!");
     }
 }

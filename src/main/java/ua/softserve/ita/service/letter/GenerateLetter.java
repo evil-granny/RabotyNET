@@ -17,7 +17,7 @@ public class GenerateLetter {
 
         letter.setEMail(user.getLogin());
 
-        letter.setSubject("Ragistration on website RabotyNet");
+        letter.setSubject("Registration on website RabotyNet");
 
         String validationLink = linkOfValidation;
 

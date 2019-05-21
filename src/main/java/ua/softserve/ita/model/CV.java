@@ -17,7 +17,11 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Table(name = "cv")
+@NamedQueries({
+        @NamedQuery(name = CV.FIND_BY_USER_ID, query = "select cv from CV cv where cv.person.userId = :id"),
+})
 public class CV implements Serializable {
+    public static final String FIND_BY_USER_ID = "CV.findByUserId";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,7 +49,7 @@ public class CV implements Serializable {
     private Education education;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @NotNull(message = "position must be not null")
+    @NotNull(message = "person must be not null")
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private Person person;
 
