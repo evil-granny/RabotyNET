@@ -1,14 +1,11 @@
 package ua.softserve.ita.controller;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.dto.CompanyDTO.CompanyPaginationDTO;
 import ua.softserve.ita.exception.CompanyAlreadyExistException;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Company;
-import ua.softserve.ita.model.enumtype.Status;
 import ua.softserve.ita.service.CompanyService;
-import ua.softserve.ita.service.letter.GenerateLetter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -22,11 +19,9 @@ import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 public class CompanyController {
 
     private final CompanyService companyService;
-    private final GenerateLetter letterService;
 
-    public CompanyController(CompanyService companyService, GenerateLetter letterService) {
+    public CompanyController(CompanyService companyService) {
         this.companyService = companyService;
-        this.letterService = letterService;
     }
 
     @GetMapping(value = "/byName/{name}")
@@ -56,15 +51,12 @@ public class CompanyController {
 
     @PutMapping("/sendMail")
     public Company sendMail(@RequestBody Company company, final HttpServletRequest request) {
-        letterService.sendCompanyApprove(company, getAppUrl(request) + "/approveCompany/" + company.getName());
-        company.setStatus(Status.MAIL_SENT);
-
-        return companyService.update(company);
+        return companyService.sendMail(company, getAppUrl(request)).orElseThrow(() -> new ResourceNotFoundException("Company not found with name " + company.getName()));
     }
 
-    @PutMapping("/approve")
-    public Company approve(@RequestBody Company company) {
-        return companyService.approve(company).orElseThrow(() -> new ResourceNotFoundException("Company not found with name " + company.getName()));
+    @PutMapping("/approve/{token}")
+    public Company approve(@PathVariable("token") String token, @RequestBody Company company) {
+        return companyService.approve(company, token).orElseThrow(() -> new ResourceNotFoundException("Company not found with name " + company.getName()));
     }
 
     @DeleteMapping("/delete/{id}")
