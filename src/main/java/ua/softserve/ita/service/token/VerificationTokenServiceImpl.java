@@ -11,6 +11,7 @@ import ua.softserve.ita.model.VerificationToken;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -40,7 +41,7 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     }
 
     @Override
-    public VerificationToken findByUser(User user) {
+    public Optional<VerificationToken> findByUser(User user) {
         return verificationTokenDao.findByUser(user);
     }
 

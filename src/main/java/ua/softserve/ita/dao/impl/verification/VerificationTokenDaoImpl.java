@@ -8,18 +8,31 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ua.softserve.ita.dao.VerificationTokenDao;
 import ua.softserve.ita.dao.impl.AbstractDao;
+import ua.softserve.ita.dao.impl.UserDaoImpl;
 import ua.softserve.ita.model.User;
 import ua.softserve.ita.model.VerificationToken;
+import ua.softserve.ita.utility.QueryUtility;
 
+import javax.persistence.NoResultException;
 import java.util.Date;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 
 @Repository
 public class VerificationTokenDaoImpl extends AbstractDao<VerificationToken,Long> implements VerificationTokenDao {
 
-    @Autowired
-    private SessionFactory sessionFactory;
+    private static final String ID = "id";
+
+
+    private final SessionFactory sessionFactory;
+
+    public VerificationTokenDaoImpl(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+
 
     @Override
     public VerificationToken findByToken(String token) {
@@ -32,13 +45,18 @@ public class VerificationTokenDaoImpl extends AbstractDao<VerificationToken,Long
     }
 
     @Override
-    public VerificationToken findByUser(User user) {
-        Session session = sessionFactory.getCurrentSession();
-        Query query = session.createQuery("from VerificationToken where user_id = '" + user.getUserId() + "'");
-        if (!query.getResultList().isEmpty()) {
-            return (VerificationToken) query.getResultList().get(0);
-        } else
-            return null;
+    public Optional<VerificationToken> findByUser(User user) {
+        return QueryUtility.findOrEmpty(() -> {
+            VerificationToken result = null;
+            try {
+                result = (VerificationToken) createNamedQuery(VerificationToken.FIND_TOKEN_BY_USER)
+                .setParameter(ID, user.getUserId())
+                .getSingleResult();
+            } catch (NoResultException ex) {
+                Logger.getLogger(UserDaoImpl.class.getName()).log(Level.WARNING, "Token not found");
+            }
+            return result;
+        });
     }
 
     @Override
@@ -90,4 +108,6 @@ public class VerificationTokenDaoImpl extends AbstractDao<VerificationToken,Long
         Query query = session.createQuery("delete  VerificationToken where user_id ="+ userId);
         query.executeUpdate();
     }
+
+
 }

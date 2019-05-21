@@ -22,8 +22,6 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
-import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
-
 @CrossOrigin
 @RestController
 public class RegistrationController {
@@ -52,9 +50,7 @@ public class RegistrationController {
 
     @GetMapping(value = "/users/{login}/")
     public ResponseEntity<?> getByLogin(@PathVariable("login") String login) {
-        List<User> users = userService.findByEmail(login);
-        System.out.println(getLoggedUser().get().getUserID());
-        return ResponseEntity.ok().body(users);
+        return ResponseEntity.ok().body(userService.findByEmail(login).isPresent());
     }
 
     @GetMapping("/users")
@@ -75,8 +71,7 @@ public class RegistrationController {
     @DeleteMapping("/deleteUser/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
         User user = userService.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("User with id: %d not found", id)));
-        VerificationToken verificationToken = tokenService.findByUser(user);
-        tokenService.delete(verificationToken);
+        tokenService.findByUser(user).ifPresent(tokenService::delete);
         userService.deleteById(id);
         return ResponseEntity.ok().body(user);
     }
@@ -96,29 +91,41 @@ public class RegistrationController {
     @RequestMapping(value = "/registrationConfirm", method = RequestMethod.GET)
     public String confirmRegistration(@RequestParam("token") final String token) {
         final String result = verificationTokenService.validateVerificationToken(token);
-        if (result.equals("valid")) {
+        if (result.equals("TOKEN_VALID")) {
             final Optional<User> user = userService.findByToken(token);
             authWithoutPassword(user);
-            return "confirmed";
         }
-        return "expired";
+        return result;
+    }
+
+    @RequestMapping(value = "/user/findToken", method = RequestMethod.GET)
+    public String findToken(@RequestParam("username")String username) {
+        User  user = new User();
+        if (userService.findByEmail(username).isPresent()){
+            user = userService.findByEmail(username).get();
+        }
+        String verificationToken = null;
+        if(verificationTokenService.findByUser(user).isPresent()){
+           verificationToken = verificationTokenService.findByUser(user).get().getToken();
+        }
+        return verificationTokenService.validateVerificationToken(verificationToken);
     }
 
     @RequestMapping(value = "/user/resendRegistrationToken", method = RequestMethod.POST)
     public ResponseEntity<String> resendRegistrationToken(
             HttpServletRequest request, @RequestBody String email) {
 
-        List<User> user = userService.findByEmail(email);
-        if(user.isEmpty()){
+        Optional<User> user = userService.findByEmail(email);
+        if(!user.isPresent()){
             return ResponseEntity.badRequest().body("Email not found!");
         }else {
-            verificationTokenService.deleteByUserId(user.get(0).getUserId());
-            registrationListener.onApplicationEvent(new OnRegistrationCompleteEvent(user.get(0), getAppUrl(request)));
+            verificationTokenService.deleteByUserId(user.get().getUserId());
+            registrationListener.onApplicationEvent(new OnRegistrationCompleteEvent(user.get(), getAppUrl(request)));
             return ResponseEntity.ok().body("Successful!");
         }
     }
 
-    public void authWithoutPassword(Optional<User> user) {
+    private void authWithoutPassword(Optional<User> user) {
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(user, null);
 

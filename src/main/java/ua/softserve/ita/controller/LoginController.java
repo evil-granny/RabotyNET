@@ -1,7 +1,6 @@
 package ua.softserve.ita.controller;
 
-import com.sun.xml.internal.ws.developer.StreamingAttachment;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.model.User;
 import ua.softserve.ita.model.UserPrincipal;
@@ -11,8 +10,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import java.util.Optional;
 
 import static ua.softserve.ita.model.UserPrincipal.UNKNOWN_USER;
 import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
@@ -51,10 +48,10 @@ public class LoginController {
     }
 
     @RequestMapping(value = "/login/enabled/{email}/", method = RequestMethod.GET)
-    public boolean enabledUser(@PathVariable("email") String email) {
-        User user = userService.findByEmail(email).get(0);
-        if(user.isEnabled()){
-            return true;
-        }else return false;
+    public ResponseEntity<?> enabledUser(@PathVariable("email") String email) {
+        if(userService.findByEmail(email).isPresent()){
+            User user = userService.findByEmail(email).get();
+            return ResponseEntity.ok(user.isEnabled());
+        }else return ResponseEntity.ok().body("User not found!");
     }
 }
