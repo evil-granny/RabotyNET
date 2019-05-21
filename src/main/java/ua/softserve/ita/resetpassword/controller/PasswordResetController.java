@@ -7,11 +7,16 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import ua.softserve.ita.dao.UserDao;
+import ua.softserve.ita.dto.UserDto;
 import ua.softserve.ita.model.User;
+import ua.softserve.ita.registration.RegistrationListener;
 import ua.softserve.ita.resetpassword.OnRestorePasswordCompleteEvent;
+import ua.softserve.ita.resetpassword.RestorePasswordListener;
+import ua.softserve.ita.resetpassword.UserResetPasswordDto;
 import ua.softserve.ita.service.token.VerificationTokenService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @Slf4j
 @CrossOrigin
@@ -19,24 +24,23 @@ import javax.servlet.http.HttpServletRequest;
 public class PasswordResetController {
 
     private final UserDao userDao;
-    private final ApplicationEventPublisher eventPublisher;
     private final VerificationTokenService tokenService;
+    private final RestorePasswordListener restorePasswordListener;
 
-    public PasswordResetController(ApplicationEventPublisher eventPublisher, UserDao userDao, VerificationTokenService tokenService) {
-        this.eventPublisher = eventPublisher;
+    public PasswordResetController(UserDao userDao, VerificationTokenService tokenService, RestorePasswordListener restorePasswordListener) {
         this.userDao = userDao;
         this.tokenService = tokenService;
+        this.restorePasswordListener = restorePasswordListener;
     }
 
     @PostMapping("/resetPassword")
-    @ResponseBody
-    public ResponseEntity<?> resetPassword(@RequestBody String userLogin, final HttpServletRequest request) throws UserNotFoundException {
-        log.info("userLogin = " + userLogin);
-        User user = userDao.findUserByUsername(userLogin);
+    public ResponseEntity<?> resetPassword(@RequestBody UserResetPasswordDto userResetPasswordDto, final HttpServletRequest request) throws UserNotFoundException {
+        log.info("userLogin = " + userResetPasswordDto.getUsername());
+        User user = userDao.findUserByUsername(userResetPasswordDto.getUsername());
         if (user == null) {
-            throw new UserNotFoundException();
+            throw new UserNotFoundException("There is no such login user!");
         }
-        eventPublisher.publishEvent(new OnRestorePasswordCompleteEvent(user, getAppUrl(request)));
+        restorePasswordListener.onApplicationEvent(new OnRestorePasswordCompleteEvent(user, getAppUrl(request)));
         return ResponseEntity.ok().body("User found successfully.");
     }
 
