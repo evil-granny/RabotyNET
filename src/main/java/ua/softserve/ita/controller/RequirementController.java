@@ -32,20 +32,24 @@ public class RequirementController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Requirement>> getAllVacancies() {
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_COWNER')")
+    public ResponseEntity<List<Requirement>> getAllRequirements() {
         List<Requirement> vacancyList = requirementService.findAll();
         return ResponseEntity.ok().body(vacancyList);
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Requirement> getVacancyById(@PathVariable("id") Long id) {
+    @PreAuthorize("hasRole('ROLE_COWNER')")
+    public ResponseEntity<Requirement> getRequirementById(@PathVariable("id") Long id) {
         Requirement requirement = requirementService.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Requirement with id: %d not found", id)));
         return ResponseEntity.ok().body(requirement);
     }
 
     @PutMapping
+    @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_COWNER')")
     public ResponseEntity<Requirement> updateRequirement(@Valid @RequestBody Requirement requirement) {
         final Requirement updatedVacancy = requirementService.update(requirement);

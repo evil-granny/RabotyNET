@@ -12,13 +12,11 @@ public interface PhotoService {
 
     List<Photo> findAll();
 
-    byte[] loadAsByteArray(String name);
-
     Photo save(Photo photo);
 
-    Photo upload(MultipartFile file, Long userId);
+    Photo uploadAvatar(MultipartFile file, Long userId);
 
-    Photo upload(MultipartFile file, String companyName);
+    Photo uploadLogo(MultipartFile file, String companyName);
 
     Photo update(Photo photo);
 

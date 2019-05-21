@@ -3,7 +3,6 @@ package ua.softserve.ita.dao.impl;
 import org.springframework.stereotype.Repository;
 import ua.softserve.ita.dao.CompanyDao;
 import ua.softserve.ita.model.Company;
-import ua.softserve.ita.model.Vacancy;
 import ua.softserve.ita.utility.QueryUtility;
 
 import javax.persistence.NoResultException;

@@ -28,9 +28,6 @@ public class CV implements Serializable {
     @Column(name = "cv_id")
     private Long cvId;
 
-    @Column(name = "photo")
-    private String photo;
-
     @Column(name = "position", nullable = false, length = 50)
     @NotNull(message = "position must be not null")
     @NotBlank(message = "position must be not blank")
