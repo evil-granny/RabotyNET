@@ -8,17 +8,10 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.csrf.CsrfFilter;
-import org.springframework.security.web.csrf.CsrfTokenRepository;
-import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
-//import ua.softserve.ita.filter.CustomCsrfFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-
-//    private static final String[] CSRF_IGNORE = {"/login/**", "/registration/**"};
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -52,10 +45,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
 
                 .csrf()
-//                .ignoringAntMatchers(CSRF_IGNORE) // URI where CSRF check will not be applied
-//                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()); // defines a repository where tokens are stored
-//                .and()
-//                .addFilterBefore(new CustomCsrfFilter(), CsrfFilter.class);
                 .disable();
     }
 
@@ -74,10 +63,4 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/configuration/security",
             "/csrf"
     };
-
-//    private CsrfTokenRepository csrfTokenRepository() {
-//        HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
-//        repository.setHeaderName(CustomCsrfFilter.CSRF_COOKIE_NAME);
-//        return repository;
-//    }
 }
