@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ua.softserve.ita.dao.UserDao;
-import ua.softserve.ita.model.Company;
 import ua.softserve.ita.model.User;
 import ua.softserve.ita.utility.QueryUtility;
 
@@ -20,14 +19,13 @@ import java.util.logging.Logger;
 @Primary
 @Transactional
 public class UserDaoImpl extends AbstractDao<User, Long> implements UserDao {
-    private static final Logger lOGGER = Logger.getLogger(UserDao.class.getName());
+
     private static final String ID = "id";
 
     @Override
     public User findUserByUsername(String username) {
         Query<User> query = sessionFactory.getCurrentSession().createQuery("select u from User u join u.roles where u.login = :login", User.class);
         query.setParameter("login", username);
-        lOGGER.severe("QUERY = " + query.getSingleResult());
         return query.getSingleResult();
     }
 

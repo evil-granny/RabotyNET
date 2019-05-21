@@ -1,4 +1,4 @@
-package ua.softserve.ita.resetpassword;
+package ua.softserve.ita.dto;
 
 import lombok.Data;
 import ua.softserve.ita.validation.ValidEmail;

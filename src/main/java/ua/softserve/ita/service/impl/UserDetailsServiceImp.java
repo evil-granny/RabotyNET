@@ -15,13 +15,10 @@ import ua.softserve.ita.model.UserPrincipal;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.logging.Logger;
 
 @Service
 @Transactional
 public class UserDetailsServiceImp implements UserDetailsService {
-
-    private static final Logger lOGGER = Logger.getLogger(UserDetailsServiceImp.class.getName());
 
     private final UserDao userDao;
 
@@ -39,15 +36,12 @@ public class UserDetailsServiceImp implements UserDetailsService {
             authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getType().toUpperCase()));
         }
         if (user != null) {
-            lOGGER.severe("Our user is - " + user.getUserId());
             UserPrincipal principal = new UserPrincipal(
                     user.getUsername(),
                     user.getPassword(),
                     authorities,
                     user.getUserId()
             );
-            lOGGER.severe("PRINCIPAL is " + principal);
-            lOGGER.severe("PRINCIPAL ID is " + principal.getUserId());
             return principal;
         } else {
             throw new UsernameNotFoundException("User not found.");

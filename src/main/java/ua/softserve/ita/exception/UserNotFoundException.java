@@ -1,4 +1,4 @@
-package ua.softserve.ita.resetpassword.controller;
+package ua.softserve.ita.exception;
 
 public class UserNotFoundException extends RuntimeException {
     public UserNotFoundException(final String message) {
