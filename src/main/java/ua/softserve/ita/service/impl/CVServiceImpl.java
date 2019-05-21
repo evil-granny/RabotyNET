@@ -3,6 +3,7 @@ package ua.softserve.ita.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.softserve.ita.dao.CVDao;
+import ua.softserve.ita.dao.PersonDao;
 import ua.softserve.ita.dao.UserDao;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.CV;
@@ -25,11 +26,13 @@ public class CVServiceImpl implements CVService {
 
     private final CVDao cvDao;
     private final UserDao userDao;
+    private final PersonDao personDao;
 
     @Autowired
-    public CVServiceImpl(CVDao cvDao, UserDao userDao) {
+    public CVServiceImpl(CVDao cvDao, UserDao userDao, PersonDao personDao) {
         this.cvDao = cvDao;
         this.userDao = userDao;
+        this.personDao = personDao;
     }
 
     @Override
@@ -45,10 +48,8 @@ public class CVServiceImpl implements CVService {
     @Override
     public CV save(CV cv) {
 
-        Long userId = getLoggedUser().get().getUserId();
-
-        Person person = new Person();
-        person.setUserId(userId);
+        Person person = personDao.findById(getLoggedUser().get().getUserId())
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Person was not found")));
         cv.setPerson(person);
 
         Set<Skill> skills = cv.getSkills();
@@ -64,7 +65,8 @@ public class CVServiceImpl implements CVService {
     public CV update(CV cv) {
 
         if (getLoggedUser().isPresent()) {
-            User user = userDao.findById(getLoggedUser().get().getUserId()).orElseThrow(() -> new ResourceNotFoundException("Person with id: %d was not found"));
+            User user = userDao.findById(getLoggedUser().get().getUserId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Person was not found"));
             cv.getPerson().setUser(user);
         }
 
