@@ -37,7 +37,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/admin").access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/users").access("hasRole('ROLE_USER')")
-                .antMatchers("/userCV/**").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
+                .antMatchers("/userCV").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
                 .antMatchers("/createCV").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
 
                 .antMatchers("/companies/all").access("hasRole('ROLE_ADMIN')")
@@ -57,7 +57,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/companies/byCompany/**").permitAll()
 
                 .antMatchers("/searchCV").access("hasRole('ROLE_COWNER')")
-                .antMatchers("/", "/vacancies", "/login", "/registrationConfirm/**", "/registration", "/users/**").permitAll()
+                .antMatchers("/", "/vacancies", "user/**", "/login/**","/login", "/registrationConfirm/**", "/registration/**", "/users/**").permitAll()
                 .antMatchers("/", "/vacancies/**", "/loginUser", "/registration").permitAll()
                 .antMatchers("/people", "/people/*", "people/**").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
                 .antMatchers("/", "/pdf/**", "/updatePDF", "/createPdf/**").permitAll()

@@ -24,5 +24,7 @@ public interface CompanyService {
 
     List<Company> findByUserId(Long id);
 
-    Optional<Company> approve(Company company);
+    Optional<Company> sendMail(Company company, String hostLink);
+
+    Optional<Company> approve(Company company, String companyToken);
 }

@@ -1,6 +1,9 @@
 package ua.softserve.ita.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
+import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ua.softserve.ita.dao.*;
 import ua.softserve.ita.dto.CompanyDTO.CompanyPaginationDTO;
@@ -9,6 +12,7 @@ import ua.softserve.ita.model.Company;
 import ua.softserve.ita.model.User;
 import ua.softserve.ita.model.enumtype.Status;
 import ua.softserve.ita.service.CompanyService;
+import ua.softserve.ita.service.letter.GenerateLetter;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -24,15 +28,17 @@ public class CompanyServiceImpl implements CompanyService {
     private final ContactDao contactDao;
     private final UserDao userDao;
     private final RoleDao roleDao;
+    private final GenerateLetter letterService;
 
     @Autowired
     public CompanyServiceImpl(CompanyDao companyDao, AddressDao addressDao, ContactDao contactDao, UserDao userDao,
-                              RoleDao roleDao) {
+                              RoleDao roleDao, GenerateLetter letterService) {
         this.companyDao = companyDao;
         this.addressDao = addressDao;
         this.contactDao = contactDao;
         this.userDao = userDao;
         this.roleDao = roleDao;
+        this.letterService = letterService;
     }
 
     @Override
@@ -95,7 +101,31 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public Optional<Company> approve(Company company) {
+    public Optional<Company> sendMail(Company company, String hostLink) {
+        Pbkdf2PasswordEncoder encoder = new Pbkdf2PasswordEncoder("secret", 10000, 5);
+
+        Optional<Company> res = companyDao.findByName(company.getName());
+
+        if(res.isPresent()) {
+            company = res.get();
+
+            letterService.sendCompanyApprove(company, hostLink +
+                    "/approveCompany/" + company.getName() + "/" + encoder.encode(company.getName()));
+            company.setStatus(Status.MAIL_SENT);
+
+            companyDao.update(company);
+        }
+
+        return res;
+    }
+
+    @Override
+    public Optional<Company> approve(Company company, String companyToken) {
+        Pbkdf2PasswordEncoder encoder = new Pbkdf2PasswordEncoder("secret", 10000, 5);
+
+        if(!encoder.matches(company.getName(), companyToken))
+            return Optional.empty();
+
         Optional<Company> res = companyDao.findByName(company.getName());
 
         if(res.isPresent()) {
