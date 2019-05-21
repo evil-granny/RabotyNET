@@ -3,6 +3,7 @@ package ua.softserve.ita.resetpassword.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
@@ -13,10 +14,12 @@ import ua.softserve.ita.registration.RegistrationListener;
 import ua.softserve.ita.resetpassword.OnRestorePasswordCompleteEvent;
 import ua.softserve.ita.resetpassword.RestorePasswordListener;
 import ua.softserve.ita.resetpassword.UserResetPasswordDto;
+import ua.softserve.ita.service.UserService;
 import ua.softserve.ita.service.token.VerificationTokenService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Slf4j
 @CrossOrigin
@@ -24,13 +27,17 @@ import javax.validation.Valid;
 public class PasswordResetController {
 
     private final UserDao userDao;
+    private final UserService userService;
     private final VerificationTokenService tokenService;
     private final RestorePasswordListener restorePasswordListener;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public PasswordResetController(UserDao userDao, VerificationTokenService tokenService, RestorePasswordListener restorePasswordListener) {
+    public PasswordResetController(UserDao userDao, UserService userService, VerificationTokenService tokenService, RestorePasswordListener restorePasswordListener, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userDao = userDao;
+        this.userService = userService;
         this.tokenService = tokenService;
         this.restorePasswordListener = restorePasswordListener;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @PostMapping("/resetPassword")
@@ -48,16 +55,16 @@ public class PasswordResetController {
         return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
     }
 
-    @GetMapping(value = "/changePassword")
-    public RedirectView showChangePasswordPage(@RequestParam("token") String token) {
-        String result = tokenService.validateVerificationToken(token);
-        RedirectView redirectConfirmPassword = new RedirectView();
-        RedirectView redirectLogin = new RedirectView();
-        redirectConfirmPassword.setUrl("http://localhost:4200/confirmPassword");
-        redirectLogin.setUrl("http://localhost:4200/login");
-        if (result != null) {
-            return redirectConfirmPassword;
+    @PostMapping("/changePassword")
+    public ResponseEntity<?> changePassword(@RequestBody UserResetPasswordDto userResetPasswordDto) {
+        final String result = tokenService.validateVerificationToken(userResetPasswordDto.getUserResetPasswordToken());
+        if (result.equals("valid")) {
+            final Optional<User> user = userService.findByToken(userResetPasswordDto.getUserResetPasswordToken());
+            log.info("User = " + user);
+            user.get().setPassword(bCryptPasswordEncoder.encode(userResetPasswordDto.getResetPassword()));
+            log.info("User new password = " + user.get().getPassword());
+            userService.update(user.get());
         }
-        return redirectLogin;
+        return ResponseEntity.ok().body("Successfully!");
     }
 }

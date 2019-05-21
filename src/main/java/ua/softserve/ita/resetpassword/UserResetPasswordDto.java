@@ -17,6 +17,10 @@ public class UserResetPasswordDto {
 
     @NotNull
     @NotEmpty
+    private String userResetPasswordToken;
+
+    @NotNull
+    @NotEmpty
     @Size(min = 8, max = 60)
     private String resetPassword;
 }
