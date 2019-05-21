@@ -29,45 +29,45 @@ public class PhotoController {
     }
 
     @GetMapping(path = {"/{id}"})
+    @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Get photo by specific id")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = Photo.class)})
     public Photo findById(@PathVariable("id") Long id) {
         return photoService.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(String.format("Photo with id: %d was not found", id)));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Photo with id %d was not found?!", id)));
     }
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create new photo")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = Photo.class)})
     public Photo create(@Valid @RequestBody Photo photo) {
         return photoService.save(photo);
     }
 
-    @PostMapping(path = "/{user_id}")
-    @ApiOperation(value = "Upload photo for user with specific id")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
-    public Photo upload(@RequestParam("file") MultipartFile file, @PathVariable("user_id") Long userId) {
-        return photoService.upload(file, userId);
+    @PostMapping(path = "/avatars/{user_id}")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Upload photo for person with specific id")
+    public Photo uploadAvatar(@Valid @RequestParam("file") MultipartFile file, @PathVariable("user_id") Long userId) {
+        return photoService.uploadAvatar(file, userId);
     }
 
-    @PostMapping(path = "/logo/{companyName}")
+    @PostMapping(path = "/logos/{company_name}")
+    @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Upload photo for company with specific name")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
-    public Photo uploadLogo(@RequestParam("file") MultipartFile file, @PathVariable("companyName") String companyName) {
-        return photoService.upload(file, companyName);
+    public Photo uploadLogo(@Valid @RequestParam("file") MultipartFile file, @PathVariable("company_name") String companyName) {
+        return photoService.uploadLogo(file, companyName);
     }
 
     @PutMapping()
+    @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Update photo")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = Photo.class)})
     public Photo update(@Valid @RequestBody Photo photo) {
         return photoService.update(photo);
     }
 
     @DeleteMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ApiOperation(value = "Delete the photo with specific id")
+    @ApiOperation(value = "Delete photo with specific id")
     public void deleteById(@PathVariable("id") Long id) {
         photoService.deleteById(id);
     }
