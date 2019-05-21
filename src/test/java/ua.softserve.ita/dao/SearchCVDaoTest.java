@@ -339,7 +339,7 @@ class SearchCVDaoTest {
     @Test
     void search() {
         SearchCVDao searchCVDao = new SearchCVDao(sessionFactory);
-        SearchCVResponseDTO searchCVResponseDTO = searchCVDao.search("name", "jo", 2000, 0);
+        SearchCVResponseDTO searchCVResponseDTO = searchCVDao.search("name", "jo", 5000, 0);
         assertEquals(searchCVResponseDTO.getCount().intValue(), searchCVResponseDTO.getSearchCVDTOs().size());
     }
 
