@@ -35,7 +35,7 @@ class SearchCVDaoTest {
             {"Java", "Python", "Angular", "JavaScript", "Fortran", "HTML", "CSS", "Scala", "Assembler"};
     private String[] ranks = {"Junior", "Middle", "Senior"};
     private String[] positions = {"Developer", "QATC"};
-    private String[] companies = {"Google", "Meta Cortex", "Microsoft", "Apple", "Amazon", "USA Government", "IBM",
+    private String[] companies = {"Meta Cortex", "Google", "Microsoft", "Apple", "Amazon", "USA Government", "IBM",
             "Tesla", "GMC", "Cyberdyne Systems", "Umbrella", "Omni Consumer Products"};
     private String[] universities = {"Stanford University", "Massachusetts Institute of Technology",
             "Harvard University", "Princeton University", "University of Chicago"};
@@ -118,7 +118,7 @@ class SearchCVDaoTest {
     private Education getEducation(long id) {
         Education education = new Education();
         education.setDegree("Master");
-        education.setGraduation(5);
+        education.setGraduation(2010);
         education.setEducationId(id);
         education.setSchool(universities[random.nextInt(universities.length)]);
         education.setSpecialty("Computer science");
@@ -214,33 +214,33 @@ class SearchCVDaoTest {
         adminUser.setRoles(adminRoleList);
         session.update(adminUser);
 
-        User userUser = new User();
-        userUser.setLogin("user@gmail.com");
-        userUser.setPassword("$2a$10$t31PsVNWl8eaWr9/gPwKKeX.4Q2grl12wmiRrN9fEZDMlMGHwA92m");
-        userUser.setEnabled(true);
-        session.save(userUser);
-        Role userRole = new Role();
-        userRole.setType("user");
-        userRole.setRoleId(userUser.getUserId());
-        session.save(userRole);
-        List<Role> userRoleList = new ArrayList<>();
-        userRoleList.add(userRole);
-        userUser.setRoles(userRoleList);
-        session.update(userUser);
+//        User userUser = new User();
+//        userUser.setLogin("user@gmail.com");
+//        userUser.setPassword("$2a$10$t31PsVNWl8eaWr9/gPwKKeX.4Q2grl12wmiRrN9fEZDMlMGHwA92m");
+//        userUser.setEnabled(true);
+//        session.save(userUser);
+//        Role userRole = new Role();
+//        userRole.setType("user");
+//        userRole.setRoleId(userUser.getUserId());
+//        session.save(userRole);
+//        List<Role> userRoleList = new ArrayList<>();
+//        userRoleList.add(userRole);
+//        userUser.setRoles(userRoleList);
+//        session.update(userUser);
 
-        User cownerUser = new User();
-        cownerUser.setLogin("cowner@gmail.com");
-        cownerUser.setPassword("$2a$10$DmeWO6UlY/m2QjJaxLGUzezqOotvJmpzbBmZGBr8o/HHeNUuCWcpK");
-        cownerUser.setEnabled(true);
-        session.save(cownerUser);
-        Role cownerRole = new Role();
-        cownerRole.setType("cowner");
-        cownerRole.setRoleId(cownerUser.getUserId());
-        session.save(cownerRole);
-        List<Role> cownerRoleList = new ArrayList<>();
-        cownerRoleList.add(cownerRole);
-        cownerUser.setRoles(cownerRoleList);
-        session.update(cownerUser);
+//        User cownerUser = new User();
+//        cownerUser.setLogin("cowner@gmail.com");
+//        cownerUser.setPassword("$2a$10$DmeWO6UlY/m2QjJaxLGUzezqOotvJmpzbBmZGBr8o/HHeNUuCWcpK");
+//        cownerUser.setEnabled(true);
+//        session.save(cownerUser);
+//        Role cownerRole = new Role();
+//        cownerRole.setType("cowner");
+//        cownerRole.setRoleId(cownerUser.getUserId());
+//        session.save(cownerRole);
+//        List<Role> cownerRoleList = new ArrayList<>();
+//        cownerRoleList.add(cownerRole);
+//        cownerUser.setRoles(cownerRoleList);
+//        session.update(cownerUser);
 
         session.getTransaction().commit();
     }
@@ -248,8 +248,25 @@ class SearchCVDaoTest {
     private void insertCvs(int count, Session session) {
         for (int i = 1; i <= count; i++) {
             session.beginTransaction();
-            User user = getUser();
+
+            User user = new User();
+            if (i == 1) {
+                user.setLogin("user@gmail.com");
+            } else {
+                user.setLogin("user" + i + "@gmail.com");
+            }
+            user.setPassword("$2a$10$t31PsVNWl8eaWr9/gPwKKeX.4Q2grl12wmiRrN9fEZDMlMGHwA92m");
+            user.setEnabled(true);
             session.save(user);
+            Role userRole = new Role();
+            userRole.setType("user");
+            userRole.setRoleId(user.getUserId());
+            session.save(userRole);
+            List<Role> userRoleList = new ArrayList<>();
+            userRoleList.add(userRole);
+            user.setRoles(userRoleList);
+            session.update(user);
+
             Address address = getAddress(user.getUserId());
             session.save(address);
             Contact contact = getContact(user.getUserId());
@@ -280,19 +297,42 @@ class SearchCVDaoTest {
     private void insertVacancies(int count, Session session) {
         for (int i = 1; i <= count; i++) {
             session.beginTransaction();
-            User user = getUser();
-            session.save(user);
-            Contact contact = getContact(user.getUserId());
-            contact.setEmail(user.getLogin());
+            User cownerUser = new User();
+            if (i == 1) {
+                cownerUser.setLogin("cowner@gmail.com");
+            } else {
+                cownerUser.setLogin("cowner" + i + "@gmail.com");
+            }
+            cownerUser.setPassword("$2a$10$DmeWO6UlY/m2QjJaxLGUzezqOotvJmpzbBmZGBr8o/HHeNUuCWcpK");
+            cownerUser.setEnabled(true);
+            session.save(cownerUser);
+            Role cownerRole = new Role();
+            cownerRole.setType("cowner");
+            cownerRole.setRoleId(cownerUser.getUserId());
+            session.save(cownerRole);
+            List<Role> cownerRoleList = new ArrayList<>();
+            cownerRoleList.add(cownerRole);
+            cownerUser.setRoles(cownerRoleList);
+            session.update(cownerUser);
+            Contact contact = getContact(cownerUser.getUserId());
+            contact.setEmail(cownerUser.getLogin());
             session.save(contact);
-            Address address = getAddress(user.getUserId());
+            Address address = getAddress(cownerUser.getUserId());
             session.save(address);
-            Company company = getCompany(contact, address, user);
+            Company company = getCompany(contact, address, cownerUser);
             session.save(company);
             for (int j = 0; j < 8; j++) {
                 Vacancy vacancy = getVacancy(company);
+                if(j == 2 || j == 4){
+                    vacancy.setHotVacancy(true);
+                }
                 session.save(vacancy);
             }
+            Photo photo = getPhoto(cownerUser.getUserId());
+            session.save(photo);
+            Person person = getPerson(cownerUser.getUserId(), address, contact, photo);
+            session.save(person);
+
             session.getTransaction().commit();
         }
     }
@@ -300,7 +340,7 @@ class SearchCVDaoTest {
     private void insert() throws FileNotFoundException {
         setData();
         Session session = sessionFactory.openSession();
-        insertCvs(1000, session);
+        insertCvs(3000, session);
         insertVacancies(12, session);
         insertRegisteredUsers(session);
     }
@@ -331,7 +371,7 @@ class SearchCVDaoTest {
                 .setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect")
                 .setProperty("hibernate.show_sql", "true")
                 .setProperty("hibernate.show_sql", "true")
-                .setProperty("hibernate.hbm2ddl.auto", "update")
+                .setProperty("hibernate.hbm2ddl.auto", "create")
                 .buildSessionFactory();
         insert();
     }
