@@ -16,6 +16,7 @@ import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 
 @CrossOrigin
 @RestController
+@RequestMapping("/resume")
 public class CVController {
     private final CVService cvService;
     private final SkillService skillService;
@@ -29,32 +30,32 @@ public class CVController {
         this.jobService = jobService;
     }
 
-    @GetMapping(path = {"/cv/{id}"})
+    @GetMapping(path = {"/{id}"})
     public CV findById(@PathVariable("id") long id) {
         return cvService.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("CV with id: %d not found", id)));
     }
 
-    @GetMapping(value = "/userCV")
+    @GetMapping(value = "/user")
     public CV getCVByUser() {
-        return cvService.findByUserId(getLoggedUser().get().getUserId()).orElseThrow(() -> new ResourceNotFoundException(String.format("CV with id: %d not found")));
+        return cvService.findByUserId(getLoggedUser().get().getUserId()).orElseThrow(() -> new ResourceNotFoundException(String.format("CV was not found")));
     }
 
-    @GetMapping(path = {"/cvs"})
+    @GetMapping(path = {"/all"})
     public List<CV> findAll() {
         return cvService.findAll();
     }
 
-    @PostMapping(path = "/createCV")
+    @PostMapping(path = "/create")
     public CV insert(@RequestBody CV cv) {
         return cvService.save(cv);
     }
 
-    @PutMapping(path = "/updateCV")
+    @PutMapping(path = "/update")
     public CV update(@RequestBody CV cv) {
         return cvService.update(cv);
     }
 
-    @DeleteMapping(path = "/deleteCV/{id}")
+    @DeleteMapping(path = "/delete/{id}")
     public void deleteById(@PathVariable("id") long id) {
         cvService.deleteById(id);
     }
