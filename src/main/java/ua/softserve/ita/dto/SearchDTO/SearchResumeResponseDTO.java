@@ -10,9 +10,9 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class SearchCVResponseDTO {
+public class SearchResumeResponseDTO {
 
     private BigInteger count;
 
-    private List<SearchCVDTO> searchCVDTOs;
+    private List<SearchResumeDTO> searchResumeDTOS;
 }

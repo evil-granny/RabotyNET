@@ -6,8 +6,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ua.softserve.ita.dao.impl.search.SearchCVDao;
-import ua.softserve.ita.dto.SearchDTO.SearchCVResponseDTO;
+import ua.softserve.ita.dao.impl.search.SearchResumeDao;
+import ua.softserve.ita.dto.SearchDTO.SearchResumeResponseDTO;
 import ua.softserve.ita.model.*;
 import ua.softserve.ita.model.enumtype.Employment;
 import ua.softserve.ita.model.enumtype.Status;
@@ -24,7 +24,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
-class SearchCVDaoTest {
+class SearchResumeDaoTest {
 
     private SessionFactory sessionFactory;
 
@@ -378,9 +378,9 @@ class SearchCVDaoTest {
 
     @Test
     void search() {
-        SearchCVDao searchCVDao = new SearchCVDao(sessionFactory);
-        SearchCVResponseDTO searchCVResponseDTO = searchCVDao.search("name", "jo", 5000, 0);
-        assertEquals(searchCVResponseDTO.getCount().intValue(), searchCVResponseDTO.getSearchCVDTOs().size());
+        SearchResumeDao searchResumeDao = new SearchResumeDao(sessionFactory);
+        SearchResumeResponseDTO searchResumeResponseDTO = searchResumeDao.search("name", "jo", 5000, 0);
+        assertEquals(searchResumeResponseDTO.getCount().intValue(), searchResumeResponseDTO.getSearchResumeDTOS().size());
     }
 
 

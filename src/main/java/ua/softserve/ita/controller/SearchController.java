@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ua.softserve.ita.dto.SearchDTO.SearchRequestDTO;
-import ua.softserve.ita.dto.SearchDTO.SearchCVResponseDTO;
+import ua.softserve.ita.dto.SearchDTO.SearchResumeResponseDTO;
 import ua.softserve.ita.dto.SearchDTO.SearchVacancyResponseDTO;
-import ua.softserve.ita.service.search.SearchCVService;
+import ua.softserve.ita.service.search.SearchResumeService;
 import ua.softserve.ita.service.search.SearchVacancyService;
 
 @CrossOrigin
@@ -17,25 +17,25 @@ import ua.softserve.ita.service.search.SearchVacancyService;
 @Slf4j
 public class SearchController {
 
-    private final SearchCVService searchCVService;
+    private final SearchResumeService searchResumeService;
     private final SearchVacancyService searchVacancyService;
 
     @Autowired
-    public SearchController(SearchCVService searchCVService, SearchVacancyService searchVacancyService) {
-        this.searchCVService = searchCVService;
+    public SearchController(SearchResumeService searchResumeService, SearchVacancyService searchVacancyService) {
+        this.searchResumeService = searchResumeService;
         this.searchVacancyService = searchVacancyService;
     }
 
-    @PostMapping("/searchCV")
-    public SearchCVResponseDTO getResult(@RequestBody SearchRequestDTO searchRequestDTO) {
+    @PostMapping("/search/resume")
+    public SearchResumeResponseDTO getResult(@RequestBody SearchRequestDTO searchRequestDTO) {
         log.info("Request = " + searchRequestDTO.toString());
 
-        return searchCVService.getResponse(searchRequestDTO.getSearchParameter(), searchRequestDTO.getSearchText().trim(),
+        return searchResumeService.getResponse(searchRequestDTO.getSearchParameter(), searchRequestDTO.getSearchText().trim(),
                 searchRequestDTO.getResultsOnPage(), searchRequestDTO.getFirstResultNumber());
 
     }
 
-    @PostMapping("/vacancies/search")
+    @PostMapping("/search/vacancies")
     public SearchVacancyResponseDTO getVacanciesResult(@RequestBody SearchRequestDTO searchRequestDTO) {
         log.info("Request = " + searchRequestDTO.toString());
 
