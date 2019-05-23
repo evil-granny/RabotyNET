@@ -145,4 +145,9 @@ public class CompanyServiceImpl implements CompanyService {
 
         return res;
     }
+
+    @Override
+    public Optional<Company> findCompanyByVacancyId(Long id) {
+        return companyDao.findByVacancyId(id);
+    }
 }

@@ -22,6 +22,8 @@ import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 @Service
 @Transactional
 public class VacancyServiceImpl implements VacancyService {
+    private static final int COUNT_VACANCIES_ON_SINGLE_PAGE = 9;
+    private static final int COUNT_VACANCIES_ON_VIEW_COMPANY_PAGE = 4;
 
     private final VacancyDao vacancyDao;
     private final RequirementDao requirementDao;
@@ -45,21 +47,21 @@ public class VacancyServiceImpl implements VacancyService {
     }
 
     @Override
-    public VacancyDTO findAllByCompanyName(String companyName, int first, int count) {
-        return new VacancyDTO(vacancyDao.getCountOfVacanciesByCompanyName(companyName),
-                vacancyDao.findAllByCompanyNameWithPagination(companyName, first, count));
+    public VacancyDTO findAllVacanciesByCompanyId(Long companyId, int first) {
+        return new VacancyDTO(vacancyDao.getCountOfVacanciesByCompanyId(companyId),
+                vacancyDao.findAllByCompanyIdWithPagination(companyId, first,COUNT_VACANCIES_ON_VIEW_COMPANY_PAGE));
     }
 
     @Override
-    public VacancyDTO findAllHotVacanciesWithPagination(int first, int count) {
+    public VacancyDTO findAllHotVacanciesWithPagination(int first) {
         return new VacancyDTO(vacancyDao.getCountAllHotVacancies(),
-                vacancyDao.findAllHotVacanciesWithPagination(first, count));
+                vacancyDao.findAllHotVacanciesWithPagination(first,COUNT_VACANCIES_ON_SINGLE_PAGE));
     }
 
     @Override
-    public VacancyDTO findAllVacanciesWithPagination(int first, int count) {
+    public VacancyDTO findAllVacanciesWithPagination(int first) {
         return new VacancyDTO(vacancyDao.getCountOfAllVacancies(),
-                vacancyDao.findAllVacanciesWithPagination(first, count));
+                vacancyDao.findAllVacanciesWithPagination(first,COUNT_VACANCIES_ON_SINGLE_PAGE));
     }
 
     @Override
