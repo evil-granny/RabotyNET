@@ -5,17 +5,12 @@ import ua.softserve.ita.model.VerificationToken;
 
 import java.util.Date;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 public interface VerificationTokenDao {
 
     VerificationToken findByToken(String token);
 
     Optional<VerificationToken> findByUser(User user);
-
-    Stream<VerificationToken> findAllByExpiryDateLessThan(Date now);
-
-    void deleteByExpiryDateLessThan(Date now);
 
     void deleteAllExpiredSince(Date now);
 

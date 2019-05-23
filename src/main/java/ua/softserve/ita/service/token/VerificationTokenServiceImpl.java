@@ -9,6 +9,7 @@ import ua.softserve.ita.dao.VerificationTokenDao;
 import ua.softserve.ita.model.User;
 import ua.softserve.ita.model.VerificationToken;
 
+import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
@@ -34,7 +35,6 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
         this.userDao = userDao;
     }
 
-
     @Override
     public VerificationToken findByToken(String token) {
         return verificationTokenDao.findByToken(token);
@@ -46,22 +46,13 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     }
 
     @Override
-    public Stream<VerificationToken> findAllByExpiryDateLessThan(Date now) {
-        return verificationTokenDao.findAllByExpiryDateLessThan(now);
-    }
-
-    @Override
-    public void deleteByExpiryDateLessThan(Date expiredDate) {
-        verificationTokenDao.deleteByExpiryDateLessThan(expiredDate);
-    }
-
-    @Override
     public void deleteByUserId(Long userId) {
         verificationTokenDao.deleteByUserId(userId);
     }
 
     @Override
-    public void deleteAllExpiredSince(Date now) {
+    public void deleteAllExpiredSince() {
+        Date now = Date.from(Instant.now());
         verificationTokenDao.deleteAllExpiredSince(now);
     }
 
@@ -83,14 +74,6 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     public VerificationToken createVerificationTokenForUser(final User user, final String token) {
         final VerificationToken myToken = new VerificationToken(token, user);
         return  create(myToken);
-    }
-
-    public VerificationToken generateNewVerificationToken(final String existingVerificationToken) {
-        VerificationToken vToken = verificationTokenDao.findByToken(existingVerificationToken);
-        vToken.updateToken(UUID.randomUUID()
-                .toString());
-        vToken = verificationTokenDao.update(vToken);
-        return vToken;
     }
 
     public String validateVerificationToken(String token) {

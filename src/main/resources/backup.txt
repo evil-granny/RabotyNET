@@ -1,6 +1,6 @@
-INSERT INTO public.users(enabled, login, password) VALUES (true, 'admin', '$2a$10$E2.PwtnpF2p6aB3NFM3Qo.TarTYsaiWD0yTZ7qY1U3K.ybKxNvCku');
-INSERT INTO public.users(enabled, login, password) VALUES (true, 'cowner', '$2a$10$DmeWO6UlY/m2QjJaxLGUzezqOotvJmpzbBmZGBr8o/HHeNUuCWcpK');
-INSERT INTO public.users(enabled, login, password) VALUES (true, 'user', '$2a$10$t31PsVNWl8eaWr9/gPwKKeX.4Q2grl12wmiRrN9fEZDMlMGHwA92m');
+INSERT INTO public.users(enabled, login, password) VALUES (true, 'admin.admin@gmail.com', '$2a$10$E2.PwtnpF2p6aB3NFM3Qo.TarTYsaiWD0yTZ7qY1U3K.ybKxNvCku');
+INSERT INTO public.users(enabled, login, password) VALUES (true, 'cowner.cowner@gmail.com', '$2a$10$DmeWO6UlY/m2QjJaxLGUzezqOotvJmpzbBmZGBr8o/HHeNUuCWcpK');
+INSERT INTO public.users(enabled, login, password) VALUES (true, 'user.user@gmail.com', '$2a$10$t31PsVNWl8eaWr9/gPwKKeX.4Q2grl12wmiRrN9fEZDMlMGHwA92m');
 
 
 INSERT INTO public.roles(role_id, type)  VALUES (1, 'admin');
@@ -14,56 +14,183 @@ INSERT INTO public.user_role(user_id, role_id) VALUES (3, 3);
 
 
 INSERT INTO public.address(
-   apartment, building, city, country, street, zip_code)
-  VALUES ('10', '20', 'Chernivtsi', 'Ukraine', 'Holovna', 58000);
+   building, city, country, street, zip_code)
+  VALUES ('20', 'Chernivtsi', 'Ukraine', 'Holovna', 58000);
+
+INSERT INTO public.address(
+   building, city, country, street, zip_code)
+  VALUES ('33', 'Chernivtsi', 'Ukraine', 'Shevchenka', 58000);
+
+INSERT INTO public.address(
+   building, city, country, street, zip_code)
+  VALUES ('246', 'Chernivtsi', 'Ukraine', 'Holovna', 58000);
+
+INSERT INTO public.address(
+   building, city, country, street, zip_code)
+  VALUES ('33', 'Chernivtsi', 'Ukraine', 'Komarova', 58000);
+
+INSERT INTO public.address(
+   building, city, country, street, zip_code)
+  VALUES ('15', 'Chernivtsi', 'Ukraine', 'Rivnenska', 58000);
+
+
+
 
 INSERT INTO public.education(
    degree, graduation, school, specialty)
-  VALUES ('Master', 2016, 'ChNU', 'Software Engineer');
+  VALUES ('Master', 2016, 'CHNU', 'Software Engineer');
+
+INSERT INTO public.education(
+   degree, graduation, school, specialty)
+  VALUES ('Master', 2009, 'KPI', 'Software Engineer');
+
+
+
 
 INSERT INTO public.contact(
    email, phone_number)
   VALUES ('den.ohorodnik@gmail.com', '+380973999060');
 
+INSERT INTO public.contact(
+   email, phone_number)
+  VALUES ('jon.snow@gmail.com', '+380973219033');
+
+INSERT INTO public.contact(
+   email, phone_number)
+  VALUES ('softserve@gmail.com', '+380974429012');
+
+INSERT INTO public.contact(
+   email, phone_number)
+  VALUES ('inventor.soft@gmail.com', '+380984529012');
+
+INSERT INTO public.contact(
+   email, phone_number)
+  VALUES ('val.soft@gmail.com', '+380972993270');
+
+
+
+
+
+INSERT INTO public.person(
+   user_id)
+  VALUES (1);
+
 INSERT INTO public.person(
    user_id, birthday, first_name, last_name, address_id, contact_id, photo_id)
-  VALUES (1,' 1999-04-06', 'Denys', 'Ohorodnik', 1, 1, null);
+  VALUES (2,' 1986-11-26', 'Jon', 'Snow', 2, 2, null);
 
 INSERT INTO public.person(
-   user_id)
-  VALUES (2);
-
-INSERT INTO public.person(
-   user_id)
-  VALUES (3);
+   user_id, birthday, first_name, last_name, address_id, contact_id, photo_id)
+  VALUES (3,' 1999-06-04', 'Denys', 'Ohorodnik', 1, 1, null);
 
 INSERT INTO public.cv(
-  photo, "position", education_id,user_id)
-  VALUES ('http://', 'developer', 1, 1);
+ "position", education_id,user_id)
+  VALUES ('developer', 1, 2);
+
+INSERT INTO public.cv(
+ "position", education_id,user_id)
+  VALUES ('java developer', 2, 3);
+
 
 INSERT INTO public.skill(
   description, title,print_pdf, cv_id)
-  VALUES ('MVC', 'Java',true,1);
+  VALUES ('Spring MVC', 'MVC',true,1);
 
 INSERT INTO public.job(
   begin, companyname, description, "end",print_pdf, "position", cv_id)
-  VALUES ('2000-10-10', 'SoftServe' ,'java dev', '2009-03-04',true,'junior', 1);
+  VALUES ('2000-10-10', 'SoftServe' ,'junior java developer', '2009-03-04',true,'junior', 1);
+
+INSERT INTO public.skill(
+  description, title,print_pdf, cv_id)
+  VALUES ('Spring Boot', 'Spring',true,1);
+
+INSERT INTO public.job(
+  begin, companyname, description, "end",print_pdf, "position", cv_id)
+  VALUES ('2006-04-08', 'ValSoft' ,'middle java developer', '2009-11-04',true,'middle', 1);
+
+
+
+
+INSERT INTO public.skill(
+  description, title,print_pdf, cv_id)
+  VALUES ('Good skill', 'Linux',true,2);
+
+INSERT INTO public.job(
+  begin, companyname, description, "end",print_pdf, "position", cv_id)
+  VALUES ('2008-03-08', 'ValSoft' ,'middle java developer', '2005-07-04',true,'middle', 2);
+
+INSERT INTO public.skill(
+  description, title,print_pdf, cv_id)
+  VALUES ('Some experience', 'Angular',true,2);
+
+INSERT INTO public.job(
+  begin, companyname, description, "end",print_pdf, "position", cv_id)
+  VALUES ('2006-10-08', 'SoftServe' ,'junior java developer', '2009-10-04',true,'junior', 2);
+
+INSERT INTO public.skill(
+  description, title,print_pdf, cv_id)
+  VALUES ('Some experience', 'Html',true,2);
+
+INSERT INTO public.job(
+  begin, companyname, description, "end",print_pdf, "position", cv_id)
+  VALUES ('2010-04-08', 'InventorSoft' ,'senior java developer', '2014-11-04',true,'senior', 2);
+
+
 
 INSERT INTO public.company(
-  description, edrpou, name, website, status,address_id, contact_id, user_id)
-  VALUES ('First Company', 34345, 'SoftServe', 'vk.com','CREATED', 1, 1, 2);
+	description, edrpou, name, status, website, address_id, contact_id, photo_id, user_id)
+	VALUES ('Fisrt company', 23456742, 'SoftServe', 'CREATED', 'www.softserveinc.com', 3, 3,null, 2);
+
+INSERT INTO public.company(
+	description, edrpou, name, status, website, address_id, contact_id, photo_id, user_id)
+	VALUES ('Second company', 55368632,'InventorSoft','APPROVED', 'www.inventorsoft.com', 4,4, null,2);
+
+INSERT INTO public.company(
+	description, edrpou, name, status, website, address_id, contact_id, photo_id, user_id)
+	VALUES ('Third company', 63964221, 'ValSoft','BLOCKED', 'www.valsoft.com', 5, 5, null, 2);
+
+
+
 
 INSERT INTO public.vacancy(
    description, "position", salary, employment, company_id)
-  VALUES ('junior', 'Junior Java Developer', 1000, 'FULL', 1);
+  VALUES ('Junior Java Developer', 'Junior Developer', 1000, 'FULL', 1);
 
 INSERT INTO public.vacancy(
    description, "position", salary, employment, company_id)
-  VALUES ('Middle', 'Middle React Developer', 3000, 'HOURLY', 1);
+  VALUES ('Middle React Developer', 'Middle Developer', 3000, 'HOURLY', 1);
 
 INSERT INTO public.vacancy(
    description, "position", salary, hot_vacancy ,employment, company_id)
-  VALUES ('Senior', 'Senior Angular Developer', 4000, true, 'PART_TIME', 1);
+  VALUES ('Senior Angular Developer', 'Senior Developer', 4000, true, 'PART_TIME', 1);
+
+
+INSERT INTO public.vacancy(
+   description, "position", salary, employment, company_id)
+  VALUES ('Junior Junior Developer', 'Junior Developer', 1000, 'FULL', 2);
+
+INSERT INTO public.vacancy(
+   description, "position", salary, employment, company_id)
+  VALUES ('Middle WebUI Developer', 'Middle Developer', 3000, 'HOURLY', 2);
+
+INSERT INTO public.vacancy(
+   description, "position", salary, hot_vacancy ,employment, company_id)
+  VALUES ('Senior Angular Developer', 'Senior Developer', 4000, true, 'PART_TIME', 2);
+
+
+INSERT INTO public.vacancy(
+   description, "position", salary, employment, company_id)
+  VALUES ('Junior Java Developer', 'Junior Developer', 1000, 'FULL', 3);
+
+INSERT INTO public.vacancy(
+   description, "position", salary, employment, company_id)
+  VALUES ('Middle WebUI Developer', 'Middle Developer', 3000, 'HOURLY', 3);
+
+INSERT INTO public.vacancy(
+   description, "position", salary, hot_vacancy ,employment, company_id)
+  VALUES ('Senior React Developer', 'Senior Developer', 4000, true, 'PART_TIME', 3);
+
+
 
 INSERT INTO public.requirement(
    description, vacancy_id)
@@ -83,20 +210,60 @@ INSERT INTO public.requirement(
 
 INSERT INTO public.requirement(
    description, vacancy_id)
-  VALUES ('Strong experience building Java EE applications, preferably using Java 8', 2);
+  VALUES ('Strong experience building Java EE applications, preferably using Java 8', 3);
 
 INSERT INTO public.requirement(
    description, vacancy_id)
-  VALUES ('Degree in Computer Science, Engineering or relevant field', 2);
+  VALUES ('Degree in Computer Science, Engineering or relevant field', 3);
 
 INSERT INTO public.requirement(
    description, vacancy_id)
-  VALUES ('Bachelor degree in computer science or related fields', 3);
+  VALUES ('Bachelor degree in computer science or related fields', 4);
 
 INSERT INTO public.requirement(
    description, vacancy_id)
-  VALUES ('Ability to program production-grade applications with Node.js', 3);
+  VALUES ('Ability to program production-grade applications with Node.js', 4);
+
+
+
 
 INSERT INTO public.requirement(
    description, vacancy_id)
-  VALUES ('Thorough experience of REST & API practices', 3);
+  VALUES ('Solid understanding of Linux operating system', 5);
+
+INSERT INTO public.requirement(
+   description, vacancy_id)
+  VALUES ('Good understanding of the networking', 5);
+
+INSERT INTO public.requirement(
+   description, vacancy_id)
+  VALUES ('Experience with any public cloud provider', 6);
+
+INSERT INTO public.requirement(
+   description, vacancy_id)
+  VALUES ('Experience in and understanding of CI', 6);
+
+INSERT INTO public.requirement(
+   description, vacancy_id)
+  VALUES ('Experience with monitoring and log management ', 7);
+
+INSERT INTO public.requirement(
+   description, vacancy_id)
+  VALUES ('Degree in Computer Science, Engineering or relevant field', 7);
+
+
+INSERT INTO public.requirement(
+   description, vacancy_id)
+  VALUES ('Extensive understanding of enterprise monitoring solutions', 8);
+
+INSERT INTO public.requirement(
+   description, vacancy_id)
+  VALUES ('Good written and verbal English communications skills', 8);
+
+INSERT INTO public.requirement(
+   description, vacancy_id)
+  VALUES ('Deep knowledge DBs, RDBMS, SQL', 9);
+
+INSERT INTO public.requirement(
+   description, vacancy_id)
+  VALUES ('You are adept at writing unit tests and testable code, and working under distributed version control', 9);

@@ -3,6 +3,10 @@ package ua.softserve.ita.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.model.User;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ua.softserve.ita.model.UserPrincipal;
 import ua.softserve.ita.service.UserService;
 
@@ -30,10 +34,9 @@ public class LoginController {
         return getLoggedUser().orElse(UNKNOWN_USER);
     }
 
-    @PostMapping("/logout")
+    @GetMapping("/logout")
     public void logout(HttpServletRequest request,
                        HttpServletResponse response) {
-        /* Getting session and then invalidating it */
         HttpSession session = request.getSession(false);
         if (request.isRequestedSessionIdValid() && session != null) {
             session.invalidate();

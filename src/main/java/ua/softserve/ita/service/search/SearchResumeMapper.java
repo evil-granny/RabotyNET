@@ -1,7 +1,7 @@
 package ua.softserve.ita.service.search;
 
 import lombok.extern.slf4j.Slf4j;
-import ua.softserve.ita.dto.SearchDTO.SearchCVDTO;
+import ua.softserve.ita.dto.SearchDTO.SearchResumeDTO;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -9,9 +9,9 @@ import java.time.Period;
 import java.time.ZoneId;
 
 @Slf4j
-public class SearchCVMapper {
+public class SearchResumeMapper {
 
-    public SearchCVDTO getSearchCVDTO(String result) {
+    public SearchResumeDTO getSearchResumeDTO(String result) {
         String[] resultArray = result.split(",");
         for (int i = 0; i < resultArray.length; i++) {
             resultArray[i] = resultArray[i].replace("[", "");
@@ -19,7 +19,7 @@ public class SearchCVMapper {
             resultArray[i] = resultArray[i].replace("\"", "");
         }
 
-        return SearchCVDTO.builder()
+        return SearchResumeDTO.builder()
                 .id(Long.valueOf(resultArray[0]))
                 .firstName(resultArray[1].trim())
                 .lastName(resultArray[2].trim())

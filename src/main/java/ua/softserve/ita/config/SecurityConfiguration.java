@@ -13,15 +13,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private static final String[] AUTH_WHITELIST = {
-            "/swagger**/**",
-            "/configuration/ui",
-            "/swagger-ui.html#/",
-            "/v2/api-docs",
-            "/webjars/**",
-            "/configuration/security",
-    };
-
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -32,40 +23,29 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .httpBasic()
                 .and()
+
                 .cors()
                 .and()
+
                 .authorizeRequests()
-                .antMatchers("/admin").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/companies/all/**","/companies/sendMail").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/companies/my","/companies/update","/companies/delete/**","/search/resume/**").access("hasRole('ROLE_COWNER')")
                 .antMatchers("/users").access("hasRole('ROLE_USER')")
-                .antMatchers("/userCV").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
-                .antMatchers("/createCV").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
-
-                .antMatchers("/companies/all").access("hasRole('ROLE_ADMIN')")
-                .antMatchers("/companies/all/**").access("hasRole('ROLE_ADMIN')")
-                .antMatchers("/companies/byName/**").permitAll()
-                .antMatchers("/companies/my").access("hasRole('ROLE_COWNER')")
-                .antMatchers("/companies/update").access("hasRole('ROLE_COWNER')")
-                .antMatchers("/companies/create").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
-                .antMatchers("/companies/sendMail").access("hasRole('ROLE_ADMIN')")
-                .antMatchers("/companies/approve").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
-                .antMatchers("/companies/delete/**").access("hasRole('ROLE_COWNER')")
-
-
-                .antMatchers("/photo/**").permitAll()
-
-                .antMatchers("/claims").permitAll()
-                .antMatchers("/companies/byCompany/**").permitAll()
-
-                .antMatchers("/searchCV").access("hasRole('ROLE_COWNER')")
-                .antMatchers("/", "/vacancies", "user/**", "/login/**","/login", "/registrationConfirm/**", "/registration/**", "/users/**").permitAll()
-                .antMatchers("/", "/vacancies/**", "/loginUser", "/registration").permitAll()
-                .antMatchers("/people", "/people/*", "people/**").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
-                .antMatchers("/", "/pdf/**", "/updatePDF", "/createPdf/**").permitAll()
-                .anyRequest().permitAll()
-//                .anyRequest().authenticated()
+                .antMatchers("/createCV","/companies/create","/companies/approve","/people", "/people/*", "people/**").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
+                .antMatchers("/companies/byName/**","/companies/byCompany/**","/claims","/photo/**","/users/**").permitAll()
+                .antMatchers("/","/vacancies/**","/login","/login/**","/registration","/registrationConfirm/**", "/resetPassword","/changePassword", "/search/vacancies/**").permitAll()
+                .antMatchers("/pdf/**", "/updatePDF", "/createPdf/**").permitAll()
+                .anyRequest().authenticated()
                 .and()
-                .logout().logoutSuccessUrl("/logout")
-                .and().csrf().disable();
+
+                .logout()
+                        .logoutSuccessUrl("/logout")
+                        .clearAuthentication(true)
+                        .deleteCookies("JSESSIONID")
+                .and()
+
+                .csrf()
+                .disable();
     }
 
     @Override
@@ -74,4 +54,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers(AUTH_WHITELIST);
     }
 
+    private static final String[] AUTH_WHITELIST = {
+            "/swagger**/**",
+            "/configuration/ui",
+            "/swagger-ui.html#/",
+            "/v2/api-docs",
+            "/webjars/**",
+            "/configuration/security",
+            "/csrf"
+    };
 }

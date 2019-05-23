@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 @Primary
 @Transactional
 public class UserDaoImpl extends AbstractDao<User, Long> implements UserDao {
-    private static final Logger lOGGER = Logger.getLogger(UserDao.class.getName());
+
     private static final String ID = "id";
     private static final String LOGIN = "login";
 
@@ -25,7 +25,6 @@ public class UserDaoImpl extends AbstractDao<User, Long> implements UserDao {
     public User findUserByUsername(String username) {
         Query<User> query = sessionFactory.getCurrentSession().createQuery("select u from User u join u.roles where u.login = :login", User.class);
         query.setParameter("login", username);
-        lOGGER.severe("QUERY = " + query.getSingleResult());
         return query.getSingleResult();
     }
 

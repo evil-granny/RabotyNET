@@ -29,16 +29,17 @@ public class PersonController {
     }
 
     @GetMapping(path = {"/{id}"})
+    @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Get person by specific id")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = Person.class)})
     public Person findById(@PathVariable("id") Long id) {
         return personService.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(String.format("Person with id: %d was not found", id)));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Person with id %d was not found?!", id)));
     }
 
     @GetMapping()
+    @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Get all people")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = List.class)})
     public List<Person> findAll() {
         return personService.findAll();
     }
@@ -46,22 +47,20 @@ public class PersonController {
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create new person")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = Person.class)})
     public Person create(@Valid @RequestBody Person person) {
         return personService.save(person);
     }
 
     @PutMapping()
+    @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Update person")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = Person.class)})
     public Person update(@Valid @RequestBody Person person) {
         return personService.update(person);
     }
 
     @DeleteMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ApiOperation(value = "Delete the person with specific id")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
+    @ApiOperation(value = "Delete person with specific id")
     public void deleteById(@PathVariable("id") Long id) {
         personService.deleteById(id);
     }
