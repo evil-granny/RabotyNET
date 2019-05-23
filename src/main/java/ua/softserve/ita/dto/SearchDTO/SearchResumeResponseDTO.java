@@ -1,14 +1,11 @@
 package ua.softserve.ita.dto.SearchDTO;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.math.BigInteger;
 import java.util.List;
 
-@Getter
-@Setter
+@Builder
 @ToString
 public class SearchResumeResponseDTO {
 
