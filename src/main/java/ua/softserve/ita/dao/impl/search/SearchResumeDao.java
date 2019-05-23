@@ -22,7 +22,7 @@ public class SearchResumeDao {
 
     private static final String NAME_QUERY =
             "SELECT DISTINCT person.user_id, person.first_Name, person.last_name, person.birthday, " +
-                    "cv.position, contact.phone_number, contact.email, address.city " +
+                    "cv.position, cv.cv_id, contact.phone_number, contact.email, address.city " +
                     "FROM person " +
                     "JOIN contact ON person.user_id = contact.contact_id " +
                     "JOIN address ON person.user_id = address.address_id " +
@@ -30,7 +30,7 @@ public class SearchResumeDao {
                     "WHERE first_name ILIKE :searchText OR last_name ILIKE :searchText ORDER BY first_name";
     private static final String PHONE_QUERY =
             "SELECT DISTINCT person.user_id, person.first_Name, person.last_name, person.birthday, " +
-                    "cv.position, contact.phone_number, contact.email, address.city " +
+                    "cv.position, cv.cv_id, contact.phone_number, contact.email, address.city " +
                     "FROM person " +
                     "JOIN contact ON person.user_id = contact.contact_id " +
                     "JOIN address ON person.user_id = address.address_id " +
@@ -38,7 +38,7 @@ public class SearchResumeDao {
                     "WHERE contact.phone_number ILIKE :searchText ORDER BY first_name";
     private static final String CITY_QUERY =
             "SELECT DISTINCT person.user_id, person.first_Name, person.last_name, person.birthday, " +
-                    "cv.position, contact.phone_number, contact.email, address.city " +
+                    "cv.position, cv.cv_id, contact.phone_number, contact.email, address.city " +
                     "FROM person " +
                     "JOIN contact ON person.user_id = contact.contact_id " +
                     "JOIN address ON person.user_id = address.address_id " +
@@ -46,7 +46,7 @@ public class SearchResumeDao {
                     "WHERE address.city ILIKE :searchText";
     private static final String SKILL_QUERY =
             "SELECT DISTINCT person.user_id, person.first_Name, person.last_name, person.birthday, " +
-                    "cv.position, contact.phone_number, contact.email, address.city " +
+                    "cv.position, cv.cv_id, contact.phone_number, contact.email, address.city " +
                     "FROM person " +
                     "JOIN contact ON person.user_id = contact.contact_id " +
                     "JOIN address ON person.user_id = address.address_id " +
@@ -55,7 +55,7 @@ public class SearchResumeDao {
                     "WHERE skill.title ILIKE :searchText OR skill.description ILIKE :searchText ORDER BY first_name";
     private static final String POSITION_QUERY =
             "SELECT DISTINCT person.user_id, person.first_Name, person.last_name, person.birthday, " +
-                    "cv.position, contact.phone_number, contact.email, address.city " +
+                    "cv.position, cv.cv_id, contact.phone_number, contact.email, address.city " +
                     "FROM person " +
                     "JOIN contact ON person.user_id = contact.contact_id " +
                     "JOIN address ON person.user_id = address.address_id " +

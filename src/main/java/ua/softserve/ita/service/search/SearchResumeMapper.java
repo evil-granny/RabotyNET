@@ -26,9 +26,10 @@ public class SearchResumeMapper {
                 .age(Period.between(Instant.ofEpochMilli(Long.valueOf(resultArray[3])).atZone(ZoneId.systemDefault())
                         .toLocalDate(), LocalDate.now()).getYears())
                 .position(resultArray[4].trim())
-                .phoneNumber(resultArray[5].trim())
-                .email(resultArray[6].trim())
-                .city(resultArray[7].trim())
+                .resumeId(Long.valueOf(resultArray[5].trim()))
+                .phoneNumber(resultArray[6].trim())
+                .email(resultArray[7].trim())
+                .city(resultArray[8].trim())
                 .build();
     }
 }

@@ -21,6 +21,8 @@ public class SearchResumeDTO {
 
     private String position;
 
+    private long resumeId;
+
     private String city;
 
     private String phoneNumber;
