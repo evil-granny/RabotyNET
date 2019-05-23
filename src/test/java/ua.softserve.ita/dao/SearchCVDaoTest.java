@@ -31,7 +31,8 @@ class SearchCVDaoTest {
     private List<String> nameList = new ArrayList<>();
     private List<String> lastNameList = new ArrayList<>();
     private List<String> cityList = new ArrayList<>();
-    private String[] languages = {"Java", "C#", "C++", "Python", "Angular", "JavaScript", "Fortran", "HTML/CSS", "Scala"};
+    private String[] languages =
+            {"Java", "Python", "Angular", "JavaScript", "Fortran", "HTML", "CSS", "Scala", "Assembler"};
     private String[] ranks = {"Junior", "Middle", "Senior"};
     private String[] positions = {"Developer", "QATC"};
     private String[] companies = {"Google", "Meta Cortex", "Microsoft", "Apple", "Amazon", "USA Government", "IBM",
@@ -39,6 +40,7 @@ class SearchCVDaoTest {
     private String[] universities = {"Stanford University", "Massachusetts Institute of Technology",
             "Harvard University", "Princeton University", "University of Chicago"};
     private List<Employment> employmentList = new ArrayList<>();
+    private List<Status> statusList = new ArrayList<>();
     private int next = 0;
     private Random random = new Random();
 
@@ -63,6 +65,7 @@ class SearchCVDaoTest {
         }
 
         employmentList = Arrays.asList(Employment.values());
+        statusList = Arrays.asList(Status.values());
     }
 
     private LocalDate getLocalDate() {
@@ -127,6 +130,7 @@ class SearchCVDaoTest {
         skill1.setTitle(languages[random.nextInt(languages.length)]);
         skill1.setDescription("Core");
         skill1.setCv(cv);
+        skill1.setPrintPdf(true);
         Skill skill2 = new Skill();
         skill2.setTitle(languages[random.nextInt(languages.length)]);
         if (skill2.getTitle().equals(skill1.getTitle())) {
@@ -134,6 +138,7 @@ class SearchCVDaoTest {
         }
         skill2.setDescription("Core");
         skill2.setCv(cv);
+        skill2.setPrintPdf(true);
         Set<Skill> skills = new HashSet<>();
         skills.add(skill1);
         skills.add(skill2);
@@ -147,6 +152,7 @@ class SearchCVDaoTest {
         job.setPosition(positions[random.nextInt(positions.length)]);
         job.setCompanyName(companies[random.nextInt(companies.length)]);
         job.setCv(cv);
+        job.setPrintPdf(true);
         Set<Job> jobs = new HashSet<>();
         jobs.add(job);
         return jobs;
@@ -167,6 +173,7 @@ class SearchCVDaoTest {
         Company company = new Company();
         company.setEdrpou(String.format("%08d", random.nextInt(100000000)));
         company.setName(companies[next++]);
+        company.setStatus(statusList.get(random.nextInt(statusList.size())));
         if (company.getName().equals("Meta Cortex")) {
             company.setDescription("Wake up.. The Matrix has you...");
         }
@@ -179,6 +186,7 @@ class SearchCVDaoTest {
 
     private Vacancy getVacancy(Company company) {
         Vacancy vacancy = new Vacancy();
+        vacancy.setDescription("Loking for good worker");
         vacancy.setPosition(ranks[random.nextInt(ranks.length)] + " " +
                 languages[random.nextInt(languages.length)] + " " +
                 positions[random.nextInt(positions.length)]);
@@ -331,7 +339,7 @@ class SearchCVDaoTest {
     @Test
     void search() {
         SearchCVDao searchCVDao = new SearchCVDao(sessionFactory);
-        SearchCVResponseDTO searchCVResponseDTO = searchCVDao.search("name", "jo", 2000, 0);
+        SearchCVResponseDTO searchCVResponseDTO = searchCVDao.search("name", "jo", 5000, 0);
         assertEquals(searchCVResponseDTO.getCount().intValue(), searchCVResponseDTO.getSearchCVDTOs().size());
     }
 

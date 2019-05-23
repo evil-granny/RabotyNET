@@ -3,9 +3,7 @@ package ua.softserve.ita.service.token;
 import ua.softserve.ita.model.User;
 import ua.softserve.ita.model.VerificationToken;
 
-import java.util.Date;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 public interface VerificationTokenService {
 
@@ -13,13 +11,9 @@ public interface VerificationTokenService {
 
     Optional<VerificationToken> findByUser(User user);
 
-    Stream<VerificationToken> findAllByExpiryDateLessThan(Date now);
-
-    void deleteByExpiryDateLessThan(Date now);
-
     void deleteByUserId(Long userId);
 
-    void deleteAllExpiredSince(Date now);
+    void deleteAllExpiredSince();
 
     VerificationToken create(VerificationToken verificationToken);
 
@@ -29,7 +23,6 @@ public interface VerificationTokenService {
 
     VerificationToken createVerificationTokenForUser(final User user, final String token);
 
-    VerificationToken generateNewVerificationToken(final String existingVerificationToken);
 
     String validateVerificationToken(String token);
 

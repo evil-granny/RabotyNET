@@ -60,23 +60,6 @@ public class VerificationTokenDaoImpl extends AbstractDao<VerificationToken,Long
     }
 
     @Override
-    public Stream<VerificationToken> findAllByExpiryDateLessThan(Date now) {
-        Session session = sessionFactory.getCurrentSession();
-        Query query = session.createQuery("from VerificationToken where expirydate = '" + now + "'");
-        if (!query.getResultList().isEmpty()) {
-            return query.getResultList().stream();
-        } else
-            return null;
-    }
-
-    @Override
-    public void deleteByExpiryDateLessThan(Date now) {
-        Session session = sessionFactory.getCurrentSession();
-        Query query = session.createQuery("delete  VerificationToken where expirydate = '" + now + "'");
-        query.executeUpdate();
-    }
-
-    @Override
     public void deleteAllExpiredSince(Date now) {
         Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery("delete  VerificationToken where expirydate <= '" + now + "'");

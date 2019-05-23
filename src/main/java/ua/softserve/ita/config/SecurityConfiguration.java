@@ -35,14 +35,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
 
                 .authorizeRequests()
-                        .antMatchers("/companies/byName/**","/companies/byCompany/**","/claims","/photo/**","/users/**").permitAll()
-                        .antMatchers("/","/vacancies/**","/login","/login/**","/registration","/registrationConfirm/**", "/resetPassword","/changePassword").permitAll()
-                        .antMatchers("/pdf/**", "/updatePDF", "/createPdf/**").permitAll()
-                        .anyRequest().authenticated()
-                        .antMatchers("/companies/all/**","/companies/sendMail").access("hasRole('ROLE_ADMIN')")
-                        .antMatchers("/companies/my","/companies/update","/companies/delete/**","/searchCV").access("hasRole('ROLE_COWNER')")
-                        .antMatchers("/users").access("hasRole('ROLE_USER')")
-                        .antMatchers("/createCV","/companies/create","/companies/approve","/people", "/people/*", "people/**").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
+                .antMatchers("/companies/all/**","/companies/sendMail").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/companies/my","/companies/update","/companies/delete/**","/searchCV").access("hasRole('ROLE_COWNER')")
+                .antMatchers("/users").access("hasRole('ROLE_USER')")
+                .antMatchers("/createCV","/companies/create","/companies/approve","/people", "/people/*", "people/**").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
+                .antMatchers("/companies/byName/**","/companies/byCompany/**","/claims","/photo/**","/users/**").permitAll()
+                .antMatchers("/","/vacancies/**","/login","/login/**","/registration","/registrationConfirm/**", "/resetPassword","/changePassword").permitAll()
+                .antMatchers("/pdf/**", "/updatePDF", "/createPdf/**").permitAll()
+                .anyRequest().authenticated()
                 .and()
 
                 .logout()
@@ -53,11 +53,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
 
                 .csrf()
-                .ignoringAntMatchers(CSRF_IGNORE) // URI where CSRF check will not be applied
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // defines a repository where tokens are stored
-                .and()
-                .addFilterBefore(new CustomCsrfFilter(), CsrfFilter.class);
-//                .disable();
+//                .ignoringAntMatchers(CSRF_IGNORE) // URI where CSRF check will not be applied
+//                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // defines a repository where tokens are stored
+//                .and()
+//                .addFilterBefore(new CustomCsrfFilter(), CsrfFilter.class);
+                .disable();
     }
 
     @Override

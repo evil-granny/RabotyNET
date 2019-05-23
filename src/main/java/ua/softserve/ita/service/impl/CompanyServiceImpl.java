@@ -1,9 +1,7 @@
 package ua.softserve.ita.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
-import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ua.softserve.ita.dao.*;
 import ua.softserve.ita.dto.CompanyDTO.CompanyPaginationDTO;
