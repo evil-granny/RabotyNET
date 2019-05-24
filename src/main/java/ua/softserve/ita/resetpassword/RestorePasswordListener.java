@@ -7,6 +7,7 @@ import ua.softserve.ita.model.User;
 import ua.softserve.ita.service.letter.GenerateLetter;
 import ua.softserve.ita.service.token.VerificationTokenService;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Component
@@ -28,7 +29,7 @@ public class RestorePasswordListener implements ApplicationListener<OnRestorePas
     }
 
     private void confirmRestorePassword(final OnRestorePasswordCompleteEvent event) {
-        final User user = event.getUser();
+        final Optional<User> user = event.getUser();
         final String token = UUID.randomUUID().toString();
         tokenService.createVerificationTokenForUser(user, token);
         final String confirmationUrl = FRONT_URL + "/confirmPassword?token=" + token;

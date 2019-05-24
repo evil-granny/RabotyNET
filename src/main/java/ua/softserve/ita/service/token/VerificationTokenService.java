@@ -21,7 +21,7 @@ public interface VerificationTokenService {
 
     void delete(VerificationToken verificationToken);
 
-    VerificationToken createVerificationTokenForUser(final User user, final String token);
+    VerificationToken createVerificationTokenForUser(final Optional<User> user, final String token);
 
 
     String validateVerificationToken(String token);

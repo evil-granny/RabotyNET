@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import ua.softserve.ita.model.*;
 import ua.softserve.ita.model.profile.Person;
 
+import java.util.Optional;
+
 @Service("generateService")
 public class GenerateLetter {
 
@@ -33,10 +35,10 @@ public class GenerateLetter {
 
     }
 
-    public void sendRestoreForgotPasswordEmail(User user, String linkOfValidation){
+    public void sendRestoreForgotPasswordEmail(Optional<User> user, String linkOfValidation){
         Letter letter = new Letter();
 
-        letter.setEMail(user.getLogin());
+        letter.setEMail(user.get().getLogin());
         letter.setSubject("Restore password on website RabotyNet");
         String validationLink=linkOfValidation;
         String content = "Your mail has been specified for restore password on the site of RabotyNET " +

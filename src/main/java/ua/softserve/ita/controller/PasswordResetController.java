@@ -36,9 +36,9 @@ public class PasswordResetController {
 
     @PostMapping("/resetPassword")
     public ResponseEntity<?> resetPassword(@RequestBody UserResetPasswordDto userResetPasswordDto, final HttpServletRequest request) throws UserNotFoundException {
-        User user;
+        Optional<User> user;
         try {
-            user = userDao.findUserByUsername(userResetPasswordDto.getUsername());
+            user = userDao.findUserWithRolesByLogin(userResetPasswordDto.getUsername());
         } catch (Exception ex) {
             throw new UserNotFoundException("Are you sure that the login is correct or not empty!");
         }

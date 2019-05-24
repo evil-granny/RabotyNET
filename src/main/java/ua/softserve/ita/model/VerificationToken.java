@@ -2,6 +2,7 @@ package ua.softserve.ita.model;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Optional;
 
 import javax.persistence.*;
 
@@ -28,7 +29,7 @@ public class VerificationToken {
 
     private Date expiryDate;
 
-    public VerificationToken() {
+    public VerificationToken(String token, Optional<User> user) {
 
     }
 

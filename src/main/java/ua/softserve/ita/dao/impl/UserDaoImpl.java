@@ -21,11 +21,30 @@ public class UserDaoImpl extends AbstractDao<User, Long> implements UserDao {
     private static final String ID = "id";
     private static final String LOGIN = "login";
 
+//    @Override
+//    public User findUserWithRolesByLogin(String username) {
+//        Query<User> query = sessionFactory.getCurrentSession().createQuery("select u from User u join u.roles where u.login = :login", User.class);
+//        query.setParameter("login", username);
+//        return query.getSingleResult();
+//    }
+
     @Override
-    public User findUserByUsername(String username) {
-        Query<User> query = sessionFactory.getCurrentSession().createQuery("select u from User u join u.roles where u.login = :login", User.class);
-        query.setParameter("login", username);
-        return query.getSingleResult();
+    public Optional<User> findUserWithRolesByLogin(String login) {
+//        Query<User> query = sessionFactory.getCurrentSession().createQuery("select u from User u join u.roles where u.login = :login", User.class);
+//        query.setParameter("login", login);
+//        return query.getSingleResult();
+
+        return QueryUtility.findOrEmpty(() -> {
+            User result = null;
+            try {
+                result = (User) createNamedQuery(User.FIND_USER_WITH_ROLES_BY_LOGIN)
+                        .setParameter(LOGIN, login)
+                        .getSingleResult();
+            } catch (NoResultException ex) {
+                Logger.getLogger(UserDaoImpl.class.getName()).log(Level.WARNING, "User not found with login " + login);
+            }
+            return result;
+        });
     }
 
 

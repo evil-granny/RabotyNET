@@ -17,7 +17,8 @@ import java.util.List;
 @Table(name = "users")
 @NamedQueries({
         @NamedQuery(name = User.FIND_USER_BY_ID, query = "select user from User user where user.userId = :id"),
-        @NamedQuery(name = User.FIND_USER_BY_EMAIL, query = "select user from User user where user.login = :login")
+        @NamedQuery(name = User.FIND_USER_BY_EMAIL, query = "select user from User user where user.login = :login"),
+        @NamedQuery(name = User.FIND_USER_WITH_ROLES_BY_LOGIN, query = "select u from User u join u.roles where u.login = :login")
 }
 )
 public class User implements Serializable, UserDetails {
@@ -25,6 +26,7 @@ public class User implements Serializable, UserDetails {
     private static final long serialVersionUID = 1L;
     public static final String FIND_USER_BY_ID = "User.findUserById";
     public static final String FIND_USER_BY_EMAIL = "User.findUserByEmail";
+    public static final String FIND_USER_WITH_ROLES_BY_LOGIN = "User.findUserWithRolesByLogin";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,7 +1,6 @@
 package ua.softserve.ita.service.token;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.softserve.ita.dao.UserDao;
@@ -13,9 +12,6 @@ import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Stream;
-
 
 
 @Service
@@ -71,7 +67,7 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
         verificationTokenDao.delete(verificationToken);
     }
 
-    public VerificationToken createVerificationTokenForUser(final User user, final String token) {
+    public VerificationToken createVerificationTokenForUser(final Optional<User> user, final String token) {
         final VerificationToken myToken = new VerificationToken(token, user);
         return  create(myToken);
     }
