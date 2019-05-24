@@ -3,20 +3,15 @@ package ua.softserve.ita.config;
 import com.google.common.collect.ImmutableList;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.csrf.CsrfFilter;
-import org.springframework.security.web.csrf.CsrfTokenRepository;
-import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import ua.softserve.ita.filter.CustomCsrfFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -32,12 +27,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(ImmutableList.of("http://localhost:4200"));
-        configuration.setAllowedMethods(ImmutableList.of("GET", "POST", "PUT", "DELETE"));
-        configuration.setAllowCredentials(true);
-        configuration.setAllowedHeaders(ImmutableList.of("Access-Control-Allow-Origin", "Authorization", "Content-Type", "Accept", "application/pdf"));
+            configuration.setAllowedOrigins(ImmutableList.of("http://localhost:4200"));
+            configuration.setAllowedMethods(ImmutableList.of("GET", "POST", "PUT", "DELETE"));
+            configuration.setAllowCredentials(true);
+            configuration.setAllowedHeaders(ImmutableList.of("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials", "Authorization", "Content-Type", "Accept", "application/pdf", "X-XSRF-TOKEN"));
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+            source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 
@@ -51,13 +46,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
 
                 .authorizeRequests()
-                .antMatchers("/companies/all/**","/companies/sendMail").access("hasRole('ROLE_ADMIN')")
-                .antMatchers("/companies/my","/companies/update","/companies/delete/**","/searchCV").access("hasRole('ROLE_COWNER')")
-                .antMatchers("/users").access("hasRole('ROLE_USER')")
-                .antMatchers("/createCV","/companies/create","/companies/approve","/people", "/people/*", "people/**").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
-                .antMatchers("/companies/byName/**","/companies/byCompany/**","/claims","/photo/**","/users/**").permitAll()
-                .antMatchers("/","/vacancies/**","/login","/login/**","/registration","/registrationConfirm/**", "/resetPassword","/changePassword").permitAll()
-                .antMatchers("/pdf/**", "/updatePDF", "/createPdf/**").permitAll()
+                        .antMatchers("/companies/all/**","/companies/sendMail").access("hasRole('ROLE_ADMIN')")
+                        .antMatchers("/companies/my","/companies/update","/companies/delete/**","/searchCV").access("hasRole('ROLE_COWNER')")
+                        .antMatchers("/users").access("hasRole('ROLE_USER')")
+                        .antMatchers("/createCV","/companies/create","/companies/approve","/people", "/people/*", "people/**").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
+                        .antMatchers("/companies/byName/**","/companies/byCompany/**","/claims","/photo/**","/users/**").permitAll()
+                        .antMatchers("/","/vacancies/**","/login","/login/**","/registration","/registrationConfirm/**", "/resetPassword","/changePassword").permitAll()
+                        .antMatchers("/pdf/**", "/updatePDF", "/createPdf/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
 
@@ -69,11 +64,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
 
                 .csrf()
-//                .ignoringAntMatchers(CSRF_IGNORE) // URI where CSRF check will not be applied
-//                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // defines a repository where tokens are stored
-//                .and()
-//                .addFilterBefore(new CustomCsrfFilter(), CsrfFilter.class);
-                .disable();
+                        .ignoringAntMatchers(CSRF_IGNORE)
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
     }
 
     @Override
@@ -90,10 +82,4 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/configuration/security",
             "/csrf"
     };
-
-    private CsrfTokenRepository csrfTokenRepository() {
-        HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
-        repository.setHeaderName(CustomCsrfFilter.CSRF_COOKIE_NAME);
-        return repository;
-    }
 }
