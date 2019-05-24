@@ -18,7 +18,7 @@ import java.util.Set;
 @Entity
 @Table(name = "resume")
 @NamedQueries({
-        @NamedQuery(name = Resume.FIND_BY_USER_ID, query = "select cv from CV cv where cv.person.userId = :id"),
+        @NamedQuery(name = Resume.FIND_BY_USER_ID, query = "select rs from Resume rs where rs.person.userId = :id"),
 })
 public class Resume implements Serializable {
     public static final String FIND_BY_USER_ID = "Resume.findByUserId";
