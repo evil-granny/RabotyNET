@@ -60,14 +60,7 @@ public class VacancyController {
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ROLE_COWNER')")
     public ResponseEntity<Vacancy> createVacancy(@Valid @RequestBody Vacancy vacancy, @PathVariable(value = "companyId") Long companyId) {
-        Company company = companyService.findById(companyId)
-                .orElseThrow(() -> new ResourceNotFoundException("Company not found with id " + companyId));
-        vacancy.setCompany(company);
-        Set<Requirement> requirements = vacancy.getRequirements();
-        requirements.forEach(e -> e.setVacancy(vacancy));
-        vacancyService.save(vacancy);
-        requirements.forEach(requirementService::save);
-        return ResponseEntity.ok(vacancy);
+        return ResponseEntity.ok(vacancyService.save(vacancy,companyId));
     }
 
     @DeleteMapping("/{id}")

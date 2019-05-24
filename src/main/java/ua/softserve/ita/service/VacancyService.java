@@ -18,7 +18,7 @@ public interface VacancyService {
 
     VacancyDTO findAllVacanciesWithPagination(int first);
 
-    Vacancy save(Vacancy vacancy);
+    Vacancy save(Vacancy vacancy,Long companyId);
 
     Vacancy update(Vacancy vacancy);
 
