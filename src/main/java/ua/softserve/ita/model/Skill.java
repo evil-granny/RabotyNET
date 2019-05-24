@@ -2,16 +2,12 @@ package ua.softserve.ita.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.List;
-import java.util.Objects;
 
 @Getter
 @Setter
@@ -44,7 +40,7 @@ public class Skill implements Serializable {
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "cv_id", nullable = false)
-    private CV cv;
+    private Resume resume;
 
 
 }

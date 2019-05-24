@@ -8,17 +8,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Data
 @Entity
 @Table(name = "users")
-@NamedQueries({
+@NamedQueries(value = {
         @NamedQuery(name = User.FIND_USER_BY_ID, query = "select user from User user where user.userId = :id"),
         @NamedQuery(name = User.FIND_USER_BY_EMAIL, query = "select user from User user where user.login = :login"),
-        @NamedQuery(name = User.FIND_USER_WITH_ROLES_BY_LOGIN, query = "select u from User u join u.roles where u.login = :login")
+        @NamedQuery(name = User.GET_USER_WITH_ROLES, query = "select user from User user join user.roles where user.login = :login")
 }
 )
 public class User implements Serializable, UserDetails {
@@ -26,7 +26,7 @@ public class User implements Serializable, UserDetails {
     private static final long serialVersionUID = 1L;
     public static final String FIND_USER_BY_ID = "User.findUserById";
     public static final String FIND_USER_BY_EMAIL = "User.findUserByEmail";
-    public static final String FIND_USER_WITH_ROLES_BY_LOGIN = "User.findUserWithRolesByLogin";
+    public static final String GET_USER_WITH_ROLES = "User.getUserWithRoles";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,7 +60,7 @@ public class User implements Serializable, UserDetails {
     @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @JsonIgnore

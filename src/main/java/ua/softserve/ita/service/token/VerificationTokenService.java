@@ -7,23 +7,19 @@ import java.util.Optional;
 
 public interface VerificationTokenService {
 
-    VerificationToken findByToken(String token);
+    Optional<VerificationToken> findByToken(String token);
 
     Optional<VerificationToken> findByUser(User user);
 
-    void deleteByUserId(Long userId);
-
     void deleteAllExpiredSince();
 
-    VerificationToken create(VerificationToken verificationToken);
+    VerificationToken save(VerificationToken verificationToken);
 
     VerificationToken update(VerificationToken verificationToken);
 
     void delete(VerificationToken verificationToken);
 
-    VerificationToken createVerificationTokenForUser(final Optional<User> user, final String token);
-
-
     String validateVerificationToken(String token);
 
+    void createVerificationTokenForUser(User user, String token);
 }

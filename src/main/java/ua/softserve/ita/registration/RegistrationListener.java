@@ -31,8 +31,8 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
     private void confirmRegistration(final OnRegistrationCompleteEvent event) {
         final User user = event.getUser();
         final String token = UUID.randomUUID().toString();
-        tokenService.createVerificationTokenForUser(java.util.Optional.ofNullable(user), token);
-        final String confirmationUrl = FRONT_URL + "/registrationConfirm?token=" + token;
+        tokenService.createVerificationTokenForUser(user, token);
+        final String confirmationUrl = FRONT_URL + "/auth/confirm?token=" + token;
         sendMailService.sendValidationEmail(user, confirmationUrl);
     }
 

@@ -1,6 +1,5 @@
 package ua.softserve.ita.dao.impl;
 
-import org.hibernate.query.Query;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,7 +9,6 @@ import ua.softserve.ita.utility.QueryUtility;
 
 import javax.persistence.NoResultException;
 import java.util.Optional;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Repository
@@ -18,30 +16,19 @@ import java.util.logging.Logger;
 @Transactional
 public class UserDaoImpl extends AbstractDao<User, Long> implements UserDao {
 
-    private static final String ID = "id";
     private static final String LOGIN = "login";
-
-//    @Override
-//    public User findUserWithRolesByLogin(String username) {
-//        Query<User> query = sessionFactory.getCurrentSession().createQuery("select u from User u join u.roles where u.login = :login", User.class);
-//        query.setParameter("login", username);
-//        return query.getSingleResult();
-//    }
+    private Logger logger = Logger.getLogger(UserDaoImpl.class.getName());
 
     @Override
-    public Optional<User> findUserWithRolesByLogin(String login) {
-//        Query<User> query = sessionFactory.getCurrentSession().createQuery("select u from User u join u.roles where u.login = :login", User.class);
-//        query.setParameter("login", login);
-//        return query.getSingleResult();
-
+    public Optional<User> getUserWithRoles(String login) {
         return QueryUtility.findOrEmpty(() -> {
             User result = null;
             try {
-                result = (User) createNamedQuery(User.FIND_USER_WITH_ROLES_BY_LOGIN)
+                result = (User) createNamedQuery(User.GET_USER_WITH_ROLES)
                         .setParameter(LOGIN, login)
                         .getSingleResult();
             } catch (NoResultException ex) {
-                Logger.getLogger(UserDaoImpl.class.getName()).log(Level.WARNING, "User not found with login " + login);
+                logger.warning("User not found!");
             }
             return result;
         });
@@ -57,25 +44,10 @@ public class UserDaoImpl extends AbstractDao<User, Long> implements UserDao {
                         .setParameter(LOGIN, email)
                         .getSingleResult();
             } catch (NoResultException ex) {
-                Logger.getLogger(UserDaoImpl.class.getName()).log(Level.WARNING, "User not found with email " + email);
+                logger.warning("User not found with email " + email);
             }
             return result;
         });
-    }
-
-        @Override
-        public Optional<User> findById(Long id) {
-            return QueryUtility.findOrEmpty(() -> {
-                User result = null;
-                try {
-                    result = (User) createNamedQuery(User.FIND_USER_BY_ID)
-                            .setParameter(ID, id)
-                            .getSingleResult();
-                } catch (NoResultException ex) {
-                    Logger.getLogger(UserDaoImpl.class.getName()).log(Level.WARNING, "User not found with id " + id);
-                }
-                return result;
-            });
     }
 
 }

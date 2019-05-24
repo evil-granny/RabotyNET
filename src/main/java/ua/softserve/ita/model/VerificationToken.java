@@ -1,21 +1,25 @@
 package ua.softserve.ita.model;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Optional;
+import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Calendar;
+import java.util.Date;
 
+@Data
 @Entity
 @NamedQueries({
-        @NamedQuery(name = VerificationToken.FIND_TOKEN_BY_USER,
-                query = "select verifikationtoken from VerificationToken verifikationtoken where verifikationtoken.user.userId = :id"),
+        @NamedQuery(name = VerificationToken.FIND_TOKEN_BY_USER, query = "select vt from VerificationToken vt where vt.user.userId = :id"),
+        @NamedQuery(name = VerificationToken.FIND_VERIFICATION_TOKEN, query = "select vt from VerificationToken vt where vt.token = :token")
 }
 )
+
 public class VerificationToken {
 
     private static final int EXPIRATION = 60 * 24;
+
     public static final String FIND_TOKEN_BY_USER = "VerificationToken.findTokenByUser";
+    public static final String FIND_VERIFICATION_TOKEN = "VerificationToken.findVerificationToken";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,114 +33,20 @@ public class VerificationToken {
 
     private Date expiryDate;
 
-    public VerificationToken(String token, Optional<User> user) {
-
-    }
-
-    public VerificationToken(final String token) {
-        this.token = token;
-        this.expiryDate = calculateExpiryDate(EXPIRATION);
+    public VerificationToken() {
     }
 
     public VerificationToken(final String token, final User user) {
-        super();
-
         this.token = token;
         this.user = user;
-        this.expiryDate = calculateExpiryDate(EXPIRATION);
+        this.expiryDate = calculateExpiryDate();
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(final String token) {
-        this.token = token;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(final User user) {
-        this.user = user;
-    }
-
-    public Date getExpiryDate() {
-        return expiryDate;
-    }
-
-    public void setExpiryDate(final Date expiryDate) {
-        this.expiryDate = expiryDate;
-    }
-
-    private Date calculateExpiryDate(final int expiryTimeInMinutes) {
+    private Date calculateExpiryDate() {
         final Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(new Date().getTime());
-        cal.add(Calendar.MINUTE, expiryTimeInMinutes);
+        cal.add(Calendar.MINUTE, VerificationToken.EXPIRATION);
         return new Date(cal.getTime().getTime());
-    }
-
-    public void updateToken(final String token) {
-        this.token = token;
-        this.expiryDate = calculateExpiryDate(EXPIRATION);
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((expiryDate == null) ? 0 : expiryDate.hashCode());
-        result = prime * result + ((token == null) ? 0 : token.hashCode());
-        result = prime * result + ((user == null) ? 0 : user.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final VerificationToken other = (VerificationToken) obj;
-        if (expiryDate == null) {
-            if (other.expiryDate != null) {
-                return false;
-            }
-        } else if (!expiryDate.equals(other.expiryDate)) {
-            return false;
-        }
-        if (token == null) {
-            if (other.token != null) {
-                return false;
-            }
-        } else if (!token.equals(other.token)) {
-            return false;
-        }
-        if (user == null) {
-            if (other.user != null) {
-                return false;
-            }
-        } else if (!user.equals(other.user)) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder builder = new StringBuilder();
-        builder.append("Token [String=").append(token).append("]").append("[Expires").append(expiryDate).append("]");
-        return builder.toString();
     }
 
 }

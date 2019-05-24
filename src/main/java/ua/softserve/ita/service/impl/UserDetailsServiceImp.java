@@ -15,7 +15,6 @@ import ua.softserve.ita.model.UserPrincipal;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -29,23 +28,19 @@ public class UserDetailsServiceImp implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) {
 
-        Optional<User> user = userDao.findUserWithRolesByLogin(username);
-        Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-        for (Role role : user.get().getRoles()) {
+        User user = userDao.getUserWithRoles(username).orElseThrow(() ->
+                new UsernameNotFoundException("No user found with username " + username));
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        for (Role role : user.getRoles()) {
             authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getType().toUpperCase()));
         }
-        if (user != null) {
-            UserPrincipal principal = new UserPrincipal(
-                    user.get().getUsername(),
-                    user.get().getPassword(),
-                    authorities,
-                    user.get().getUserId()
-            );
-            return principal;
-        } else {
-            throw new UsernameNotFoundException("User not found.");
-        }
+        return new UserPrincipal(
+                user.getUsername(),
+                user.getPassword(),
+                authorities,
+                user.getUserId()
+        );
     }
 }

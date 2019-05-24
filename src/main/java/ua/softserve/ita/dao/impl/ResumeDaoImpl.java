@@ -1,8 +1,8 @@
 package ua.softserve.ita.dao.impl;
 
 import org.springframework.stereotype.Repository;
-import ua.softserve.ita.dao.CVDao;
-import ua.softserve.ita.model.CV;
+import ua.softserve.ita.dao.ResumeDao;
+import ua.softserve.ita.model.Resume;
 import ua.softserve.ita.utility.QueryUtility;
 
 import javax.persistence.NoResultException;
@@ -11,20 +11,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Repository
-public class CVDaoImpl extends AbstractDao<CV,Long> implements CVDao {
+public class ResumeDaoImpl extends AbstractDao<Resume,Long> implements ResumeDao {
     private static final String ID = "id";
 
     @Override
     @SuppressWarnings("unchecked")
-    public Optional<CV> findByUserId(Long id) {
+    public Optional<Resume> findByUserId(Long id) {
         return QueryUtility.findOrEmpty(() -> {
-            CV result = null;
+            Resume result = null;
             try {
-                result = (CV) createNamedQuery(CV.FIND_BY_USER_ID)
+                result = (Resume) createNamedQuery(Resume.FIND_BY_USER_ID)
                         .setParameter(ID, id)
                         .getSingleResult();
             } catch (NoResultException ex) {
-                Logger.getLogger(CVDaoImpl.class.getName()).log(Level.WARNING, "CV not found with name " + id);
+                Logger.getLogger(ResumeDaoImpl.class.getName()).log(Level.WARNING, "Resume not found with name " + id);
             }
             return result;
         });

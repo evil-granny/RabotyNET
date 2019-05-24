@@ -8,9 +8,7 @@ import ua.softserve.ita.dao.VerificationTokenDao;
 import ua.softserve.ita.model.User;
 import ua.softserve.ita.model.VerificationToken;
 
-import java.time.Instant;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Optional;
 
 
@@ -32,8 +30,8 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     }
 
     @Override
-    public VerificationToken findByToken(String token) {
-        return verificationTokenDao.findByToken(token);
+    public Optional<VerificationToken> findByToken(String token) {
+        return verificationTokenDao.findVerificationToken(token);
     }
 
     @Override
@@ -42,19 +40,13 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     }
 
     @Override
-    public void deleteByUserId(Long userId) {
-        verificationTokenDao.deleteByUserId(userId);
-    }
-
-    @Override
     public void deleteAllExpiredSince() {
-        Date now = Date.from(Instant.now());
-        verificationTokenDao.deleteAllExpiredSince(now);
+        verificationTokenDao.deleteAllExpiredSince();
     }
 
     @Override
-    public VerificationToken create(VerificationToken verificationToken) {
-        return verificationTokenDao.create(verificationToken);
+    public VerificationToken save(VerificationToken verificationToken) {
+        return verificationTokenDao.save(verificationToken);
     }
 
     @Override
@@ -67,29 +59,30 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
         verificationTokenDao.delete(verificationToken);
     }
 
-    public VerificationToken createVerificationTokenForUser(final Optional<User> user, final String token) {
-        final VerificationToken myToken = new VerificationToken(token, user);
-        return  create(myToken);
-    }
 
     public String validateVerificationToken(String token) {
-        final VerificationToken verificationToken = verificationTokenDao.findByToken(token);
-        if (verificationToken == null) {
-            return TOKEN_INVALID;
-        }
-
-        final User user = verificationToken.getUser();
         final Calendar cal = Calendar.getInstance();
-        if ((verificationToken.getExpiryDate()
-                .getTime()
-                - cal.getTime()
-                .getTime()) <= 0) {
-            verificationTokenDao.delete(verificationToken);
-            return TOKEN_EXPIRED;
-        }
+        if (verificationTokenDao.findVerificationToken(token).isPresent()) {
+            VerificationToken verificationToken = verificationTokenDao.findVerificationToken(token).get();
+            if ((verificationToken.getExpiryDate()
+                    .getTime()
+                    - cal.getTime()
+                    .getTime()) <= 0) {
+                verificationTokenDao.delete(verificationToken);
+                return TOKEN_EXPIRED;
+            } else {
+                User user = verificationToken.getUser();
+                user.setEnabled(true);
+                userDao.update(user);
+                return TOKEN_VALID;
+            }
+        } else
+            return TOKEN_INVALID;
+    }
 
-        user.setEnabled(true);
-        userDao.update(user);
-        return TOKEN_VALID;
+    @Override
+    public void createVerificationTokenForUser(User user, String token) {
+        VerificationToken verificationToken = new VerificationToken(token,user);
+        save(verificationToken);
     }
 }
