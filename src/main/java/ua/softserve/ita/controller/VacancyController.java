@@ -56,18 +56,11 @@ public class VacancyController {
         return ResponseEntity.ok(updatedVacancy);
     }
 
-    @PostMapping("/createVacancy/{companyName}")
+    @PostMapping("/createVacancy/{companyId}")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ROLE_COWNER')")
-    public ResponseEntity<Vacancy> createVacancy(@Valid @RequestBody Vacancy vacancy, @PathVariable(value = "companyName") String companyName) {
-        Company company = companyService.findByName(companyName)
-                .orElseThrow(() -> new ResourceNotFoundException("Company not found with name " + companyName));
-        vacancy.setCompany(company);
-        Set<Requirement> requirements = vacancy.getRequirements();
-        requirements.forEach(e -> e.setVacancy(vacancy));
-        vacancyService.save(vacancy);
-        requirements.forEach(requirementService::save);
-        return ResponseEntity.ok(vacancy);
+    public ResponseEntity<Vacancy> createVacancy(@Valid @RequestBody Vacancy vacancy, @PathVariable(value = "companyId") Long companyId) {
+        return ResponseEntity.ok(vacancyService.save(vacancy,companyId));
     }
 
     @DeleteMapping("/{id}")
@@ -77,25 +70,23 @@ public class VacancyController {
         vacancyService.deleteById(id);
     }
 
-    @GetMapping("/{first}/{count}")
+    @GetMapping("/findAll/{first}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<VacancyDTO> findAllVacanciesWithPagination(@PathVariable("first") int first, @PathVariable("count") int count) {
-        return ResponseEntity.ok().body(vacancyService.findAllVacanciesWithPagination(first, count));
+    public ResponseEntity<VacancyDTO> findAllVacanciesWithPagination(@PathVariable("first") int first) {
+        return ResponseEntity.ok().body(vacancyService.findAllVacanciesWithPagination(first));
     }
 
-    @GetMapping("/{companyName}/{first}/{count}")
+    @GetMapping("/{companyId}/{first}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<VacancyDTO> findAllVacanciesByCompanyNameWithPagination(@PathVariable("companyName") String companyName,
-                                                                                  @PathVariable("first") int first,
-                                                                                  @PathVariable("count") int count) {
-        return ResponseEntity.ok().body(vacancyService.findAllByCompanyName(companyName, first, count));
+    public ResponseEntity<VacancyDTO> findAllVacanciesByCompanyNameWithPagination(@PathVariable("companyId") Long companyId,
+                                                                                  @PathVariable("first") int first) {
+        return ResponseEntity.ok().body(vacancyService.findAllVacanciesByCompanyId(companyId, first));
     }
 
-    @GetMapping("hotVacancies/{first}/{count}")
+    @GetMapping("hotVacancies/{first}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<VacancyDTO> findAllHotVacanciesWithPagination(@PathVariable("first") int first,
-                                                                        @PathVariable("count") int count) {
-        return ResponseEntity.ok().body(vacancyService.findAllHotVacanciesWithPagination(first, count));
+    public ResponseEntity<VacancyDTO> findAllHotVacanciesWithPagination(@PathVariable("first") int first) {
+        return ResponseEntity.ok().body(vacancyService.findAllHotVacanciesWithPagination(first));
     }
 
 
