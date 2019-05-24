@@ -3,7 +3,7 @@ package ua.softserve.ita.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ua.softserve.ita.model.CV;
+import ua.softserve.ita.model.Resume;
 
 @Getter
 @Setter
@@ -14,5 +14,5 @@ public class EducationDTO {
     private String school;
     private String specialty;
     private Integer graduation;
-    private CV cv;
+    private Resume resume;
 }

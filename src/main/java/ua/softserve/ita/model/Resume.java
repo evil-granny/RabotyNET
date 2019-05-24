@@ -16,12 +16,12 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "cv")
+@Table(name = "resume")
 @NamedQueries({
-        @NamedQuery(name = CV.FIND_BY_USER_ID, query = "select cv from CV cv where cv.person.userId = :id"),
+        @NamedQuery(name = Resume.FIND_BY_USER_ID, query = "select cv from CV cv where cv.person.userId = :id"),
 })
-public class CV implements Serializable {
-    public static final String FIND_BY_USER_ID = "CV.findByUserId";
+public class Resume implements Serializable {
+    public static final String FIND_BY_USER_ID = "Resume.findByUserId";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,10 +34,10 @@ public class CV implements Serializable {
     @Size(min = 3, max = 50, message = "position length is incorrect")
     private String position;
 
-    @OneToMany(mappedBy = "cv",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "resume",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Skill> skills;
 
-    @OneToMany(mappedBy = "cv",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "resume",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Job> jobs;
 
     @OneToOne(cascade = CascadeType.ALL)
