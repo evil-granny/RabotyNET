@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import ua.softserve.ita.model.enumtype.Currency;
 import ua.softserve.ita.model.enumtype.Employment;
 
 import javax.persistence.*;
@@ -20,18 +21,18 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @NamedQueries({
-        @NamedQuery(name = Vacancy.FIND_BY_COMPANY, query = "select vac from Vacancy vac where vac.company.name = :name ORDER BY vac.vacancyId DESC"),
+        @NamedQuery(name = Vacancy.FIND_VACANCIES_BY_COMPANY_ID, query = "select vac from Vacancy vac where vac.company.companyId = :id ORDER BY vac.vacancyId DESC"),
         @NamedQuery(name = Vacancy.FIND_ALL_HOT_VACANCIES, query = "select vac from Vacancy vac where vac.hotVacancy = true ORDER BY vac.vacancyId DESC"),
         @NamedQuery(name = Vacancy.FIND_VACANCIES, query = "select vac from Vacancy vac ORDER BY vac.vacancyId DESC"),
         @NamedQuery(name = Vacancy.FIND_BY_REQUIREMENT, query = "SELECT vac FROM Vacancy vac WHERE vac.vacancyId = (SELECT req.vacancy.vacancyId FROM Requirement req WHERE req.requirementId = :id)"),
-        @NamedQuery(name = Vacancy.FIND_COUNT_VACANCIES_BY_COMPANY_NAME, query = "select count(vac.vacancyId) from Vacancy vac where vac.company.name = :name"),
+        @NamedQuery(name = Vacancy.FIND_COUNT_VACANCIES_BY_COMPANY_ID, query = "select count(vac.vacancyId) from Vacancy vac where vac.company.companyId = :id"),
         @NamedQuery(name = Vacancy.FIND_COUNT_All_VACANCY, query = "select count(vac.vacancyId) from Vacancy vac"),
         @NamedQuery(name = Vacancy.FIND_COUNT_HOT_VACANCIES, query = "select count(vac.vacancyId) from Vacancy vac where vac.hotVacancy = true"),
 })
 public class Vacancy {
-    public static final String FIND_BY_COMPANY = "Vacancy.findByCompany";
+    public static final String FIND_VACANCIES_BY_COMPANY_ID = "Vacancy.findVacanciesByCompanyId";
     public static final String FIND_BY_REQUIREMENT = "Vacancy.findByRequirement";
-    public static final String FIND_COUNT_VACANCIES_BY_COMPANY_NAME = "Vacancy.findCountVacanciesByCompanyName";
+    public static final String FIND_COUNT_VACANCIES_BY_COMPANY_ID = "Vacancy.findCountVacanciesByCompanyId";
     public static final String FIND_COUNT_All_VACANCY = "Vacancy.findCountAllVacancy";
     public static final String FIND_COUNT_HOT_VACANCIES = "Vacancy.findCountAllHotVacancies";
     public static final String FIND_VACANCIES = "Vacancy.findVacancies";
@@ -61,6 +62,10 @@ public class Vacancy {
 
     @Column(name = "salary")
     private Integer salary;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "currency")
+    private Currency currency;
 
     @Column(name = "hot_vacancy",columnDefinition="BOOLEAN DEFAULT false")
     private Boolean hotVacancy;

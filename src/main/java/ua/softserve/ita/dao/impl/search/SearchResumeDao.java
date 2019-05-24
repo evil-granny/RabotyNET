@@ -8,9 +8,9 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Component;
-import ua.softserve.ita.dto.SearchDTO.SearchCVDTO;
-import ua.softserve.ita.dto.SearchDTO.SearchCVResponseDTO;
-import ua.softserve.ita.service.search.SearchCVMapper;
+import ua.softserve.ita.dto.SearchDTO.SearchResumeDTO;
+import ua.softserve.ita.dto.SearchDTO.SearchResumeResponseDTO;
+import ua.softserve.ita.service.search.SearchResumeMapper;
 
 import javax.persistence.Query;
 import java.math.BigInteger;
@@ -18,7 +18,7 @@ import java.util.*;
 
 @Component
 @Slf4j
-public class SearchCVDao {
+public class SearchResumeDao {
 
     private static final String NAME_QUERY =
             "SELECT DISTINCT person.user_id, person.first_Name, person.last_name, person.birthday, " +
@@ -26,7 +26,7 @@ public class SearchCVDao {
                     "FROM person " +
                     "JOIN contact ON person.user_id = contact.contact_id " +
                     "JOIN address ON person.user_id = address.address_id " +
-                    "JOIN cv ON person.user_id = cv.cv_id " +
+                    "JOIN cv ON person.user_id = cv.user_id " +
                     "WHERE first_name ILIKE :searchText OR last_name ILIKE :searchText ORDER BY first_name";
     private static final String PHONE_QUERY =
             "SELECT DISTINCT person.user_id, person.first_Name, person.last_name, person.birthday, " +
@@ -34,7 +34,7 @@ public class SearchCVDao {
                     "FROM person " +
                     "JOIN contact ON person.user_id = contact.contact_id " +
                     "JOIN address ON person.user_id = address.address_id " +
-                    "JOIN cv ON person.user_id = cv.cv_id " +
+                    "JOIN cv ON person.user_id = cv.user_id " +
                     "WHERE contact.phone_number ILIKE :searchText ORDER BY first_name";
     private static final String CITY_QUERY =
             "SELECT DISTINCT person.user_id, person.first_Name, person.last_name, person.birthday, " +
@@ -42,7 +42,7 @@ public class SearchCVDao {
                     "FROM person " +
                     "JOIN contact ON person.user_id = contact.contact_id " +
                     "JOIN address ON person.user_id = address.address_id " +
-                    "JOIN cv ON person.user_id = cv.cv_id " +
+                    "JOIN cv ON person.user_id = cv.user_id " +
                     "WHERE address.city ILIKE :searchText";
     private static final String SKILL_QUERY =
             "SELECT DISTINCT person.user_id, person.first_Name, person.last_name, person.birthday, " +
@@ -50,7 +50,7 @@ public class SearchCVDao {
                     "FROM person " +
                     "JOIN contact ON person.user_id = contact.contact_id " +
                     "JOIN address ON person.user_id = address.address_id " +
-                    "JOIN cv ON person.user_id = cv.cv_id " +
+                    "JOIN cv ON person.user_id = cv.user_id " +
                     "JOIN skill ON cv.cv_id = skill.cv_id "+
                     "WHERE skill.title ILIKE :searchText OR skill.description ILIKE :searchText ORDER BY first_name";
     private static final String POSITION_QUERY =
@@ -59,7 +59,7 @@ public class SearchCVDao {
                     "FROM person " +
                     "JOIN contact ON person.user_id = contact.contact_id " +
                     "JOIN address ON person.user_id = address.address_id " +
-                    "JOIN cv ON person.user_id = cv.cv_id " +
+                    "JOIN cv ON person.user_id = cv.user_id " +
                     "JOIN skill ON cv.cv_id = skill.cv_id "+
                     "WHERE cv.position ILIKE :searchText ORDER BY first_name";
     private static final String NAME_QUERY_COUNT =
@@ -75,24 +75,24 @@ public class SearchCVDao {
                     "WHERE address.city ILIKE :searchText";
     private static final String SKILL_QUERY_COUNT =
             "SELECT DISTINCT COUNT(person.user_id) FROM person " +
-                    "JOIN cv ON person.user_id = cv.cv_id " +
+                    "JOIN cv ON person.user_id = cv.user_id " +
                     "JOIN skill ON cv.cv_id = skill.cv_id " +
                     "WHERE skill.title ILIKE :searchText OR skill.description ILIKE :searchText";
     private static final String POSITION_QUERY_COUNT =
             "SELECT DISTINCT COUNT(person.user_id) FROM person " +
-                    "JOIN cv ON person.user_id = cv.cv_id " +
+                    "JOIN cv ON person.user_id = cv.user_id " +
                     "WHERE cv.position ILIKE :searchText";
     private Session session;
 
     @Autowired
-    public SearchCVDao(SessionFactory sessionFactory) {
+    public SearchResumeDao(SessionFactory sessionFactory) {
         session = sessionFactory.openSession();
     }
 
-    public SearchCVResponseDTO search(String searchParameter, String searchText,
-                                      int resultsOnPage, int firstResultNumber) {
-        SearchCVResponseDTO searchCVResponseDTO = new SearchCVResponseDTO();
-        List<SearchCVDTO> dtoList = new ArrayList<>();
+    public SearchResumeResponseDTO search(String searchParameter, String searchText,
+                                          int resultsOnPage, int firstResultNumber) {
+        SearchResumeResponseDTO searchResumeResponseDTO = new SearchResumeResponseDTO();
+        List<SearchResumeDTO> dtoList = new ArrayList<>();
         String nativeQuery;
         String countQuery;
         switch (searchParameter) {
@@ -119,27 +119,27 @@ public class SearchCVDao {
         }
         Query getMathes = session.createNativeQuery(countQuery);
         getMathes.setParameter("searchText", "%" + searchText + "%");
-        searchCVResponseDTO.setCount((BigInteger) getMathes.getSingleResult());
-        log.info("Count = " + searchCVResponseDTO.getCount());
+        searchResumeResponseDTO.setCount((BigInteger) getMathes.getSingleResult());
+        log.info("Count = " + searchResumeResponseDTO.getCount());
 
         Query query = session.createNativeQuery(nativeQuery);
         query.setParameter("searchText", "%" + searchText + "%");
         query.setFirstResult(firstResultNumber);
         query.setMaxResults(resultsOnPage);
         List result = query.getResultList();
-        SearchCVMapper searchCVMapper = new SearchCVMapper();
-        SearchCVDTO searchCVDTO;
+        SearchResumeMapper searchResumeMapper = new SearchResumeMapper();
+        SearchResumeDTO searchResumeDTO;
         ObjectMapper objectMapper = new ObjectMapper();
         for (Object object : result) {
             try {
-                searchCVDTO = searchCVMapper.getSearchCVDTO(objectMapper.writeValueAsString(object));
-                log.info("DTO = " + searchCVDTO);
-                dtoList.add(searchCVDTO);
+                searchResumeDTO = searchResumeMapper.getSearchResumeDTO(objectMapper.writeValueAsString(object));
+                log.info("DTO = " + searchResumeDTO);
+                dtoList.add(searchResumeDTO);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
         }
-        searchCVResponseDTO.setSearchCVDTOs(dtoList);
-        return searchCVResponseDTO;
+        searchResumeResponseDTO.setSearchResumeDTOS(dtoList);
+        return searchResumeResponseDTO;
     }
 }

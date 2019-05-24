@@ -77,4 +77,14 @@ public class CompanyController {
         return "http://" + request.getServerName() + ":" + 4200 + request.getContextPath();
     }
 
+    @GetMapping(value = "/byVacancyId/{id}")
+    public Company getCompanyByVacancyId(@PathVariable("id") Long id) {
+        return companyService.findCompanyByVacancyId(id).orElseThrow(() -> new ResourceNotFoundException("Company not found with id " + id));
+    }
+
+    @GetMapping(value = "/byId/{companyId}")
+    public Company getCompanyByName(@PathVariable("companyId") Long companyId) {
+        return companyService.findById(companyId).orElseThrow(() -> new ResourceNotFoundException("Company not found with id " + companyId));
+    }
+
 }
