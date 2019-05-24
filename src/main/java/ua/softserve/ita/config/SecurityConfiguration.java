@@ -33,7 +33,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/users").access("hasRole('ROLE_USER')")
                 .antMatchers("/createCV","/companies/create","/companies/approve","/people", "/people/*", "people/**").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
                 .antMatchers("/companies/byName/**","/companies/byCompany/**","/claims","/photo/**","/users/**").permitAll()
-                .antMatchers("/","/vacancies/**","/login","/login/**","/registration","/registrationConfirm/**", "/resetPassword","/changePassword").permitAll()
+                .antMatchers("/","/vacancies/**","/login","/login/**","/users/auth/","users/auth/confirm/**", "/resetPassword","/changePassword").permitAll()
                 .antMatchers("/pdf/**", "/updatePDF", "/createPdf/**").permitAll()
                 .anyRequest().authenticated()
                 .and()

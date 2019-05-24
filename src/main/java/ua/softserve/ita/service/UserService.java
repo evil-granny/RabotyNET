@@ -3,6 +3,7 @@ package ua.softserve.ita.service;
 import ua.softserve.ita.dto.UserDto;
 import ua.softserve.ita.exception.UserAlreadyExistException;
 import ua.softserve.ita.model.User;
+import ua.softserve.ita.model.VerificationToken;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +24,7 @@ public interface UserService {
 
     void deleteById(Long id);
 
-    Optional<User> findByToken(String token);
+    Optional<VerificationToken> findByToken(String token);
 
     boolean emailExists(String email);
 }
