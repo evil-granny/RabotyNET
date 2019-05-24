@@ -18,7 +18,6 @@ import javax.servlet.http.HttpSession;
 import static ua.softserve.ita.model.UserPrincipal.UNKNOWN_USER;
 import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 
-@CrossOrigin
 @RestController
 public class LoginController {
 

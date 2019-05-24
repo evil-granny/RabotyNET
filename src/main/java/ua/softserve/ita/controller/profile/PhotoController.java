@@ -15,7 +15,6 @@ import ua.softserve.ita.service.PhotoService;
 
 import javax.validation.Valid;
 
-@CrossOrigin
 @RestController
 @RequestMapping("/photo")
 @Api(value = "PhotoControllerAPI", produces = MediaType.IMAGE_JPEG_VALUE)

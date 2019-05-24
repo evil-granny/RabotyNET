@@ -27,7 +27,6 @@ import java.util.logging.Logger;
 
 import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 
-@CrossOrigin
 @RestController
 public class PDFController {
 
