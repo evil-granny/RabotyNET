@@ -81,7 +81,7 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     }
 
     @Override
-    public void createVerificationTokenForUser(User user, String token) {
+    public void createVerificationTokenForUser(Optional<User> user, String token) {
         VerificationToken verificationToken = new VerificationToken(token,user);
         save(verificationToken);
     }

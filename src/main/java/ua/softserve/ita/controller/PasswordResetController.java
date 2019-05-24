@@ -39,7 +39,7 @@ public class PasswordResetController {
     public ResponseEntity<?> resetPassword(@RequestBody UserResetPasswordDto userResetPasswordDto, final HttpServletRequest request) {
         User user = userDao.getUserWithRoles(userResetPasswordDto.getUsername()).orElseThrow(() ->
                 new UserNotFoundException("No user found with username " + userResetPasswordDto.getUsername()));
-        restorePasswordListener.onApplicationEvent(new OnRestorePasswordCompleteEvent(user, getAppUrl(request)));
+        restorePasswordListener.onApplicationEvent(new OnRestorePasswordCompleteEvent(Optional.of(user), getAppUrl(request)));
         return ResponseEntity.ok().body("User found successfully.");
     }
 
