@@ -18,7 +18,6 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
 
-@CrossOrigin
 @RestController
 @RequestMapping("/vacancies")
 public class VacancyController {

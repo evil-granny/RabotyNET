@@ -12,7 +12,6 @@ import java.util.List;
 
 import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 
-@CrossOrigin
 @RestController
 @RequestMapping("/resume")
 public class ResumeController {

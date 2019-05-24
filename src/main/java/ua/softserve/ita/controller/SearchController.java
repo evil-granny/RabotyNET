@@ -12,7 +12,6 @@ import ua.softserve.ita.dto.SearchDTO.SearchVacancyResponseDTO;
 import ua.softserve.ita.service.search.SearchResumeService;
 import ua.softserve.ita.service.search.SearchVacancyService;
 
-@CrossOrigin
 @RestController
 @Slf4j
 public class SearchController {

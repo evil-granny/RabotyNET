@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @Slf4j
-@CrossOrigin
 @RestController
 public class PasswordResetController {
 
