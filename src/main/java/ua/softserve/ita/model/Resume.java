@@ -17,11 +17,14 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Table(name = "resume")
+//@EqualsAndHashCode
 @NamedQueries({
         @NamedQuery(name = Resume.FIND_BY_USER_ID, query = "select rs from Resume rs where rs.person.userId = :id"),
+        @NamedQuery(name = Resume.FIND_RESUME_BY_VACANCY_ID, query = "select res FROM Resume res JOIN res.vacancies vacres WHERE vacres.vacancyId = :id"),
 })
 public class Resume implements Serializable {
     public static final String FIND_BY_USER_ID = "Resume.findByUserId";
+    public static final String FIND_RESUME_BY_VACANCY_ID = "Resume.findResumeByVacancyId";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,4 +53,18 @@ public class Resume implements Serializable {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private Person person;
 
+    @ManyToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            mappedBy = "resumes")
+    private Set<Vacancy> vacancies;
+
+    @Override
+    public String toString() {
+        return "Resume{" +
+                "cvId=" + cvId +
+                ", position='" + position + '\'' +
+                ", person=" + person +
+                ", vacancies=" + vacancies +
+                '}';
+    }
 }

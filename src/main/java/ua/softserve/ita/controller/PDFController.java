@@ -10,6 +10,7 @@ import ua.softserve.ita.model.Resume;
 
 import ua.softserve.ita.model.Job;
 import ua.softserve.ita.model.Skill;
+import ua.softserve.ita.model.Vacancy;
 import ua.softserve.ita.service.*;
 import ua.softserve.ita.service.letter.GenerateLetter;
 import ua.softserve.ita.service.pdfcreater.CreateCvPdf;
@@ -22,6 +23,7 @@ import java.nio.file.Path;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 
@@ -35,14 +37,16 @@ public class PDFController {
     private final GenerateLetter generateService;
 
     private final CreateCvPdf pdfService;
+    private final VacancyService vacancyService;
 
-    public PDFController(ResumeService resumeService, GenerateLetter generateService, CreateCvPdf pdfService) {
+    public PDFController(ResumeService resumeService, GenerateLetter generateService, CreateCvPdf pdfService, VacancyService vacancyService) {
 
         this.resumeService = resumeService;
 
         this.generateService = generateService;
 
         this.pdfService = pdfService;
+        this.vacancyService = vacancyService;
     }
 
     @GetMapping(value = "/pdf/{id}")
@@ -50,23 +54,21 @@ public class PDFController {
 
         Long userID = getLoggedUser().get().getUserId();
 
-      return resumeService.findById(id).orElseThrow(() -> new ResourceNotFoundException("resume not found with id " + id));
+        return resumeService.findById(id).orElseThrow(() -> new ResourceNotFoundException("resume not found with id " + id));
 
     }
 
     @PutMapping("/pdf/updatePDF")
     public Resume update(@Valid @RequestBody Resume resume) {
-
         Set<Skill> skills = resume.getSkills();
-
         Set<Job> jobs = resume.getJobs();
-
+        Set<Vacancy> vacancies = resume.getVacancies();
+        vacancies.clear();
+        vacancies.forEach(v -> v.getResumes().add(resume));
+        vacancies.forEach(vacancyService::update);
         skills.forEach(x -> x.setResume(resume));
-
         jobs.forEach(x -> x.setResume(resume));
-
         return resumeService.update(resume);
-
     }
 
     @RequestMapping(value = "/pdf/createPdf/{id}&{send}", method = RequestMethod.GET, produces = "application/pdf")

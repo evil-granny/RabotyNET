@@ -11,6 +11,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -20,6 +21,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 @NamedQueries({
         @NamedQuery(name = Vacancy.FIND_VACANCIES_BY_COMPANY_ID, query = "select vac from Vacancy vac where vac.company.companyId = :id ORDER BY vac.vacancyId DESC"),
         @NamedQuery(name = Vacancy.FIND_ALL_HOT_VACANCIES, query = "select vac from Vacancy vac where vac.hotVacancy = true ORDER BY vac.vacancyId DESC"),
@@ -67,7 +69,7 @@ public class Vacancy {
     @Column(name = "currency")
     private Currency currency;
 
-    @Column(name = "hot_vacancy",columnDefinition="BOOLEAN DEFAULT false")
+    @Column(name = "hot_vacancy", columnDefinition = "BOOLEAN DEFAULT false")
     private Boolean hotVacancy;
 
     @JsonIgnore
@@ -78,6 +80,13 @@ public class Vacancy {
 
     @OneToMany(mappedBy = "vacancy", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private Set<Requirement> requirements;
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "vacancy_resume", joinColumns = {@JoinColumn(name = "vacancy_id")},
+            inverseJoinColumns = {@JoinColumn(name = "cv_id")})
+    private Set<Resume> resumes;
 
     @Override
     public String toString() {
@@ -90,5 +99,6 @@ public class Vacancy {
                 ", requirement=" + requirements +
                 '}';
     }
+
 
 }

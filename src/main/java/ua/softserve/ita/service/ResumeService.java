@@ -17,4 +17,6 @@ public interface ResumeService {
     void deleteById(Long id);
 
     Optional<Resume> findByUserId(Long id);
+
+    List<Resume> findResumeByVacancyId(Long vacancyId);
 }
