@@ -6,9 +6,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ua.softserve.ita.dao.impl.search.SearchDao;
-import ua.softserve.ita.dao.impl.search.SearchResumeDao;
-import ua.softserve.ita.dto.SearchDTO.SearchResumeResponseDTO;
 import ua.softserve.ita.model.*;
 import ua.softserve.ita.model.enumtype.Employment;
 import ua.softserve.ita.model.enumtype.Status;
@@ -379,8 +376,8 @@ class SearchResumeDaoTest {
 
     @Test
     void search() {
-//        SearchDao searchDao = new SearchDao(sessionFactory);
-//        SearchResumeResponseDTO searchResumeResponseDTO = searchDao.search("name", "jo", 5000, 0);
+//        SearchResumeDao searchResumeDao= new SearchResumeDao(sessionFactory);
+//        SearchResumeResponseDTO searchResumeResponseDTO = searchResumeDao.getResponse("name", "jo", 5000, 0);
 //        assertEquals(searchResumeResponseDTO.getCount().intValue(), searchResumeResponseDTO.getSearchResumeDTOS().size());
     }
 
