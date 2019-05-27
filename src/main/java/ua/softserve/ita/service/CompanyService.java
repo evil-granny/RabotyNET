@@ -27,4 +27,6 @@ public interface CompanyService {
     Optional<Company> sendMail(Company company, String hostLink);
 
     Optional<Company> approve(Company company, String companyToken);
+
+    Optional<Company> findCompanyByVacancyId(Long id);
 }

@@ -3,31 +3,27 @@ package ua.softserve.ita.dao.impl.verification;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ua.softserve.ita.dao.VerificationTokenDao;
 import ua.softserve.ita.dao.impl.AbstractDao;
-import ua.softserve.ita.dao.impl.UserDaoImpl;
 import ua.softserve.ita.model.User;
 import ua.softserve.ita.model.VerificationToken;
 import ua.softserve.ita.utility.QueryUtility;
 
 import javax.persistence.NoResultException;
+import java.time.Instant;
 import java.util.Date;
 import java.util.Optional;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
 
 
 @Repository
 public class VerificationTokenDaoImpl extends AbstractDao<VerificationToken,Long> implements VerificationTokenDao {
 
     private static final String ID = "id";
-
-
-    private final SessionFactory sessionFactory;
+    private static final String TOKEN = "token";
+    private static final String EXPIRY_DATE = "expiryDate";
+    private Logger logger =  Logger.getLogger(VerificationTokenDaoImpl.class.getName());
 
     public VerificationTokenDaoImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
@@ -35,13 +31,18 @@ public class VerificationTokenDaoImpl extends AbstractDao<VerificationToken,Long
 
 
     @Override
-    public VerificationToken findByToken(String token) {
-        Session session = sessionFactory.getCurrentSession();
-        Query query = session.createQuery("from VerificationToken where token = '" + token + "'");
-        if (!query.getResultList().isEmpty()) {
-            return (VerificationToken) query.getResultList().get(0);
-        } else
-            return null;
+    public Optional<VerificationToken> findVerificationToken(String token) {
+        return QueryUtility.findOrEmpty(() -> {
+            VerificationToken verificationToken = null;
+            try {
+                verificationToken = (VerificationToken) createNamedQuery(VerificationToken.FIND_VERIFICATION_TOKEN)
+                        .setParameter(TOKEN, token)
+                        .getSingleResult();
+            } catch (NoResultException ex) {
+                logger.warning("Token not found");
+            }
+            return verificationToken;
+        });
     }
 
     @Override
@@ -53,44 +54,17 @@ public class VerificationTokenDaoImpl extends AbstractDao<VerificationToken,Long
                 .setParameter(ID, user.getUserId())
                 .getSingleResult();
             } catch (NoResultException ex) {
-                Logger.getLogger(UserDaoImpl.class.getName()).log(Level.WARNING, "Token not found");
+                logger.warning("Token for user "+user.getUsername()+"not found");
             }
             return result;
         });
     }
 
     @Override
-    public void deleteAllExpiredSince(Date now) {
+    public void deleteAllExpiredSince() {
         Session session = sessionFactory.getCurrentSession();
-        Query query = session.createQuery("delete  VerificationToken where expirydate <= '" + now + "'");
+        Query query = session.createQuery("delete from VerificationToken vt where vt.expiryDate = :expiryDate")
+                .setParameter(EXPIRY_DATE, Date.from(Instant.now()));
         query.executeUpdate();
     }
-
-    @Override
-    public VerificationToken create(VerificationToken verificationToken) {
-        sessionFactory.getCurrentSession().save(verificationToken);
-        return verificationToken;
-    }
-
-    @Override
-    public VerificationToken update(VerificationToken verificationToken) {
-        Session session = sessionFactory.getCurrentSession();
-        session.update(verificationToken);
-        session.flush();
-        return verificationToken;
-    }
-
-    @Override
-    public void delete(VerificationToken verificationToken) {
-        sessionFactory.getCurrentSession().delete(verificationToken);
-    }
-
-    @Override
-    public void deleteByUserId(Long userId) {
-        Session session = sessionFactory.getCurrentSession();
-        Query query = session.createQuery("delete  VerificationToken where user_id ="+ userId);
-        query.executeUpdate();
-    }
-
-
 }

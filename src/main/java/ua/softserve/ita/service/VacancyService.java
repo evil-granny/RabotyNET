@@ -12,13 +12,13 @@ public interface VacancyService {
 
     List<Vacancy> findAll();
 
-    VacancyDTO findAllByCompanyName(String companyName, int first, int count);
+    VacancyDTO findAllVacanciesByCompanyId(Long companyId, int first);
 
-    VacancyDTO findAllHotVacanciesWithPagination(int first, int count);
+    VacancyDTO findAllHotVacanciesWithPagination(int first);
 
-    VacancyDTO findAllVacanciesWithPagination(int first, int count);
+    VacancyDTO findAllVacanciesWithPagination(int first);
 
-    Vacancy save(Vacancy vacancy);
+    Vacancy save(Vacancy vacancy,Long companyId);
 
     Vacancy update(Vacancy vacancy);
 

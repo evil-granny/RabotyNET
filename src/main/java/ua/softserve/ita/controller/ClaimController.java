@@ -9,7 +9,6 @@ import ua.softserve.ita.service.CompanyService;
 
 import java.util.List;
 
-@CrossOrigin
 @RestController
 @RequestMapping("/claims")
 public class ClaimController {
