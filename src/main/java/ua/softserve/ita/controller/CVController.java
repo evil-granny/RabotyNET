@@ -6,6 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.CV;
+import ua.softserve.ita.model.PdfResume;
 import ua.softserve.ita.service.CVService;
 import ua.softserve.ita.service.JobService;
 import ua.softserve.ita.service.SkillService;
@@ -46,6 +47,11 @@ public class CVController {
 
     @PostMapping(path = "/createCV")
     public CV insert(@RequestBody CV cv) {
+
+        //PdfResume pdfResume = new PdfResume();
+
+        //cv.setPdfResume(pdfResume);
+
         return cvService.save(cv);
     }
 

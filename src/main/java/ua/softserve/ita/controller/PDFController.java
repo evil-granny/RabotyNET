@@ -9,6 +9,7 @@ import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.CV;
 
 import ua.softserve.ita.model.Job;
+import ua.softserve.ita.model.PdfResume;
 import ua.softserve.ita.model.Skill;
 import ua.softserve.ita.service.*;
 import ua.softserve.ita.service.letter.GenerateLetter;
@@ -55,6 +56,11 @@ public class PDFController {
 
       return cvService.findById(id).orElseThrow(() -> new ResourceNotFoundException("cv not found with id " + id));
 
+    }
+
+    @GetMapping(value = "/pdf")
+    public CV getCVByUser() {
+        return cvService.findByUserId(getLoggedUser().get().getUserId()).orElseThrow(() -> new ResourceNotFoundException(String.format("CV with id: %d not found")));
     }
 
     @PutMapping("/pdf/updatePDF")

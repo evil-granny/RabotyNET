@@ -88,4 +88,7 @@ public class CVServiceImpl implements CVService {
     public Optional<CV> findByUserId(Long id) {
         return cvDao.findByUserId(id);
     }
+
+    @Override
+    public Optional<CV> findByPdfName(String name) { return cvDao.findByPdfName(name); }
 }

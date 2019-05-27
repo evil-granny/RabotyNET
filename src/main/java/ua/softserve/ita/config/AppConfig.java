@@ -14,7 +14,12 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import ua.softserve.ita.exception.ResourceNotFoundException;
+import ua.softserve.ita.model.CV;
+import ua.softserve.ita.service.CVService;
+import ua.softserve.ita.service.PdfResumeService;
 import ua.softserve.ita.service.pdfcreater.CleanTempCvPdf;
+import ua.softserve.ita.service.pdfcreater.CreateQrCodeVCard;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -45,6 +50,11 @@ public class AppConfig {
     @Autowired
     private Environment environment;
 
+    @Autowired
+    private PdfResumeService pdfResumeService;
+
+    @Autowired
+    private CVService cvService;
 
     @Bean
     public LocalSessionFactoryBean getSessionFactory() {
@@ -146,15 +156,33 @@ public class AppConfig {
 
         Path path = Paths.get(SAVE_DIRECTORY_FOR_PDF_DOC);
 
+        boolean toClean = false;
+
         try (DirectoryStream<Path> newDirectoryStream = Files.newDirectoryStream(path, "pdfCV" + "*")) {
 
             for (final Path newDirectoryStreamItem : newDirectoryStream) {
+
+                String pdfName = newDirectoryStreamItem.getFileName().toString();
+
+                CV cvForClean = cvService.findByPdfName(pdfName).orElseThrow(() -> new ResourceNotFoundException(String.format("CV with id: %d not found")));
+
+                cvForClean.setPdfResume(null);
+
+                CV newCleanCV = cvService.update(cvForClean);
+
+                System.out.println("clean cv");
 
                 Files.delete(newDirectoryStreamItem);
 
                 System.out.println("hello my cron");
 
+                toClean = true;
+
             }
+
+            if (toClean) pdfResumeService.deleteAll();
+
+            System.out.println("clean table pdf");
 
         } catch (final Exception e) {
 

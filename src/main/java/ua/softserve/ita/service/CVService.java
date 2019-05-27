@@ -17,4 +17,6 @@ public interface CVService {
     void deleteById(Long id);
 
     Optional<CV> findByUserId(Long id);
+
+    public Optional<CV> findByPdfName(String name);
 }

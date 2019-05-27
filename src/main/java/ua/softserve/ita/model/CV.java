@@ -19,9 +19,11 @@ import java.util.Set;
 @Table(name = "cv")
 @NamedQueries({
         @NamedQuery(name = CV.FIND_BY_USER_ID, query = "select cv from CV cv where cv.person.userId = :id"),
+        @NamedQuery(name = CV.FIND_BY_PDF_NAME, query = "select cv from CV cv where cv.pdfResume.pdfName = :name"),
 })
 public class CV implements Serializable {
     public static final String FIND_BY_USER_ID = "CV.findByUserId";
+    public static final String FIND_BY_PDF_NAME = "CV.findByPdfName";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,5 +51,9 @@ public class CV implements Serializable {
     @NotNull(message = "person must be not null")
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private Person person;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "pdf_id", referencedColumnName = "pdf_id")
+    private PdfResume pdfResume;
 
 }

@@ -9,9 +9,10 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.*;
-import ua.softserve.ita.model.profile.Photo;
-import ua.softserve.ita.service.PhotoService;
+import ua.softserve.ita.service.CVService;
+import ua.softserve.ita.service.PdfResumeService;
 
 import java.awt.*;
 import java.io.IOException;
@@ -33,8 +34,16 @@ public class CreateCvPdf {
 
     private static final Logger LOGGER = Logger.getLogger(CreateCvPdf.class.getName());
 
+    private final PdfResumeService pdfResumeService;
+    private final CVService cvService;
+    private final CreateQrCodeVCard createQR;
+
     @Autowired
-    CreateQrCodeVCard createQR;
+    public CreateCvPdf(PdfResumeService pdfResumeService, CVService cvService, CreateQrCodeVCard createQR){
+        this.pdfResumeService = pdfResumeService;
+        this.cvService = cvService;
+        this.createQR = createQR;
+    }
 
     final float BORDER_LEFT = 60;
     final float BORDER_RIGHT = 20;
@@ -76,7 +85,7 @@ public class CreateCvPdf {
     private float yCoordinate;
     private float xCoordinate;
 
-    public int countDescriptionLine(String description) {
+    private int countDescriptionLine(String description) {
 
         try {
 
@@ -656,7 +665,41 @@ public class CreateCvPdf {
 
             Path saveDir = Paths.get(SAVE_DIRECTORY_FOR_PDF_DOC);
 
-            Path tempCVFile = Files.createTempFile(saveDir, "pdfCV", ".pdf");
+            Path tempCVFile = null;
+
+            if (cv.getPdfResume() == null) {
+
+                tempCVFile = Files.createTempFile(saveDir, "pdfCV", ".pdf");
+
+                PdfResume pdfResume = new PdfResume();
+
+                pdfResume.setPath(tempCVFile.toString());
+
+                pdfResume.setPdfName(tempCVFile.getFileName().toString());
+
+                cv.setPdfResume(pdfResume);
+
+                cvService.update(cv);
+
+                //TO DO
+
+                CV cvForClean = cvService.findByPdfName(cv.getPdfResume().getPdfName()).orElseThrow(() -> new ResourceNotFoundException(String.format("CV with id: %d not found")));
+
+                cvForClean.setPdfResume(null);
+
+                cvService.update(cvForClean);
+
+                //
+
+
+
+
+
+            } else {
+
+                tempCVFile = Paths.get(cv.getPdfResume().getPath());
+
+            }
 
             this.document.save(tempCVFile.toFile());
 

@@ -1,12 +1,14 @@
 package ua.softserve.ita.dao;
 
 import ua.softserve.ita.model.CV;
+import ua.softserve.ita.model.PdfResume;
 
 import java.util.Optional;
 
-public interface CVDao extends BaseDao<CV,Long> {
+public interface PdfResumeDao extends BaseDao<PdfResume,Long> {
 
-    Optional<CV> findByUserId(Long id);
+    void deleteAll();
 
     public Optional<CV> findByPdfName(String name);
+
 }
