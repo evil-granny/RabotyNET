@@ -18,68 +18,30 @@ import java.util.List;
 @Slf4j
 public class SearchResumeService implements SearchService<SearchResumeResponseDTO> {
 
-    private static final String NAME_QUERY =
+    private static final String SELECT =
             "SELECT DISTINCT person.user_id, person.first_Name, person.last_name, person.birthday, " +
                     "cv.position, cv.cv_id, contact.phone_number, contact.email, address.city " +
-                    "FROM person " +
-                    "JOIN contact ON person.user_id = contact.contact_id " +
-                    "JOIN address ON person.user_id = address.address_id " +
-                    "JOIN cv ON person.user_id = cv.user_id " +
-                    "WHERE first_name ILIKE :searchText OR last_name ILIKE :searchText ORDER BY first_name";
-    private static final String PHONE_QUERY =
-            "SELECT DISTINCT person.user_id, person.first_Name, person.last_name, person.birthday, " +
-                    "cv.position, cv.cv_id, contact.phone_number, contact.email, address.city " +
-                    "FROM person " +
-                    "JOIN contact ON person.user_id = contact.contact_id " +
-                    "JOIN address ON person.user_id = address.address_id " +
-                    "JOIN cv ON person.user_id = cv.user_id " +
-                    "WHERE contact.phone_number ILIKE :searchText ORDER BY first_name";
-    private static final String CITY_QUERY =
-            "SELECT DISTINCT person.user_id, person.first_Name, person.last_name, person.birthday, " +
-                    "cv.position, cv.cv_id, contact.phone_number, contact.email, address.city " +
-                    "FROM person " +
-                    "JOIN contact ON person.user_id = contact.contact_id " +
-                    "JOIN address ON person.user_id = address.address_id " +
-                    "JOIN cv ON person.user_id = cv.user_id " +
-                    "WHERE address.city ILIKE :searchText";
-    private static final String SKILL_QUERY =
-            "SELECT DISTINCT person.user_id, person.first_Name, person.last_name, person.birthday, " +
-                    "cv.position, cv.cv_id, contact.phone_number, contact.email, address.city " +
-                    "FROM person " +
-                    "JOIN contact ON person.user_id = contact.contact_id " +
-                    "JOIN address ON person.user_id = address.address_id " +
-                    "JOIN cv ON person.user_id = cv.user_id " +
-                    "JOIN skill ON cv.cv_id = skill.cv_id " +
-                    "WHERE skill.title ILIKE :searchText OR skill.description ILIKE :searchText ORDER BY first_name";
-    private static final String POSITION_QUERY =
-            "SELECT DISTINCT person.user_id, person.first_Name, person.last_name, person.birthday, " +
-                    "cv.position, cv.cv_id, contact.phone_number, contact.email, address.city " +
-                    "FROM person " +
-                    "JOIN contact ON person.user_id = contact.contact_id " +
-                    "JOIN address ON person.user_id = address.address_id " +
-                    "JOIN cv ON person.user_id = cv.user_id " +
-                    "JOIN skill ON cv.cv_id = skill.cv_id " +
-                    "WHERE cv.position ILIKE :searchText ORDER BY first_name";
-    private static final String NAME_QUERY_COUNT =
-            "SELECT DISTINCT COUNT(person.user_id) FROM person " +
-                    "WHERE first_name ILIKE :searchText OR last_name ILIKE :searchText";
-    private static final String PHONE_QUERY_COUNT =
-            "SELECT DISTINCT COUNT(person.user_id) FROM person " +
-                    "JOIN contact ON person.user_id = contact.contact_id " +
-                    "WHERE contact.phone_number ILIKE :searchText";
-    private static final String CITY_QUERY_COUNT =
-            "SELECT DISTINCT COUNT(person.user_id) FROM person " +
-                    "JOIN address ON person.user_id = address.address_id " +
-                    "WHERE address.city ILIKE :searchText";
-    private static final String SKILL_QUERY_COUNT =
-            "SELECT DISTINCT COUNT(person.user_id) FROM person " +
-                    "JOIN cv ON person.user_id = cv.user_id " +
-                    "JOIN skill ON cv.cv_id = skill.cv_id " +
-                    "WHERE skill.title ILIKE :searchText OR skill.description ILIKE :searchText";
-    private static final String POSITION_QUERY_COUNT =
-            "SELECT DISTINCT COUNT(person.user_id) FROM person " +
-                    "JOIN cv ON person.user_id = cv.user_id " +
-                    "WHERE cv.position ILIKE :searchText";
+                    "FROM person";
+    private static final String JOIN_CONTACT = " JOIN contact ON person.user_id = contact.contact_id";
+    private static final String JOIN_ADDRESS = " JOIN address ON person.user_id = address.address_id";
+    private static final String JOIN_RESUME = " JOIN cv ON person.user_id = cv.user_id";
+    private static final String JOIN_SKILL = " JOIN skill ON cv.cv_id = skill.cv_id";
+    private static final String NAME =
+            " WHERE first_name ILIKE :searchText OR last_name ILIKE :searchText";
+    private static final String PHONE =
+            " WHERE contact.phone_number ILIKE :searchText";
+    private static final String CITY =
+            " WHERE address.city ILIKE :searchText ORDER BY";
+    private static final String SKILL =
+            " WHERE skill.title ILIKE :searchText OR skill.description ILIKE :searchText";
+    private static final String POSITION =
+            " WHERE cv.position ILIKE :searchText";
+    private static final String BY_NAME = " ORDER BY first_name";
+    private static final String BY_LAST_NAME = " ORDER BY last_name";
+    private static final String BY_CITY = " ORDER BY address.city";
+    private static final String BY_POSITION = " ORDER BY cv.position";
+    private static final String SELECT_COUNT =
+            "SELECT DISTINCT COUNT(person.user_id) FROM person";
 
     private final SearchDao searchDao;
 
@@ -113,27 +75,70 @@ public class SearchResumeService implements SearchService<SearchResumeResponseDT
         return searchDao.getResult(query, searchText, resultsOnPage, firstResultNumber);
     }
 
-    private String[] getQuery(String searchParameter) {
+    private String getQuery(Boolean isCount, String searchParameter, String searchSort) {
+        StringBuilder queryBuilder = new StringBuilder();
+
+        if (isCount) {
+            queryBuilder.append(SELECT_COUNT);
+        } else {
+            queryBuilder.append(SELECT).append(JOIN_CONTACT).append(JOIN_ADDRESS).append(JOIN_RESUME);
+        }
+
         switch (searchParameter) {
             case "name":
-                return new String[]{NAME_QUERY, NAME_QUERY_COUNT};
+                queryBuilder.append(NAME);
+                break;
             case "phoneNumber":
-                return new String[]{PHONE_QUERY, PHONE_QUERY_COUNT};
+                if (isCount) {
+                    queryBuilder.append(JOIN_CONTACT);
+                }
+                queryBuilder.append(PHONE);
+                break;
             case "city":
-                return new String[]{CITY_QUERY, CITY_QUERY_COUNT};
+                if (isCount) {
+                    queryBuilder.append(JOIN_ADDRESS);
+                }
+                queryBuilder.append(CITY);
+                break;
             case "skill":
-                return new String[]{SKILL_QUERY, SKILL_QUERY_COUNT};
+                if (isCount) {
+                    queryBuilder.append(JOIN_RESUME);
+                }
+                queryBuilder.append(JOIN_SKILL).append(SKILL);
+                break;
             default:
-                return new String[]{POSITION_QUERY, POSITION_QUERY_COUNT};
+                if (isCount) {
+                    queryBuilder.append(JOIN_RESUME);
+                }
+                queryBuilder.append(POSITION);
         }
+        if (!isCount) {
+            switch (searchSort) {
+                case "lastName":
+                    queryBuilder.append(BY_LAST_NAME);
+                    break;
+                case "city":
+                    queryBuilder.append(BY_CITY);
+                    break;
+                case "position":
+                    queryBuilder.append(BY_POSITION);
+                    break;
+                default:
+                    queryBuilder.append(BY_NAME);
+            }
+        }
+        log.info("query = " + queryBuilder.toString());
+        return queryBuilder.toString();
     }
 
     @Override
     public SearchResumeResponseDTO getResponse(SearchRequestDTO searchRequestDTO) {
 
         SearchResumeResponseDTO searchResumeResponseDTO = SearchResumeResponseDTO.builder()
-                .count(getCount(getQuery(searchRequestDTO.getSearchParameter())[1], searchRequestDTO.getSearchText()))
-                .searchResumeDTOS(getSearchResumeDTOS(getResult(getQuery(searchRequestDTO.getSearchParameter())[0]
+                .count(getCount(getQuery(true, searchRequestDTO.getSearchParameter(),
+                        searchRequestDTO.getSearchSort()), searchRequestDTO.getSearchText()))
+                .searchResumeDTOS(getSearchResumeDTOS(getResult(getQuery(false,
+                        searchRequestDTO.getSearchParameter(), searchRequestDTO.getSearchSort())
                         , searchRequestDTO.getSearchText()
                         , searchRequestDTO.getResultsOnPage()
                         , searchRequestDTO.getFirstResultNumber())))

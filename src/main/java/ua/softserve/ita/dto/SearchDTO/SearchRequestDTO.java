@@ -11,6 +11,8 @@ public class SearchRequestDTO {
 
     private String searchDocument;
 
+    private String searchSort;
+
     private int resultsOnPage;
 
     private int firstResultNumber;
