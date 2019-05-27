@@ -1,13 +1,8 @@
 package ua.softserve.ita.dto.SearchDTO;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
-@Getter
-@Setter
-@ToString
+@Data
 @Builder
 public class SearchResumeDTO {
 
@@ -20,6 +15,8 @@ public class SearchResumeDTO {
     private int age;
 
     private String position;
+
+    private long resumeId;
 
     private String city;
 

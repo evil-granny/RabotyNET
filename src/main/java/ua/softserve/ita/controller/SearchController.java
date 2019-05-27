@@ -28,18 +28,14 @@ public class SearchController {
     @PostMapping("/search/resume")
     public SearchResumeResponseDTO getResult(@RequestBody SearchRequestDTO searchRequestDTO) {
         log.info("Request = " + searchRequestDTO.toString());
-
-        return searchResumeService.getResponse(searchRequestDTO.getSearchParameter(), searchRequestDTO.getSearchText().trim(),
-                searchRequestDTO.getResultsOnPage(), searchRequestDTO.getFirstResultNumber());
+        return searchResumeService.getResponse(searchRequestDTO);
 
     }
 
     @PostMapping("/search/vacancies")
     public SearchVacancyResponseDTO getVacanciesResult(@RequestBody SearchRequestDTO searchRequestDTO) {
         log.info("Request = " + searchRequestDTO.toString());
-
-        return searchVacancyService.getResponse(searchRequestDTO.getSearchParameter(), searchRequestDTO.getSearchText().trim(),
-                searchRequestDTO.getResultsOnPage(), searchRequestDTO.getFirstResultNumber());
+        return searchVacancyService.getResponse(searchRequestDTO);
     }
 
 }
