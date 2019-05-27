@@ -54,7 +54,7 @@ public class ClaimControllerTest {
 
     @Test(expected = ResourceNotFoundException.class )
     public void getProductsClaimServiceThrowsException()  {
-        when(claimService.findById(eq(ID))).thenThrow(new ResourceNotFoundException("Claim not found with id "));
+        when(claimService.findById(eq(ID))).thenThrow(new ResourceNotFoundException("Claim not found with id " + ID));
         controller.findClaimById(ID);
         verify(claimService, times(1)).findById(eq(ID));
         verifyNoMoreInteractions(claimService, companyService);
