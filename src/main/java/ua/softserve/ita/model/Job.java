@@ -58,7 +58,7 @@ public class Job implements Serializable {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "cv_id", nullable = false)
+    @JoinColumn(name = "resume_id", nullable = false)
     private Resume resume;
 
 }
