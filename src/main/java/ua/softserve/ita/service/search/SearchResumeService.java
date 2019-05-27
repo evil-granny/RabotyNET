@@ -20,12 +20,12 @@ public class SearchResumeService implements SearchService<SearchResumeResponseDT
 
     private static final String SELECT =
             "SELECT DISTINCT person.user_id, person.first_Name, person.last_name, person.birthday, " +
-                    "cv.position, cv.cv_id, contact.phone_number, contact.email, address.city " +
+                    "resume.position, resume.resume_id, contact.phone_number, contact.email, address.city " +
                     "FROM person";
     private static final String JOIN_CONTACT = " JOIN contact ON person.user_id = contact.contact_id";
     private static final String JOIN_ADDRESS = " JOIN address ON person.user_id = address.address_id";
-    private static final String JOIN_RESUME = " JOIN cv ON person.user_id = cv.user_id";
-    private static final String JOIN_SKILL = " JOIN skill ON cv.cv_id = skill.cv_id";
+    private static final String JOIN_RESUME = " JOIN resume ON person.user_id = resume.user_id";
+    private static final String JOIN_SKILL = " JOIN skill ON resume.resume_id = skill.resume_id";
     private static final String NAME =
             " WHERE first_name ILIKE :searchText OR last_name ILIKE :searchText";
     private static final String PHONE =
@@ -35,11 +35,11 @@ public class SearchResumeService implements SearchService<SearchResumeResponseDT
     private static final String SKILL =
             " WHERE skill.title ILIKE :searchText OR skill.description ILIKE :searchText";
     private static final String POSITION =
-            " WHERE cv.position ILIKE :searchText";
+            " WHERE resume.position ILIKE :searchText";
     private static final String BY_NAME = " ORDER BY first_name";
     private static final String BY_LAST_NAME = " ORDER BY last_name";
     private static final String BY_CITY = " ORDER BY address.city";
-    private static final String BY_POSITION = " ORDER BY cv.position";
+    private static final String BY_POSITION = " ORDER BY resume.position";
     private static final String BY_PHONE = " ORDER BY contact.phone_number";
     private static final String BY_AGE = " ORDER BY person.birthday";
     private static final String DIRECTION = " DESC";
