@@ -37,10 +37,17 @@ public class ClaimControllerTest {
 
     @Test
     public void getClaimsById()  {
-        Claim mockClaim = new Claim();
+        Claim mockClaim = Claim.builder()
+                .claimId(1)
+                .title("Claim")
+                .description("Claim")
+                .build();
+
         when(claimService.findById(eq(ID))).thenReturn(Optional.of(mockClaim));
         Claim claimById = controller.findClaimById(ID);
+
         assertEquals(mockClaim, claimById);
+
         verify(claimService, times(1)).findById(eq(ID));
         verifyNoMoreInteractions(claimService, companyService);
     }
