@@ -125,11 +125,11 @@ class SearchResumeDaoTest {
         return education;
     }
 
-    private Set<Skill> getSkills(CV cv) {
+    private Set<Skill> getSkills(Resume resume) {
         Skill skill1 = new Skill();
         skill1.setTitle(languages[random.nextInt(languages.length)]);
         skill1.setDescription("Core");
-        skill1.setCv(cv);
+        skill1.setResume(resume);
         skill1.setPrintPdf(true);
         Skill skill2 = new Skill();
         skill2.setTitle(languages[random.nextInt(languages.length)]);
@@ -137,7 +137,7 @@ class SearchResumeDaoTest {
             skill2.setTitle(languages[random.nextInt(languages.length)]);
         }
         skill2.setDescription("Core");
-        skill2.setCv(cv);
+        skill2.setResume(resume);
         skill2.setPrintPdf(true);
         Set<Skill> skills = new HashSet<>();
         skills.add(skill1);
@@ -145,28 +145,28 @@ class SearchResumeDaoTest {
         return skills;
     }
 
-    private Set<Job> getJobs(CV cv) {
+    private Set<Job> getJobs(Resume resume) {
         Job job = new Job();
         job.setBegin(LocalDate.parse("2005-02-02"));
         job.setEnd(LocalDate.parse("2012-03-03"));
         job.setPosition(positions[random.nextInt(positions.length)]);
         job.setCompanyName(companies[random.nextInt(companies.length)]);
-        job.setCv(cv);
+        job.setResume(resume);
         job.setPrintPdf(true);
         Set<Job> jobs = new HashSet<>();
         jobs.add(job);
         return jobs;
     }
 
-    private CV getCv(long user_id, Education education, Person person) {
-        CV cv = new CV();
-        cv.setPosition(ranks[random.nextInt(ranks.length)] + " " +
+    private Resume getCv(long user_id, Education education, Person person) {
+        Resume resume = new Resume();
+        resume.setPosition(ranks[random.nextInt(ranks.length)] + " " +
                 languages[random.nextInt(languages.length)] + " " +
                 positions[random.nextInt(positions.length)]);
-        cv.setEducation(education);
-        cv.setCvId(user_id);
-        cv.setPerson(person);
-        return cv;
+        resume.setEducation(education);
+        resume.setCvId(user_id);
+        resume.setPerson(person);
+        return resume;
     }
 
     private Company getCompany(Contact contact, Address address, User user) {
@@ -278,14 +278,14 @@ class SearchResumeDaoTest {
             session.save(photo);
             Person person = getPerson(user.getUserId(), address, contact, photo);
             session.save(person);
-            CV cv = getCv(user.getUserId(), education, person);
-            session.save(cv);
-            log.info("#: " + String.valueOf(i) + " - CV Id = " + String.valueOf(cv.getCvId()));
-            Set<Job> jobs = getJobs(cv);
+            Resume resume = getCv(user.getUserId(), education, person);
+            session.save(resume);
+            log.info("#: " + String.valueOf(i) + " - Resume Id = " + String.valueOf(resume.getCvId()));
+            Set<Job> jobs = getJobs(resume);
             for (Job job : jobs) {
                 session.save(job);
             }
-            Set<Skill> skills = getSkills(cv);
+            Set<Skill> skills = getSkills(resume);
             for (Skill skill : skills) {
                 session.save(skill);
             }
@@ -352,7 +352,7 @@ class SearchResumeDaoTest {
                 .addAnnotatedClass(Address.class)
                 .addAnnotatedClass(Contact.class)
                 .addAnnotatedClass(Photo.class)
-                .addAnnotatedClass(CV.class)
+                .addAnnotatedClass(Resume.class)
                 .addAnnotatedClass(Job.class)
                 .addAnnotatedClass(Skill.class)
                 .addAnnotatedClass(Education.class)

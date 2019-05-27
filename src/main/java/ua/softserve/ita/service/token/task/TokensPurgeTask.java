@@ -18,8 +18,6 @@ public class TokensPurgeTask {
 
     @Scheduled(cron = "${purge.cron.cleanOldTokens}")
     public void purgeExpired() {
-
-
         verificationTokenService.deleteAllExpiredSince();
     }
 }

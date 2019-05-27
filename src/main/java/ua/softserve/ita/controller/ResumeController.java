@@ -1,12 +1,10 @@
 package ua.softserve.ita.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.exception.ResourceNotFoundException;
-import ua.softserve.ita.model.CV;
-import ua.softserve.ita.service.CVService;
+import ua.softserve.ita.model.Resume;
+import ua.softserve.ita.service.ResumeService;
 import ua.softserve.ita.service.JobService;
 import ua.softserve.ita.service.SkillService;
 
@@ -16,47 +14,47 @@ import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 
 @RestController
 @RequestMapping("/resume")
-public class CVController {
-    private final CVService cvService;
+public class ResumeController {
+    private final ResumeService resumeService;
     private final SkillService skillService;
     private final JobService jobService;
 
 
     @Autowired
-    public CVController(CVService cvService, SkillService skillService, JobService jobService) {
-        this.cvService = cvService;
+    public ResumeController(ResumeService resumeService, SkillService skillService, JobService jobService) {
+        this.resumeService = resumeService;
         this.skillService = skillService;
         this.jobService = jobService;
     }
 
     @GetMapping(path = {"/{id}"})
-    public CV findById(@PathVariable("id") long id) {
-        return cvService.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("CV with id: %d not found", id)));
+    public Resume findById(@PathVariable("id") long id) {
+        return resumeService.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("Resume with id: %d not found", id)));
     }
 
     @GetMapping(value = "/user")
-    public CV getCVByUser() {
-        return cvService.findByUserId(getLoggedUser().get().getUserId()).orElseThrow(() -> new ResourceNotFoundException(String.format("CV was not found")));
+    public Resume getCVByUser() {
+        return resumeService.findByUserId(getLoggedUser().get().getUserId()).orElseThrow(() -> new ResourceNotFoundException(String.format("Resume was not found")));
     }
 
     @GetMapping(path = {"/all"})
-    public List<CV> findAll() {
-        return cvService.findAll();
+    public List<Resume> findAll() {
+        return resumeService.findAll();
     }
 
     @PostMapping(path = "/create")
-    public CV insert(@RequestBody CV cv) {
-        return cvService.save(cv);
+    public Resume insert(@RequestBody Resume resume) {
+        return resumeService.save(resume);
     }
 
     @PutMapping(path = "/update")
-    public CV update(@RequestBody CV cv) {
-        return cvService.update(cv);
+    public Resume update(@RequestBody Resume resume) {
+        return resumeService.update(resume);
     }
 
     @DeleteMapping(path = "/delete/{id}")
     public void deleteById(@PathVariable("id") long id) {
-        cvService.deleteById(id);
+        resumeService.deleteById(id);
     }
 
     @DeleteMapping("/skill/{id}")

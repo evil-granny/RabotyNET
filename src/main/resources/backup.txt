@@ -83,11 +83,11 @@ INSERT INTO public.person(
    user_id, birthday, first_name, last_name, address_id, contact_id, photo_id)
   VALUES (3,' 1999-06-04', 'Denys', 'Ohorodnik', 1, 1, null);
 
-INSERT INTO public.cv(
+INSERT INTO public.resume(
  "position", education_id,user_id)
   VALUES ('developer', 1, 2);
 
-INSERT INTO public.cv(
+INSERT INTO public.resume(
  "position", education_id,user_id)
   VALUES ('java developer', 2, 3);
 
