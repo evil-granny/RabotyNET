@@ -1,13 +1,8 @@
 package ua.softserve.ita.dto.SearchDTO;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
-@Getter
-@Setter
-@ToString
+@Data
 @Builder
 public class SearchResumeDTO {
 

@@ -6,7 +6,7 @@ import java.math.BigInteger;
 import java.util.List;
 
 @Builder
-@ToString
+@Data
 public class SearchResumeResponseDTO {
 
     private BigInteger count;

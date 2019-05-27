@@ -29,7 +29,6 @@ public class SearchController {
     @PostMapping("/search/resume")
     public SearchResumeResponseDTO getResult(@RequestBody SearchRequestDTO searchRequestDTO) {
         log.info("Request = " + searchRequestDTO.toString());
-
         return searchResumeService.getResponse(searchRequestDTO);
 
     }
@@ -37,7 +36,6 @@ public class SearchController {
     @PostMapping("/search/vacancies")
     public SearchVacancyResponseDTO getVacanciesResult(@RequestBody SearchRequestDTO searchRequestDTO) {
         log.info("Request = " + searchRequestDTO.toString());
-
         return searchVacancyService.getResponse(searchRequestDTO);
     }
 
