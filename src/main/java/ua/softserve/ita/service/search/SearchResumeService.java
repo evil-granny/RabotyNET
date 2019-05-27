@@ -41,7 +41,9 @@ public class SearchResumeService implements SearchService<SearchResumeResponseDT
     private static final String BY_CITY = " ORDER BY address.city";
     private static final String BY_POSITION = " ORDER BY cv.position";
     private static final String BY_PHONE = " ORDER BY contact.phone_number";
-    private static final String BY_AGE = " ORDER BY person.birthday DESC";
+    private static final String BY_AGE = " ORDER BY person.birthday";
+    private static final String DIRECTION = " DESC";
+    private static final String INVERSE_DIRECTION = " ASC";
     private static final String SELECT_COUNT =
             "SELECT DISTINCT COUNT(person.user_id) FROM person";
 
@@ -77,7 +79,7 @@ public class SearchResumeService implements SearchService<SearchResumeResponseDT
         return searchDao.getResult(query, searchText, resultsOnPage, firstResultNumber);
     }
 
-    private String getQuery(Boolean isCount, String searchParameter, String searchSort) {
+    private String getQuery(Boolean isCount, String searchParameter, String searchSort, String direction) {
         StringBuilder queryBuilder = new StringBuilder();
 
         if (isCount) {
@@ -118,21 +120,41 @@ public class SearchResumeService implements SearchService<SearchResumeResponseDT
             switch (searchSort) {
                 case "lastName":
                     queryBuilder.append(BY_LAST_NAME);
-                    break;
+                    if ("desc".equals(direction)){
+                        queryBuilder.append(DIRECTION);
+                    }
+                        break;
                 case "city":
                     queryBuilder.append(BY_CITY);
+                    if ("desc".equals(direction)){
+                        queryBuilder.append(DIRECTION);
+                    }
                     break;
                 case "position":
                     queryBuilder.append(BY_POSITION);
+                    if ("desc".equals(direction)){
+                        queryBuilder.append(DIRECTION);
+                    }
                     break;
                 case "phone":
                     queryBuilder.append(BY_PHONE);
+                    if ("desc".equals(direction)){
+                        queryBuilder.append(DIRECTION);
+                    }
                     break;
                 case "age":
                     queryBuilder.append(BY_AGE);
+                    if ("desc".equals(direction)){
+                        queryBuilder.append(INVERSE_DIRECTION);
+                    } else {
+                        queryBuilder.append(DIRECTION);
+                    }
                     break;
                 default:
                     queryBuilder.append(BY_NAME);
+                    if ("desc".equals(direction)){
+                        queryBuilder.append(DIRECTION);
+                    }
             }
         }
         log.info("query = " + queryBuilder.toString());
@@ -144,9 +166,11 @@ public class SearchResumeService implements SearchService<SearchResumeResponseDT
 
         SearchResumeResponseDTO searchResumeResponseDTO = SearchResumeResponseDTO.builder()
                 .count(getCount(getQuery(true, searchRequestDTO.getSearchParameter(),
-                        searchRequestDTO.getSearchSort()), searchRequestDTO.getSearchText()))
+                        searchRequestDTO.getSearchSort(), searchRequestDTO.getDirection())
+                        , searchRequestDTO.getSearchText()))
                 .searchResumeDTOS(getSearchResumeDTOS(getResult(getQuery(false,
-                        searchRequestDTO.getSearchParameter(), searchRequestDTO.getSearchSort())
+                        searchRequestDTO.getSearchParameter(), searchRequestDTO.getSearchSort()
+                        , searchRequestDTO.getDirection())
                         , searchRequestDTO.getSearchText()
                         , searchRequestDTO.getResultsOnPage()
                         , searchRequestDTO.getFirstResultNumber())))

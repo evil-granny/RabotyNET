@@ -34,6 +34,7 @@ public class SearchVacancyService implements SearchService<SearchVacancyResponse
     private static final String BY_COMPANY = " ORDER BY company.name";
     private static final String BY_EMPLOYMENT = " ORDER BY vacancy.employment";
     private static final String BY_SALARY = " ORDER BY vacancy.salary";
+    private static final String DIRECTION = " DESC";
 
     private final SearchDao searchDao;
 
@@ -67,7 +68,7 @@ public class SearchVacancyService implements SearchService<SearchVacancyResponse
         return searchDao.getResult(query, searchText, resultsOnPage, firstResultNumber);
     }
 
-    private String getQuery(Boolean isCount, String searchParameter, String searchSort) {
+    private String getQuery(Boolean isCount, String searchParameter, String searchSort, String direction) {
         StringBuilder queryBuilder = new StringBuilder();
 
         if (isCount) {
@@ -97,18 +98,33 @@ public class SearchVacancyService implements SearchService<SearchVacancyResponse
             switch (searchSort) {
                 case "city":
                     queryBuilder.append(BY_CITY);
+                    if ("desc".equals(direction)){
+                        queryBuilder.append(DIRECTION);
+                    }
                     break;
                 case "position":
                     queryBuilder.append(BY_POSITION);
+                    if ("desc".equals(direction)){
+                        queryBuilder.append(DIRECTION);
+                    }
                     break;
                 case "employment":
                     queryBuilder.append(BY_EMPLOYMENT);
+                    if ("desc".equals(direction)){
+                        queryBuilder.append(DIRECTION);
+                    }
                     break;
                 case "salary":
                     queryBuilder.append(BY_SALARY);
+                    if ("desc".equals(direction)){
+                        queryBuilder.append(DIRECTION);
+                    }
                     break;
                 default:
                     queryBuilder.append(BY_COMPANY);
+                    if ("desc".equals(direction)){
+                        queryBuilder.append(DIRECTION);
+                    }
             }
         }
         log.info("query = " + queryBuilder.toString());
@@ -119,9 +135,11 @@ public class SearchVacancyService implements SearchService<SearchVacancyResponse
     public SearchVacancyResponseDTO getResponse(SearchRequestDTO searchRequestDTO) {
         SearchVacancyResponseDTO searchVacancyResponseDTO = SearchVacancyResponseDTO.builder()
                 .count(getCount(getQuery(true, searchRequestDTO.getSearchParameter(),
-                        searchRequestDTO.getSearchSort()), searchRequestDTO.getSearchText()))
+                        searchRequestDTO.getSearchSort(), searchRequestDTO.getDirection())
+                        , searchRequestDTO.getSearchText()))
                 .searchVacancyDTOS(getSearchVacancyDTOS(getResult(getQuery(false,
-                        searchRequestDTO.getSearchParameter(), searchRequestDTO.getSearchSort())
+                        searchRequestDTO.getSearchParameter(), searchRequestDTO.getSearchSort()
+                        , searchRequestDTO.getDirection())
                         , searchRequestDTO.getSearchText(), searchRequestDTO.getResultsOnPage()
                         , searchRequestDTO.getFirstResultNumber())))
                 .build();
