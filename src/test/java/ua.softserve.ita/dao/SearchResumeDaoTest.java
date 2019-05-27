@@ -164,7 +164,7 @@ class SearchResumeDaoTest {
                 languages[random.nextInt(languages.length)] + " " +
                 positions[random.nextInt(positions.length)]);
         resume.setEducation(education);
-        resume.setCvId(user_id);
+        resume.setResumeId(user_id);
         resume.setPerson(person);
         return resume;
     }
@@ -280,7 +280,7 @@ class SearchResumeDaoTest {
             session.save(person);
             Resume resume = getCv(user.getUserId(), education, person);
             session.save(resume);
-            log.info("#: " + String.valueOf(i) + " - Resume Id = " + String.valueOf(resume.getCvId()));
+            log.info("#: " + String.valueOf(i) + " - Resume Id = " + String.valueOf(resume.getResumeId()));
             Set<Job> jobs = getJobs(resume);
             for (Job job : jobs) {
                 session.save(job);
