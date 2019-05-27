@@ -40,6 +40,8 @@ public class SearchResumeService implements SearchService<SearchResumeResponseDT
     private static final String BY_LAST_NAME = " ORDER BY last_name";
     private static final String BY_CITY = " ORDER BY address.city";
     private static final String BY_POSITION = " ORDER BY cv.position";
+    private static final String BY_PHONE = " ORDER BY contact.phone_number";
+    private static final String BY_AGE = " ORDER BY person.birthday DESC";
     private static final String SELECT_COUNT =
             "SELECT DISTINCT COUNT(person.user_id) FROM person";
 
@@ -122,6 +124,12 @@ public class SearchResumeService implements SearchService<SearchResumeResponseDT
                     break;
                 case "position":
                     queryBuilder.append(BY_POSITION);
+                    break;
+                case "phone":
+                    queryBuilder.append(BY_PHONE);
+                    break;
+                case "age":
+                    queryBuilder.append(BY_AGE);
                     break;
                 default:
                     queryBuilder.append(BY_NAME);

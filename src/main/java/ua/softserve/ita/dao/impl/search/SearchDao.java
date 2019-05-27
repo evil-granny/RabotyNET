@@ -30,7 +30,8 @@ public class SearchDao {
     @SuppressWarnings("unchecked")
     public List<Object> getResult(String query, String searchText,
                                     int resultsOnPage, int firstResultNumber){
-        return session.createNativeQuery(query).setParameter( SEARCH_TEXT, "%" + searchText + "%")
+        return session.createNativeQuery(query)
+                .setParameter( SEARCH_TEXT, "%" + searchText + "%")
                 .setFirstResult(firstResultNumber)
                 .setMaxResults(resultsOnPage)
                 .getResultList();

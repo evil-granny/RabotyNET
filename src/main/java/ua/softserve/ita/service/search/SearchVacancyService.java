@@ -32,6 +32,8 @@ public class SearchVacancyService implements SearchService<SearchVacancyResponse
     private static final String BY_POSITION = " ORDER BY vacancy.position";
     private static final String BY_CITY = " ORDER BY address.city";
     private static final String BY_COMPANY = " ORDER BY company.name";
+    private static final String BY_EMPLOYMENT = " ORDER BY vacancy.employment";
+    private static final String BY_SALARY = " ORDER BY vacancy.salary";
 
     private final SearchDao searchDao;
 
@@ -98,6 +100,12 @@ public class SearchVacancyService implements SearchService<SearchVacancyResponse
                     break;
                 case "position":
                     queryBuilder.append(BY_POSITION);
+                    break;
+                case "employment":
+                    queryBuilder.append(BY_EMPLOYMENT);
+                    break;
+                case "salary":
+                    queryBuilder.append(BY_SALARY);
                     break;
                 default:
                     queryBuilder.append(BY_COMPANY);
