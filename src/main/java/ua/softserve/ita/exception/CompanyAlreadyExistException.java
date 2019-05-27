@@ -11,4 +11,5 @@ public class CompanyAlreadyExistException extends NullPointerException {
     public CompanyAlreadyExistException(String message) {
         super(message);
     }
+
 }

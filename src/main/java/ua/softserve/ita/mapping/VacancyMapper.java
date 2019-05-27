@@ -9,6 +9,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface VacancyMapper extends BaseMapper<VacancyDTO, Vacancy> {
+
     @Override
     @Mapping(target = "vacancyId", source = "entity.vacancy.id")
     VacancyDTO toDTO(Vacancy vacancy);
@@ -16,4 +17,5 @@ public interface VacancyMapper extends BaseMapper<VacancyDTO, Vacancy> {
     @Override
     @Mapping(target = "vacancyId", source = "entity.vacancy.id")
     List<Vacancy> toEntity(List<VacancyDTO> vacancyDTOS);
+
 }

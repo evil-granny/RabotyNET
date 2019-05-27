@@ -367,25 +367,25 @@ public class CreateCvPdf {
 
             createNewPage();
 
-            try {
-
-                PDImageXObject pdImage = PDImageXObject.createFromByteArray(this.document,cv.getPerson().getPhoto().getImage(),"");
-
-                float scale = (float) PHOTO_SIZE / pdImage.getWidth();
-
-                this.yCoordinate -= pdImage.getHeight() * scale;
-
-                this.xCoordinate -= pdImage.getWidth() * scale;
-
-                this.contentStream.drawImage(pdImage, this.xCoordinate, this.yCoordinate,
-                        pdImage.getWidth() * scale, pdImage.getHeight() * scale);
-
-            } catch (Exception e) {
-
-                this.yCoordinate -= PHOTO_SIZE;
-
-                this.xCoordinate -= PHOTO_SIZE;
-            }
+//            try {
+//
+//                PDImageXObject pdImage = PDImageXObject.createFromByteArray(this.document,cv.getPerson().getPhoto().getImage(),"");
+//
+//                float scale = (float) PHOTO_SIZE / pdImage.getWidth();
+//
+//                this.yCoordinate -= pdImage.getHeight() * scale;
+//
+//                this.xCoordinate -= pdImage.getWidth() * scale;
+//
+//                this.contentStream.drawImage(pdImage, this.xCoordinate, this.yCoordinate,
+//                        pdImage.getWidth() * scale, pdImage.getHeight() * scale);
+//
+//            } catch (Exception e) {
+//
+//                this.yCoordinate -= PHOTO_SIZE;
+//
+//                this.xCoordinate -= PHOTO_SIZE;
+//            }
 
             //line
             final float X_CORDINAT_PHOTO = this.xCoordinate;

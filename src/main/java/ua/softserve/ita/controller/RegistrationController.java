@@ -29,9 +29,9 @@ public class RegistrationController {
     private final RegistrationListener registrationListener;
     private final VerificationTokenService tokenService;
 
-    public RegistrationController( UserService userService, PersonService personService,
-                                   VerificationTokenService tokenService, VerificationTokenService verificationTokenService,
-                                   RegistrationListener registrationListener) {
+    public RegistrationController(UserService userService, PersonService personService,
+                                  VerificationTokenService tokenService, VerificationTokenService verificationTokenService,
+                                  RegistrationListener registrationListener) {
         this.userService = userService;
         this.personService = personService;
         this.tokenService = tokenService;
@@ -92,21 +92,20 @@ public class RegistrationController {
     public String confirmRegistration(@RequestParam("token") final String token) {
         final String result = verificationTokenService.validateVerificationToken(token);
         if (result.equals("TOKEN_VALID")) {
-            final Optional<User> user = userService.findByToken(token);
-            authWithoutPassword(user);
+            userService.findByToken(token).ifPresent(this::authWithoutPassword);
         }
         return result;
     }
 
     @RequestMapping(value = "/user/findToken", method = RequestMethod.GET)
-    public String findToken(@RequestParam("username")String username) {
-        User  user = new User();
-        if (userService.findByEmail(username).isPresent()){
+    public String findToken(@RequestParam("username") String username) {
+        User user = new User();
+        if (userService.findByEmail(username).isPresent()) {
             user = userService.findByEmail(username).get();
         }
         String verificationToken = null;
-        if(verificationTokenService.findByUser(user).isPresent()){
-           verificationToken = verificationTokenService.findByUser(user).get().getToken();
+        if (verificationTokenService.findByUser(user).isPresent()) {
+            verificationToken = verificationTokenService.findByUser(user).get().getToken();
         }
         return verificationTokenService.validateVerificationToken(verificationToken);
     }
@@ -116,16 +115,16 @@ public class RegistrationController {
             HttpServletRequest request, @RequestParam String email) {
 
         Optional<User> user = userService.findByEmail(email);
-        if(!user.isPresent()){
+        if (!user.isPresent()) {
             return ResponseEntity.badRequest().body("Email not found!");
-        }else {
+        } else {
             verificationTokenService.deleteByUserId(user.get().getUserId());
             registrationListener.onApplicationEvent(new OnRegistrationCompleteEvent(user.get(), getAppUrl(request)));
             return ResponseEntity.ok().body("Successfully!");
         }
     }
 
-    private void authWithoutPassword(Optional<User> user) {
+    private void authWithoutPassword(User user) {
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(user, null);
 
