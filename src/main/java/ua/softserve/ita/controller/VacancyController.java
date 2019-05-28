@@ -22,14 +22,10 @@ import java.util.Set;
 @RequestMapping("/vacancies")
 public class VacancyController {
     private final VacancyService vacancyService;
-    private final RequirementService requirementService;
-    private final CompanyService companyService;
 
     @Autowired
-    public VacancyController(VacancyService vacancyService, RequirementService requirementService, CompanyService companyService) {
+    public VacancyController(VacancyService vacancyService) {
         this.vacancyService = vacancyService;
-        this.requirementService = requirementService;
-        this.companyService = companyService;
     }
 
     @GetMapping
