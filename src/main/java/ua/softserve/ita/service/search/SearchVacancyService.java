@@ -1,12 +1,16 @@
 package ua.softserve.ita.service.search;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.softserve.ita.dao.impl.search.SearchVacancyDao;
+import ua.softserve.ita.dto.SearchDTO.SearchRequestDTO;
 import ua.softserve.ita.dto.SearchDTO.SearchVacancyResponseDTO;
 
+
 @Component
-public class SearchVacancyService {
+@Slf4j
+public class SearchVacancyService implements SearchService<SearchVacancyResponseDTO> {
 
     private final SearchVacancyDao searchVacancyDao;
 
@@ -15,8 +19,8 @@ public class SearchVacancyService {
         this.searchVacancyDao = searchVacancyDao;
     }
 
-    public SearchVacancyResponseDTO getResponse(String searchParameter, String searchText, int resultsOnPage, int firstResultNumber) {
-        return searchVacancyDao.search(searchParameter, searchText, resultsOnPage, firstResultNumber);
-
+    @Override
+    public SearchVacancyResponseDTO getResponse(SearchRequestDTO searchRequestDTO) {
+        return searchVacancyDao.getResponse(searchRequestDTO);
     }
 }

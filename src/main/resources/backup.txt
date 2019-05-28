@@ -83,56 +83,56 @@ INSERT INTO public.person(
    user_id, birthday, first_name, last_name, address_id, contact_id, photo_id)
   VALUES (3,' 1999-06-04', 'Denys', 'Ohorodnik', 1, 1, null);
 
-INSERT INTO public.cv(
+INSERT INTO public.resume(
  "position", education_id,user_id)
   VALUES ('developer', 1, 2);
 
-INSERT INTO public.cv(
+INSERT INTO public.resume(
  "position", education_id,user_id)
   VALUES ('java developer', 2, 3);
 
 
 INSERT INTO public.skill(
-  description, title,print_pdf, cv_id)
+  description, title,print_pdf, resume_id)
   VALUES ('Spring MVC', 'MVC',true,1);
 
 INSERT INTO public.job(
-  begin, companyname, description, "end",print_pdf, "position", cv_id)
+  begin, companyname, description, "end",print_pdf, "position", resume_id)
   VALUES ('2000-10-10', 'SoftServe' ,'junior java developer', '2009-03-04',true,'junior', 1);
 
 INSERT INTO public.skill(
-  description, title,print_pdf, cv_id)
+  description, title,print_pdf, resume_id)
   VALUES ('Spring Boot', 'Spring',true,1);
 
 INSERT INTO public.job(
-  begin, companyname, description, "end",print_pdf, "position", cv_id)
+  begin, companyname, description, "end",print_pdf, "position", resume_id)
   VALUES ('2006-04-08', 'ValSoft' ,'middle java developer', '2009-11-04',true,'middle', 1);
 
 
 
 
 INSERT INTO public.skill(
-  description, title,print_pdf, cv_id)
+  description, title,print_pdf, resume_id)
   VALUES ('Good skill', 'Linux',true,2);
 
 INSERT INTO public.job(
-  begin, companyname, description, "end",print_pdf, "position", cv_id)
+  begin, companyname, description, "end",print_pdf, "position", resume_id)
   VALUES ('2008-03-08', 'ValSoft' ,'middle java developer', '2005-07-04',true,'middle', 2);
 
 INSERT INTO public.skill(
-  description, title,print_pdf, cv_id)
+  description, title,print_pdf, resume_id)
   VALUES ('Some experience', 'Angular',true,2);
 
 INSERT INTO public.job(
-  begin, companyname, description, "end",print_pdf, "position", cv_id)
+  begin, companyname, description, "end",print_pdf, "position", resume_id)
   VALUES ('2006-10-08', 'SoftServe' ,'junior java developer', '2009-10-04',true,'junior', 2);
 
 INSERT INTO public.skill(
-  description, title,print_pdf, cv_id)
+  description, title,print_pdf, resume_id)
   VALUES ('Some experience', 'Html',true,2);
 
 INSERT INTO public.job(
-  begin, companyname, description, "end",print_pdf, "position", cv_id)
+  begin, companyname, description, "end",print_pdf, "position", resume_id)
   VALUES ('2010-04-08', 'InventorSoft' ,'senior java developer', '2014-11-04',true,'senior', 2);
 
 

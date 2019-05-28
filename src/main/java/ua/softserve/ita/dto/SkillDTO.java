@@ -3,7 +3,7 @@ package ua.softserve.ita.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ua.softserve.ita.model.CV;
+import ua.softserve.ita.model.Resume;
 
 @Getter
 @Setter
@@ -12,5 +12,5 @@ public class SkillDTO {
     private Long skillId;
     private String title;
     private String description;
-    private CV cv;
+    private Resume resume;
 }

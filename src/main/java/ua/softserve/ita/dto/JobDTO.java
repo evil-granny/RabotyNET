@@ -3,7 +3,7 @@ package ua.softserve.ita.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ua.softserve.ita.model.CV;
+import ua.softserve.ita.model.Resume;
 
 import java.time.LocalDate;
 @Getter
@@ -16,5 +16,5 @@ public class JobDTO {
     private LocalDate end;
     private String companyName;
     private String description;
-    private CV cv;
+    private Resume resume;
 }

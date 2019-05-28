@@ -18,7 +18,6 @@ import javax.servlet.http.HttpSession;
 import static ua.softserve.ita.model.UserPrincipal.UNKNOWN_USER;
 import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 
-@CrossOrigin
 @RestController
 public class LoginController {
 
@@ -48,13 +47,5 @@ public class LoginController {
             cookie.setPath("/");
             response.addCookie(cookie);
         }
-    }
-
-    @RequestMapping(value = "/login/enabled/{email}/", method = RequestMethod.GET)
-    public ResponseEntity<?> enabledUser(@PathVariable("email") String email) {
-        if(userService.findByEmail(email).isPresent()){
-            User user = userService.findByEmail(email).get();
-            return ResponseEntity.ok(user.isEnabled());
-        }else return ResponseEntity.ok().body("User not found!");
     }
 }

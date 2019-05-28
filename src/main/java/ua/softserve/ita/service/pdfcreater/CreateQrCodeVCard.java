@@ -4,7 +4,7 @@ import net.glxn.qrgen.core.image.ImageType;
 import net.glxn.qrgen.core.vcard.VCard;
 import net.glxn.qrgen.javase.QRCode;
 import org.springframework.stereotype.Service;
-import ua.softserve.ita.model.CV;
+import ua.softserve.ita.model.Resume;
 
 import java.io.*;
 
@@ -13,17 +13,17 @@ public class CreateQrCodeVCard {
 
     final int QR_CODE_SIZE = 250;
 
-    public ByteArrayOutputStream createQRCode(CV cv, String url){
+    public ByteArrayOutputStream createQRCode(Resume resume, String url){
 
         VCard vCard = new VCard();
 
-        vCard.setName(cv.getPerson().getFirstName() + " " +cv.getPerson().getLastName());
+        vCard.setName(resume.getPerson().getFirstName() + " " + resume.getPerson().getLastName());
 
-        vCard.setPhoneNumber(cv.getPerson().getContact().getPhoneNumber());
+        vCard.setPhoneNumber(resume.getPerson().getContact().getPhoneNumber());
 
-        vCard.setTitle(cv.getPosition());
+        vCard.setTitle(resume.getPosition());
 
-        vCard.setEmail(cv.getPerson().getContact().getEmail());
+        vCard.setEmail(resume.getPerson().getContact().getEmail());
 
         ByteArrayOutputStream bout =
                 QRCode.from(vCard)

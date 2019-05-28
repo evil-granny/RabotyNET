@@ -2,6 +2,7 @@ package ua.softserve.ita.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.dao.UserDao;
@@ -17,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @Slf4j
-@CrossOrigin
 @RestController
 public class PasswordResetController {
 
@@ -36,13 +36,9 @@ public class PasswordResetController {
     }
 
     @PostMapping("/resetPassword")
-    public ResponseEntity<?> resetPassword(@RequestBody UserResetPasswordDto userResetPasswordDto, final HttpServletRequest request) throws UserNotFoundException {
-        User user;
-        try {
-            user = userDao.findUserByUsername(userResetPasswordDto.getUsername());
-        } catch (Exception ex) {
-            throw new UserNotFoundException("Are you sure that the login is correct or not empty!");
-        }
+    public ResponseEntity<?> resetPassword(@RequestBody UserResetPasswordDto userResetPasswordDto, final HttpServletRequest request) {
+        User user = userDao.getUserWithRoles(userResetPasswordDto.getUsername()).orElseThrow(() ->
+                new UserNotFoundException("No user found with username " + userResetPasswordDto.getUsername()));
         restorePasswordListener.onApplicationEvent(new OnRestorePasswordCompleteEvent(user, getAppUrl(request)));
         return ResponseEntity.ok().body("User found successfully.");
     }
@@ -55,9 +51,11 @@ public class PasswordResetController {
     public ResponseEntity<?> changePassword(@RequestBody UserResetPasswordDto userResetPasswordDto) {
         final String result = tokenService.validateVerificationToken(userResetPasswordDto.getUserResetPasswordToken());
         if (result.equals("valid")) {
-            final Optional<User> user = userService.findByToken(userResetPasswordDto.getUserResetPasswordToken());
-            user.get().setPassword(bCryptPasswordEncoder.encode(userResetPasswordDto.getResetPassword()));
-            userService.update(user.get());
+            userService.findByToken(userResetPasswordDto.getUserResetPasswordToken()).ifPresent((t)->{
+              User user = t.getUser();
+              user.setPassword(bCryptPasswordEncoder.encode(userResetPasswordDto.getResetPassword()));
+                userService.update(user);
+            });
         }
         return ResponseEntity.ok().body("Successfully!");
     }
