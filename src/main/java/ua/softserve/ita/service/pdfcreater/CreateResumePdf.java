@@ -237,7 +237,13 @@ public class CreateResumePdf {
 
             printContext("School", education.getSchool());
 
-            printContext("Graduation", education.getGraduation().toString());
+            if (education.getSpecialty() == null) {printContext("Specialty", "");}
+
+            else {printContext("Specialty", education.getSpecialty().toString());};
+
+            if (education.getGraduation() == null) {printContext("Graduation", "");}
+
+            else {printContext("Graduation", education.getGraduation().toString());};
 
             this.contentStream.endText();
 
@@ -276,7 +282,9 @@ public class CreateResumePdf {
 
                         this.yCoordinate -= LEADING_LINE;
 
-                        countLineForBlock += countDescriptionLine(job.getDescription());
+                        if (job.getDescription() == null) {countLineForBlock += 1;}
+
+                        else {countLineForBlock += countDescriptionLine(job.getDescription());}
 
                         experienceHeader(countLineForBlock);
 
@@ -284,9 +292,13 @@ public class CreateResumePdf {
 
                         printContext("Period", job.getBegin(), job.getEnd());
 
-                        printContext("Company", job.getCompanyName());
+                        if (job.getCompanyName() == null) {printContext("Company", "");}
 
-                        printContext("Description", job.getDescription());
+                        else {printContext("Company", job.getCompanyName());};
+
+                        if (job.getDescription() == null) {printContext("Description", "");}
+
+                        else {printContext("Description", job.getDescription());}
 
                         this.yCoordinate -= INFO_LEADING;
 
@@ -355,13 +367,17 @@ public class CreateResumePdf {
 
                         this.yCoordinate -= LEADING_LINE;
 
-                        countLineForBlock += countDescriptionLine(skill.getDescription());
+                        if (skill.getDescription() == null) {countLineForBlock += 1;}
+
+                        else {countLineForBlock += countDescriptionLine(skill.getDescription());}
 
                         experienceHeader(countLineForBlock);
 
                         printContext("Title", skill.getTitle());
 
-                        printContext("Description", skill.getDescription());
+                        if (skill.getDescription() == null) {printContext("Description", "");}
+
+                        else {printContext("Description", skill.getDescription());}
 
                         this.yCoordinate -= INFO_LEADING;
 
@@ -531,8 +547,14 @@ public class CreateResumePdf {
                         listContext.add(buildLine.toString());
 
                         buildLine.delete(0, buildLine.length() - 1);
+
+                        buildLine.append(word)
+                                .append(" ");
+
                     }
                 }
+
+                if (buildLine.length() != 0) {listContext.add(buildLine.toString());}
 
                 for (String line : listContext) {
 
