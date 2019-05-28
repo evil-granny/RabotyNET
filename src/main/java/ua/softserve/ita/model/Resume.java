@@ -32,8 +32,8 @@ public class Resume implements Serializable {
     private Long cvId;
 
     @Column(name = "position", nullable = false, length = 50)
-    @NotNull(message = "position must be not null")
-    @NotBlank(message = "position must be not blank")
+//    @NotNull(message = "position must be not null")
+//    @NotBlank(message = "position must be not blank")
     @Size(min = 3, max = 50, message = "position length is incorrect")
     private String position;
 
@@ -52,6 +52,9 @@ public class Resume implements Serializable {
     @NotNull(message = "person must be not null")
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private Person person;
+
+    @Column(name = "reviewed", columnDefinition = "BOOLEAN DEFAULT false")
+    private Boolean reviewed;
 
     @ManyToMany(fetch = FetchType.EAGER,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE},

@@ -78,7 +78,7 @@ public class ResumeController {
     public List<Resume> getResumeByVacancyId(@PathVariable("vacancyId") Long vacancyId){
         List<Resume> resumeByVacancyId = resumeService.findResumeByVacancyId(vacancyId);
         List<Person> collect = resumeByVacancyId.stream().map(Resume::getPerson).collect(Collectors.toList());
-        collect.forEach(System.out::println);
+//        collect.forEach(System.out::println);
         return resumeByVacancyId;
     }
 

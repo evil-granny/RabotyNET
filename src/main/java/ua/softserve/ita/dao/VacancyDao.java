@@ -20,4 +20,6 @@ public interface VacancyDao extends BaseDao<Vacancy,Long> {
     List<Vacancy> findAllHotVacanciesWithPagination(int first,int count);
 
     Optional<Vacancy> findByRequirementId(Long id);
+
+    void insertIntoVacancyResume();
 }

@@ -1,7 +1,6 @@
 package ua.softserve.ita.service;
 
 import ua.softserve.ita.dto.VacancyDTO.VacancyDTO;
-import ua.softserve.ita.model.Company;
 import ua.softserve.ita.model.Resume;
 import ua.softserve.ita.model.Vacancy;
 
@@ -29,4 +28,5 @@ public interface VacancyService {
 
     void deleteById(Long id);
 
+    Resume sendResumeOnThisVacancy(Resume resume);
 }

@@ -9,6 +9,7 @@ import ua.softserve.ita.dto.VacancyDTO.VacancyDTO;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Company;
 import ua.softserve.ita.model.Requirement;
+import ua.softserve.ita.model.Resume;
 import ua.softserve.ita.model.Vacancy;
 import ua.softserve.ita.service.CompanyService;
 import ua.softserve.ita.service.RequirementService;
@@ -86,6 +87,12 @@ public class VacancyController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<VacancyDTO> findAllHotVacanciesWithPagination(@PathVariable("first") int first) {
         return ResponseEntity.ok().body(vacancyService.findAllHotVacanciesWithPagination(first));
+    }
+
+    @PostMapping("/sendResume")
+    public ResponseEntity<Resume> sendResumeOnThisVacancy(@Valid @RequestBody Resume resume){
+        System.out.println(resume);
+        return ResponseEntity.ok().body(vacancyService.sendResumeOnThisVacancy(resume));
     }
 
 
