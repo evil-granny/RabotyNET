@@ -2,16 +2,16 @@ package ua.softserve.ita.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.softserve.ita.dao.CVDao;
+import ua.softserve.ita.dao.ResumeDao;
 import ua.softserve.ita.dao.PersonDao;
 import ua.softserve.ita.dao.UserDao;
 import ua.softserve.ita.exception.ResourceNotFoundException;
-import ua.softserve.ita.model.CV;
+import ua.softserve.ita.model.Resume;
 import ua.softserve.ita.model.Job;
 import ua.softserve.ita.model.Skill;
 import ua.softserve.ita.model.User;
 import ua.softserve.ita.model.profile.Person;
-import ua.softserve.ita.service.CVService;
+import ua.softserve.ita.service.ResumeService;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -22,71 +22,71 @@ import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 
 @Service
 @Transactional
-public class CVServiceImpl implements CVService {
+public class ResumeServiceImpl implements ResumeService {
 
-    private final CVDao cvDao;
+    private final ResumeDao resumeDao;
     private final UserDao userDao;
     private final PersonDao personDao;
 
     @Autowired
-    public CVServiceImpl(CVDao cvDao, UserDao userDao, PersonDao personDao) {
-        this.cvDao = cvDao;
+    public ResumeServiceImpl(ResumeDao resumeDao, UserDao userDao, PersonDao personDao) {
+        this.resumeDao = resumeDao;
         this.userDao = userDao;
         this.personDao = personDao;
     }
 
     @Override
-    public Optional<CV> findById(Long id) {
-        return cvDao.findById(id);
+    public Optional<Resume> findById(Long id) {
+        return resumeDao.findById(id);
     }
 
     @Override
-    public List<CV> findAll() {
-        return cvDao.findAll();
+    public List<Resume> findAll() {
+        return resumeDao.findAll();
     }
 
     @Override
-    public CV save(CV cv) {
+    public Resume save(Resume resume) {
 
         Person person = personDao.findById(getLoggedUser().get().getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Person was not found")));
-        cv.setPerson(person);
+        resume.setPerson(person);
 
-        Set<Skill> skills = cv.getSkills();
-        Set<Job> jobs = cv.getJobs();
-        skills.forEach(x -> x.setCv(cv));
-        jobs.forEach(x -> x.setCv(cv));
+        Set<Skill> skills = resume.getSkills();
+        Set<Job> jobs = resume.getJobs();
+        skills.forEach(x -> x.setResume(resume));
+        jobs.forEach(x -> x.setResume(resume));
 
 
-        return cvDao.save(cv);
+        return resumeDao.save(resume);
     }
 
     @Override
-    public CV update(CV cv) {
+    public Resume update(Resume resume) {
 
         if (getLoggedUser().isPresent()) {
             User user = userDao.findById(getLoggedUser().get().getUserId())
                     .orElseThrow(() -> new ResourceNotFoundException("Person was not found"));
-            cv.getPerson().setUser(user);
+            resume.getPerson().setUser(user);
         }
 
-        Set<Skill> skills = cv.getSkills();
-        Set<Job> jobs = cv.getJobs();
-        skills.forEach(x -> x.setCv(cv));
-        jobs.forEach(x -> x.setCv(cv));
+        Set<Skill> skills = resume.getSkills();
+        Set<Job> jobs = resume.getJobs();
+        skills.forEach(x -> x.setResume(resume));
+        jobs.forEach(x -> x.setResume(resume));
 
 
-        return cvDao.update(cv);
+        return resumeDao.update(resume);
     }
 
     @Override
     public void deleteById(Long id) {
-        cvDao.deleteById(id);
+        resumeDao.deleteById(id);
     }
 
     @Override
-    public Optional<CV> findByUserId(Long id) {
-        return cvDao.findByUserId(id);
+    public Optional<Resume> findByUserId(Long id) {
+        return resumeDao.findByUserId(id);
     }
 
 }

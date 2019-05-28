@@ -11,7 +11,6 @@ import java.util.Optional;
 @Repository
 public class VacancyDaoImpl extends AbstractDao<Vacancy, Long> implements VacancyDao {
     private static final String ID = "id";
-    private static final String NAME = "name";
 
     @Override
     public Optional<Vacancy> findByRequirementId(Long id) {
@@ -19,20 +18,21 @@ public class VacancyDaoImpl extends AbstractDao<Vacancy, Long> implements Vacanc
                 .setParameter(ID, id)
                 .getSingleResult()));
     }
+
     @Override
     @SuppressWarnings("unchecked")
-    public List<Vacancy> findAllByCompanyNameWithPagination(String companyName, int first, int count) {
-        return (List<Vacancy>)createNamedQuery(Vacancy.FIND_BY_COMPANY)
-                .setParameter(NAME, companyName)
+    public List<Vacancy> findAllByCompanyIdWithPagination(Long companyId, int first, int count) {
+        return (List<Vacancy>) createNamedQuery(Vacancy.FIND_VACANCIES_BY_COMPANY_ID)
+                .setParameter(ID, companyId)
                 .setFirstResult(first)
                 .setMaxResults(count)
                 .getResultList();
     }
 
     @Override
-    public Long getCountOfVacanciesByCompanyName(String companyName) {
-        return (Long) createNamedQuery(Vacancy.FIND_COUNT_VACANCIES_BY_COMPANY_NAME)
-                .setParameter(NAME, companyName)
+    public Long getCountOfVacanciesByCompanyId(Long companyId) {
+        return (Long) createNamedQuery(Vacancy.FIND_COUNT_VACANCIES_BY_COMPANY_ID)
+                .setParameter(ID, companyId)
                 .getSingleResult();
     }
 
@@ -51,7 +51,7 @@ public class VacancyDaoImpl extends AbstractDao<Vacancy, Long> implements Vacanc
     @Override
     @SuppressWarnings("unchecked")
     public List<Vacancy> findAllVacanciesWithPagination(int first, int count) {
-        return (List<Vacancy>)createNamedQuery(Vacancy.FIND_VACANCIES)
+        return (List<Vacancy>) createNamedQuery(Vacancy.FIND_VACANCIES)
                 .setFirstResult(first)
                 .setMaxResults(count)
                 .getResultList();
@@ -60,7 +60,7 @@ public class VacancyDaoImpl extends AbstractDao<Vacancy, Long> implements Vacanc
     @Override
     @SuppressWarnings("unchecked")
     public List<Vacancy> findAllHotVacanciesWithPagination(int first, int count) {
-        return (List<Vacancy>)createNamedQuery(Vacancy.FIND_ALL_HOT_VACANCIES)
+        return (List<Vacancy>) createNamedQuery(Vacancy.FIND_ALL_HOT_VACANCIES)
                 .setFirstResult(first)
                 .setMaxResults(count)
                 .getResultList();

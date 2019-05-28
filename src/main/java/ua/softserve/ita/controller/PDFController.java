@@ -6,7 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.exception.ResourceNotFoundException;
-import ua.softserve.ita.model.CV;
+import ua.softserve.ita.model.Resume;
 
 import ua.softserve.ita.model.Job;
 import ua.softserve.ita.model.PdfResume;
@@ -26,13 +26,12 @@ import java.util.logging.Logger;
 
 import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 
-@CrossOrigin
 @RestController
 public class PDFController {
 
     private static final Logger LOGGER = Logger.getLogger(PDFController.class.getName());
 
-    private final CVService cvService;
+    private final ResumeService resumeService;
 
     private final GenerateLetter generateService;
 
@@ -40,9 +39,9 @@ public class PDFController {
 
     private final PdfResumeService pdfResumeService;
 
-    public PDFController(CVService cvService, GenerateLetter generateService, CreateCvPdf pdfService, PdfResumeService pdfResumeService) {
+    public PDFController(ResumeService resumeService, GenerateLetter generateService, CreateCvPdf pdfService, PdfResumeService pdfResumeService) {
 
-        this.cvService = cvService;
+        this.resumeService = resumeService;
 
         this.generateService = generateService;
 
@@ -52,11 +51,11 @@ public class PDFController {
     }
 
     @GetMapping(value = "/pdf/{id}")
-    public CV getCV(@PathVariable("id") long id) {
+    public Resume getCV(@PathVariable("id") long id) {
 
         Long userID = getLoggedUser().get().getUserId();
 
-      return cvService.findById(id).orElseThrow(() -> new ResourceNotFoundException("cv not found with id " + id));
+      return resumeService.findById(id).orElseThrow(() -> new ResourceNotFoundException("resume not found with id " + id));
 
     }
 
@@ -76,17 +75,17 @@ public class PDFController {
 
 
     @PutMapping("/pdf/updatePDF")
-    public CV update(@Valid @RequestBody CV cv) {
+    public Resume update(@Valid @RequestBody Resume resume) {
 
-        Set<Skill> skills = cv.getSkills();
+        Set<Skill> skills = resume.getSkills();
 
-        Set<Job> jobs = cv.getJobs();
+        Set<Job> jobs = resume.getJobs();
 
-        skills.forEach(x -> x.setCv(cv));
+        skills.forEach(x -> x.setResume(resume));
 
-        jobs.forEach(x -> x.setCv(cv));
+        jobs.forEach(x -> x.setResume(resume));
 
-        return cvService.update(cv);
+        return resumeService.update(resume);
 
     }
 
@@ -97,9 +96,9 @@ public class PDFController {
 
         response.setContentType("application/pdf");
 
-        CV cv = cvService.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("Vacancy with id: %d not found", id)));
+        Resume resume = resumeService.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("Vacancy with id: %d not found", id)));
 
-        Path pathToPdf = pdfService.createPDF(cv);
+        Path pathToPdf = pdfService.createPDF(resume);
 
         byte[] fileContent;
 
@@ -113,7 +112,7 @@ public class PDFController {
 
             fileContent = Files.readAllBytes(pathToPdf.toRealPath());
 
-            if (send) generateService.sendPersonPDF(cv.getPerson(), pathToPdf.toRealPath().toString());
+            if (send) generateService.sendPersonPDF(resume.getPerson(), pathToPdf.toRealPath().toString());
 
             return new ResponseEntity<>(fileContent, headers, HttpStatus.OK);
 

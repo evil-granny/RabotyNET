@@ -15,7 +15,6 @@ import ua.softserve.ita.service.PersonService;
 import javax.validation.Valid;
 import java.util.List;
 
-@CrossOrigin
 @RestController
 @RequestMapping("/people")
 @Api(value = "PersonControllerAPI", produces = MediaType.APPLICATION_JSON_VALUE)

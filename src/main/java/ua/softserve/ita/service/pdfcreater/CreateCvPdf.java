@@ -368,7 +368,7 @@ public class CreateCvPdf {
 
     }
 
-    public Path createPDF(CV cv) {
+    public Path createPDF(Resume resume) {
 
         try {
 
@@ -378,7 +378,7 @@ public class CreateCvPdf {
 
             try {
 
-                PDImageXObject pdImage = PDImageXObject.createFromByteArray(this.document,cv.getPerson().getPhoto().getImage(),"");
+                PDImageXObject pdImage = PDImageXObject.createFromByteArray(this.document, resume.getPerson().getPhoto().getImage(),"");
 
                 float scale = (float) PHOTO_SIZE / pdImage.getHeight();
 
@@ -422,11 +422,11 @@ public class CreateCvPdf {
 
             this.contentStream.setLeading(TITLE_LEADING);
 
-            this.contentStream.showText(cv.getPerson().getFirstName());
+            this.contentStream.showText(resume.getPerson().getFirstName());
 
             this.contentStream.newLine();
 
-            this.contentStream.showText(cv.getPerson().getLastName());
+            this.contentStream.showText(resume.getPerson().getLastName());
 
             this.contentStream.endText();
 
@@ -443,26 +443,26 @@ public class CreateCvPdf {
 
             this.contentStream.setLeading(INFO_LEADING);
 
-            this.contentStream.showText(cv.getPosition());
+            this.contentStream.showText(resume.getPosition());
 
             this.contentStream.newLine();
 
-            String phoneNumber = cv.getPerson().getContact().getPhoneNumber();
+            String phoneNumber = resume.getPerson().getContact().getPhoneNumber();
 
             printContext("Phone", phoneNumber);
 
-            String eMail = cv.getPerson().getContact().getEmail();
+            String eMail = resume.getPerson().getContact().getEmail();
 
             printContext("EMail", eMail);
 
             this.contentStream.endText();
 
             //Context
-            Education education = cv.getEducation();
+            Education education = resume.getEducation();
 
-            Set<Job> jobs = cv.getJobs();
+            Set<Job> jobs = resume.getJobs();
 
-            Set<Skill> skills = cv.getSkills();
+            Set<Skill> skills = resume.getSkills();
 
             float startContext = (float) 2 / 3;
 
@@ -490,7 +490,7 @@ public class CreateCvPdf {
 
             final float Y_CORDINAT_EDUCATION_BORDER_LINE = this.yCoordinate;
 
-            PDImageXObject pdQR = PDImageXObject.createFromByteArray(this.document, createQR.createQRCode(cv, "").toByteArray(), "");
+            PDImageXObject pdQR = PDImageXObject.createFromByteArray(this.document, createQR.createQRCode(resume, "").toByteArray(), "");
 
             this.yCoordinate = Y_COORDINAT_SUBTITLE_EDUCATION;
 
@@ -667,7 +667,7 @@ public class CreateCvPdf {
 
             Path tempCVFile = null;
 
-            long idUser = cv.getPerson().getUserId();
+            long idUser = resume.getPerson().getUserId();
 
             PdfResume pdfResume = pdfResumeService.findByUserId(idUser).orElse(null);
 
@@ -681,7 +681,7 @@ public class CreateCvPdf {
 
                 pdfResume.setPdfName(tempCVFile.getFileName().toString());
 
-                pdfResume.setPerson(cv.getPerson());
+                pdfResume.setPerson(resume.getPerson());
 
                 pdfResumeService.save(pdfResume);
 

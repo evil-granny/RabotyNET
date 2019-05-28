@@ -28,23 +28,19 @@ public class UserDetailsServiceImp implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) {
 
-        User user = userDao.findUserByUsername(username);
-        Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+        User user = userDao.getUserWithRoles(username).orElseThrow(() ->
+                new UsernameNotFoundException("No user found with username " + username));
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
         for (Role role : user.getRoles()) {
             authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getType().toUpperCase()));
         }
-        if (user != null) {
-            UserPrincipal principal = new UserPrincipal(
-                    user.getUsername(),
-                    user.getPassword(),
-                    authorities,
-                    user.getUserId()
-            );
-            return principal;
-        } else {
-            throw new UsernameNotFoundException("User not found.");
-        }
+        return new UserPrincipal(
+                user.getUsername(),
+                user.getPassword(),
+                authorities,
+                user.getUserId()
+        );
     }
 }
