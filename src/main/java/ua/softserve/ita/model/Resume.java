@@ -23,6 +23,7 @@ import java.util.Set;
 public class Resume implements Serializable {
     public static final String FIND_BY_USER_ID = "Resume.findByUserId";
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "resume_id")

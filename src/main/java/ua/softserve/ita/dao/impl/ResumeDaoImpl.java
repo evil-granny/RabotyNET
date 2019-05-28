@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 @Repository
 public class ResumeDaoImpl extends AbstractDao<Resume,Long> implements ResumeDao {
     private static final String ID = "id";
+    private static final String NAME = "name";
 
     @Override
     @SuppressWarnings("unchecked")

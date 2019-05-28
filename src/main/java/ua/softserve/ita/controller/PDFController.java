@@ -9,10 +9,11 @@ import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Resume;
 
 import ua.softserve.ita.model.Job;
+import ua.softserve.ita.model.PdfResume;
 import ua.softserve.ita.model.Skill;
 import ua.softserve.ita.service.*;
 import ua.softserve.ita.service.letter.GenerateLetter;
-import ua.softserve.ita.service.pdfcreater.CreateCvPdf;
+import ua.softserve.ita.service.pdfcreater.CreateResumePdf;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -34,15 +35,19 @@ public class PDFController {
 
     private final GenerateLetter generateService;
 
-    private final CreateCvPdf pdfService;
+    private final CreateResumePdf pdfService;
 
-    public PDFController(ResumeService resumeService, GenerateLetter generateService, CreateCvPdf pdfService) {
+    private final PdfResumeService pdfResumeService;
+
+    public PDFController(ResumeService resumeService, GenerateLetter generateService, CreateResumePdf pdfService, PdfResumeService pdfResumeService) {
 
         this.resumeService = resumeService;
 
         this.generateService = generateService;
 
         this.pdfService = pdfService;
+
+        this.pdfResumeService = pdfResumeService;
     }
 
     @GetMapping(value = "/pdf/{id}")
@@ -53,6 +58,24 @@ public class PDFController {
       return resumeService.findById(id).orElseThrow(() -> new ResourceNotFoundException("resume not found with id " + id));
 
     }
+
+    @GetMapping(value = "/pdf")
+    public Resume getCVByUser() {
+        return resumeService.findByUserId(getLoggedUser().get().getUserId()).orElseThrow(() -> new ResourceNotFoundException(String.format("CV with id: %d not found")));
+    }
+
+    @GetMapping(value = "/pdf/sendEmail")
+    public boolean sendEmail() {
+
+        PdfResume pdfResume = pdfResumeService.findByUserId(getLoggedUser().get().getUserId()).orElseThrow(() -> new ResourceNotFoundException(String.format("CV with id: %d not found")));
+
+        generateService.sendPersonPDF(pdfResume.getPerson(), pdfResume.getPath());
+
+        return true;
+
+      }
+
+
 
     @PutMapping("/pdf/updatePDF")
     public Resume update(@Valid @RequestBody Resume resume) {

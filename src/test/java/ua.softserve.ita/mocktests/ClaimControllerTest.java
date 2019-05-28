@@ -1,7 +1,9 @@
 package ua.softserve.ita.mocktests;
 
+
 import org.junit.Before;
 import org.junit.Test;
+
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -14,8 +16,10 @@ import ua.softserve.ita.service.CompanyService;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ClaimControllerTest {
