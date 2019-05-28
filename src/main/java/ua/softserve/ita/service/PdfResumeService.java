@@ -1,5 +1,6 @@
 package ua.softserve.ita.service;
 
+import ua.softserve.ita.model.CV;
 import ua.softserve.ita.model.PdfResume;
 
 import java.util.List;
@@ -18,5 +19,9 @@ public interface PdfResumeService {
     void deleteById(Long id);
 
     void deleteAll();
+
+    Optional<PdfResume> findByUserId(Long id);
+
+    public Optional<PdfResume> findByPdfName(String name);
 
 }

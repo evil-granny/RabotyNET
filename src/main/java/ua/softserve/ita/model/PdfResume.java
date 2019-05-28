@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import ua.softserve.ita.model.profile.Person;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -21,7 +22,13 @@ import java.util.Objects;
 @AllArgsConstructor
 @Entity
 @Table(name = "pdf_resume")
+@NamedQueries({
+        @NamedQuery(name = PdfResume.FIND_BY_USER_ID, query = "select pdfResume from PdfResume pdfResume where pdfResume.person.userId = :id"),
+        @NamedQuery(name = PdfResume.FIND_BY_PDF_NAME, query = "select pdfResume from PdfResume pdfResume where pdfResume.pdfName = :name"),
+})
 public class PdfResume implements Serializable {
+    public static final String FIND_BY_USER_ID = "PdfResume.findByUserId";
+    public static final String FIND_BY_PDF_NAME = "PdfResume.findByPdfName";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,5 +43,9 @@ public class PdfResume implements Serializable {
     @Size(max = 100, message = "pdf_name length is incorrect")
     private String pdfName;
 
+    @OneToOne
+    @NotNull(message = "person must be not null")
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
+    private Person person;
 
 }

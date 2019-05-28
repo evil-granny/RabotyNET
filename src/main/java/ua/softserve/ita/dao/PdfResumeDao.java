@@ -9,6 +9,8 @@ public interface PdfResumeDao extends BaseDao<PdfResume,Long> {
 
     void deleteAll();
 
-    public Optional<CV> findByPdfName(String name);
+    Optional<PdfResume> findByUserId(Long id);
+
+    public Optional<PdfResume> findByPdfName(String name);
 
 }

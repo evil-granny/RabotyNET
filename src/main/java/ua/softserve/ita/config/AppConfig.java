@@ -162,15 +162,15 @@ public class AppConfig {
 
             for (final Path newDirectoryStreamItem : newDirectoryStream) {
 
-                String pdfName = newDirectoryStreamItem.getFileName().toString();
+                //String pdfName = newDirectoryStreamItem.getFileName().toString();
 
-                CV cvForClean = cvService.findByPdfName(pdfName).orElseThrow(() -> new ResourceNotFoundException(String.format("CV with id: %d not found")));
+                //CV cvForClean = cvService.findByPdfName(pdfName).orElseThrow(() -> new ResourceNotFoundException(String.format("CV with id: %d not found")));
 
-                cvForClean.setPdfResume(null);
+                //cvForClean.setPdfResume(null);
 
-                CV newCleanCV = cvService.update(cvForClean);
+                //CV newCleanCV = cvService.update(cvForClean);
 
-                System.out.println("clean cv");
+                //System.out.println("clean cv");
 
                 Files.delete(newDirectoryStreamItem);
 

@@ -50,5 +50,14 @@ public class PdfResumeServiceImpl implements PdfResumeService {
     @Override
     public void deleteAll() {pdfResumeDao.deleteAll();}
 
+    @Override
+    public Optional<PdfResume> findByUserId(Long id) {
+        return pdfResumeDao.findByUserId(id);
+    }
+
+    @Override
+    public Optional<PdfResume> findByPdfName(String name) {
+        return pdfResumeDao.findByPdfName(name);
+    }
 
 }

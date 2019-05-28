@@ -31,19 +31,4 @@ public class CVDaoImpl extends AbstractDao<CV,Long> implements CVDao {
         });
     }
 
-    @Override
-    public Optional<CV> findByPdfName(String name) {
-        return QueryUtility.findOrEmpty(() -> {
-            CV result = null;
-            try {
-                result = (CV) createNamedQuery(CV.FIND_BY_PDF_NAME)
-                        .setParameter(NAME, name)
-                        .getSingleResult();
-            } catch (NoResultException ex) {
-                Logger.getLogger(CompanyDaoImpl.class.getName()).log(Level.WARNING, "PdfFile not found with name " + name);
-            }
-            return result;
-        });
-    }
-
 }

@@ -380,7 +380,7 @@ public class CreateCvPdf {
 
                 PDImageXObject pdImage = PDImageXObject.createFromByteArray(this.document,cv.getPerson().getPhoto().getImage(),"");
 
-                float scale = (float) PHOTO_SIZE / pdImage.getWidth();
+                float scale = (float) PHOTO_SIZE / pdImage.getHeight();
 
                 this.yCoordinate -= pdImage.getHeight() * scale;
 
@@ -667,37 +667,27 @@ public class CreateCvPdf {
 
             Path tempCVFile = null;
 
-            if (cv.getPdfResume() == null) {
+            long idUser = cv.getPerson().getUserId();
+
+            PdfResume pdfResume = pdfResumeService.findByUserId(idUser).orElse(null);
+
+            if (pdfResume == null) {
+
+                pdfResume = new PdfResume();
 
                 tempCVFile = Files.createTempFile(saveDir, "pdfCV", ".pdf");
 
-                PdfResume pdfResume = new PdfResume();
-
-                pdfResume.setPath(tempCVFile.toString());
+                pdfResume.setPath(tempCVFile.toRealPath().toString());
 
                 pdfResume.setPdfName(tempCVFile.getFileName().toString());
 
-                cv.setPdfResume(pdfResume);
+                pdfResume.setPerson(cv.getPerson());
 
-                cvService.update(cv);
-
-                //TO DO
-
-                CV cvForClean = cvService.findByPdfName(cv.getPdfResume().getPdfName()).orElseThrow(() -> new ResourceNotFoundException(String.format("CV with id: %d not found")));
-
-                cvForClean.setPdfResume(null);
-
-                cvService.update(cvForClean);
-
-                //
-
-
-
-
+                pdfResumeService.save(pdfResume);
 
             } else {
 
-                tempCVFile = Paths.get(cv.getPdfResume().getPath());
+                tempCVFile = Paths.get(pdfResume.getPath());
 
             }
 

@@ -18,5 +18,4 @@ public interface CVService {
 
     Optional<CV> findByUserId(Long id);
 
-    public Optional<CV> findByPdfName(String name);
 }

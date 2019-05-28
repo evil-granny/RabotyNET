@@ -8,5 +8,4 @@ public interface CVDao extends BaseDao<CV,Long> {
 
     Optional<CV> findByUserId(Long id);
 
-    public Optional<CV> findByPdfName(String name);
 }

@@ -13,10 +13,8 @@ import ua.softserve.ita.model.PdfResume;
 import ua.softserve.ita.model.Skill;
 import ua.softserve.ita.service.*;
 import ua.softserve.ita.service.letter.GenerateLetter;
-import ua.softserve.ita.service.pdfcreater.CleanTempCvPdf;
 import ua.softserve.ita.service.pdfcreater.CreateCvPdf;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
@@ -40,13 +38,17 @@ public class PDFController {
 
     private final CreateCvPdf pdfService;
 
-    public PDFController(CVService cvService, GenerateLetter generateService, CreateCvPdf pdfService) {
+    private final PdfResumeService pdfResumeService;
+
+    public PDFController(CVService cvService, GenerateLetter generateService, CreateCvPdf pdfService, PdfResumeService pdfResumeService) {
 
         this.cvService = cvService;
 
         this.generateService = generateService;
 
         this.pdfService = pdfService;
+
+        this.pdfResumeService = pdfResumeService;
     }
 
     @GetMapping(value = "/pdf/{id}")
@@ -62,6 +64,16 @@ public class PDFController {
     public CV getCVByUser() {
         return cvService.findByUserId(getLoggedUser().get().getUserId()).orElseThrow(() -> new ResourceNotFoundException(String.format("CV with id: %d not found")));
     }
+
+    @GetMapping(value = "/pdf/sendEmail")
+    public void sendEmail() {
+
+        PdfResume pdfResume = pdfResumeService.findByUserId(getLoggedUser().get().getUserId()).orElseThrow(() -> new ResourceNotFoundException(String.format("CV with id: %d not found")));
+
+        generateService.sendPersonPDF(pdfResume.getPerson(), pdfResume.getPath());
+    }
+
+
 
     @PutMapping("/pdf/updatePDF")
     public CV update(@Valid @RequestBody CV cv) {
