@@ -5,12 +5,14 @@ import org.springframework.stereotype.Service;
 import ua.softserve.ita.dao.*;
 import ua.softserve.ita.dto.VacancyDTO.VacancyDTO;
 import ua.softserve.ita.exception.ResourceNotFoundException;
-import ua.softserve.ita.model.*;
+import ua.softserve.ita.model.Company;
+import ua.softserve.ita.model.Requirement;
+import ua.softserve.ita.model.Resume;
+import ua.softserve.ita.model.Vacancy;
 import ua.softserve.ita.service.ResumeService;
 import ua.softserve.ita.service.VacancyService;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -27,16 +29,14 @@ public class VacancyServiceImpl implements VacancyService {
     private final RequirementDao requirementDao;
     private final CompanyDao companyDao;
     private final ResumeDao resumeDao;
-    private final UserDao userDao;
     private final ResumeService resumeService;
 
     @Autowired
-    public VacancyServiceImpl(VacancyDao vacancyDao, RequirementDao requirementDao, CompanyDao companyDao, ResumeDao resumeDao, UserDao userDao, ResumeService resumeService) {
+    public VacancyServiceImpl(VacancyDao vacancyDao, RequirementDao requirementDao, CompanyDao companyDao, ResumeDao resumeDao, ResumeService resumeService) {
         this.vacancyDao = vacancyDao;
         this.requirementDao = requirementDao;
         this.companyDao = companyDao;
         this.resumeDao = resumeDao;
-        this.userDao = userDao;
         this.resumeService = resumeService;
     }
 
@@ -82,18 +82,6 @@ public class VacancyServiceImpl implements VacancyService {
     }
 
     @Override
-    public Optional<Vacancy> sendResume(Vacancy vacancy, Set<Resume> resumes) {
-        Optional<Vacancy> result = vacancyDao.findById(vacancy.getVacancyId());
-        if(result.isPresent()) {
-            vacancy = result.get();
-            vacancy.setResumes(resumes);
-            resumes.forEach(resumeDao::update);
-            vacancyDao.update(vacancy);
-        }
-        return result;
-    }
-
-    @Override
     public Vacancy update(Vacancy vacancy) {
         Company company = companyDao.findByVacancyId(vacancy.getVacancyId())
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Company by vacancy id: %d not found", vacancy.getVacancyId())));
@@ -117,44 +105,5 @@ public class VacancyServiceImpl implements VacancyService {
         if (company.getUser().getUserId().equals(getLoggedUser().get().getUserId())) {
             vacancyDao.deleteById(id);
         }
-    }
-
-    @Override
-    public Resume sendResumeOnThisVacancy(Resume resume) {
-//        vacancyDao.insertIntoVacancyResume();
-
-        if (getLoggedUser().isPresent()) {
-            User user = userDao.findById(getLoggedUser().get().getUserId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Person was not found"));
-            resume.getPerson().setUser(user);
-        }
-        Set<Vacancy> vacancies = resume.getVacancies();
-        System.out.println("Start"+vacancies.isEmpty());
-        vacancies.forEach(System.out::println);
-
-//        vacancies.clear();
-
-        Set<Skill> skills = resume.getSkills();
-        Set<Job> jobs = resume.getJobs();
-        skills.forEach(x -> x.setResume(resume));
-        jobs.forEach(x -> x.setResume(resume));
-        resume.getVacancies().add(vacancyDao.findById(8L).orElseThrow(()->new ResourceNotFoundException("fggffg")));
-
-
-
-
-//        vacancies.forEach(v -> v.setResumes(resume));
-
-        System.out.println(resume);
-        vacancies.forEach(v -> v.getResumes().add(resume));
-//        vacancies.forEach(System.out::println);
-//        System.out.println("End "+vacancies.isEmpty());
-//
-        vacancies.forEach(vacancyDao::update);
-
-
-//        resumeDao.save(resume);
-
-       return resumeService.update(resume);
     }
 }

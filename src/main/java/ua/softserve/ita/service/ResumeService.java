@@ -19,4 +19,6 @@ public interface ResumeService {
     Optional<Resume> findByUserId(Long id);
 
     List<Resume> findResumeByVacancyId(Long vacancyId);
+
+    Resume sendResumeOnThisVacancy(Resume resume,Long vacancyId);
 }

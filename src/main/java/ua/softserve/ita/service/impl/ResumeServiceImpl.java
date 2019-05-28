@@ -95,4 +95,26 @@ public class ResumeServiceImpl implements ResumeService {
     public List<Resume> findResumeByVacancyId(Long vacancyId) {
         return resumeDao.findResumeByVacancyId(vacancyId);
     }
+
+    @Override
+    public Resume sendResumeOnThisVacancy(Resume resume, Long vacancyId) {
+        if (getLoggedUser().isPresent()) {
+            User user = userDao.findById(getLoggedUser().get().getUserId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Person was not found"));
+            resume.getPerson().setUser(user);
+        }
+        Set<Vacancy> vacancies = resume.getVacancies();
+        System.out.println("Start" + vacancies.isEmpty());
+        vacancies.forEach(System.out::println);
+        Set<Skill> skills = resume.getSkills();
+        Set<Job> jobs = resume.getJobs();
+        skills.forEach(x -> x.setResume(resume));
+        jobs.forEach(x -> x.setResume(resume));
+        resume.getVacancies().add(vacancyDao.findById(vacancyId)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Vacancy with id: %d not found", vacancyId))));
+        System.out.println(resume);
+        vacancies.forEach(v -> v.getResumes().add(resume));
+        vacancies.forEach(vacancyDao::update);
+        return update(resume);
+    }
 }

@@ -5,10 +5,8 @@ import ua.softserve.ita.dao.VacancyDao;
 import ua.softserve.ita.model.Vacancy;
 import ua.softserve.ita.utility.QueryUtility;
 
-import javax.persistence.Parameter;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Repository
 public class VacancyDaoImpl extends AbstractDao<Vacancy, Long> implements VacancyDao {
@@ -66,13 +64,5 @@ public class VacancyDaoImpl extends AbstractDao<Vacancy, Long> implements Vacanc
                 .setFirstResult(first)
                 .setMaxResults(count)
                 .getResultList();
-    }
-
-    @Override
-    public void insertIntoVacancyResume() {
-        Set<Parameter<?>> parameters = createNativeQuery("INSERT INTO vacancy_resume(vacancy_id, cv_id)VALUES (8, 1)").getParameters();
-        parameters.forEach(System.out::println);
-//                .setParameter()
-//                .getSingleResult();
     }
 }

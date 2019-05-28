@@ -20,13 +20,10 @@ public interface VacancyService {
 
     VacancyDTO findAllVacanciesWithPagination(int first);
 
-    Vacancy save(Vacancy vacancy,Long companyId);
-
-    Optional<Vacancy> sendResume(Vacancy vacancy, Set<Resume> resumes);
+    Vacancy save(Vacancy vacancy, Long companyId);
 
     Vacancy update(Vacancy vacancy);
 
     void deleteById(Long id);
 
-    Resume sendResumeOnThisVacancy(Resume resume);
 }

@@ -30,8 +30,7 @@ import java.util.Set;
         @NamedQuery(name = Vacancy.FIND_COUNT_VACANCIES_BY_COMPANY_ID, query = "select count(vac.vacancyId) from Vacancy vac where vac.company.companyId = :id"),
         @NamedQuery(name = Vacancy.FIND_COUNT_All_VACANCY, query = "select count(vac.vacancyId) from Vacancy vac"),
         @NamedQuery(name = Vacancy.FIND_COUNT_HOT_VACANCIES, query = "select count(vac.vacancyId) from Vacancy vac where vac.hotVacancy = true"),
-//        @NamedQuery(name = Vacancy.FIND, query = "insert into vacancy_resume (vacancy_id, cv_id) select  v.vacancyId  r.cvId from Vacancy v  inner join Resume r  on r.cvId = v.cvId and u.Username = Username"),
-
+        @NamedQuery(name = Vacancy.FIND_BY_VACANCY_ID, query = "select vac from Vacancy vac where vac.vacancyId = :id"),
 })
 public class Vacancy {
     public static final String FIND_VACANCIES_BY_COMPANY_ID = "Vacancy.findVacanciesByCompanyId";
@@ -41,7 +40,7 @@ public class Vacancy {
     public static final String FIND_COUNT_HOT_VACANCIES = "Vacancy.findCountAllHotVacancies";
     public static final String FIND_VACANCIES = "Vacancy.findVacancies";
     public static final String FIND_ALL_HOT_VACANCIES = "Vacancy.findAllHotVacancies";
-//    public static final String FIND = "Vacancy.gffgfg";
+    public static final String FIND_BY_VACANCY_ID = "Vacancy.findVacancyByVacancyId";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
