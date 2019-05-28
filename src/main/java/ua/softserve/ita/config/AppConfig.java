@@ -10,25 +10,18 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import ua.softserve.ita.exception.ResourceNotFoundException;
-import ua.softserve.ita.model.CV;
-import ua.softserve.ita.service.CVService;
 import ua.softserve.ita.service.PdfResumeService;
-import ua.softserve.ita.service.pdfcreater.CleanTempCvPdf;
-import ua.softserve.ita.service.pdfcreater.CreateQrCodeVCard;
+import ua.softserve.ita.service.pdfcreater.CleanTempResumePdf;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Date;
 import java.util.Properties;
-import java.util.Timer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -52,9 +45,6 @@ public class AppConfig {
 
     @Autowired
     private PdfResumeService pdfResumeService;
-
-    @Autowired
-    private CVService cvService;
 
     @Bean
     public LocalSessionFactoryBean getSessionFactory() {
@@ -150,7 +140,7 @@ public class AppConfig {
 
         final String SAVE_DIRECTORY_FOR_PDF_DOC = "pdf/tempPDFdir";
 
-        final Logger LOGGER = Logger.getLogger(CleanTempCvPdf.class.getName());
+        final Logger LOGGER = Logger.getLogger(CleanTempResumePdf.class.getName());
 
         final String PREFIX_FILE_NAME = "pdfCV";
 

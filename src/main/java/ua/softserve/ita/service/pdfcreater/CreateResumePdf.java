@@ -9,11 +9,9 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.*;
-import ua.softserve.ita.service.CVService;
 import ua.softserve.ita.service.PdfResumeService;
-
+import ua.softserve.ita.service.ResumeService;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -30,18 +28,18 @@ import java.util.logging.Logger;
 
 @Service
 @Data
-public class CreateCvPdf {
+public class CreateResumePdf {
 
-    private static final Logger LOGGER = Logger.getLogger(CreateCvPdf.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(CreateResumePdf.class.getName());
 
     private final PdfResumeService pdfResumeService;
-    private final CVService cvService;
+    private final ResumeService resumeService;
     private final CreateQrCodeVCard createQR;
 
     @Autowired
-    public CreateCvPdf(PdfResumeService pdfResumeService, CVService cvService, CreateQrCodeVCard createQR){
+    public CreateResumePdf(PdfResumeService pdfResumeService, ResumeService resumeService, CreateQrCodeVCard createQR){
         this.pdfResumeService = pdfResumeService;
-        this.cvService = cvService;
+        this.resumeService = resumeService;
         this.createQR = createQR;
     }
 
@@ -288,7 +286,7 @@ public class CreateCvPdf {
 
         try {
 
-            pathLogo = Paths.get(CreateCvPdf.class.getClassLoader().getResource("logo.png").toURI()).toString();
+            pathLogo = Paths.get(CreateResumePdf.class.getClassLoader().getResource("logo.png").toURI()).toString();
 
             PDImageXObject pdLogo = PDImageXObject.createFromFile(pathLogo, document);
 

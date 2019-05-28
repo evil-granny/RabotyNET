@@ -1,6 +1,5 @@
 package ua.softserve.ita.service;
 
-import ua.softserve.ita.model.CV;
 import ua.softserve.ita.model.PdfResume;
 
 import java.util.List;
