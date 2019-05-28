@@ -1,0 +1,221 @@
+package ua.softserve.ita.unittests;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import ua.softserve.ita.controller.CompanyController;
+import ua.softserve.ita.dto.CompanyDTO.CompanyPaginationDTO;
+import ua.softserve.ita.exception.ResourceNotFoundException;
+import ua.softserve.ita.model.Company;
+import ua.softserve.ita.model.UserPrincipal;
+import ua.softserve.ita.service.CompanyService;
+import ua.softserve.ita.utility.LoggedUserUtil;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.powermock.api.mockito.PowerMockito.*;
+
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({LoggedUserUtil.class, CompanyController.class})
+public class CompanyControllerTest {
+
+    @Mock
+    private CompanyService companyService;
+
+    private CompanyController controller;
+
+    private static final String NAME = "SoftServe";
+    private static final int FIRST = 1;
+    private static final int COUNT = 2;
+    private static final Long ALL_COUNT = 2L;
+    private static final Long USER_ID = 1L;
+    private static final Long COMPANY_ID = 1L;
+
+    @Before
+    public void setUp() {
+        this.controller = new CompanyController(companyService);
+    }
+
+    @Test
+    public void getCompanyByName() {
+        Company mockCompany = Company.builder()
+                .companyId(1L)
+                .name(NAME)
+                .build();
+
+        when(companyService.findByName(eq(NAME))).thenReturn(Optional.of(mockCompany));
+        Company companyByName = controller.getCompanyByName(NAME);
+
+        assertEquals(mockCompany, companyByName);
+
+        verify(companyService, times(1)).findByName(eq(NAME));
+        verifyNoMoreInteractions(companyService);
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void getCompanyByNameNotFound() {
+        when(companyService.findByName(eq(NAME))).thenThrow(new ResourceNotFoundException("Company not found with name " + NAME));
+
+        controller.getCompanyByName(NAME);
+
+        verify(companyService, times(1)).findByName(eq(NAME));
+        verifyNoMoreInteractions(companyService);
+    }
+
+    @Test
+    public void getAllCompanies() {
+        Company mockCompany1 = Company.builder()
+                .companyId(1L)
+                .name("SoftServe")
+                .build();
+        Company mockCompany2 = Company.builder()
+                .companyId(2L)
+                .name("SharpMinds")
+                .build();
+        List<Company> mockCompanies = new LinkedList<>();
+        mockCompanies.add(mockCompany1);
+        mockCompanies.add(mockCompany2);
+
+        when(companyService.findAll()).thenReturn(mockCompanies);
+        List<Company> allCompanies = controller.getAll();
+
+        assertEquals(mockCompanies, allCompanies);
+
+        verify(companyService, times(1)).findAll();
+        verifyNoMoreInteractions(companyService);
+    }
+
+    @Test
+    public void getAllCompaniesWithPagination() {
+        Company mockCompany1 = Company.builder()
+                .companyId(1L)
+                .name("SoftServe")
+                .build();
+        Company mockCompany2 = Company.builder()
+                .companyId(2L)
+                .name("SharpMinds")
+                .build();
+        List<Company> mockCompanies = new LinkedList<>();
+        mockCompanies.add(mockCompany1);
+        mockCompanies.add(mockCompany2);
+        CompanyPaginationDTO mockDTO = new CompanyPaginationDTO(ALL_COUNT, mockCompanies);
+
+        when(companyService.findAllWithPagination(eq(FIRST), eq(COUNT))).thenReturn(mockDTO);
+        CompanyPaginationDTO companyPaginationDTO = controller.getAllWithPagination(FIRST, COUNT);
+
+        assertEquals(mockDTO, companyPaginationDTO);
+
+        verify(companyService, times(1)).findAllWithPagination(eq(FIRST), eq(COUNT));
+        verifyNoMoreInteractions(companyService);
+    }
+
+    @Test
+    public void getAllCompaniesByUser() {
+        Company mockCompany1 = Company.builder()
+                .companyId(1L)
+                .name("SoftServe")
+                .build();
+        Company mockCompany2 = Company.builder()
+                .companyId(2L)
+                .name("SharpMinds")
+                .build();
+        List<Company> mockCompanies = new LinkedList<>();
+        mockCompanies.add(mockCompany1);
+        mockCompanies.add(mockCompany2);
+
+        mockStatic(LoggedUserUtil.class);
+
+        when(LoggedUserUtil.getLoggedUser()).thenReturn(Optional.of(new UserPrincipal("admin.admin@gmail.com", "admin", new ArrayList<>(), USER_ID)));
+        when(companyService.findByUserId(eq(USER_ID))).thenReturn(mockCompanies);
+        List<Company> allCompaniesByUser = controller.getAllByUser();
+
+        assertEquals(mockCompanies, allCompaniesByUser);
+
+        verifyStatic(LoggedUserUtil.class);
+        LoggedUserUtil.getLoggedUser();
+        verify(companyService, times(1)).findByUserId(eq(USER_ID));
+        verifyNoMoreInteractions(companyService);
+    }
+
+    @Test
+    public void createCompany() {
+        Company mockCompany = Company.builder()
+                .companyId(1L)
+                .name("SoftServe")
+                .build();
+
+        when(companyService.save(any(Company.class))).thenReturn(Optional.of(mockCompany));
+        Company createdCompany = controller.create(new Company());
+
+        assertEquals(mockCompany, createdCompany);
+
+        verify(companyService, times(1)).save(any(Company.class));
+        verifyNoMoreInteractions(companyService);
+    }
+
+    @Test
+    public void updateCompany() {
+        Company mockCompany = Company.builder()
+                .companyId(1L)
+                .name("SoftServe")
+                .build();
+
+        when(companyService.update(any(Company.class))).thenReturn(mockCompany);
+        Company updatedCompany = controller.update(new Company());
+
+        assertEquals(mockCompany, updatedCompany);
+
+        verify(companyService, times(1)).update(any(Company.class));
+        verifyNoMoreInteractions(companyService);
+    }
+
+    @Test
+    public void sendMail() {
+        Company mockCompany = Company.builder()
+                .companyId(1L)
+                .name("SoftServe")
+                .build();
+
+        HttpServletRequest request = mock(HttpServletRequest.class);
+
+        when(companyService.sendMail(any(Company.class), any(String.class))).thenReturn(Optional.of(mockCompany));
+        Company companyWithSentLetter = controller.sendMail(new Company(), request);
+
+        assertEquals(mockCompany, companyWithSentLetter);
+
+        verify(companyService, times(1)).sendMail(any(Company.class), any(String.class));
+        verifyNoMoreInteractions(companyService);
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void sendMailThrowsException() {
+        HttpServletRequest request = mock(HttpServletRequest.class);
+
+        when(companyService.sendMail(any(Company.class), any(String.class))).thenThrow(new ResourceNotFoundException("Company not found with name " + NAME));
+
+        controller.sendMail(new Company(), request);
+
+        verify(companyService, times(1)).sendMail(any(Company.class), any(String.class));
+        verifyNoMoreInteractions(companyService);
+    }
+
+    @Test
+    public void deleteCompany() {
+        controller.delete(COMPANY_ID);
+
+        verify(companyService, times(1)).deleteById(eq(COMPANY_ID));
+        verifyNoMoreInteractions(companyService);
+    }
+}
