@@ -52,7 +52,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         .antMatchers("/resume/**","/companies/create","/companies/approve","/people", "/people/*", "people/**").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
                         .antMatchers("/companies/byName/**","/companies/byCompany/**","/claims","/photo/**","/users/**", "/users/enabled/**").permitAll()
                         .antMatchers("/","/vacancies/**","/login","/login/**", "/resetPassword","/changePassword").permitAll()
-                        .antMatchers("/pdf/**", "/updatePDF", "/createPdf/**").permitAll()
+                        .antMatchers("/pdf/**", "/updatePDF", "/createPdf/**","/healthCheck").permitAll()
                 .anyRequest().authenticated()
                 .and()
 
