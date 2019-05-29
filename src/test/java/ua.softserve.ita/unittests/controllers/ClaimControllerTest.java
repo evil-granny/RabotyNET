@@ -1,4 +1,4 @@
-package ua.softserve.ita.unittests;
+package ua.softserve.ita.unittests.controllers;
 
 import org.junit.Before;
 import org.junit.Test;
