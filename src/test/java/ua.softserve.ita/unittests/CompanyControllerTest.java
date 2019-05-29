@@ -8,6 +8,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import ua.softserve.ita.controller.CompanyController;
 import ua.softserve.ita.dto.CompanyDTO.CompanyPaginationDTO;
+import ua.softserve.ita.exception.CompanyAlreadyExistException;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Company;
 import ua.softserve.ita.model.UserPrincipal;
@@ -20,7 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
@@ -42,6 +43,7 @@ public class CompanyControllerTest {
     private static final Long ALL_COUNT = 2L;
     private static final Long USER_ID = 1L;
     private static final Long COMPANY_ID = 1L;
+    private static final String TOKEN = "8edfh8";
 
     @Before
     public void setUp() {
@@ -165,6 +167,15 @@ public class CompanyControllerTest {
         verifyNoMoreInteractions(companyService);
     }
 
+    @Test(expected = CompanyAlreadyExistException.class)
+    public void createCompanyAlreadyExists() {
+        when(companyService.save(any(Company.class))).thenThrow(new CompanyAlreadyExistException("Company already exists"));
+        controller.create(new Company());
+
+        verify(companyService, times(1)).save(any(Company.class));
+        verifyNoMoreInteractions(companyService);
+    }
+
     @Test
     public void updateCompany() {
         Company mockCompany = Company.builder()
@@ -216,6 +227,58 @@ public class CompanyControllerTest {
         controller.delete(COMPANY_ID);
 
         verify(companyService, times(1)).deleteById(eq(COMPANY_ID));
+        verifyNoMoreInteractions(companyService);
+    }
+
+    @Test
+    public void approveCompany() {
+        Company mockCompany = Company.builder()
+                .companyId(1L)
+                .name("SoftServe")
+                .build();
+
+        when(companyService.approve(any(Company.class), eq(TOKEN))).thenReturn(Optional.of(mockCompany));
+        Company approvedCompany = controller.approve(TOKEN, new Company());
+
+        assertEquals(mockCompany, approvedCompany);
+
+        verify(companyService, times(1)).approve(any(Company.class), eq(TOKEN));
+        verifyNoMoreInteractions(companyService);
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void approveCompanyNotFound() {
+        when(companyService.approve(any(Company.class), eq(TOKEN))).thenThrow(new ResourceNotFoundException("Company not found with name " + NAME));
+        controller.approve(TOKEN, new Company());
+
+        verify(companyService, times(1)).approve(any(Company.class), eq(TOKEN));
+        verifyNoMoreInteractions(companyService);
+    }
+
+    @Test
+    public void ifCompanyExists() {
+        Company mockCompany = Company.builder()
+                .companyId(1L)
+                .name("SoftServe")
+                .build();
+
+        when(companyService.findByName(eq(NAME))).thenReturn(Optional.of(mockCompany));
+        boolean companyExists = controller.exists(NAME);
+
+        assertTrue(companyExists);
+
+        verify(companyService, times(1)).findByName(eq(NAME));
+        verifyNoMoreInteractions(companyService);
+    }
+
+    @Test
+    public void ifCompanyDoesNotExist() {
+        when(companyService.findByName(eq(NAME))).thenReturn(Optional.empty());
+        boolean companyExists = controller.exists(NAME);
+
+        assertFalse(companyExists);
+
+        verify(companyService, times(1)).findByName(eq(NAME));
         verifyNoMoreInteractions(companyService);
     }
 }
