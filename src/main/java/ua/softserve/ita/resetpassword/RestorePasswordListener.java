@@ -7,6 +7,7 @@ import ua.softserve.ita.model.User;
 import ua.softserve.ita.service.letter.GenerateLetter;
 import ua.softserve.ita.service.token.VerificationTokenService;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Component

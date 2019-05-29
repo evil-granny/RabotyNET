@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Optional;
 
 @Data
 @Entity
@@ -33,7 +34,7 @@ public class VerificationToken {
 
     private Date expiryDate;
 
-    public VerificationToken() {
+    public VerificationToken(String token, Optional<User> user) {
     }
 
     public VerificationToken(final String token, final User user) {

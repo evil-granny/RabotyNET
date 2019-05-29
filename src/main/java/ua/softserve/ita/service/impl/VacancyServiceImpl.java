@@ -2,14 +2,14 @@ package ua.softserve.ita.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.softserve.ita.dao.CompanyDao;
-import ua.softserve.ita.dao.RequirementDao;
-import ua.softserve.ita.dao.VacancyDao;
+import ua.softserve.ita.dao.*;
 import ua.softserve.ita.dto.VacancyDTO.VacancyDTO;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Company;
 import ua.softserve.ita.model.Requirement;
+import ua.softserve.ita.model.Resume;
 import ua.softserve.ita.model.Vacancy;
+import ua.softserve.ita.service.ResumeService;
 import ua.softserve.ita.service.VacancyService;
 
 import javax.transaction.Transactional;
@@ -28,12 +28,16 @@ public class VacancyServiceImpl implements VacancyService {
     private final VacancyDao vacancyDao;
     private final RequirementDao requirementDao;
     private final CompanyDao companyDao;
+    private final ResumeDao resumeDao;
+    private final ResumeService resumeService;
 
     @Autowired
-    public VacancyServiceImpl(VacancyDao vacancyDao, RequirementDao requirementDao, CompanyDao companyDao) {
+    public VacancyServiceImpl(VacancyDao vacancyDao, RequirementDao requirementDao, CompanyDao companyDao, ResumeDao resumeDao, ResumeService resumeService) {
         this.vacancyDao = vacancyDao;
         this.requirementDao = requirementDao;
         this.companyDao = companyDao;
+        this.resumeDao = resumeDao;
+        this.resumeService = resumeService;
     }
 
     @Override
@@ -87,8 +91,11 @@ public class VacancyServiceImpl implements VacancyService {
             requirements.forEach(e -> e.setVacancy(vacancy));
             requirements.stream().filter(requirement -> requirement.getRequirementId() == null).forEach(requirementDao::save);
             requirements.forEach(requirementDao::update);
+            Set<Resume> resumes = vacancyDao.findById(vacancy.getVacancyId()).get().getResumes();
+            resumes.forEach(r -> r.getVacancies().add(vacancy));
+            resumes.forEach(resumeService::update);
         }
-        return vacancyDao.update(vacancy);
+        return vacancy;
     }
 
     @Override

@@ -16,9 +16,5 @@ public class PersonDTO {
     private Long userId;
     private String firstName;
     private String lastName;
-    private LocalDate birthday;
-    private String photo;
     private Contact contact;
-    private Address address;
-    private User user;
 }
