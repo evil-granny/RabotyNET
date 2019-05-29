@@ -16,7 +16,7 @@ public class RabotyNETInitializer extends AbstractAnnotationConfigDispatcherServ
 
     @Override
     protected String[] getServletMappings() {
-        return new String[]{"/"};
+        return new String[]{"/RabotyNET"};
     }
 
 }
