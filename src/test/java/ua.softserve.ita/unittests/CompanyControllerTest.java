@@ -44,6 +44,7 @@ public class CompanyControllerTest {
     private static final Long USER_ID = 1L;
     private static final Long COMPANY_ID = 1L;
     private static final String TOKEN = "8edfh8";
+    private static final Long VACANCY_ID = 3L;
 
     @Before
     public void setUp() {
@@ -279,6 +280,32 @@ public class CompanyControllerTest {
         assertFalse(companyExists);
 
         verify(companyService, times(1)).findByName(eq(NAME));
+        verifyNoMoreInteractions(companyService);
+    }
+
+    @Test
+    public void getCompanyByVacancyId() {
+        Company mockCompany = Company.builder()
+                .companyId(1L)
+                .name("SoftServe")
+                .build();
+
+        when(companyService.findCompanyByVacancyId(eq(VACANCY_ID))).thenReturn(Optional.of(mockCompany));
+        Company companyByVacancyId = controller.getCompanyByVacancyId(VACANCY_ID);
+
+        assertEquals(mockCompany, companyByVacancyId);
+
+        verify(companyService, times(1)).findCompanyByVacancyId(eq(VACANCY_ID));
+        verifyNoMoreInteractions(companyService);
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void getCompanyByVacancyIdNotFound() {
+        when(companyService.findCompanyByVacancyId(eq(VACANCY_ID))).thenThrow(new ResourceNotFoundException("Company not found with vacancy id " + VACANCY_ID));
+
+        controller.getCompanyByVacancyId(VACANCY_ID);
+
+        verify(companyService, times(1)).findCompanyByVacancyId(eq(VACANCY_ID));
         verifyNoMoreInteractions(companyService);
     }
 }

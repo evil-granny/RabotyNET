@@ -79,7 +79,7 @@ public class CompanyController {
 
     @GetMapping(value = "/byVacancyId/{id}")
     public Company getCompanyByVacancyId(@PathVariable("id") Long id) {
-        return companyService.findCompanyByVacancyId(id).orElseThrow(() -> new ResourceNotFoundException("Company not found with id " + id));
+        return companyService.findCompanyByVacancyId(id).orElseThrow(() -> new ResourceNotFoundException("Company not found with vacancy id " + id));
     }
 
     @GetMapping(value = "/byId/{companyId}")
