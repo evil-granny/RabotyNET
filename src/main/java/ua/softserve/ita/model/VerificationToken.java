@@ -34,7 +34,7 @@ public class VerificationToken {
 
     private Date expiryDate;
 
-    public VerificationToken(String token, Optional<User> user) {
+    public VerificationToken() {
     }
 
     public VerificationToken(final String token, final User user) {
