@@ -2,7 +2,6 @@ package ua.softserve.ita.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,18 +27,14 @@ public class SearchController {
     @PostMapping("/search/resume")
     public SearchResumeResponseDTO getResult(@RequestBody SearchRequestDTO searchRequestDTO) {
         log.info("Request = " + searchRequestDTO.toString());
-
-        return searchResumeService.getResponse(searchRequestDTO.getSearchParameter(), searchRequestDTO.getSearchText().trim(),
-                searchRequestDTO.getResultsOnPage(), searchRequestDTO.getFirstResultNumber());
+        return searchResumeService.getResponse(searchRequestDTO);
 
     }
 
     @PostMapping("/search/vacancies")
     public SearchVacancyResponseDTO getVacanciesResult(@RequestBody SearchRequestDTO searchRequestDTO) {
         log.info("Request = " + searchRequestDTO.toString());
-
-        return searchVacancyService.getResponse(searchRequestDTO.getSearchParameter(), searchRequestDTO.getSearchText().trim(),
-                searchRequestDTO.getResultsOnPage(), searchRequestDTO.getFirstResultNumber());
+        return searchVacancyService.getResponse(searchRequestDTO);
     }
 
 }

@@ -14,7 +14,7 @@ import java.util.Optional;
 @Repository
 public abstract class AbstractDao<T, PK extends Serializable> implements BaseDao<T, PK> {
 
-    private final Class<T> clazz;
+    final protected Class<T> clazz;
 
     @SuppressWarnings("unchecked")
     public AbstractDao() {
@@ -78,9 +78,8 @@ public abstract class AbstractDao<T, PK extends Serializable> implements BaseDao
         return (List<T>) sessionFactory.getCurrentSession().createQuery("from " + clazz.getName()).list();
     }
 
-    protected Query createNamedQuery(String query) {
+    public Query createNamedQuery(String query) {
         return sessionFactory.getCurrentSession().createNamedQuery(query);
     }
-
 
 }

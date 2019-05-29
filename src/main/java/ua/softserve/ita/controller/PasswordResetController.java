@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.dao.UserDao;
+import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.exception.UserNotFoundException;
 import ua.softserve.ita.model.User;
 import ua.softserve.ita.resetpassword.OnRestorePasswordCompleteEvent;
@@ -38,7 +39,7 @@ public class PasswordResetController {
     @PostMapping("/resetPassword")
     public ResponseEntity<?> resetPassword(@RequestBody UserResetPasswordDto userResetPasswordDto, final HttpServletRequest request) {
         User user = userDao.getUserWithRoles(userResetPasswordDto.getUsername()).orElseThrow(() ->
-                new UserNotFoundException("No user found with username " + userResetPasswordDto.getUsername()));
+                new UserNotFoundException("Please check the correctness of the email " + userResetPasswordDto.getUsername()));
         restorePasswordListener.onApplicationEvent(new OnRestorePasswordCompleteEvent(user, getAppUrl(request)));
         return ResponseEntity.ok().body("User found successfully.");
     }
@@ -56,6 +57,8 @@ public class PasswordResetController {
               user.setPassword(bCryptPasswordEncoder.encode(userResetPasswordDto.getResetPassword()));
                 userService.update(user);
             });
+        } else {
+            throw new ResourceNotFoundException("Your token invalid or expired. Please try again");
         }
         return ResponseEntity.ok().body("Successfully!");
     }

@@ -46,11 +46,11 @@ public class Job implements Serializable {
     private LocalDate end;
 
     @Column(name = "companyName", length = 50)
-    @Size(min = 3, max = 50, message = "company name length is incorrect")
+    @Size(max = 50, message = "company name length is incorrect")
     private String companyName;
 
     @Column(name = "description", length = 200)
-    @Size(min = 3, max = 200, message = "description length is incorrect")
+    @Size(max = 200, message = "description length is incorrect")
     private String description;
 
     @Column(name = "print_pdf",nullable = false)
@@ -58,7 +58,7 @@ public class Job implements Serializable {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "cv_id", nullable = false)
+    @JoinColumn(name = "resume_id", nullable = false)
     private Resume resume;
 
 }

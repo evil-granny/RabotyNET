@@ -17,20 +17,21 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Table(name = "resume")
+//@EqualsAndHashCode
 @NamedQueries({
         @NamedQuery(name = Resume.FIND_BY_USER_ID, query = "select rs from Resume rs where rs.person.userId = :id"),
+        @NamedQuery(name = Resume.FIND_RESUME_BY_VACANCY_ID, query = "select res FROM Resume res JOIN res.vacancies vacres WHERE vacres.vacancyId = :id"),
 })
 public class Resume implements Serializable {
     public static final String FIND_BY_USER_ID = "Resume.findByUserId";
+    public static final String FIND_RESUME_BY_VACANCY_ID = "Resume.findResumeByVacancyId";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "cv_id")
-    private Long cvId;
+    @Column(name = "resume_id")
+    private Long resumeId;
 
     @Column(name = "position", nullable = false, length = 50)
-    @NotNull(message = "position must be not null")
-    @NotBlank(message = "position must be not blank")
     @Size(min = 3, max = 50, message = "position length is incorrect")
     private String position;
 
@@ -50,4 +51,21 @@ public class Resume implements Serializable {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private Person person;
 
+    @Column(name = "reviewed", columnDefinition = "BOOLEAN DEFAULT false")
+    private Boolean reviewed;
+
+    @ManyToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            mappedBy = "resumes")
+    private Set<Vacancy> vacancies;
+
+    @Override
+    public String toString() {
+        return "Resume{" +
+                "resumeId=" + resumeId +
+                ", position='" + position + '\'' +
+                ", person=" + person +
+                ", vacancies=" + vacancies +
+                '}';
+    }
 }

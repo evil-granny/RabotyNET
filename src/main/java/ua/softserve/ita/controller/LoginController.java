@@ -2,6 +2,7 @@ package ua.softserve.ita.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ua.softserve.ita.exception.UserNotFoundException;
 import ua.softserve.ita.model.User;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +31,11 @@ public class LoginController {
 
     @PostMapping("/login")
     public UserPrincipal userLoginPost() {
-        return getLoggedUser().orElse(UNKNOWN_USER);
+        if (getLoggedUser().isPresent()){
+            return getLoggedUser().get();
+        } else {
+            throw new UserNotFoundException("No such user");
+        }
     }
 
     @GetMapping("/logout")

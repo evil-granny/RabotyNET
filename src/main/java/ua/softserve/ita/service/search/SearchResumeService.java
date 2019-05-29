@@ -1,12 +1,15 @@
 package ua.softserve.ita.service.search;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.softserve.ita.dao.impl.search.SearchResumeDao;
+import ua.softserve.ita.dto.SearchDTO.SearchRequestDTO;
 import ua.softserve.ita.dto.SearchDTO.SearchResumeResponseDTO;
 
 @Component
-public class SearchResumeService {
+@Slf4j
+public class SearchResumeService implements SearchService<SearchResumeResponseDTO> {
 
     private final SearchResumeDao searchResumeDao;
 
@@ -15,9 +18,10 @@ public class SearchResumeService {
         this.searchResumeDao = searchResumeDao;
     }
 
-    public SearchResumeResponseDTO getResponse(String searchParameter, String searchText, int resultsOnPage, int firstResultNumber) {
-        return searchResumeDao.search(searchParameter, searchText, resultsOnPage, firstResultNumber);
-
+    @Override
+    public SearchResumeResponseDTO getResponse(SearchRequestDTO searchRequestDTO) {
+        return searchResumeDao.getResponse(searchRequestDTO);
     }
+
 }
 

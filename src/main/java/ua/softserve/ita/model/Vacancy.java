@@ -12,6 +12,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -21,6 +22,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 @NamedQueries({
         @NamedQuery(name = Vacancy.FIND_VACANCIES_BY_COMPANY_ID, query = "select vac from Vacancy vac where vac.company.companyId = :id ORDER BY vac.vacancyId DESC"),
         @NamedQuery(name = Vacancy.FIND_ALL_HOT_VACANCIES, query = "select vac from Vacancy vac where vac.hotVacancy = true ORDER BY vac.vacancyId DESC"),
@@ -30,6 +32,7 @@ import java.util.Set;
         @NamedQuery(name = Vacancy.FIND_COUNT_VACANCIES_BY_COMPANY_ID, query = "select count(vac.vacancyId) from Vacancy vac where vac.company.companyId = :id"),
         @NamedQuery(name = Vacancy.FIND_COUNT_All_VACANCY, query = "select count(vac.vacancyId) from Vacancy vac"),
         @NamedQuery(name = Vacancy.FIND_COUNT_HOT_VACANCIES, query = "select count(vac.vacancyId) from Vacancy vac where vac.hotVacancy = true"),
+        @NamedQuery(name = Vacancy.FIND_BY_VACANCY_ID, query = "select vac from Vacancy vac where vac.vacancyId = :id"),
         @NamedQuery(name = Vacancy.FIND_COUNT_CLOSED_VACANCIES, query = "select count(vac.vacancyId) from Vacancy vac where vac.vacancyStatus = ua.softserve.ita.model.enumtype.VacancyStatus.OUTDATED or vac.vacancyStatus = ua.softserve.ita.model.enumtype.VacancyStatus.OCCUPIED"),
 })
 public class Vacancy {
@@ -42,6 +45,7 @@ public class Vacancy {
     public static final String FIND_COUNT_CLOSED_VACANCIES = "Vacancy.findCountAllClosedVacancies";
     public static final String FIND_VACANCIES = "Vacancy.findVacancies";
     public static final String FIND_ALL_HOT_VACANCIES = "Vacancy.findAllHotVacancies";
+    public static final String FIND_BY_VACANCY_ID = "Vacancy.findVacancyByVacancyId";
     public static final String FIND_CLOSED_VACANCIES = "Vacancy.findAllClosedVacancies";
 
     @Id
@@ -89,6 +93,13 @@ public class Vacancy {
 
     @OneToMany(mappedBy = "vacancy", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private Set<Requirement> requirements;
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "vacancy_resume", joinColumns = {@JoinColumn(name = "vacancy_id")},
+            inverseJoinColumns = {@JoinColumn(name = "cv_id")})
+    private Set<Resume> resumes;
 
     @Override
     public String toString() {
