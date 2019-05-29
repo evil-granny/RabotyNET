@@ -60,7 +60,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         .logoutSuccessUrl("/logout")
                         .clearAuthentication(true)
                         .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID")
+                        .deleteCookies("JSESSIONID","XSRF-TOKEN")
                 .and()
 
                 .csrf()
