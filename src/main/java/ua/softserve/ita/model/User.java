@@ -43,7 +43,7 @@ public class User implements Serializable, UserDetails {
     private boolean enabled;
 
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY,
+    @ManyToMany(fetch = FetchType.EAGER,
             cascade = {
                     CascadeType.PERSIST,
                     CascadeType.MERGE

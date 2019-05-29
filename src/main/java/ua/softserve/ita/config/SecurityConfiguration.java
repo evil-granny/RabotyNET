@@ -17,7 +17,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private static final String[] CSRF_IGNORE = {"/login/**", "/users/**"};
+    private static final String[] CSRF_IGNORE = {"/login/**", "/users/**","/resetPassword","/changePassword"};
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -47,12 +47,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 .authorizeRequests()
                         .antMatchers("/companies/all/**","/companies/sendMail").access("hasRole('ROLE_ADMIN')")
-                        .antMatchers("/companies/my","/companies/update","/companies/delete/**","/searchCV").access("hasRole('ROLE_COWNER')")
+                        .antMatchers("/companies/my","/**/companies/update","/**/companies/delete/**").access("hasRole('ROLE_COWNER')")
                         .antMatchers("/users").access("hasRole('ROLE_USER')")
+                .antMatchers("/resume/findByVacancyId/**").access("hasRole('ROLE_COWNER')")
                         .antMatchers("/resume/**","/companies/create","/companies/approve","/people", "/people/*", "people/**").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
-                        .antMatchers("/companies/byName/**","/companies/byCompany/**","/claims","/photo/**","/users/**").permitAll()
+                        .antMatchers("/companies/byName/**","/companies/byCompany/**","/claims","/photo/**","/users/**", "/users/enabled/**").permitAll()
                         .antMatchers("/","/vacancies/**","/login","/login/**", "/resetPassword","/changePassword").permitAll()
-                        .antMatchers("/pdf/**", "/updatePDF", "/createPdf/**").permitAll()
+                        .antMatchers("/pdf/**", "/updatePDF", "/createPdf/**","/healthCheck").permitAll()
                 .anyRequest().authenticated()
                 .and()
 
@@ -60,7 +61,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         .logoutSuccessUrl("/logout")
                         .clearAuthentication(true)
                         .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID")
+                        .deleteCookies("JSESSIONID","XSRF-TOKEN")
                 .and()
 
                 .csrf()

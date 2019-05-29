@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import ua.softserve.ita.model.*;
 import ua.softserve.ita.model.profile.Person;
 
+import java.util.Optional;
+
 @Service("generateService")
 public class GenerateLetter {
 
