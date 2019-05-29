@@ -22,18 +22,14 @@ import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 @Transactional
 public class CompanyServiceImpl implements CompanyService {
     private final CompanyDao companyDao;
-    private final AddressDao addressDao;
-    private final ContactDao contactDao;
     private final UserDao userDao;
     private final RoleDao roleDao;
     private final GenerateLetter letterService;
 
     @Autowired
-    public CompanyServiceImpl(CompanyDao companyDao, AddressDao addressDao, ContactDao contactDao, UserDao userDao,
+    public CompanyServiceImpl(CompanyDao companyDao, UserDao userDao,
                               RoleDao roleDao, GenerateLetter letterService) {
         this.companyDao = companyDao;
-        this.addressDao = addressDao;
-        this.contactDao = contactDao;
         this.userDao = userDao;
         this.roleDao = roleDao;
         this.letterService = letterService;
@@ -62,8 +58,6 @@ public class CompanyServiceImpl implements CompanyService {
         Company result = null;
 
         if(!com.isPresent()) {
-            addressDao.save(company.getAddress());
-            contactDao.save(company.getContact());
             result = companyDao.save(company);
         }
 
@@ -74,8 +68,6 @@ public class CompanyServiceImpl implements CompanyService {
     public Company update(Company company) {
         if(company.getUser().getUserId().equals(getLoggedUser().get().getUserId())) {
             companyDao.update(company);
-            addressDao.update(company.getAddress());
-            contactDao.update(company.getContact());
         }
         return companyDao.update(company);
     }

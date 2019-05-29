@@ -1,7 +1,7 @@
 package ua.softserve.ita.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,7 +12,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-@Data
+@Builder
+@Getter
+@Setter
+@AllArgsConstructor
 @Entity
 @Table(name = "users")
 @NamedQueries(value = {
