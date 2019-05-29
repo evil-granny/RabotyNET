@@ -367,16 +367,16 @@ public class CreateCvPdf {
 
             try {
 
-                PDImageXObject pdImage = PDImageXObject.createFromByteArray(this.document, resume.getPerson().getPhoto().getImage(),"");
-
-                float scale = (float) PHOTO_SIZE / pdImage.getWidth();
-
-                this.yCoordinate -= pdImage.getHeight() * scale;
-
-                this.xCoordinate -= pdImage.getWidth() * scale;
-
-                this.contentStream.drawImage(pdImage, this.xCoordinate, this.yCoordinate,
-                        pdImage.getWidth() * scale, pdImage.getHeight() * scale);
+//                PDImageXObject pdImage = PDImageXObject.createFromByteArray(this.document, resume.getPerson().getPhoto().getImage(),"");
+//
+//                float scale = (float) PHOTO_SIZE / pdImage.getWidth();
+//
+//                this.yCoordinate -= pdImage.getHeight() * scale;
+//
+//                this.xCoordinate -= pdImage.getWidth() * scale;
+//
+//                this.contentStream.drawImage(pdImage, this.xCoordinate, this.yCoordinate,
+//                        pdImage.getWidth() * scale, pdImage.getHeight() * scale);
 
             } catch (Exception e) {
 

@@ -22,6 +22,7 @@ import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 @Service
 @Transactional
 public class VacancyServiceImpl implements VacancyService {
+
     private static final int COUNT_VACANCIES_ON_SINGLE_PAGE = 9;
     private static final int COUNT_VACANCIES_ON_VIEW_COMPANY_PAGE = 4;
 
@@ -56,6 +57,12 @@ public class VacancyServiceImpl implements VacancyService {
     public VacancyDTO findAllHotVacanciesWithPagination(int first) {
         return new VacancyDTO(vacancyDao.getCountAllHotVacancies(),
                 vacancyDao.findAllHotVacanciesWithPagination(first, COUNT_VACANCIES_ON_SINGLE_PAGE));
+    }
+
+    @Override
+    public VacancyDTO findAllClosedVacanciesWithPagination(int first) {
+        return new VacancyDTO(vacancyDao.getCountAllClosedVacancies(),
+                vacancyDao.findAllClosedVacanciesWithPagination(first, COUNT_VACANCIES_ON_SINGLE_PAGE));
     }
 
     @Override
@@ -99,4 +106,5 @@ public class VacancyServiceImpl implements VacancyService {
             vacancyDao.deleteById(id);
         }
     }
+
 }

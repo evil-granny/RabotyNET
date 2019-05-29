@@ -7,8 +7,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.dto.VacancyDTO.VacancyDTO;
 import ua.softserve.ita.exception.ResourceNotFoundException;
-import ua.softserve.ita.model.Company;
-import ua.softserve.ita.model.Requirement;
 import ua.softserve.ita.model.Vacancy;
 import ua.softserve.ita.service.CompanyService;
 import ua.softserve.ita.service.RequirementService;
@@ -16,11 +14,11 @@ import ua.softserve.ita.service.VacancyService;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/vacancies")
 public class VacancyController {
+
     private final VacancyService vacancyService;
     private final RequirementService requirementService;
     private final CompanyService companyService;
@@ -59,7 +57,7 @@ public class VacancyController {
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ROLE_COWNER')")
     public ResponseEntity<Vacancy> createVacancy(@Valid @RequestBody Vacancy vacancy, @PathVariable(value = "companyId") Long companyId) {
-        return ResponseEntity.ok(vacancyService.save(vacancy,companyId));
+        return ResponseEntity.ok(vacancyService.save(vacancy, companyId));
     }
 
     @DeleteMapping("/{id}")
@@ -88,5 +86,11 @@ public class VacancyController {
         return ResponseEntity.ok().body(vacancyService.findAllHotVacanciesWithPagination(first));
     }
 
+    @GetMapping("closedVacancies/{first}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<VacancyDTO> findAllClosedVacanciesWithPagination(@PathVariable("first") int first) {
+        System.out.println(vacancyService.findAllClosedVacanciesWithPagination(first));
+        return ResponseEntity.ok().body(vacancyService.findAllClosedVacanciesWithPagination(first));
+    }
 
 }

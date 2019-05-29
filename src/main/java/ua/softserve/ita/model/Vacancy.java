@@ -6,6 +6,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import ua.softserve.ita.model.enumtype.Currency;
 import ua.softserve.ita.model.enumtype.Employment;
+import ua.softserve.ita.model.enumtype.VacancyStatus;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -23,20 +24,25 @@ import java.util.Set;
 @NamedQueries({
         @NamedQuery(name = Vacancy.FIND_VACANCIES_BY_COMPANY_ID, query = "select vac from Vacancy vac where vac.company.companyId = :id ORDER BY vac.vacancyId DESC"),
         @NamedQuery(name = Vacancy.FIND_ALL_HOT_VACANCIES, query = "select vac from Vacancy vac where vac.hotVacancy = true ORDER BY vac.vacancyId DESC"),
-        @NamedQuery(name = Vacancy.FIND_VACANCIES, query = "select vac from Vacancy vac ORDER BY vac.vacancyId DESC"),
+        @NamedQuery(name = Vacancy.FIND_CLOSED_VACANCIES, query = "select vac from Vacancy vac where (vac.vacancyStatus = ua.softserve.ita.model.enumtype.VacancyStatus.OUTDATED or vac.vacancyStatus = ua.softserve.ita.model.enumtype.VacancyStatus.OCCUPIED) and vac.company.user.userId = :id order by vac.vacancyId DESC "),
+        @NamedQuery(name = Vacancy.FIND_VACANCIES, query = "select vac from Vacancy vac WHERE vac.company.status = ua.softserve.ita.model.enumtype.Status.APPROVED and vac.vacancyStatus = ua.softserve.ita.model.enumtype.VacancyStatus.OPEN ORDER BY vac.vacancyId DESC"),
         @NamedQuery(name = Vacancy.FIND_BY_REQUIREMENT, query = "SELECT vac FROM Vacancy vac WHERE vac.vacancyId = (SELECT req.vacancy.vacancyId FROM Requirement req WHERE req.requirementId = :id)"),
         @NamedQuery(name = Vacancy.FIND_COUNT_VACANCIES_BY_COMPANY_ID, query = "select count(vac.vacancyId) from Vacancy vac where vac.company.companyId = :id"),
         @NamedQuery(name = Vacancy.FIND_COUNT_All_VACANCY, query = "select count(vac.vacancyId) from Vacancy vac"),
         @NamedQuery(name = Vacancy.FIND_COUNT_HOT_VACANCIES, query = "select count(vac.vacancyId) from Vacancy vac where vac.hotVacancy = true"),
+        @NamedQuery(name = Vacancy.FIND_COUNT_CLOSED_VACANCIES, query = "select count(vac.vacancyId) from Vacancy vac where vac.vacancyStatus = ua.softserve.ita.model.enumtype.VacancyStatus.OUTDATED or vac.vacancyStatus = ua.softserve.ita.model.enumtype.VacancyStatus.OCCUPIED"),
 })
 public class Vacancy {
+
     public static final String FIND_VACANCIES_BY_COMPANY_ID = "Vacancy.findVacanciesByCompanyId";
     public static final String FIND_BY_REQUIREMENT = "Vacancy.findByRequirement";
     public static final String FIND_COUNT_VACANCIES_BY_COMPANY_ID = "Vacancy.findCountVacanciesByCompanyId";
     public static final String FIND_COUNT_All_VACANCY = "Vacancy.findCountAllVacancy";
     public static final String FIND_COUNT_HOT_VACANCIES = "Vacancy.findCountAllHotVacancies";
+    public static final String FIND_COUNT_CLOSED_VACANCIES = "Vacancy.findCountAllClosedVacancies";
     public static final String FIND_VACANCIES = "Vacancy.findVacancies";
     public static final String FIND_ALL_HOT_VACANCIES = "Vacancy.findAllHotVacancies";
+    public static final String FIND_CLOSED_VACANCIES = "Vacancy.findAllClosedVacancies";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,6 +66,11 @@ public class Vacancy {
     @Column(name = "employment")
     private Employment employment;
 
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "vacancy_status")
+    private VacancyStatus vacancyStatus;
+
     @Column(name = "salary")
     private Integer salary;
 
@@ -67,7 +78,7 @@ public class Vacancy {
     @Column(name = "currency")
     private Currency currency;
 
-    @Column(name = "hot_vacancy",columnDefinition="BOOLEAN DEFAULT false")
+    @Column(name = "hot_vacancy", columnDefinition = "BOOLEAN DEFAULT false")
     private Boolean hotVacancy;
 
     @JsonIgnore

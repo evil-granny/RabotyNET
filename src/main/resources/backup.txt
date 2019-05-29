@@ -153,42 +153,42 @@ INSERT INTO public.company(
 
 
 INSERT INTO public.vacancy(
-   description, "position", salary, employment, company_id)
-  VALUES ('Junior Java Developer', 'Junior Developer', 1000, 'FULL', 1);
+   description, "position", salary, employment, vacancy_status, company_id)
+  VALUES ('Junior Java Developer', 'Junior Developer', 1000, 'FULL', 'OCCUPIED', 1);
 
 INSERT INTO public.vacancy(
-   description, "position", salary, employment, company_id)
-  VALUES ('Middle React Developer', 'Middle Developer', 3000, 'HOURLY', 1);
+   description, "position", salary, employment, vacancy_status, company_id)
+  VALUES ('Middle React Developer', 'Middle Developer', 3000, 'HOURLY', 'OUTDATED', 1);
 
 INSERT INTO public.vacancy(
-   description, "position", salary, hot_vacancy ,employment, company_id)
-  VALUES ('Senior Angular Developer', 'Senior Developer', 4000, true, 'PART_TIME', 1);
-
-
-INSERT INTO public.vacancy(
-   description, "position", salary, employment, company_id)
-  VALUES ('Junior Junior Developer', 'Junior Developer', 1000, 'FULL', 2);
-
-INSERT INTO public.vacancy(
-   description, "position", salary, employment, company_id)
-  VALUES ('Middle WebUI Developer', 'Middle Developer', 3000, 'HOURLY', 2);
-
-INSERT INTO public.vacancy(
-   description, "position", salary, hot_vacancy ,employment, company_id)
-  VALUES ('Senior Angular Developer', 'Senior Developer', 4000, true, 'PART_TIME', 2);
+   description, "position", salary, employment, vacancy_status, company_id)
+  VALUES ('Senior Angular Developer', 'Senior Developer', 4000, 'PART_TIME', 'OUTDATED', 1);
 
 
 INSERT INTO public.vacancy(
-   description, "position", salary, employment, company_id)
-  VALUES ('Junior Java Developer', 'Junior Developer', 1000, 'FULL', 3);
+   description, "position", salary, employment, vacancy_status, company_id)
+  VALUES ('Junior Junior Developer', 'Junior Developer', 1000, 'FULL', 'OPEN', 2);
 
 INSERT INTO public.vacancy(
-   description, "position", salary, employment, company_id)
-  VALUES ('Middle WebUI Developer', 'Middle Developer', 3000, 'HOURLY', 3);
+   description, "position", salary, employment, vacancy_status, company_id)
+  VALUES ('Middle WebUI Developer', 'Middle Developer', 3000, 'HOURLY', 'OPEN', 2);
 
 INSERT INTO public.vacancy(
-   description, "position", salary, hot_vacancy ,employment, company_id)
-  VALUES ('Senior React Developer', 'Senior Developer', 4000, true, 'PART_TIME', 3);
+   description, "position", salary, hot_vacancy ,employment, vacancy_status, company_id)
+  VALUES ('Senior Angular Developer', 'Senior Developer', 4000, true, 'PART_TIME', 'OPEN', 2);
+
+
+INSERT INTO public.vacancy(
+   description, "position", salary, employment, vacancy_status, company_id)
+  VALUES ('Junior Java Developer', 'Junior Developer', 1000, 'FULL', 'OPEN', 3);
+
+INSERT INTO public.vacancy(
+   description, "position", salary, hot_vacancy, employment, vacancy_status, company_id)
+  VALUES ('Middle WebUI Developer', 'Middle Developer', 3000, true, 'HOURLY', 'OPEN', 3);
+
+INSERT INTO public.vacancy(
+   description, "position", salary, hot_vacancy ,employment, vacancy_status, company_id)
+  VALUES ('Senior React Developer', 'Senior Developer', 4000, true, 'PART_TIME', 'OPEN', 3);
 
 
 
