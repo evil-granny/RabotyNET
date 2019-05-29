@@ -17,6 +17,7 @@ import java.util.Objects;
 @Setter
 @Builder
 @AllArgsConstructor
+//@EqualsAndHashCode
 @NoArgsConstructor
 public class Requirement {
 
@@ -36,21 +37,6 @@ public class Requirement {
     @JoinColumn(name = "vacancy_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Vacancy vacancy;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Requirement that = (Requirement) o;
-        return Objects.equals(requirementId, that.requirementId) &&
-                Objects.equals(description, that.description) &&
-                Objects.equals(vacancy, that.vacancy);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(requirementId, description, vacancy);
-    }
 
     @Override
     public String toString() {
