@@ -1,4 +1,4 @@
-package ua.softserve.ita.unittest;
+package ua.softserve.ita.unittest.controller;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -41,7 +41,7 @@ public class VacancyControllerTest {
         Vacancy mockVacancy = new Vacancy();
         when(vacancyService.findById(eq(ID))).thenReturn(Optional.of(mockVacancy));
         ResponseEntity<Vacancy> vacancyById = controller.getVacancyById(ID);
-        assertEquals(mockVacancy, vacancyById);
+        assertEquals(ResponseEntity.ok().body(mockVacancy), vacancyById);
         verify(vacancyService, times(1)).findById(eq(ID));
         verifyNoMoreInteractions(vacancyService);
     }
@@ -61,9 +61,41 @@ public class VacancyControllerTest {
 
         ResponseEntity<List<Vacancy>> allResumes = controller.getAllVacancies();
 
-        assertEquals(mockVacancies, allResumes);
+        assertEquals(ResponseEntity.ok().body(mockVacancies), allResumes);
 
         verify(vacancyService, times(1)).findAll();
         verifyNoMoreInteractions(vacancyService);
     }
+
+    /*@Test
+    public void updateResume(){
+        Vacancy mockVacancy = Vacancy.builder()
+                .vacancyId(4L)
+                .position("Developer")
+                .build();
+
+        when(vacancyService.update(any(Vacancy.class))).thenReturn(mockVacancy);
+        Vacancy createdResume = controller.updateVacancy(new ResponseEntity<Vacancy>());
+
+        assertEquals(ResponseEntity.ok(mockVacancy), createdResume);
+
+        verify(vacancyService, times(1)).update(any(Vacancy.class));
+        verifyNoMoreInteractions(vacancyService);
+    }*/
+
+    /*@Test
+    public void createResume(){
+        Vacancy mockVacancy = Vacancy.builder()
+                .vacancyId(4L)
+                .position("Developer")
+                .build();
+
+        when(vacancyService.save(any(Vacancy.class),eq(ID))).thenReturn(mockVacancy);
+        Vacancy createdResume = controller.createVacancy(new Vacancy(), ID);
+
+        assertEquals(mockVacancy, createdResume);
+
+        verify(vacancyService, times(1)).save(any(Vacancy.class), eq(ID));
+        verifyNoMoreInteractions(vacancyService);
+    }*/
 }

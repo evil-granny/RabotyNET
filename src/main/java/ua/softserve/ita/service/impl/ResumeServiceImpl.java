@@ -65,9 +65,9 @@ public class ResumeServiceImpl implements ResumeService {
     public Resume update(Resume resume) {
 
         if (getLoggedUser().isPresent()) {
-            User user = userDao.findById(getLoggedUser().get().getUserId())
+            Person person = personDao.findById(getLoggedUser().get().getUserId())
                     .orElseThrow(() -> new ResourceNotFoundException("Person was not found"));
-            resume.getPerson().setUser(user);
+            resume.setPerson(person);
         }
 
         Set<Skill> skills = resume.getSkills();
