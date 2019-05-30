@@ -4,16 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Resume;
-import ua.softserve.ita.model.Vacancy;
-import ua.softserve.ita.model.profile.Person;
-import ua.softserve.ita.service.ResumeService;
 import ua.softserve.ita.service.JobService;
+import ua.softserve.ita.service.ResumeService;
 import ua.softserve.ita.service.SkillService;
-import ua.softserve.ita.service.VacancyService;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 
@@ -23,15 +18,12 @@ public class ResumeController {
     private final ResumeService resumeService;
     private final SkillService skillService;
     private final JobService jobService;
-    private final VacancyService vacancyService;
-
 
     @Autowired
-    public ResumeController(ResumeService resumeService, SkillService skillService, JobService jobService, VacancyService vacancyService) {
+    public ResumeController(ResumeService resumeService, SkillService skillService, JobService jobService) {
         this.resumeService = resumeService;
         this.skillService = skillService;
         this.jobService = jobService;
-        this.vacancyService = vacancyService;
     }
 
     @GetMapping(path = {"/{id}"})
@@ -42,7 +34,8 @@ public class ResumeController {
 
     @GetMapping(value = "/user")
     public Resume getCVByUser() {
-        return resumeService.findByUserId(getLoggedUser().get().getUserId())
+        Long userId = getLoggedUser().get().getUserId();
+        return resumeService.findByUserId(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Resume was not found"));
     }
 
@@ -77,7 +70,7 @@ public class ResumeController {
     }
 
     @GetMapping("/byVacancyId/{vacancyId}")
-    public List<Resume> getResumeByVacancyId(@PathVariable("vacancyId") Long vacancyId){
+    public List<Resume> getResumeByVacancyId(@PathVariable("vacancyId") Long vacancyId) {
         return resumeService.findResumeByVacancyId(vacancyId);
     }
 

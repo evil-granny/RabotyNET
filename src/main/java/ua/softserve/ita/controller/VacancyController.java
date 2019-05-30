@@ -47,7 +47,9 @@ public class VacancyController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_COWNER')")
     public ResponseEntity<Vacancy> updateVacancy(@Valid @RequestBody Vacancy vacancy) {
+        System.out.println(vacancy);
         final Vacancy updatedVacancy = vacancyService.update(vacancy);
+        System.out.println(updatedVacancy);
         return ResponseEntity.ok(updatedVacancy);
     }
 

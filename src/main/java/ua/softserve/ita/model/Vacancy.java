@@ -97,7 +97,7 @@ public class Vacancy {
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "vacancy_resume", joinColumns = {@JoinColumn(name = "vacancy_id")},
-            inverseJoinColumns = {@JoinColumn(name = "cv_id")})
+            inverseJoinColumns = {@JoinColumn(name = "resume_id")})
     private Set<Resume> resumes;
 
     @Override

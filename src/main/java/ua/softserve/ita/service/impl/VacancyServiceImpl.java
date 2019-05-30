@@ -98,11 +98,11 @@ public class VacancyServiceImpl implements VacancyService {
             requirements.forEach(e -> e.setVacancy(vacancy));
             requirements.stream().filter(requirement -> requirement.getRequirementId() == null).forEach(requirementDao::save);
             requirements.forEach(requirementDao::update);
+
             Set<Resume> resumes = vacancyDao.findById(vacancy.getVacancyId()).get().getResumes();
-            resumes.forEach(r -> r.getVacancies().add(vacancy));
-            resumes.forEach(resumeService::update);
+            resumes.forEach(resumeDao::update);
         }
-        return vacancy;
+        return vacancyDao.update(vacancy);
     }
 
     @Override
