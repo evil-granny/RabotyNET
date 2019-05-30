@@ -168,7 +168,6 @@ public class SearchResumeDao {
                     }
             }
         }
-        log.info("query = " + queryBuilder.toString());
         return queryBuilder.toString();
     }
 
