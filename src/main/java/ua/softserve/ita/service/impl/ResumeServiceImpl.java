@@ -2,14 +2,12 @@ package ua.softserve.ita.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.softserve.ita.dao.ResumeDao;
-import ua.softserve.ita.dao.PersonDao;
-import ua.softserve.ita.dao.UserDao;
-import ua.softserve.ita.dao.VacancyDao;
+import ua.softserve.ita.dao.*;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.*;
 import ua.softserve.ita.model.profile.Person;
 import ua.softserve.ita.service.ResumeService;
+import ua.softserve.ita.service.letter.GenerateLetter;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -26,13 +24,18 @@ public class ResumeServiceImpl implements ResumeService {
     private final UserDao userDao;
     private final PersonDao personDao;
     private final VacancyDao vacancyDao;
+    private final PdfResumeDao pdfResumeService;
+    private final GenerateLetter generateService;
+
 
     @Autowired
-    public ResumeServiceImpl(ResumeDao resumeDao, UserDao userDao, PersonDao personDao, VacancyDao vacancyDao) {
+    public ResumeServiceImpl(ResumeDao resumeDao, UserDao userDao, PersonDao personDao, VacancyDao vacancyDao, PdfResumeDao pdfResumeService,GenerateLetter generateService) {
         this.resumeDao = resumeDao;
         this.userDao = userDao;
         this.personDao = personDao;
         this.vacancyDao = vacancyDao;
+        this.pdfResumeService = pdfResumeService;
+        this.generateService = generateService;
     }
 
     @Override
@@ -108,10 +111,22 @@ public class ResumeServiceImpl implements ResumeService {
         Set<Vacancy> vacancies = resume.getVacancies();
         skills.forEach(x -> x.setResume(resume));
         jobs.forEach(x -> x.setResume(resume));
-        resume.getVacancies().add(vacancyDao.findById(vacancyId)
-                .orElseThrow(() -> new ResourceNotFoundException(String.format("Vacancy with id: %d not found", vacancyId))));
+
+        Vacancy vacancy = vacancyDao.findById(vacancyId)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Vacancy with id: %d not found", vacancyId)));
+
+        //TO DO
+
+        String eMail = vacancy.getCompany().getContact().getEmail();
+
+        PdfResume pdfResume = pdfResumeService.findByUserId(getLoggedUser().get().getUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("CV with id: %d not found"));
+        generateService.sendResumePdfForVacancy(eMail, pdfResume.getPath());
+        //
+        resume.getVacancies().add(vacancy);
         vacancies.forEach(v -> v.getResumes().add(resume));
         vacancies.forEach(vacancyDao::update);
+
         return update(resume);
     }
 }

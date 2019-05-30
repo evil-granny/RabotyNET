@@ -85,6 +85,10 @@ public class VacancyController {
 
     @PostMapping("/sendResume/{vacancyId}")
     public ResponseEntity<Resume> sendResumeOnThisVacancy(@Valid @RequestBody Resume resume, @PathVariable("vacancyId") Long vacancyId) {
+        Long test = vacancyId;
+        System.out.println(vacancyId);
+
+
         return ResponseEntity.ok().body(resumeService.sendResumeOnThisVacancy(resume, vacancyId));
     }
 

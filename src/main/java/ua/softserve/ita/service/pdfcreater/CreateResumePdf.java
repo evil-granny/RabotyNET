@@ -408,7 +408,7 @@ public class CreateResumePdf {
 
                 tempCVFile = Files.createTempFile(saveDir, "pdfCV", ".pdf");
 
-                pdfResume.setPath(tempCVFile.toRealPath().toString());
+                pdfResume.setPath(tempCVFile.toString());
 
                 pdfResume.setPdfName(tempCVFile.getFileName().toString());
 
