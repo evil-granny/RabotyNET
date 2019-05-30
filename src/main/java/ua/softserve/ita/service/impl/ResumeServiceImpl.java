@@ -65,28 +65,22 @@ public class ResumeServiceImpl implements ResumeService {
 
     @Override
     public Resume update(Resume resume) {
-
-        Long userId = getLoggedUser().get().getUserId();
-
-        if (resume.getPerson().getUserId().equals(userId)) {
-            Person person = personDao.findById(userId)
+        if (getLoggedUser().isPresent()) {
+            User user = userDao.findById(getLoggedUser().get().getUserId())
                     .orElseThrow(() -> new ResourceNotFoundException("Person was not found"));
-            resume.setPerson(person);
-
-            Set<Skill> skills = resume.getSkills();
-            Set<Job> jobs = resume.getJobs();
-            skills.forEach(x -> x.setResume(resume));
-            jobs.forEach(x -> x.setResume(resume));
-
-            resumeDao.update(resume);
+            resume.getPerson().setUser(user);
         }
+        Set<Skill> skills = resume.getSkills();
+        Set<Job> jobs = resume.getJobs();
+        skills.forEach(x -> x.setResume(resume));
+        jobs.forEach(x -> x.setResume(resume));
+
         Set<Vacancy> vacancies = resume.getVacancies();
         vacancies.clear();
         vacancies.forEach(v -> v.getResumes().add(resume));
         vacancies.forEach(vacancyDao::update);
 
-
-        return resume;
+        return resumeDao.update(resume);
     }
 
     @Override
@@ -118,20 +112,18 @@ public class ResumeServiceImpl implements ResumeService {
         skills.forEach(x -> x.setResume(resume));
         jobs.forEach(x -> x.setResume(resume));
 
-        Vacancy vacancy = vacancyDao.findById(vacancyId)
+      Vacancy vacancy = vacancyDao.findById(vacancyId)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Vacancy with id: %d not found", vacancyId)));
 
         //TO DO
-
         String eMail = vacancy.getCompany().getContact().getEmail();
-
         PdfResume pdfResume = pdfResumeService.findByUserId(getLoggedUser().get().getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("CV with id: %d not found"));
         generateService.sendResumePdfForVacancy(eMail, pdfResume.getPath());
-        //
+
         resume.getVacancies().add(vacancy);
         vacancies.forEach(v -> v.getResumes().add(resume));
-        vacancies.forEach(vacancyDao::update);
+        vacancies.forEach(vacancyDao::save);
 
         return update(resume);
     }
