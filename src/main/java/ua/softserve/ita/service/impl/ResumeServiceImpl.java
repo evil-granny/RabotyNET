@@ -25,13 +25,11 @@ import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 public class ResumeServiceImpl implements ResumeService {
 
     private final ResumeDao resumeDao;
-    private final UserDao userDao;
     private final PersonDao personDao;
 
     @Autowired
-    public ResumeServiceImpl(ResumeDao resumeDao, UserDao userDao, PersonDao personDao) {
+    public ResumeServiceImpl(ResumeDao resumeDao, PersonDao personDao) {
         this.resumeDao = resumeDao;
-        this.userDao = userDao;
         this.personDao = personDao;
     }
 

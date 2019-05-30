@@ -49,9 +49,13 @@ public class ResumeControllerTest {
     @Test
     public void getResumeById()  {
         Resume mockResume = new Resume();
+
         when(resumeService.findById(eq(ID))).thenReturn(Optional.of(mockResume));
+
         Resume resumeById = controller.findById(ID);
+
         assertEquals(mockResume, resumeById);
+
         verify(resumeService, times(1)).findById(eq(ID));
         verifyNoMoreInteractions(resumeService);
     }

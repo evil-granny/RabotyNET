@@ -9,9 +9,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import ua.softserve.ita.dao.PersonDao;
 import ua.softserve.ita.dao.ResumeDao;
 import ua.softserve.ita.dao.UserDao;
-import ua.softserve.ita.model.Job;
 import ua.softserve.ita.model.Resume;
-import ua.softserve.ita.model.User;
 import ua.softserve.ita.model.UserPrincipal;
 import ua.softserve.ita.model.profile.Person;
 import ua.softserve.ita.service.ResumeService;
@@ -37,9 +35,6 @@ public class ResumeServiceTest {
     private ResumeDao resumeDao;
 
     @Mock
-    private UserDao userDao;
-
-    @Mock
     private PersonDao personDao;
 
     private ResumeService service;
@@ -49,7 +44,7 @@ public class ResumeServiceTest {
 
     @Before
     public void setUp(){
-        this.service = new ResumeServiceImpl(resumeDao, userDao, personDao);
+        this.service = new ResumeServiceImpl(resumeDao, personDao);
     }
 
     @Test
