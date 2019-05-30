@@ -17,10 +17,15 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Set;
 
+/*
 @Data
+*/
+@Getter
+@Setter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Entity
 @Table(name = "company")
 @NamedQueries({
         @NamedQuery(name = Company.FIND_BY_VACANCY_ID,query = "SELECT com FROM Company com WHERE com.companyId = (SELECT vac.company.companyId FROM Vacancy vac WHERE vac.vacancyId = :id)"),
