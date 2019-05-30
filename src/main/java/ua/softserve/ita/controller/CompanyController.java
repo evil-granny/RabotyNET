@@ -43,7 +43,7 @@ public class CompanyController {
         return companyService.findByUserId(getLoggedUser().get().getUserId());
     }
 
-    @PostMapping(value = "/update")
+    @PutMapping(value = "/update")
     public Company update(@Valid @RequestBody Company company) {
         return companyService.update(company);
     }
