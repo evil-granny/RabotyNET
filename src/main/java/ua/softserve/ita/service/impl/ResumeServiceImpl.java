@@ -25,13 +25,11 @@ import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 public class ResumeServiceImpl implements ResumeService {
 
     private final ResumeDao resumeDao;
-    private final UserDao userDao;
     private final PersonDao personDao;
 
     @Autowired
-    public ResumeServiceImpl(ResumeDao resumeDao, UserDao userDao, PersonDao personDao) {
+    public ResumeServiceImpl(ResumeDao resumeDao, PersonDao personDao) {
         this.resumeDao = resumeDao;
-        this.userDao = userDao;
         this.personDao = personDao;
     }
 
@@ -64,19 +62,23 @@ public class ResumeServiceImpl implements ResumeService {
     @Override
     public Resume update(Resume resume) {
 
-        if (getLoggedUser().isPresent()) {
-            User user = userDao.findById(getLoggedUser().get().getUserId())
+        Long userId = getLoggedUser().get().getUserId();
+
+        if (resume.getPerson().getUserId().equals(userId)) {
+            Person person = personDao.findById(userId)
                     .orElseThrow(() -> new ResourceNotFoundException("Person was not found"));
-            resume.getPerson().setUser(user);
+            resume.setPerson(person);
+
+            Set<Skill> skills = resume.getSkills();
+            Set<Job> jobs = resume.getJobs();
+            skills.forEach(x -> x.setResume(resume));
+            jobs.forEach(x -> x.setResume(resume));
+
+            resumeDao.update(resume);
         }
 
-        Set<Skill> skills = resume.getSkills();
-        Set<Job> jobs = resume.getJobs();
-        skills.forEach(x -> x.setResume(resume));
-        jobs.forEach(x -> x.setResume(resume));
 
-
-        return resumeDao.update(resume);
+        return resume;
     }
 
     @Override

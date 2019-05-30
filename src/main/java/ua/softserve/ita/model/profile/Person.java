@@ -16,6 +16,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 @EqualsAndHashCode
 @ToString
 public class Person implements Serializable {

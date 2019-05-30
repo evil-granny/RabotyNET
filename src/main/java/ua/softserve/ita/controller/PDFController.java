@@ -47,26 +47,13 @@ public class PDFController {
 
     @GetMapping(value = "/pdf/{id}")
     public Resume getCV(@PathVariable("id") long id) {
-
-        Long userID = getLoggedUser().get().getUserId();
-
       return resumeService.findById(id).orElseThrow(() -> new ResourceNotFoundException("resume not found with id " + id));
 
     }
 
     @PutMapping("/pdf/updatePDF")
     public Resume update(@Valid @RequestBody Resume resume) {
-
-        Set<Skill> skills = resume.getSkills();
-
-        Set<Job> jobs = resume.getJobs();
-
-        skills.forEach(x -> x.setResume(resume));
-
-        jobs.forEach(x -> x.setResume(resume));
-
         return resumeService.update(resume);
-
     }
 
     @RequestMapping(value = "/pdf/createPdf/{id}&{send}", method = RequestMethod.GET, produces = "application/pdf")

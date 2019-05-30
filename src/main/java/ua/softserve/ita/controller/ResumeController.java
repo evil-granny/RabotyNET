@@ -33,7 +33,7 @@ public class ResumeController {
     }
 
     @GetMapping(value = "/user")
-    public Resume getCVByUser() {
+    public Resume getResumeByUser() {
         return resumeService.findByUserId(getLoggedUser().get().getUserId()).orElseThrow(() -> new ResourceNotFoundException(String.format("Resume was not found")));
     }
 
