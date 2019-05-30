@@ -2,11 +2,13 @@ package ua.softserve.ita.dto.SearchDTO;
 
 import lombok.*;
 
+import java.math.BigInteger;
+
 @Data
 @Builder
 public class SearchResumeDTO {
 
-    private long id;
+    private BigInteger id;
 
     private String firstName;
 
@@ -16,11 +18,9 @@ public class SearchResumeDTO {
 
     private String position;
 
-    private long resumeId;
+    private BigInteger resumeId;
 
     private String city;
 
     private String phoneNumber;
-
-    private String email;
 }

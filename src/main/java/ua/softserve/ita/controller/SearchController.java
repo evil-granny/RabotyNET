@@ -24,14 +24,14 @@ public class SearchController {
         this.searchVacancyService = searchVacancyService;
     }
 
-    @PostMapping("/search/resume")
+    @PostMapping("/searchResume")
     public SearchResumeResponseDTO getResult(@RequestBody SearchRequestDTO searchRequestDTO) {
         log.info("Request = " + searchRequestDTO.toString());
         return searchResumeService.getResponse(searchRequestDTO);
 
     }
 
-    @PostMapping("/search/vacancies")
+    @PostMapping("/searchVacancy")
     public SearchVacancyResponseDTO getVacanciesResult(@RequestBody SearchRequestDTO searchRequestDTO) {
         log.info("Request = " + searchRequestDTO.toString());
         return searchVacancyService.getResponse(searchRequestDTO);
