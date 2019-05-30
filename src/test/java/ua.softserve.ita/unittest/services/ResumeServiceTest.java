@@ -1,4 +1,4 @@
-package ua.softserve.ita.unittest.service;
+package ua.softserve.ita.unittest.services;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -8,7 +8,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import ua.softserve.ita.dao.PersonDao;
 import ua.softserve.ita.dao.ResumeDao;
-import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Resume;
 import ua.softserve.ita.model.UserPrincipal;
 import ua.softserve.ita.model.profile.Person;

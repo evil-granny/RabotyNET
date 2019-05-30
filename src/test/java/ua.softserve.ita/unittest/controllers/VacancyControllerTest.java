@@ -1,11 +1,10 @@
-package ua.softserve.ita.unittest.controller;
+package ua.softserve.ita.unittest.controllers;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import ua.softserve.ita.controller.VacancyController;
 import ua.softserve.ita.exception.ResourceNotFoundException;
@@ -75,7 +74,7 @@ public class VacancyControllerTest {
                 .build();
 
         when(vacancyService.update(any(Vacancy.class))).thenReturn(mockVacancy);
-        Vacancy createdResume = controller.updateVacancy(new ResponseEntity<Vacancy>());
+        Vacancy createdResume = controllers.updateVacancy(new ResponseEntity<Vacancy>());
 
         assertEquals(ResponseEntity.ok(mockVacancy), createdResume);
 
@@ -91,7 +90,7 @@ public class VacancyControllerTest {
                 .build();
 
         when(vacancyService.save(any(Vacancy.class),eq(ID))).thenReturn(mockVacancy);
-        Vacancy createdResume = controller.createVacancy(new Vacancy(), ID);
+        Vacancy createdResume = controllers.createVacancy(new Vacancy(), ID);
 
         assertEquals(mockVacancy, createdResume);
 

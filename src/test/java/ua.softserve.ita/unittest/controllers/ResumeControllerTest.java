@@ -1,13 +1,11 @@
-package ua.softserve.ita.unittest.controller;
+package ua.softserve.ita.unittest.controllers;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mortbay.jetty.webapp.WebAppContext;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import ua.softserve.ita.controller.ResumeController;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Resume;

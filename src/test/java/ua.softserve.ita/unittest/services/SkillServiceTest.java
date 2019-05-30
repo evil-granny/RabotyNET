@@ -1,4 +1,4 @@
-package ua.softserve.ita.unittest.service;
+package ua.softserve.ita.unittest.services;
 
 import org.junit.Before;
 import org.junit.Test;
