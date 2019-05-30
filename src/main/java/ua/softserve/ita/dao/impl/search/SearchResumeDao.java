@@ -1,7 +1,5 @@
 package ua.softserve.ita.dao.impl.search;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 
 import org.hibernate.Session;
@@ -11,10 +9,13 @@ import org.springframework.stereotype.Repository;
 import ua.softserve.ita.dto.SearchDTO.SearchRequestDTO;
 import ua.softserve.ita.dto.SearchDTO.SearchResumeDTO;
 import ua.softserve.ita.dto.SearchDTO.SearchResumeResponseDTO;
-import ua.softserve.ita.service.search.SearchResumeMapper;
 
+import javax.persistence.Tuple;
 import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -23,7 +24,7 @@ public class SearchResumeDao {
 
     private static final String SELECT =
             "SELECT DISTINCT person.user_id, person.first_Name, person.last_name, person.birthday, " +
-                    "resume.position, resume.resume_id, contact.phone_number, contact.email, address.city " +
+                    "resume.position, resume.resume_id, contact.phone_number, address.city " +
                     "FROM person";
     private static final String JOIN_CONTACT = " JOIN contact ON person.user_id = contact.contact_id";
     private static final String JOIN_ADDRESS = " JOIN address ON person.user_id = address.address_id";
@@ -59,36 +60,34 @@ public class SearchResumeDao {
         session = sessionFactory.openSession();
     }
 
-    private BigInteger getCount(String query, String searchText){
-        return (BigInteger)session.createNativeQuery(query)
-                .setParameter( SEARCH_TEXT, "%" + searchText + "%").getSingleResult();
+    private BigInteger getCount(String query, String searchText) {
+        return (BigInteger) session.createNativeQuery(query)
+                .setParameter(SEARCH_TEXT, "%" + searchText + "%").getSingleResult();
     }
 
-    private List<SearchResumeDTO> getSearchResumeDTOS(List<Object> list) {
-        List<SearchResumeDTO> dtoList = new ArrayList<>();
-        SearchResumeMapper searchResumeMapper = new SearchResumeMapper();
-        SearchResumeDTO searchResumeDTO;
-        ObjectMapper objectMapper = new ObjectMapper();
-        for (Object object : list) {
-            try {
-                searchResumeDTO = searchResumeMapper.getSearchResumeDTO(objectMapper.writeValueAsString(object));
-                log.info("DTO = " + searchResumeDTO);
-                dtoList.add(searchResumeDTO);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
-        }
-        return dtoList;
-    }
+    private List<SearchResumeDTO> getResult(String query, String searchText,
+                                            int resultsOnPage, int firstResultNumber) {
 
-    @SuppressWarnings("unchecked")
-    private List<Object> getResult(String query, String searchText,
-                                  int resultsOnPage, int firstResultNumber){
-        return session.createNativeQuery(query)
-                .setParameter( SEARCH_TEXT, "%" + searchText + "%")
+        List<Tuple> tupleList = session.createNativeQuery(query, Tuple.class)
+                .setParameter(SEARCH_TEXT, "%" + searchText + "%")
                 .setFirstResult(firstResultNumber)
                 .setMaxResults(resultsOnPage)
                 .getResultList();
+
+        List<SearchResumeDTO> dtoList = new ArrayList<>();
+        for (Tuple tuple : tupleList) {
+            dtoList.add(SearchResumeDTO.builder()
+                    .id(tuple.get("user_id", BigInteger.class))
+                    .firstName(tuple.get("first_name", String.class))
+                    .lastName(tuple.get("last_name", String.class))
+                    .age(Period.between(tuple.get("birthday", java.sql.Date.class).toLocalDate(), LocalDate.now()).getYears())
+                    .position(tuple.get("position", String.class))
+                    .resumeId(tuple.get("resume_id", BigInteger.class))
+                    .city(tuple.get("city", String.class))
+                    .phoneNumber(tuple.get("phone_number", String.class))
+                    .build());
+        }
+        return dtoList;
     }
 
     private String getQuery(Boolean isCount, String searchParameter, String searchSort, String direction) {
@@ -132,31 +131,31 @@ public class SearchResumeDao {
             switch (searchSort) {
                 case "lastName":
                     queryBuilder.append(BY_LAST_NAME);
-                    if ("desc".equals(direction)){
+                    if ("desc".equals(direction)) {
                         queryBuilder.append(DIRECTION);
                     }
                     break;
                 case "city":
                     queryBuilder.append(BY_CITY);
-                    if ("desc".equals(direction)){
+                    if ("desc".equals(direction)) {
                         queryBuilder.append(DIRECTION);
                     }
                     break;
                 case "position":
                     queryBuilder.append(BY_POSITION);
-                    if ("desc".equals(direction)){
+                    if ("desc".equals(direction)) {
                         queryBuilder.append(DIRECTION);
                     }
                     break;
                 case "phone":
                     queryBuilder.append(BY_PHONE);
-                    if ("desc".equals(direction)){
+                    if ("desc".equals(direction)) {
                         queryBuilder.append(DIRECTION);
                     }
                     break;
                 case "age":
                     queryBuilder.append(BY_AGE);
-                    if ("desc".equals(direction)){
+                    if ("desc".equals(direction)) {
                         queryBuilder.append(INVERSE_DIRECTION);
                     } else {
                         queryBuilder.append(DIRECTION);
@@ -164,7 +163,7 @@ public class SearchResumeDao {
                     break;
                 default:
                     queryBuilder.append(BY_NAME);
-                    if ("desc".equals(direction)){
+                    if ("desc".equals(direction)) {
                         queryBuilder.append(DIRECTION);
                     }
             }
@@ -178,12 +177,12 @@ public class SearchResumeDao {
                 .count(getCount(getQuery(true, searchRequestDTO.getSearchParameter(),
                         searchRequestDTO.getSearchSort(), searchRequestDTO.getDirection())
                         , searchRequestDTO.getSearchText()))
-                .searchResumeDTOS(getSearchResumeDTOS(getResult(getQuery(false,
+                .searchResumeDTOS(getResult(getQuery(false,
                         searchRequestDTO.getSearchParameter(), searchRequestDTO.getSearchSort()
                         , searchRequestDTO.getDirection())
                         , searchRequestDTO.getSearchText()
                         , searchRequestDTO.getResultsOnPage()
-                        , searchRequestDTO.getFirstResultNumber())))
+                        , searchRequestDTO.getFirstResultNumber()))
                 .build();
         log.info("searchResumeResponseDTO = " + searchResumeResponseDTO.toString());
         return searchResumeResponseDTO;
