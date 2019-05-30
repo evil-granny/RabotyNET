@@ -14,6 +14,7 @@ import ua.softserve.ita.service.letter.GenerateLetter;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
@@ -66,10 +67,11 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public Company update(Company company) {
-        if(company.getUser().getUserId().equals(getLoggedUser().get().getUserId())) {
-            companyDao.update(company);
+        Company companyToUpdate = companyDao.findById(company.getCompanyId()).orElseThrow(() -> new ResourceNotFoundException(String.format("Company with id: %d not found", company.getCompanyId())));
+        if(companyToUpdate.getUser().getUserId().equals(getLoggedUser().get().getUserId())) {
+            return companyDao.update(companyToUpdate);
         }
-        return companyDao.update(company);
+        return companyToUpdate;
     }
 
     @Override
@@ -92,47 +94,39 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public Optional<Company> sendMail(Company company, String hostLink) {
-        Pbkdf2PasswordEncoder encoder = new Pbkdf2PasswordEncoder("secret", 10000, 5);
-
         Optional<Company> res = companyDao.findByName(company.getName());
 
-        if(res.isPresent()) {
-            company = res.get();
+        Company com = res.orElseThrow(() -> new ResourceNotFoundException("Company not found with name " + company.getName()));
 
-            letterService.sendCompanyApprove(company, hostLink +
-                    "/approveCompany/" + company.getName() + "/" + encoder.encode(company.getName()));
-            company.setStatus(Status.MAIL_SENT);
+        letterService.sendCompanyApprove(com, hostLink +
+                "/approveCompany/" + com.getName() + "/" + Objects.hash(com.getName()));
+        com.setStatus(Status.MAIL_SENT);
 
-            companyDao.update(company);
-        }
+        companyDao.update(com);
 
         return res;
     }
 
     @Override
     public Optional<Company> approve(Company company, String companyToken) {
-        Pbkdf2PasswordEncoder encoder = new Pbkdf2PasswordEncoder("secret", 10000, 5);
-
-        if(!encoder.matches(company.getName(), companyToken))
+        if(!companyToken.equals(Objects.hash(company.getName()) + ""))
             return Optional.empty();
 
         Optional<Company> res = companyDao.findByName(company.getName());
 
-        if(res.isPresent()) {
-            company = res.get();
+        Company com = res.orElseThrow(() -> new ResourceNotFoundException("Company not found with name " + company.getName()));
 
-            if (company.getUser().getUserId().equals(getLoggedUser().get().getUserId())) {
-                company.setStatus(Status.APPROVED);
+        if (com.getUser().getUserId().equals(getLoggedUser().get().getUserId())) {
+            com.setStatus(Status.APPROVED);
 
-                User user = company.getUser();
+            User user = com.getUser();
 
-                if (user.getRoles().stream().noneMatch(role -> role.getType().equals("cowner"))) {
-                    user.getRoles().add(roleDao.findByType("cowner"));
+            if (user.getRoles().stream().noneMatch(role -> role.getType().equals("cowner"))) {
+                user.getRoles().add(roleDao.findByType("cowner"));
 
-                    userDao.update(user);
-                }
-                companyDao.update(company);
+                userDao.update(user);
             }
+            companyDao.update(com);
         }
 
         return res;

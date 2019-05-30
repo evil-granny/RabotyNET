@@ -37,7 +37,7 @@ public class CompanyControllerTest {
 
     private CompanyController controller;
 
-    private static final String NAME = "SoftServe";
+    private static final String COMPANY_NAME = "SoftServe";
     private static final int FIRST = 1;
     private static final int COUNT = 2;
     private static final Long ALL_COUNT = 2L;
@@ -55,25 +55,25 @@ public class CompanyControllerTest {
     public void getCompanyByName() {
         Company mockCompany = Company.builder()
                 .companyId(1L)
-                .name(NAME)
+                .name(COMPANY_NAME)
                 .build();
 
-        when(companyService.findByName(eq(NAME))).thenReturn(Optional.of(mockCompany));
-        Company companyByName = controller.getCompanyByName(NAME);
+        when(companyService.findByName(eq(COMPANY_NAME))).thenReturn(Optional.of(mockCompany));
+        Company companyByName = controller.getCompanyByName(COMPANY_NAME);
 
         assertEquals(mockCompany, companyByName);
 
-        verify(companyService, times(1)).findByName(eq(NAME));
+        verify(companyService, times(1)).findByName(eq(COMPANY_NAME));
         verifyNoMoreInteractions(companyService);
     }
 
     @Test(expected = ResourceNotFoundException.class)
     public void getCompanyByNameNotFound() {
-        when(companyService.findByName(eq(NAME))).thenThrow(new ResourceNotFoundException("Company not found with name " + NAME));
+        when(companyService.findByName(eq(COMPANY_NAME))).thenThrow(new ResourceNotFoundException("Company not found with name " + COMPANY_NAME));
 
-        controller.getCompanyByName(NAME);
+        controller.getCompanyByName(COMPANY_NAME);
 
-        verify(companyService, times(1)).findByName(eq(NAME));
+        verify(companyService, times(1)).findByName(eq(COMPANY_NAME));
         verifyNoMoreInteractions(companyService);
     }
 
@@ -215,7 +215,7 @@ public class CompanyControllerTest {
     public void sendMailThrowsException() {
         HttpServletRequest request = mock(HttpServletRequest.class);
 
-        when(companyService.sendMail(any(Company.class), any(String.class))).thenThrow(new ResourceNotFoundException("Company not found with name " + NAME));
+        when(companyService.sendMail(any(Company.class), any(String.class))).thenThrow(new ResourceNotFoundException("Company not found with name " + COMPANY_NAME));
 
         controller.sendMail(new Company(), request);
 
@@ -249,7 +249,7 @@ public class CompanyControllerTest {
 
     @Test(expected = ResourceNotFoundException.class)
     public void approveCompanyNotFound() {
-        when(companyService.approve(any(Company.class), eq(TOKEN))).thenThrow(new ResourceNotFoundException("Company not found with name " + NAME));
+        when(companyService.approve(any(Company.class), eq(TOKEN))).thenThrow(new ResourceNotFoundException("Company not found with name " + COMPANY_NAME));
         controller.approve(TOKEN, new Company());
 
         verify(companyService, times(1)).approve(any(Company.class), eq(TOKEN));
@@ -263,23 +263,23 @@ public class CompanyControllerTest {
                 .name("SoftServe")
                 .build();
 
-        when(companyService.findByName(eq(NAME))).thenReturn(Optional.of(mockCompany));
-        boolean companyExists = controller.exists(NAME);
+        when(companyService.findByName(eq(COMPANY_NAME))).thenReturn(Optional.of(mockCompany));
+        boolean companyExists = controller.exists(COMPANY_NAME);
 
         assertTrue(companyExists);
 
-        verify(companyService, times(1)).findByName(eq(NAME));
+        verify(companyService, times(1)).findByName(eq(COMPANY_NAME));
         verifyNoMoreInteractions(companyService);
     }
 
     @Test
     public void ifCompanyDoesNotExist() {
-        when(companyService.findByName(eq(NAME))).thenReturn(Optional.empty());
-        boolean companyExists = controller.exists(NAME);
+        when(companyService.findByName(eq(COMPANY_NAME))).thenReturn(Optional.empty());
+        boolean companyExists = controller.exists(COMPANY_NAME);
 
         assertFalse(companyExists);
 
-        verify(companyService, times(1)).findByName(eq(NAME));
+        verify(companyService, times(1)).findByName(eq(COMPANY_NAME));
         verifyNoMoreInteractions(companyService);
     }
 

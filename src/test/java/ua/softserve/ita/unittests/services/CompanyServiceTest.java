@@ -10,20 +10,21 @@ import ua.softserve.ita.dao.CompanyDao;
 import ua.softserve.ita.dao.RoleDao;
 import ua.softserve.ita.dao.UserDao;
 import ua.softserve.ita.dto.CompanyDTO.CompanyPaginationDTO;
+import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Company;
+import ua.softserve.ita.model.Role;
 import ua.softserve.ita.model.User;
 import ua.softserve.ita.model.UserPrincipal;
+import ua.softserve.ita.model.enumtype.Status;
 import ua.softserve.ita.service.CompanyService;
 import ua.softserve.ita.service.impl.CompanyServiceImpl;
 import ua.softserve.ita.service.letter.GenerateLetter;
 import ua.softserve.ita.utility.LoggedUserUtil;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
@@ -59,6 +60,8 @@ public class CompanyServiceTest {
     private static final Long ALL_COUNT = 2L;
     private static final Long USER_ID = 1L;
     private static final String COMPANY_NAME = "SoftServe";
+    private static final String HOST = "localhost";
+    private static final Long VACANCY_ID = 1L;
 
     @Test
     public void getCompanyById() {
@@ -156,5 +159,234 @@ public class CompanyServiceTest {
         verify(companyDao, times(1)).save(any(Company.class));
         verify(companyDao, times(1)).findByName(eq(COMPANY_NAME));
         verifyNoMoreInteractions(userDao, companyDao);
+    }
+
+    @Test
+    public void updateCompany() {
+        User mockUser = User.builder()
+                .userId(USER_ID)
+                .build();
+
+        Company mockCompany = Company.builder()
+                .companyId(COMPANY_ID)
+                .name("SoftServe")
+                .user(mockUser)
+                .build();
+
+        Company companyToUpdate = Company.builder()
+                .companyId(COMPANY_ID)
+                .name("SoftServe")
+                .user(mockUser)
+                .build();
+
+        mockStatic(LoggedUserUtil.class);
+
+        when(LoggedUserUtil.getLoggedUser()).thenReturn(Optional.of(new UserPrincipal("admin", "admin", new ArrayList<>(), USER_ID)));
+        when(companyDao.findById(eq(COMPANY_ID))).thenReturn(Optional.of(companyToUpdate));
+        when(companyDao.update(eq(companyToUpdate))).thenReturn(mockCompany);
+        Company updatedCompany = service.update(companyToUpdate);
+
+        assertEquals(mockCompany, updatedCompany);
+
+        verifyStatic(LoggedUserUtil.class);
+        LoggedUserUtil.getLoggedUser();
+        verify(companyDao, times(1)).findById(eq(COMPANY_ID));
+        verify(companyDao, times(1)).update(eq(companyToUpdate));
+        verifyNoMoreInteractions(companyDao);
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void updateCompanyNotFound() {
+        when(companyDao.findById(eq(COMPANY_ID))).thenThrow(new ResourceNotFoundException(String.format("Company with id: %d not found", COMPANY_ID)));
+
+        service.update(new Company());
+
+        verify(companyDao, times(1)).findById(eq(COMPANY_ID));
+        verifyNoMoreInteractions(companyDao);
+    }
+
+    @Test
+    public void deleteCompany() {
+        User mockUser = User.builder()
+                .userId(USER_ID)
+                .build();
+
+        Company mockCompany = Company.builder()
+                .companyId(COMPANY_ID)
+                .name("SharpMinds")
+                .user(mockUser)
+                .build();
+
+        mockStatic(LoggedUserUtil.class);
+
+        when(LoggedUserUtil.getLoggedUser()).thenReturn(Optional.of(new UserPrincipal("admin", "admin", new ArrayList<>(), USER_ID)));
+        when(companyDao.findById(eq(COMPANY_ID))).thenReturn(Optional.of(mockCompany));
+
+        service.deleteById(COMPANY_ID);
+
+        verifyStatic(LoggedUserUtil.class);
+        LoggedUserUtil.getLoggedUser();
+        verify(companyDao, times(1)).findById(eq(COMPANY_ID));
+        verify(companyDao, times(1)).deleteById(eq(COMPANY_ID));
+        verifyNoMoreInteractions(companyDao);
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void deleteCompanyNotFound() {
+        when(companyDao.findById(eq(COMPANY_ID))).thenThrow(new ResourceNotFoundException(String.format("Company with id: %d not found", COMPANY_ID)));
+
+        service.deleteById(COMPANY_ID);
+
+        verify(companyDao, times(1)).findById(eq(COMPANY_ID));
+        verifyNoMoreInteractions(companyDao);
+    }
+
+    @Test
+    public void getCompanyByName() {
+        Company mockCompany = Company.builder()
+                .companyId(1L)
+                .name(COMPANY_NAME)
+                .build();
+
+        when(companyDao.findByName(eq(COMPANY_NAME))).thenReturn(Optional.of(mockCompany));
+        Optional<Company> companyByName = service.findByName(COMPANY_NAME);
+
+        assertEquals(Optional.of(mockCompany), companyByName);
+
+        verify(companyDao, times(1)).findByName(eq(COMPANY_NAME));
+        verifyNoMoreInteractions(companyDao);
+    }
+
+    @Test
+    public void getCompaniesByUserId() {
+        Company mockCompany = Company.builder()
+                .companyId(1L)
+                .name(COMPANY_NAME)
+                .build();
+
+        List<Company> mockCompanies = new LinkedList<>();
+        mockCompanies.add(mockCompany);
+
+        when(companyDao.findByUserId(eq(USER_ID))).thenReturn(mockCompanies);
+        List<Company> companiesByUserId = service.findByUserId(USER_ID);
+
+        assertEquals(mockCompanies, companiesByUserId);
+
+        verify(companyDao, times(1)).findByUserId(eq(USER_ID));
+        verifyNoMoreInteractions(companyDao);
+    }
+
+    @Test
+    public void sendMail() {
+        Company companySendMailTo = Company.builder()
+                .companyId(1L)
+                .name(COMPANY_NAME)
+                .build();
+
+        Company mockCompany = Company.builder()
+                .companyId(1L)
+                .name(COMPANY_NAME)
+                .build();
+
+        when(companyDao.findByName(eq(COMPANY_NAME))).thenReturn(Optional.of(mockCompany));
+        when(companyDao.update(eq(mockCompany))).thenReturn(mockCompany);
+
+        Optional<Company> companyWithSentMail = service.sendMail(companySendMailTo, HOST);
+
+        assertNotEquals(companySendMailTo.getStatus(), companyWithSentMail.get().getStatus());
+        companySendMailTo.setStatus(Status.MAIL_SENT);
+        assertEquals(Optional.of(companySendMailTo), companyWithSentMail);
+
+        verify(companyDao, times(1)).findByName(COMPANY_NAME);
+        verify(companyDao, times(1)).update(eq(mockCompany));
+        verify(letterService, times(1)).sendCompanyApprove(eq(mockCompany), any(String.class));
+        verifyNoMoreInteractions(companyDao, letterService);
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void sendMailNotFound() {
+        Company companySendMailTo = Company.builder()
+                .companyId(1L)
+                .name(COMPANY_NAME)
+                .build();
+
+        when(companyDao.findByName(eq(COMPANY_NAME))).thenThrow(new ResourceNotFoundException("Company not found with name " + COMPANY_NAME));
+
+        service.sendMail(companySendMailTo, HOST);
+
+        verify(companyDao, times(1)).findByName(eq(COMPANY_NAME));
+        verifyNoMoreInteractions(companyDao);
+    }
+
+    @Test
+    public void approveCompany() {
+        List<Role> mockRoles = new LinkedList<>();
+        mockRoles.add(Role.builder().type("cowner").build());
+
+        User mockUser = User.builder()
+                .userId(USER_ID)
+                .roles(mockRoles)
+                .build();
+
+        Company companyToUpdate = Company.builder()
+                .companyId(1L)
+                .name(COMPANY_NAME)
+                .user(mockUser)
+                .build();
+
+        Company mockCompany = Company.builder()
+                .companyId(1L)
+                .name(COMPANY_NAME)
+                .user(mockUser)
+                .build();
+
+        mockStatic(LoggedUserUtil.class);
+
+        when(LoggedUserUtil.getLoggedUser()).thenReturn(Optional.of(new UserPrincipal("admin", "admin", new ArrayList<>(), USER_ID)));
+        when(companyDao.findByName(eq(COMPANY_NAME))).thenReturn(Optional.of(mockCompany));
+        when(companyDao.update(eq(mockCompany))).thenReturn(mockCompany);
+
+        Optional<Company> approvedCompany = service.approve(companyToUpdate, Objects.hash(COMPANY_NAME) + "");
+
+        assertNotEquals(companyToUpdate.getStatus(), approvedCompany.get().getStatus());
+        companyToUpdate.setStatus(Status.APPROVED);
+        assertEquals(Optional.of(companyToUpdate), approvedCompany);
+
+        verifyStatic(LoggedUserUtil.class);
+        LoggedUserUtil.getLoggedUser();
+        verify(companyDao, times(1)).findByName(COMPANY_NAME);
+        verify(companyDao, times(1)).update(eq(mockCompany));
+        verifyNoMoreInteractions(companyDao);
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void approveCompanyNotFound() {
+        Company companyToApprove = Company.builder()
+                .companyId(1L)
+                .name(COMPANY_NAME)
+                .build();
+
+        when(companyDao.findByName(eq(COMPANY_NAME))).thenThrow(new ResourceNotFoundException("Company not found with name " + COMPANY_NAME));
+
+        service.sendMail(companyToApprove, HOST);
+
+        verify(companyDao, times(1)).findByName(eq(COMPANY_NAME));
+        verifyNoMoreInteractions(companyDao);
+    }
+
+    @Test
+    public void getCompanyByVacancyId() {
+        Company mockCompany = Company.builder()
+                .companyId(COMPANY_ID)
+                .name("SoftServe")
+                .build();
+
+        when(companyDao.findByVacancyId(eq(VACANCY_ID))).thenReturn(Optional.of(mockCompany));
+        Optional<Company> companyByVacancyId = service.findCompanyByVacancyId(VACANCY_ID);
+
+        assertEquals(Optional.of(mockCompany), companyByVacancyId);
+
+        verify(companyDao, times(1)).findByVacancyId(eq(VACANCY_ID));
+        verifyNoMoreInteractions(companyDao);
     }
 }
