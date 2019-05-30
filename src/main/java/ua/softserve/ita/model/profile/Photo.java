@@ -1,16 +1,12 @@
 package ua.softserve.ita.model.profile;
 
-import lombok.*;
+import lombok.Data;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "photo")
-@NoArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
-@ToString
+@Data
 public class Photo {
 
     @Id
@@ -20,8 +16,5 @@ public class Photo {
 
     @Column(name = "name")
     private String name;
-
-    @Column(name = "image")
-    private byte[] image;
 
 }

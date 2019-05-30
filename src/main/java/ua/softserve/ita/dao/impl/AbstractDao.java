@@ -79,12 +79,7 @@ public abstract class AbstractDao<T, PK extends Serializable> implements BaseDao
     }
 
     public Query createNamedQuery(String query) {
-        return (Query) sessionFactory.createEntityManager().createNamedQuery(query);
+        return sessionFactory.getCurrentSession().createNamedQuery(query);
     }
-
-    public Query createNativeQuery(String query) {
-        return (Query) sessionFactory.createEntityManager().createNativeQuery(query);
-    }
-
 
 }

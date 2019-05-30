@@ -7,29 +7,25 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.dto.VacancyDTO.VacancyDTO;
 import ua.softserve.ita.exception.ResourceNotFoundException;
-import ua.softserve.ita.model.Company;
-import ua.softserve.ita.model.Requirement;
+import ua.softserve.ita.model.Resume;
 import ua.softserve.ita.model.Vacancy;
-import ua.softserve.ita.service.CompanyService;
-import ua.softserve.ita.service.RequirementService;
+import ua.softserve.ita.service.ResumeService;
 import ua.softserve.ita.service.VacancyService;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/vacancies")
 public class VacancyController {
+
     private final VacancyService vacancyService;
-    private final RequirementService requirementService;
-    private final CompanyService companyService;
+    private final ResumeService resumeService;
 
     @Autowired
-    public VacancyController(VacancyService vacancyService, RequirementService requirementService, CompanyService companyService) {
+    public VacancyController(VacancyService vacancyService, ResumeService resumeService) {
         this.vacancyService = vacancyService;
-        this.requirementService = requirementService;
-        this.companyService = companyService;
+        this.resumeService = resumeService;
     }
 
     @GetMapping
@@ -59,7 +55,7 @@ public class VacancyController {
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ROLE_COWNER')")
     public ResponseEntity<Vacancy> createVacancy(@Valid @RequestBody Vacancy vacancy, @PathVariable(value = "companyId") Long companyId) {
-        return ResponseEntity.ok(vacancyService.save(vacancy,companyId));
+        return ResponseEntity.ok(vacancyService.save(vacancy, companyId));
     }
 
     @DeleteMapping("/{id}")
@@ -88,5 +84,18 @@ public class VacancyController {
         return ResponseEntity.ok().body(vacancyService.findAllHotVacanciesWithPagination(first));
     }
 
+    @GetMapping("closedVacancies/{first}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<VacancyDTO> findAllClosedVacanciesWithPagination(@PathVariable("first") int first) {
+        return ResponseEntity.ok().body(vacancyService.findAllClosedVacanciesWithPagination(first));
+    }
+    @PostMapping("/sendResume/{vacancyId}")
+    public ResponseEntity<Resume> sendResumeOnThisVacancy(@Valid @RequestBody Resume resume, @PathVariable("vacancyId") Long vacancyId) {
+        Long test = vacancyId;
+        System.out.println(vacancyId);
+
+
+        return ResponseEntity.ok().body(resumeService.sendResumeOnThisVacancy(resume, vacancyId));
+    }
 
 }

@@ -2,14 +2,11 @@ package ua.softserve.ita.controller.profile;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.profile.Photo;
 import ua.softserve.ita.service.PhotoService;
 
@@ -30,17 +27,8 @@ public class PhotoController {
     @GetMapping(path = {"/{id}"})
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Get photo by specific id")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = Photo.class)})
-    public Photo findById(@PathVariable("id") Long id) {
-        return photoService.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(String.format("Photo with id %d was not found?!", id)));
-    }
-
-    @PostMapping()
-    @ResponseStatus(HttpStatus.CREATED)
-    @ApiOperation(value = "Create new photo")
-    public Photo create(@Valid @RequestBody Photo photo) {
-        return photoService.save(photo);
+    public byte[] load(@PathVariable("id") Long id) {
+        return photoService.load(id);
     }
 
     @PostMapping(path = "/avatars/{user_id}")
@@ -55,13 +43,6 @@ public class PhotoController {
     @ApiOperation(value = "Upload photo for company with specific name")
     public Photo uploadLogo(@Valid @RequestParam("file") MultipartFile file, @PathVariable("company_name") String companyName) {
         return photoService.uploadLogo(file, companyName);
-    }
-
-    @PutMapping()
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Update photo")
-    public Photo update(@Valid @RequestBody Photo photo) {
-        return photoService.update(photo);
     }
 
     @DeleteMapping(path = "/{id}")

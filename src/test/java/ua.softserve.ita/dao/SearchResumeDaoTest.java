@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import ua.softserve.ita.model.*;
 import ua.softserve.ita.model.enumtype.Employment;
 import ua.softserve.ita.model.enumtype.Status;
+import ua.softserve.ita.model.enumtype.VacancyStatus;
 import ua.softserve.ita.model.profile.Address;
 import ua.softserve.ita.model.profile.Contact;
 import ua.softserve.ita.model.profile.Person;
@@ -35,10 +36,11 @@ class SearchResumeDaoTest {
     private String[] positions = {"Developer", "QATC"};
     private String[] companies = {"Meta Cortex", "Google", "Microsoft", "Apple", "Amazon", "USA Government", "IBM",
             "Tesla", "GMC", "Cyberdyne Systems", "Umbrella", "Omni Consumer Products"};
-    private String[] universities = {"Stanford University", "Massachusetts Institute of Technology",
+    private String[] universities = {"Stanford University", "Massachusetts Institute",
             "Harvard University", "Princeton University", "University of Chicago"};
     private List<Employment> employmentList = new ArrayList<>();
     private List<Status> statusList = new ArrayList<>();
+    private List<VacancyStatus> vacancyStatusList = new ArrayList<>();
     private int next = 0;
     private Random random = new Random();
 
@@ -64,6 +66,7 @@ class SearchResumeDaoTest {
 
         employmentList = Arrays.asList(Employment.values());
         statusList = Arrays.asList(Status.values());
+        vacancyStatusList = Arrays.asList(VacancyStatus.values());
     }
 
     private LocalDate getLocalDate() {
@@ -156,7 +159,7 @@ class SearchResumeDaoTest {
         return jobs;
     }
 
-    private Resume getCv(long user_id, Education education, Person person) {
+    private Resume getResume(long user_id, Education education, Person person) {
         Resume resume = new Resume();
         resume.setPosition(ranks[random.nextInt(ranks.length)] + " " +
                 languages[random.nextInt(languages.length)] + " " +
@@ -190,6 +193,8 @@ class SearchResumeDaoTest {
                 positions[random.nextInt(positions.length)]);
         vacancy.setEmployment(employmentList.get(random.nextInt(employmentList.size())));
         vacancy.setSalary(random.nextInt(5) * 1000 + 500);
+        vacancy.setVacancyStatus(vacancyStatusList.get(random.nextInt(vacancyStatusList.size())));
+        vacancy.setHotVacancy(random.nextInt(5) % 2 != 0);
         vacancy.setCompany(company);
         return vacancy;
     }
@@ -212,38 +217,10 @@ class SearchResumeDaoTest {
         adminUser.setRoles(adminRoleList);
         session.update(adminUser);
 
-//        User userUser = new User();
-//        userUser.setLogin("user@gmail.com");
-//        userUser.setPassword("$2a$10$t31PsVNWl8eaWr9/gPwKKeX.4Q2grl12wmiRrN9fEZDMlMGHwA92m");
-//        userUser.setEnabled(true);
-//        session.save(userUser);
-//        Role userRole = new Role();
-//        userRole.setType("user");
-//        userRole.setRoleId(userUser.getUserId());
-//        session.save(userRole);
-//        List<Role> userRoleList = new ArrayList<>();
-//        userRoleList.add(userRole);
-//        userUser.setRoles(userRoleList);
-//        session.update(userUser);
-
-//        User cownerUser = new User();
-//        cownerUser.setLogin("cowner@gmail.com");
-//        cownerUser.setPassword("$2a$10$DmeWO6UlY/m2QjJaxLGUzezqOotvJmpzbBmZGBr8o/HHeNUuCWcpK");
-//        cownerUser.setEnabled(true);
-//        session.save(cownerUser);
-//        Role cownerRole = new Role();
-//        cownerRole.setType("cowner");
-//        cownerRole.setRoleId(cownerUser.getUserId());
-//        session.save(cownerRole);
-//        List<Role> cownerRoleList = new ArrayList<>();
-//        cownerRoleList.add(cownerRole);
-//        cownerUser.setRoles(cownerRoleList);
-//        session.update(cownerUser);
-
         session.getTransaction().commit();
     }
 
-    private void insertCvs(int count, Session session) {
+    private void insertResume(int count, Session session) {
         for (int i = 1; i <= count; i++) {
             session.beginTransaction();
 
@@ -276,7 +253,7 @@ class SearchResumeDaoTest {
             session.save(photo);
             Person person = getPerson(user.getUserId(), address, contact, photo);
             session.save(person);
-            Resume resume = getCv(user.getUserId(), education, person);
+            Resume resume = getResume(user.getUserId(), education, person);
             session.save(resume);
             log.info("#: " + String.valueOf(i) + " - Resume Id = " + String.valueOf(resume.getResumeId()));
             Set<Job> jobs = getJobs(resume);
@@ -321,7 +298,7 @@ class SearchResumeDaoTest {
             session.save(company);
             for (int j = 0; j < 8; j++) {
                 Vacancy vacancy = getVacancy(company);
-                if(j == 2 || j == 4){
+                if (j == 2 || j == 4) {
                     vacancy.setHotVacancy(true);
                 }
                 session.save(vacancy);
@@ -338,7 +315,7 @@ class SearchResumeDaoTest {
     private void insert() throws FileNotFoundException {
         setData();
         Session session = sessionFactory.openSession();
-        insertCvs(3000, session);
+        insertResume(10, session);
         insertVacancies(12, session);
         insertRegisteredUsers(session);
     }
@@ -369,7 +346,7 @@ class SearchResumeDaoTest {
                 .setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect")
                 .setProperty("hibernate.show_sql", "true")
                 .setProperty("hibernate.show_sql", "true")
-                .setProperty("hibernate.hbm2ddl.auto", "create")
+                .setProperty("hibernate.hbm2ddl.auto", "update")
                 .buildSessionFactory();
         insert();
     }
@@ -380,7 +357,6 @@ class SearchResumeDaoTest {
 //        SearchResumeResponseDTO searchResumeResponseDTO = searchResumeDao.getResponse("name", "jo", 5000, 0);
 //        assertEquals(searchResumeResponseDTO.getCount().intValue(), searchResumeResponseDTO.getSearchResumeDTOS().size());
     }
-
 
 }
 

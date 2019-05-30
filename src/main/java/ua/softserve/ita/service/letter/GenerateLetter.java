@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import ua.softserve.ita.model.*;
 import ua.softserve.ita.model.profile.Person;
 
+import java.util.Optional;
+
 @Service("generateService")
 public class GenerateLetter {
 
@@ -58,6 +60,25 @@ public class GenerateLetter {
         letter.setSubject("Your new resume from RabotyNET");
 
         String content = "Thank you for using our PDF designer, your Resume in attached";
+
+        letter.setContent(content);
+
+        letter.setWithAttachment(true);
+
+        letter.setLinkForAttachment(path);
+
+        letterService.sendLetter(letter);
+    }
+
+    public void sendResumePdfForVacancy(String eMail, String path){
+
+        Letter letter = new Letter();
+
+        letter.setEMail(eMail);
+
+        letter.setSubject("Your get new resume from RabotyNET");
+
+        String content = "Candidate Resume in attached";
 
         letter.setContent(content);
 

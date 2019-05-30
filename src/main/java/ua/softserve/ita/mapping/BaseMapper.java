@@ -5,6 +5,7 @@ import org.mapstruct.Mapping;
 import java.util.List;
 
 public interface BaseMapper<DTO, E> {
+
     DTO toDTO(E entity);
 
     List<DTO> toDTO(List<E> entities);
@@ -13,4 +14,5 @@ public interface BaseMapper<DTO, E> {
     E toEntity(DTO dto);
 
     List<E> toEntity(List<DTO> dtos);
+
 }
