@@ -12,6 +12,7 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import ua.softserve.ita.filter.RestCsrfPreventionFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -66,7 +67,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 .csrf()
                         .ignoringAntMatchers(CSRF_IGNORE)
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .and()
+                .addFilterBefore(new RestCsrfPreventionFilter(), RestCsrfPreventionFilter.class);
     }
 
     @Override
