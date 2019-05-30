@@ -36,7 +36,7 @@ class SearchResumeDaoTest {
     private String[] positions = {"Developer", "QATC"};
     private String[] companies = {"Meta Cortex", "Google", "Microsoft", "Apple", "Amazon", "USA Government", "IBM",
             "Tesla", "GMC", "Cyberdyne Systems", "Umbrella", "Omni Consumer Products"};
-    private String[] universities = {"Stanford University", "Massachusetts Institute of Technology",
+    private String[] universities = {"Stanford University", "Massachusetts Institute",
             "Harvard University", "Princeton University", "University of Chicago"};
     private List<Employment> employmentList = new ArrayList<>();
     private List<Status> statusList = new ArrayList<>();
