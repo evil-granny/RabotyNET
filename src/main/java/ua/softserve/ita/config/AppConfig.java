@@ -14,7 +14,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import ua.softserve.ita.service.PdfResumeService;
-import ua.softserve.ita.service.pdfcreater.CleanTempResumePdf;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -140,7 +139,7 @@ public class AppConfig {
 
         final String SAVE_DIRECTORY_FOR_PDF_DOC = "pdf/tempPDFdir";
 
-        final Logger LOGGER = Logger.getLogger(CleanTempResumePdf.class.getName());
+        final Logger LOGGER = Logger.getLogger(AppConfig.class.getName());
 
         final String PREFIX_FILE_NAME = "pdfCV";
 

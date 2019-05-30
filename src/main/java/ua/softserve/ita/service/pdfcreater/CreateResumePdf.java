@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.softserve.ita.model.*;
 import ua.softserve.ita.service.PdfResumeService;
+import ua.softserve.ita.service.PhotoService;
 import ua.softserve.ita.service.ResumeService;
 import java.awt.*;
 import java.io.IOException;
@@ -69,6 +70,7 @@ public class CreateResumePdf {
     private final PdfResumeService pdfResumeService;
     private final ResumeService resumeService;
     private final CreateQrCodeVCard createQR;
+    private final PhotoService photoService;
 
     private PDDocument document;
     private PDPage page;
@@ -77,10 +79,11 @@ public class CreateResumePdf {
     private float xCoordinate;
 
     @Autowired
-    public CreateResumePdf(PdfResumeService pdfResumeService, ResumeService resumeService, CreateQrCodeVCard createQR){
+    public CreateResumePdf(PdfResumeService pdfResumeService, ResumeService resumeService, CreateQrCodeVCard createQR, PhotoService photoService){
         this.pdfResumeService = pdfResumeService;
         this.resumeService = resumeService;
         this.createQR = createQR;
+        this.photoService = photoService;
     }
 
     public Path createPDF(Resume resume) {
@@ -93,16 +96,19 @@ public class CreateResumePdf {
 
             try {
 
-//                PDImageXObject pdImage = PDImageXObject.createFromByteArray(this.document, resume.getPerson().getPhoto().getImage(),"");
-////
-////                float scale = (float) PHOTO_SIZE / pdImage.getHeight();
-////
-////                this.yCoordinate -= pdImage.getHeight() * scale;
-////
-////                this.xCoordinate -= pdImage.getWidth() * scale;
-////
-////                this.contentStream.drawImage(pdImage, this.xCoordinate, this.yCoordinate,
-////                        pdImage.getWidth() * scale, pdImage.getHeight() * scale);
+               Long photoId = resume.getPerson().getPhoto().getPhotoId();
+               byte[] photo = photoService.load(photoId);
+
+               PDImageXObject pdImage = PDImageXObject.createFromByteArray(this.document,photo,"");
+
+                float scale = (float) PHOTO_SIZE / pdImage.getHeight();
+
+                this.yCoordinate -= pdImage.getHeight() * scale;
+
+                this.xCoordinate -= pdImage.getWidth() * scale;
+
+                this.contentStream.drawImage(pdImage, this.xCoordinate, this.yCoordinate,
+                        pdImage.getWidth() * scale, pdImage.getHeight() * scale);
 
             } catch (Exception e) {
 
