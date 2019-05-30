@@ -338,7 +338,7 @@ class SearchResumeDaoTest {
     private void insert() throws FileNotFoundException {
         setData();
         Session session = sessionFactory.openSession();
-        insertCvs(3000, session);
+        insertCvs(10, session);
         insertVacancies(12, session);
         insertRegisteredUsers(session);
     }
