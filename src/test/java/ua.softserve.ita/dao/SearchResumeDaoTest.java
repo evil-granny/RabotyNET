@@ -381,6 +381,5 @@ class SearchResumeDaoTest {
 //        assertEquals(searchResumeResponseDTO.getCount().intValue(), searchResumeResponseDTO.getSearchResumeDTOS().size());
     }
 
-
 }
 
