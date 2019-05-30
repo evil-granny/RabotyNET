@@ -47,10 +47,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 .authorizeRequests()
                         .antMatchers("/companies/all/**","/companies/sendMail").access("hasRole('ROLE_ADMIN')")
-                        .antMatchers("/companies/my","/**/companies/update","/**/companies/delete/**").access("hasRole('ROLE_COWNER')")
+                        .antMatchers("/companies/my","/RabotyNET/companies/update","/RabotyNET/companies/delete/**").access("hasRole('ROLE_COWNER')")
                         .antMatchers("/users").access("hasRole('ROLE_USER')")
                         .antMatchers("/resume/findByVacancyId/**").access("hasRole('ROLE_COWNER')")
-                        .antMatchers("/resume/**","/companies/create","/companies/approve","/people", "/people/*", "people/**").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
+                        .antMatchers("/resume/**","/RabotyNET/companies/create","/companies/approve","/people", "/RabotyNET/people/*", "/RabotyNET/people/**").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
                         .antMatchers("/companies/byName/**","/companies/byCompany/**","/claims","/photo/**","/users/**", "/users/enabled/**").permitAll()
                         .antMatchers("/","/vacancies/**","/login","/login/**", "/resetPassword","/changePassword").permitAll()
                         .antMatchers("/pdf/**", "/updatePDF", "/createPdf/**","/healthCheck").permitAll()
