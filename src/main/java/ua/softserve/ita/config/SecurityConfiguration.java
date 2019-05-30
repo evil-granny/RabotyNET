@@ -64,9 +64,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         .deleteCookies("JSESSIONID","XSRF-TOKEN")
                 .and()
 
-                .csrf().disable();
-//                        .ignoringAntMatchers(CSRF_IGNORE)
-//                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+                .csrf()
+                        .ignoringAntMatchers(CSRF_IGNORE)
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
     }
 
     @Override
