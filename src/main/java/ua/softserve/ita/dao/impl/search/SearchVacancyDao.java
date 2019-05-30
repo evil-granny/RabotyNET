@@ -138,7 +138,7 @@ public class SearchVacancyDao {
     }
 
     public SearchVacancyResponseDTO getResponse(SearchRequestDTO searchRequestDTO) {
-        SearchVacancyResponseDTO searchVacancyResponseDTO = SearchVacancyResponseDTO.builder()
+        return SearchVacancyResponseDTO.builder()
                 .count(getCount(getQuery(true, searchRequestDTO.getSearchParameter(),
                         searchRequestDTO.getSearchSort(), searchRequestDTO.getDirection())
                         , searchRequestDTO.getSearchText()))
@@ -148,8 +148,5 @@ public class SearchVacancyDao {
                         , searchRequestDTO.getSearchText(), searchRequestDTO.getResultsOnPage()
                         , searchRequestDTO.getFirstResultNumber()))
                 .build();
-        log.info("searchVacancyResponseDTO = " + searchVacancyResponseDTO.toString());
-        return searchVacancyResponseDTO;
-
     }
 }
