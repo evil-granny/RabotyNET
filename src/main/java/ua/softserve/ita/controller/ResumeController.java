@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Resume;
-import ua.softserve.ita.service.ResumeService;
 import ua.softserve.ita.service.JobService;
+import ua.softserve.ita.service.ResumeService;
 import ua.softserve.ita.service.SkillService;
 
 import java.util.List;
@@ -19,7 +19,6 @@ public class ResumeController {
     private final SkillService skillService;
     private final JobService jobService;
 
-
     @Autowired
     public ResumeController(ResumeService resumeService, SkillService skillService, JobService jobService) {
         this.resumeService = resumeService;
@@ -29,7 +28,8 @@ public class ResumeController {
 
     @GetMapping(path = {"/{id}"})
     public Resume findById(@PathVariable("id") long id) {
-        return resumeService.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("Resume with id: %d not found", id)));
+        return resumeService.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Resume with id: %d not found", id)));
     }
 
     @GetMapping(value = "/user")
@@ -65,6 +65,11 @@ public class ResumeController {
     @DeleteMapping("/job/{id}")
     public void deleteJob(@PathVariable("id") Long id) {
         jobService.deleteById(id);
+    }
+
+    @GetMapping("/byVacancyId/{vacancyId}")
+    public List<Resume> getResumeByVacancyId(@PathVariable("vacancyId") Long vacancyId) {
+        return resumeService.findResumeByVacancyId(vacancyId);
     }
 
 }

@@ -1,7 +1,5 @@
 package ua.softserve.ita.dao.impl.search;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 
 import org.hibernate.Session;
@@ -11,12 +9,11 @@ import org.springframework.stereotype.Component;
 import ua.softserve.ita.dto.SearchDTO.SearchRequestDTO;
 import ua.softserve.ita.dto.SearchDTO.SearchVacancyDTO;
 import ua.softserve.ita.dto.SearchDTO.SearchVacancyResponseDTO;
-import ua.softserve.ita.service.search.SearchVacancyMapper;
 
+import javax.persistence.Tuple;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
-
 
 @Component
 @Slf4j
@@ -49,36 +46,32 @@ public class SearchVacancyDao {
         session = sessionFactory.openSession();
     }
 
-    private BigInteger getCount(String query, String searchText){
-        return (BigInteger)session.createNativeQuery(query)
-                .setParameter( SEARCH_TEXT, "%" + searchText + "%").getSingleResult();
+    private BigInteger getCount(String query, String searchText) {
+        return (BigInteger) session.createNativeQuery(query)
+                .setParameter(SEARCH_TEXT, "%" + searchText + "%").getSingleResult();
     }
 
-    private List<SearchVacancyDTO> getSearchVacancyDTOS(List<Object> list) {
-        List<SearchVacancyDTO> dtoList = new ArrayList<>();
-        SearchVacancyMapper searchVacancyMapper = new SearchVacancyMapper();
-        SearchVacancyDTO searchVacancyDTO;
-        ObjectMapper objectMapper = new ObjectMapper();
-        for (Object object : list) {
-            try {
-                searchVacancyDTO = searchVacancyMapper.getSearchVacancyDTO(objectMapper.writeValueAsString(object));
-                log.info("DTO = " + searchVacancyDTO);
-                dtoList.add(searchVacancyDTO);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
-        }
-        return dtoList;
-    }
-
-    @SuppressWarnings("unchecked")
-    private List<Object> getResult(String query, String searchText,
-                                  int resultsOnPage, int firstResultNumber){
-        return session.createNativeQuery(query)
-                .setParameter( SEARCH_TEXT, "%" + searchText + "%")
+    private List<SearchVacancyDTO> getResult(String query, String searchText,
+                                             int resultsOnPage, int firstResultNumber) {
+        List<Tuple> tupleList = session.createNativeQuery(query, Tuple.class)
+                .setParameter(SEARCH_TEXT, "%" + searchText + "%")
                 .setFirstResult(firstResultNumber)
                 .setMaxResults(resultsOnPage)
                 .getResultList();
+
+        List<SearchVacancyDTO> dtoList = new ArrayList<>();
+        for (Tuple tuple : tupleList) {
+            dtoList.add(SearchVacancyDTO.builder()
+                    .vacancyId(tuple.get("vacancy_id", BigInteger.class))
+                    .companyId(tuple.get("company_id", BigInteger.class))
+                    .position(tuple.get("position", String.class))
+                    .companyName(tuple.get("name", String.class))
+                    .city(tuple.get("city", String.class))
+                    .employment(tuple.get("employment", String.class))
+                    .salary(tuple.get("salary", Integer.class))
+                    .build());
+        }
+        return dtoList;
     }
 
     private String getQuery(Boolean isCount, String searchParameter, String searchSort, String direction) {
@@ -111,52 +104,48 @@ public class SearchVacancyDao {
             switch (searchSort) {
                 case "city":
                     queryBuilder.append(BY_CITY);
-                    if ("desc".equals(direction)){
+                    if ("desc".equals(direction)) {
                         queryBuilder.append(DIRECTION);
                     }
                     break;
                 case "position":
                     queryBuilder.append(BY_POSITION);
-                    if ("desc".equals(direction)){
+                    if ("desc".equals(direction)) {
                         queryBuilder.append(DIRECTION);
                     }
                     break;
                 case "employment":
                     queryBuilder.append(BY_EMPLOYMENT);
-                    if ("desc".equals(direction)){
+                    if ("desc".equals(direction)) {
                         queryBuilder.append(DIRECTION);
                     }
                     break;
                 case "salary":
                     queryBuilder.append(BY_SALARY);
-                    if ("desc".equals(direction)){
+                    if ("desc".equals(direction)) {
                         queryBuilder.append(DIRECTION);
                     }
                     break;
                 default:
                     queryBuilder.append(BY_COMPANY);
-                    if ("desc".equals(direction)){
+                    if ("desc".equals(direction)) {
                         queryBuilder.append(DIRECTION);
                     }
             }
         }
-        log.info("query = " + queryBuilder.toString());
         return queryBuilder.toString();
     }
 
     public SearchVacancyResponseDTO getResponse(SearchRequestDTO searchRequestDTO) {
-        SearchVacancyResponseDTO searchVacancyResponseDTO = SearchVacancyResponseDTO.builder()
+        return SearchVacancyResponseDTO.builder()
                 .count(getCount(getQuery(true, searchRequestDTO.getSearchParameter(),
                         searchRequestDTO.getSearchSort(), searchRequestDTO.getDirection())
                         , searchRequestDTO.getSearchText()))
-                .searchVacancyDTOS(getSearchVacancyDTOS(getResult(getQuery(false,
+                .searchVacancyDTOS(getResult(getQuery(false,
                         searchRequestDTO.getSearchParameter(), searchRequestDTO.getSearchSort()
                         , searchRequestDTO.getDirection())
                         , searchRequestDTO.getSearchText(), searchRequestDTO.getResultsOnPage()
-                        , searchRequestDTO.getFirstResultNumber())))
+                        , searchRequestDTO.getFirstResultNumber()))
                 .build();
-        log.info("searchVacancyResponseDTO = " + searchVacancyResponseDTO.toString());
-        return searchVacancyResponseDTO;
-
     }
 }

@@ -12,6 +12,8 @@ public interface PhotoService {
 
     List<Photo> findAll();
 
+    byte[] load(Long id);
+
     Photo save(Photo photo);
 
     Photo uploadAvatar(MultipartFile file, Long userId);

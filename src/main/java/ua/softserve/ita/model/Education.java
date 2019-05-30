@@ -38,7 +38,7 @@ public class Education implements Serializable {
     private String school;
 
     @Column(name = "specialty", length = 100)
-    @Size(min = 3, max = 100, message = "specialty length is incorrect")
+    @Size(max = 100, message = "specialty length is incorrect")
     private String specialty;
 
     @Column(name = "graduation")

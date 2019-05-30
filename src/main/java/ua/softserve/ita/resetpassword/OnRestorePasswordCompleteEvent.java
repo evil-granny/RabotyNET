@@ -3,6 +3,8 @@ package ua.softserve.ita.resetpassword;
 import org.springframework.context.ApplicationEvent;
 import ua.softserve.ita.model.User;
 
+import java.util.Optional;
+
 @SuppressWarnings("restorepassword")
 public class OnRestorePasswordCompleteEvent extends ApplicationEvent {
 
