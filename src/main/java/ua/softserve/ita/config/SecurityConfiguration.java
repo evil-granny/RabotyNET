@@ -17,7 +17,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private static final String[] CSRF_IGNORE = {"/login/**", "/users/**","/resetPassword","/changePassword"};
+    private static final String[] CSRF_IGNORE = {"/login/**", "/users/**", "/resetPassword", "/changePassword"};
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -27,12 +27,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration configuration = new CorsConfiguration();
-            configuration.setAllowedOrigins(ImmutableList.of("http://localhost:4200"));
-            configuration.setAllowedMethods(ImmutableList.of("GET", "POST", "PUT", "DELETE"));
-            configuration.setAllowCredentials(true);
-            configuration.setAllowedHeaders(ImmutableList.of("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials", "Authorization", "Content-Type", "Accept", "application/pdf", "X-XSRF-TOKEN"));
+        configuration.setAllowedOrigins(ImmutableList.of("http://localhost:4200"));
+        configuration.setAllowedMethods(ImmutableList.of("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedHeaders(ImmutableList.of("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials", "Authorization", "Content-Type", "Accept", "application/pdf", "X-XSRF-TOKEN"));
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-            source.registerCorsConfiguration("/**", configuration);
+        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 
@@ -46,28 +46,28 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
 
                 .authorizeRequests()
-                        .antMatchers("/companies/all/**","/companies/sendMail").access("hasRole('ROLE_ADMIN')")
-                        .antMatchers("/companies/my","/**/companies/update","/**/companies/delete/**").access("hasRole('ROLE_COWNER')")
-                        .antMatchers("/users").access("hasRole('ROLE_USER')")
-                .antMatchers("/resume/findByVacancyId/**").access("hasRole('ROLE_COWNER')")
-                        .antMatchers("/resume/**","/companies/create","/companies/approve","/people", "/people/*", "people/**").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
-                        .antMatchers("/companies/byName/**","/companies/byCompany/**","/claims","/photo/**","/users/**", "/users/enabled/**").permitAll()
-                        .antMatchers("/","/vacancies/**","/login","/login/**", "/resetPassword","/changePassword").permitAll()
-                        .antMatchers("/pdf/**", "/updatePDF", "/createPdf/**","/healthCheck").permitAll()
-                        .antMatchers("/sendResume/{vacancyId}").permitAll()
+                .antMatchers("/companies/all/**", "/companies/sendMail").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/companies/my", "/**/companies/update", "/**/companies/delete/**").access("hasRole('ROLE_COWNER')")
+                .antMatchers("/users").access("hasRole('ROLE_USER')")
+                .antMatchers("/resume/findByVacancyId/**", "/showResume/**").access("hasRole('ROLE_COWNER')")
+                .antMatchers("/resume/**", "/companies/create", "/companies/approve", "/people", "/people/*", "people/**").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
+                .antMatchers("/companies/byName/**", "/companies/byCompany/**", "/claims", "/photo/**", "/users/**", "/users/enabled/**").permitAll()
+                .antMatchers("/", "/vacancies/**", "/login", "/login/**", "/resetPassword", "/changePassword").permitAll()
+                .antMatchers("/pdf/**", "/updatePDF", "/createPdf/**", "/healthCheck").permitAll()
+                    .antMatchers("/sendResume/{vacancyId}").permitAll()
                 .anyRequest().authenticated()
                 .and()
 
                 .logout()
-                        .logoutSuccessUrl("/logout")
-                        .clearAuthentication(true)
-                        .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID","XSRF-TOKEN")
+                .logoutSuccessUrl("/logout")
+                .clearAuthentication(true)
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID", "XSRF-TOKEN")
                 .and()
 
                 .csrf()
-                        .ignoringAntMatchers(CSRF_IGNORE)
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+                .ignoringAntMatchers(CSRF_IGNORE)
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
     }
 
     @Override

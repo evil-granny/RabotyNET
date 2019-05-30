@@ -1,17 +1,13 @@
 package ua.softserve.ita.model.profile;
 
-import lombok.*;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "contact")
-@NoArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
-@ToString
+@Data
 public class Contact implements Serializable {
 
     @Id

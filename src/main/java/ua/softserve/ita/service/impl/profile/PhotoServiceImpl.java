@@ -58,6 +58,22 @@ public class PhotoServiceImpl implements PhotoService {
     }
 
     @Override
+    public byte[] load(Long id) {
+        Photo photo = photoDao.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Photo with id %d was not found?!", id)));
+
+        Path file = Paths.get(UPLOAD_DIRECTORY_FOR_AVATARS).resolve(photo.getName());
+
+        try {
+            return FileUtils.readFileToByteArray(file.toFile());
+        } catch (IOException ex) {
+            logger.error(ex.getMessage());
+        }
+
+        throw new RuntimeException("An error has occurred while loading photo?! Try again.");
+    }
+
+    @Override
     public Photo save(Photo photo) {
         return photoDao.save(photo);
     }
@@ -143,8 +159,6 @@ public class PhotoServiceImpl implements PhotoService {
 
         Photo photo = new Photo();
         photo.setName(uuid.toString() + extension);
-        byte[] image = FileUtils.readFileToByteArray(pathForUpload.resolve(uuid.toString() + extension).toFile());
-        photo.setImage(image);
 
         return photoDao.save(photo);
     }

@@ -18,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/vacancies")
 public class VacancyController {
+
     private final VacancyService vacancyService;
     private final ResumeService resumeService;
 
@@ -46,7 +47,9 @@ public class VacancyController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_COWNER')")
     public ResponseEntity<Vacancy> updateVacancy(@Valid @RequestBody Vacancy vacancy) {
+        System.out.println(vacancy);
         final Vacancy updatedVacancy = vacancyService.update(vacancy);
+        System.out.println(updatedVacancy);
         return ResponseEntity.ok(updatedVacancy);
     }
 
@@ -83,6 +86,12 @@ public class VacancyController {
         return ResponseEntity.ok().body(vacancyService.findAllHotVacanciesWithPagination(first));
     }
 
+    @GetMapping("closedVacancies/{first}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<VacancyDTO> findAllClosedVacanciesWithPagination(@PathVariable("first") int first) {
+        System.out.println(vacancyService.findAllClosedVacanciesWithPagination(first));
+        return ResponseEntity.ok().body(vacancyService.findAllClosedVacanciesWithPagination(first));
+    }
     @PostMapping("/sendResume/{vacancyId}")
     public ResponseEntity<Resume> sendResumeOnThisVacancy(@Valid @RequestBody Resume resume, @PathVariable("vacancyId") Long vacancyId) {
         Long test = vacancyId;

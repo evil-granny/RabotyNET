@@ -13,7 +13,6 @@ import ua.softserve.ita.model.profile.Person;
 import ua.softserve.ita.service.PersonService;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/people")
@@ -34,20 +33,6 @@ public class PersonController {
     public Person findById(@PathVariable("id") Long id) {
         return personService.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Person with id %d was not found?!", id)));
-    }
-
-    @GetMapping()
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Get all people")
-    public List<Person> findAll() {
-        return personService.findAll();
-    }
-
-    @PostMapping()
-    @ResponseStatus(HttpStatus.CREATED)
-    @ApiOperation(value = "Create new person")
-    public Person create(@Valid @RequestBody Person person) {
-        return personService.save(person);
     }
 
     @PutMapping()

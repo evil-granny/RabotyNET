@@ -1,6 +1,7 @@
 package ua.softserve.ita.model.enumtype;
 
 public enum Currency {
+
     USD("usd"),
 
     UAH("uah"),
@@ -26,4 +27,5 @@ public enum Currency {
         throw new UnsupportedOperationException(
                 "The code " + code + " is not supported!");
     }
+
 }
