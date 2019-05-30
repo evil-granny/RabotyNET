@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import ua.softserve.ita.controller.VacancyController;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Vacancy;
+import ua.softserve.ita.service.ResumeService;
 import ua.softserve.ita.service.VacancyService;
 
 import java.util.ArrayList;
@@ -25,13 +26,16 @@ public class VacancyControllerTest {
     @Mock
     private VacancyService vacancyService;
 
+    @Mock
+    private ResumeService resumeService;
+
     private VacancyController controller;
 
     private static final long ID = 1;
 
     @Before
     public void setUp() {
-        this.controller = new VacancyController(vacancyService);
+        this.controller = new VacancyController(vacancyService, resumeService);
     }
 
     @Test

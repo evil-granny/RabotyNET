@@ -8,9 +8,12 @@ import org.mockito.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
 import ua.softserve.ita.controller.PDFController;
 import ua.softserve.ita.model.Resume;
+import ua.softserve.ita.model.Vacancy;
+import ua.softserve.ita.service.PdfResumeService;
 import ua.softserve.ita.service.ResumeService;
+import ua.softserve.ita.service.VacancyService;
 import ua.softserve.ita.service.letter.GenerateLetter;
-import ua.softserve.ita.service.pdfcreater.CreateCvPdf;
+import ua.softserve.ita.service.pdfcreater.CreateResumePdf;
 
 import java.util.Optional;
 
@@ -28,7 +31,13 @@ public class PDFControllerTest {
     private GenerateLetter generateService;
 
     @Mock
-    private CreateCvPdf pdfService;
+    private CreateResumePdf pdfService;
+
+    @Mock
+    private PdfResumeService pdfResumeService;
+
+    @Mock
+    private VacancyService vacancyService;
 
     private PDFController controller;
 
@@ -36,7 +45,7 @@ public class PDFControllerTest {
 
     @Before
     public void setUp(){
-        this.controller = new PDFController(resumeService, generateService, pdfService);
+        this.controller = new PDFController(resumeService, generateService, pdfService, pdfResumeService, vacancyService);
     }
 
     @Test

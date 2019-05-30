@@ -6,13 +6,14 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import ua.softserve.ita.dao.PersonDao;
-import ua.softserve.ita.dao.ResumeDao;
+import ua.softserve.ita.dao.*;
 import ua.softserve.ita.model.Resume;
 import ua.softserve.ita.model.UserPrincipal;
 import ua.softserve.ita.model.profile.Person;
+import ua.softserve.ita.service.PdfResumeService;
 import ua.softserve.ita.service.ResumeService;
 import ua.softserve.ita.service.impl.ResumeServiceImpl;
+import ua.softserve.ita.service.letter.GenerateLetter;
 import ua.softserve.ita.utility.LoggedUserUtil;
 
 import java.util.ArrayList;
@@ -36,6 +37,18 @@ public class ResumeServiceTest {
     @Mock
     private PersonDao personDao;
 
+    @Mock
+    private UserDao userDao;
+
+    @Mock
+    private VacancyDao vacancyDao;
+
+    @Mock
+    private PdfResumeDao pdfResumeDao;
+
+    @Mock
+    private GenerateLetter generateLetter;
+
     private ResumeService service;
 
     private static final long ID = 2;
@@ -43,7 +56,7 @@ public class ResumeServiceTest {
 
     @Before
     public void setUp(){
-        this.service = new ResumeServiceImpl(resumeDao, personDao);
+        this.service = new ResumeServiceImpl(resumeDao, userDao, personDao, vacancyDao, pdfResumeDao, generateLetter);
     }
 
     @Test

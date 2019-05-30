@@ -23,6 +23,7 @@ public class ResumeServiceImpl implements ResumeService {
     private final ResumeDao resumeDao;
     private final PersonDao personDao;
     private final VacancyDao vacancyDao;
+    private final UserDao userDao;
     private final PdfResumeDao pdfResumeService;
     private final GenerateLetter generateService;
 
@@ -32,6 +33,7 @@ public class ResumeServiceImpl implements ResumeService {
         this.resumeDao = resumeDao;
         this.personDao = personDao;
         this.vacancyDao = vacancyDao;
+        this.userDao = userDao;
         this.pdfResumeService = pdfResumeService;
         this.generateService = generateService;
     }
