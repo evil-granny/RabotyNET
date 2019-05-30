@@ -11,7 +11,6 @@ import java.io.Serializable;
 
 @Getter
 @Setter
-@EqualsAndHashCode
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor

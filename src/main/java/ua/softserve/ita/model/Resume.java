@@ -10,11 +10,10 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Set;
 
-@Getter
-@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 @Entity
 @Table(name = "resume")
 @NamedQueries({
