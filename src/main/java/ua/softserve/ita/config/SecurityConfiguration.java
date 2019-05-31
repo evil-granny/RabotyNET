@@ -90,8 +90,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .antMatchers(COWNER_URLS).access("hasRole('ROLE_COWNER')")
                     .antMatchers(USER_URLS).access("hasRole('ROLE_USER')")
                     .antMatchers(COWNER_USER_URLS).access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
-                .anyRequest().authenticated()
                     .antMatchers(ALL_USERS_URLS).permitAll()
+                .anyRequest().authenticated()
                 .and()
 
                 .logout()
