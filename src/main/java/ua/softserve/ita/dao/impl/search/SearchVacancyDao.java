@@ -21,13 +21,15 @@ public class SearchVacancyDao {
 
     private static final String SELECT =
             "SELECT DISTINCT vacancy.position, vacancy.salary, vacancy.employment, vacancy.vacancy_id, " +
-                    "vacancy.company_id, company.name, address.city " +
+                    "vacancy.company_id, company.name, address.city, vacancy.currency " +
                     "FROM vacancy";
     private static final String JOIN_COMPANY = " JOIN company ON vacancy.company_id = company.company_id";
     private static final String JOIN_ADDRESS = " JOIN address ON vacancy.company_id = address.address_id";
-    private static final String POSITION = " WHERE vacancy.position ILIKE :searchText";
-    private static final String CITY = " WHERE address.city ILIKE :searchText";
-    private static final String COMPANY = " WHERE company.name ILIKE :searchText";
+    private static final String STATUS = " WHERE company.status = 'APPROVED' and" +
+            " vacancy.vacancy_status = 'OPEN' and";
+    private static final String POSITION = " vacancy.position ILIKE :searchText";
+    private static final String CITY = " address.city ILIKE :searchText";
+    private static final String COMPANY = " company.name ILIKE :searchText";
     private static final String SELECT_COUNT = "SELECT DISTINCT COUNT(vacancy.vacancy_id) " +
             "FROM vacancy";
     private static final String BY_POSITION = " ORDER BY vacancy.position %s, company.name, address.city";
@@ -70,6 +72,7 @@ public class SearchVacancyDao {
                     .city(tuple.get("city", String.class))
                     .employment(tuple.get("employment", String.class))
                     .salary(tuple.get("salary", Integer.class))
+                    .currency(tuple.get("currency", String.class))
                     .build());
         }
         return dtoList;
@@ -79,9 +82,9 @@ public class SearchVacancyDao {
         StringBuilder queryBuilder = new StringBuilder();
 
         if (isCount) {
-            queryBuilder.append(SELECT_COUNT);
+            queryBuilder.append(SELECT_COUNT).append(JOIN_COMPANY).append(STATUS);
         } else {
-            queryBuilder.append(SELECT).append(JOIN_COMPANY).append(JOIN_ADDRESS);
+            queryBuilder.append(SELECT).append(JOIN_COMPANY).append(JOIN_ADDRESS).append(STATUS);
         }
 
         switch (searchParameter) {
