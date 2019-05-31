@@ -4,11 +4,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import ua.softserve.ita.dao.*;
 import ua.softserve.ita.model.Resume;
 import ua.softserve.ita.model.UserPrincipal;
+import ua.softserve.ita.model.Vacancy;
 import ua.softserve.ita.model.profile.Person;
 import ua.softserve.ita.service.PdfResumeService;
 import ua.softserve.ita.service.ResumeService;
@@ -16,10 +18,7 @@ import ua.softserve.ita.service.impl.ResumeServiceImpl;
 import ua.softserve.ita.service.letter.GenerateLetter;
 import ua.softserve.ita.utility.LoggedUserUtil;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
@@ -29,6 +28,7 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(LoggedUserUtil.class)
+@PowerMockIgnore("javax.management.*")
 public class ResumeServiceTest {
 
     @Mock
@@ -53,6 +53,7 @@ public class ResumeServiceTest {
 
     private static final long ID = 2;
     private static final long USER_ID = 3;
+    private static final long VACANCY_ID = 2;
 
     @Before
     public void setUp(){
@@ -136,7 +137,9 @@ public class ResumeServiceTest {
                 .skills(new HashSet<>())
                 .position("Developer")
                 .person(mockUser)
+                .vacancies(new HashSet<>())
                 .build();
+
 
         mockStatic(LoggedUserUtil.class);
 
@@ -149,6 +152,7 @@ public class ResumeServiceTest {
                 .skills(new HashSet<>())
                 .position("Developer")
                 .person(mockUser)
+                .vacancies(new HashSet<>())
                 .build());
 
         assertEquals(mockResume, createdResume);
