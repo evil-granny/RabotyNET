@@ -8,16 +8,26 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.*;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.util.WebUtils;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private static final String[] CSRF_IGNORE = {"/login/**", "/users/**", "/resetPassword", "/changePassword", "/searchVacancy"};
+    private static final String[] CSRF_IGNORE = {"/login/**", "/users/**","/password/**","/searchVacancy"};
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -27,12 +37,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(ImmutableList.of("http://localhost:4200"));
-        configuration.setAllowedMethods(ImmutableList.of("GET", "POST", "PUT", "DELETE"));
-        configuration.setAllowCredentials(true);
-        configuration.setAllowedHeaders(ImmutableList.of("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials", "Authorization", "Content-Type", "Accept", "application/pdf", "X-XSRF-TOKEN"));
+            configuration.setAllowedOrigins(ImmutableList.of("http://localhost:4200"));
+            configuration.setAllowedMethods(ImmutableList.of("GET", "POST", "PUT", "DELETE"));
+            configuration.setAllowCredentials(true);
+            configuration.setAllowedHeaders(ImmutableList.of("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials", "Authorization", "Content-Type", "Accept", "application/pdf", "X-XSRF-TOKEN"));
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+            source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 
@@ -46,29 +56,60 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
 
                 .authorizeRequests()
-                .antMatchers("/companies/all/**", "/companies/sendMail").access("hasRole('ROLE_ADMIN')")
-                .antMatchers("/companies/my", "/**/companies/update", "/**/companies/delete/**", "/searchResume").access("hasRole('ROLE_COWNER')")
-                .antMatchers("/users").access("hasRole('ROLE_USER')")
-                .antMatchers("/resume/findByVacancyId/**", "/showResume/**").access("hasRole('ROLE_COWNER')")
-                .antMatchers("/resume/**", "/companies/create", "/companies/approve", "/people", "/people/*", "people/**").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
-                .antMatchers("/companies/byName/**", "/companies/byCompany/**", "/claims", "/photo/**", "/users/**", "/users/enabled/**").permitAll()
-                .antMatchers("/", "/vacancies/**", "/login", "/login/**", "/resetPassword", "/changePassword").permitAll()
-                .antMatchers("/pdf/**", "/updatePDF", "/createPdf/**", "/healthCheck").permitAll()
+                    .antMatchers("/companies/all/**", "/companies/sendMail").access("hasRole('ROLE_ADMIN')")
+                    .antMatchers("/companies/my", "/**/companies/update", "/**/companies/delete/**", "/searchResume").access("hasRole('ROLE_COWNER')")
+                    .antMatchers("/users").access("hasRole('ROLE_USER')")
+                    .antMatchers("/resume/findByVacancyId/**", "/showResume/**").access("hasRole('ROLE_COWNER')")
+                    .antMatchers("/resume/**", "/companies/create", "/companies/approve", "/people", "/people/*", "people/**").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
+                    .antMatchers("/companies/byName/**", "/companies/byCompany/**", "/claims", "/photo/**", "/users/**", "/users/enabled/**").permitAll()
+                    .antMatchers("/", "/vacancies/**", "/login", "/login/**", "/password/**","/healthCheck").permitAll()
+                    .antMatchers("/pdf/**", "/updatePDF", "/createPdf/**").permitAll()
                     .antMatchers("/sendResume/{vacancyId}").permitAll()
-                .antMatchers("/pdf/**", "/updatePDF", "/createPdf/**", "/healthCheck", "/searchVacancy").permitAll()
-                .anyRequest().authenticated()
+                    .antMatchers("/pdf/**", "/updatePDF", "/createPdf/**", "/healthCheck", "/searchVacancy").permitAll()
+                    .anyRequest().authenticated()
                 .and()
 
                 .logout()
-                .logoutSuccessUrl("/logout")
-                .clearAuthentication(true)
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID", "XSRF-TOKEN")
+                    .logoutSuccessUrl("/logout")
+                    .clearAuthentication(true)
+                    .invalidateHttpSession(true)
+                    .deleteCookies("JSESSIONID", "XSRF-TOKEN")
                 .and()
 
                 .csrf()
-                .ignoringAntMatchers(CSRF_IGNORE)
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+                    .ignoringAntMatchers(CSRF_IGNORE)
+                    .csrfTokenRepository(csrfTokenRepository())
+                .and()
+                .addFilterAfter(csrfHeaderFilter(), CsrfFilter.class);
+    }
+
+    private Filter csrfHeaderFilter() {
+        return new OncePerRequestFilter() {
+            @Override
+            protected void doFilterInternal(HttpServletRequest request,
+                                            HttpServletResponse response, FilterChain filterChain)
+                    throws ServletException, IOException {
+                CsrfToken csrf = (CsrfToken) request.getAttribute(CsrfToken.class
+                        .getName());
+                if (csrf != null) {
+                    Cookie cookie = WebUtils.getCookie(request, "XSRF-TOKEN");
+                    String token = csrf.getToken();
+                    if (cookie == null || token != null
+                            && !token.equals(cookie.getValue())) {
+                        cookie = new Cookie("XSRF-TOKEN", token);
+                        cookie.setPath("/");
+                        response.addCookie(cookie);
+                    }
+                }
+                filterChain.doFilter(request, response);
+            }
+        };
+    }
+
+    private CsrfTokenRepository csrfTokenRepository() {
+        HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
+        repository.setHeaderName("X-XSRF-TOKEN");
+        return repository;
     }
 
     @Override

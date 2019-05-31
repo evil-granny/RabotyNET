@@ -357,6 +357,11 @@
             <artifactId>powermock-module-junit4</artifactId>
             <version>1.7.4</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+            <version>9.0.17</version>
+        </dependency>
 
     </dependencies>
 
