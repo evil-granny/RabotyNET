@@ -21,21 +21,24 @@ public class SearchVacancyDao {
 
     private static final String SELECT =
             "SELECT DISTINCT vacancy.position, vacancy.salary, vacancy.employment, vacancy.vacancy_id, " +
-                    "vacancy.company_id, company.name, address.city " +
+                    "vacancy.company_id, company.name, address.city, vacancy.currency " +
                     "FROM vacancy";
     private static final String JOIN_COMPANY = " JOIN company ON vacancy.company_id = company.company_id";
     private static final String JOIN_ADDRESS = " JOIN address ON vacancy.company_id = address.address_id";
-    private static final String POSITION = " WHERE vacancy.position ILIKE :searchText";
-    private static final String CITY = " WHERE address.city ILIKE :searchText";
-    private static final String COMPANY = " WHERE company.name ILIKE :searchText";
+    private static final String STATUS = " WHERE company.status = 'APPROVED' and" +
+            " vacancy.vacancy_status = 'OPEN' and";
+    private static final String POSITION = " vacancy.position ILIKE :searchText";
+    private static final String CITY = " address.city ILIKE :searchText";
+    private static final String COMPANY = " company.name ILIKE :searchText";
     private static final String SELECT_COUNT = "SELECT DISTINCT COUNT(vacancy.vacancy_id) " +
             "FROM vacancy";
-    private static final String BY_POSITION = " ORDER BY vacancy.position";
-    private static final String BY_CITY = " ORDER BY address.city";
-    private static final String BY_COMPANY = " ORDER BY company.name";
-    private static final String BY_EMPLOYMENT = " ORDER BY vacancy.employment";
-    private static final String BY_SALARY = " ORDER BY vacancy.salary";
-    private static final String DIRECTION = " DESC";
+    private static final String BY_POSITION = " ORDER BY vacancy.position %s, company.name, address.city";
+    private static final String BY_CITY = " ORDER BY address.city %s, vacancy.position, company.name";
+    private static final String BY_COMPANY = " ORDER BY company.name %s, vacancy.position, address.city";
+    private static final String BY_EMPLOYMENT = " ORDER BY vacancy.employment %s, vacancy.position, company.name";
+    private static final String BY_SALARY = " ORDER BY vacancy.salary %s, vacancy.position, company.name";
+    private static final String DESC = "DESC";
+    private static final String ASC = "ASC";
 
     private static final String SEARCH_TEXT = "searchText";
 
@@ -69,6 +72,7 @@ public class SearchVacancyDao {
                     .city(tuple.get("city", String.class))
                     .employment(tuple.get("employment", String.class))
                     .salary(tuple.get("salary", Integer.class))
+                    .currency(tuple.get("currency", String.class))
                     .build());
         }
         return dtoList;
@@ -78,9 +82,9 @@ public class SearchVacancyDao {
         StringBuilder queryBuilder = new StringBuilder();
 
         if (isCount) {
-            queryBuilder.append(SELECT_COUNT);
+            queryBuilder.append(SELECT_COUNT).append(JOIN_COMPANY).append(STATUS);
         } else {
-            queryBuilder.append(SELECT).append(JOIN_COMPANY).append(JOIN_ADDRESS);
+            queryBuilder.append(SELECT).append(JOIN_COMPANY).append(JOIN_ADDRESS).append(STATUS);
         }
 
         switch (searchParameter) {
@@ -103,34 +107,19 @@ public class SearchVacancyDao {
         if (!isCount) {
             switch (searchSort) {
                 case "city":
-                    queryBuilder.append(BY_CITY);
-                    if ("desc".equals(direction)) {
-                        queryBuilder.append(DIRECTION);
-                    }
+                    queryBuilder.append(String.format(BY_CITY, DESC.equalsIgnoreCase(direction) ? DESC : ASC));
                     break;
                 case "position":
-                    queryBuilder.append(BY_POSITION);
-                    if ("desc".equals(direction)) {
-                        queryBuilder.append(DIRECTION);
-                    }
+                    queryBuilder.append(String.format(BY_POSITION, DESC.equalsIgnoreCase(direction) ? DESC : ASC));
                     break;
                 case "employment":
-                    queryBuilder.append(BY_EMPLOYMENT);
-                    if ("desc".equals(direction)) {
-                        queryBuilder.append(DIRECTION);
-                    }
+                    queryBuilder.append(String.format(BY_EMPLOYMENT, DESC.equalsIgnoreCase(direction) ? DESC : ASC));
                     break;
                 case "salary":
-                    queryBuilder.append(BY_SALARY);
-                    if ("desc".equals(direction)) {
-                        queryBuilder.append(DIRECTION);
-                    }
+                    queryBuilder.append(String.format(BY_SALARY, DESC.equalsIgnoreCase(direction) ? DESC : ASC));
                     break;
                 default:
-                    queryBuilder.append(BY_COMPANY);
-                    if ("desc".equals(direction)) {
-                        queryBuilder.append(DIRECTION);
-                    }
+                    queryBuilder.append(String.format(BY_COMPANY, DESC.equalsIgnoreCase(direction) ? DESC : ASC));
             }
         }
         return queryBuilder.toString();

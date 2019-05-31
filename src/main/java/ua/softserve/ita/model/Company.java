@@ -15,6 +15,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.Set;
 
 /*
@@ -75,13 +76,13 @@ public class Company implements Serializable {
     @NotNull
     private Status status;
 
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "contact_id", referencedColumnName = "contact_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @NotNull
     private Contact contact;
 
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @NotNull
@@ -118,5 +119,27 @@ public class Company implements Serializable {
                 ", vacancies=" + vacancies +
                 ", user=" + user +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Company company = (Company) o;
+        return Objects.equals(companyId, company.companyId) &&
+                Objects.equals(name, company.name) &&
+                Objects.equals(edrpou, company.edrpou) &&
+                Objects.equals(description, company.description) &&
+                Objects.equals(website, company.website) &&
+                status == company.status &&
+                Objects.equals(contact, company.contact) &&
+                Objects.equals(address, company.address) &&
+                Objects.equals(photo, company.photo) &&
+                Objects.equals(user, company.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(companyId, name, edrpou, description, website, status, contact, address, photo, user);
     }
 }

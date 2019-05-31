@@ -27,4 +27,6 @@ public class SearchVacancyDTO {
 
     private int salary;
 
+    private String currency;
+
 }

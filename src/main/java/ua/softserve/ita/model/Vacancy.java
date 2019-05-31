@@ -22,7 +22,6 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 @NamedQueries({
         @NamedQuery(name = Vacancy.FIND_VACANCIES_BY_COMPANY_ID, query = "select vac from Vacancy vac where vac.company.companyId = :id ORDER BY vac.vacancyId DESC"),
         @NamedQuery(name = Vacancy.FIND_ALL_HOT_VACANCIES, query = "select vac from Vacancy vac where vac.hotVacancy = true ORDER BY vac.vacancyId DESC"),
@@ -100,6 +99,28 @@ public class Vacancy {
     @JoinTable(name = "vacancy_resume", joinColumns = {@JoinColumn(name = "vacancy_id")},
             inverseJoinColumns = {@JoinColumn(name = "resume_id")})
     private Set<Resume> resumes;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vacancy vacancy = (Vacancy) o;
+        return Objects.equals(vacancyId, vacancy.vacancyId) &&
+                Objects.equals(description, vacancy.description) &&
+                Objects.equals(position, vacancy.position) &&
+                employment == vacancy.employment &&
+                vacancyStatus == vacancy.vacancyStatus &&
+                Objects.equals(salary, vacancy.salary) &&
+                currency == vacancy.currency &&
+                Objects.equals(hotVacancy, vacancy.hotVacancy) &&
+                Objects.equals(requirements, vacancy.requirements);
+//                Objects.equals(resumes, vacancy.resumes);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(vacancyId, description, position, employment, vacancyStatus, salary, currency, hotVacancy, requirements);
+    }
 
     @Override
     public String toString() {
