@@ -27,7 +27,7 @@ import java.io.IOException;
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private static final String[] CSRF_IGNORE = {"/login/**", "/users/**","/resetPassword","/changePassword"};
+    private static final String[] CSRF_IGNORE = {"/login/**", "/users/**","/password/**"};
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -62,7 +62,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         .antMatchers("/resume/findByVacancyId/**").access("hasRole('ROLE_COWNER')")
                         .antMatchers("/resume/**","/companies/create","/companies/approve","/people", "/people/*", "people/**").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
                         .antMatchers("/companies/byName/**","/companies/ByVacancyId/**","/companies/byCompany/**","/claims","/photo/**","/users/**", "/users/enabled/**").permitAll()
-                        .antMatchers("/vacancies/**","/login","/login/**", "/resetPassword","/changePassword").permitAll()
+                        .antMatchers("/vacancies/**","/login","/login/**", "/password/**").permitAll()
                         .antMatchers("/pdf/**", "/updatePDF", "/createPdf/**","/healthCheck").permitAll()
                 .anyRequest().authenticated()
                 .and()
