@@ -32,7 +32,7 @@ public class SwaggerConfig {
                 .apiInfo(apiInfo())
                 .groupName("Basic Authorization")
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("ua.softserve.ita.controllers"))
+                .apis(RequestHandlerSelectors.basePackage("ua.softserve.ita.controller"))
                 .paths(PathSelectors.any())
                 .build()
                 .securitySchemes(Collections.singletonList(new BasicAuth("BasicAuth")))

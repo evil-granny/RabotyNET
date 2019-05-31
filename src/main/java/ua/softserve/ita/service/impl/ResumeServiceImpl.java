@@ -29,7 +29,7 @@ public class ResumeServiceImpl implements ResumeService {
 
 
     @Autowired
-    public ResumeServiceImpl(ResumeDao resumeDao, UserDao userDao, PersonDao personDao, VacancyDao vacancyDao, PdfResumeDao pdfResumeService,GenerateLetter generateService) {
+    public ResumeServiceImpl(ResumeDao resumeDao, UserDao userDao, PersonDao personDao, VacancyDao vacancyDao, PdfResumeDao pdfResumeService, GenerateLetter generateService) {
         this.resumeDao = resumeDao;
         this.personDao = personDao;
         this.vacancyDao = vacancyDao;
@@ -109,23 +109,20 @@ public class ResumeServiceImpl implements ResumeService {
         }
         Set<Skill> skills = resume.getSkills();
         Set<Job> jobs = resume.getJobs();
-        Set<Vacancy> vacancies = resume.getVacancies();
         skills.forEach(x -> x.setResume(resume));
         jobs.forEach(x -> x.setResume(resume));
 
-      Vacancy vacancy = vacancyDao.findById(vacancyId)
+        Vacancy vacancy = vacancyDao.findById(vacancyId)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Vacancy with id: %d not found", vacancyId)));
 
-        //TO DO
         String eMail = vacancy.getCompany().getContact().getEmail();
         PdfResume pdfResume = pdfResumeService.findByUserId(getLoggedUser().get().getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("CV with id: %d not found"));
         generateService.sendResumePdfForVacancy(eMail, pdfResume.getPath());
 
         resume.getVacancies().add(vacancy);
-        vacancies.forEach(v -> v.getResumes().add(resume));
-        vacancies.forEach(vacancyDao::save);
-
+        vacancy.getResumes().add(resume);
+        vacancyDao.save(vacancy);
         return update(resume);
     }
 }
