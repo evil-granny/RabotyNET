@@ -67,11 +67,10 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public Company update(Company company) {
-        Company companyToUpdate = companyDao.findById(company.getCompanyId()).orElseThrow(() -> new ResourceNotFoundException(String.format("Company with id: %d not found", company.getCompanyId())));
-        if(companyToUpdate.getUser().getUserId().equals(getLoggedUser().get().getUserId())) {
-            return companyDao.update(companyToUpdate);
+        if(company.getUser().getUserId().equals(getLoggedUser().get().getUserId())) {
+            return companyDao.update(company);
         }
-        return companyToUpdate;
+        return company;
     }
 
     @Override

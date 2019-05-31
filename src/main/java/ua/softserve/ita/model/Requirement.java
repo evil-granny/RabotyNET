@@ -17,7 +17,6 @@ import java.util.Objects;
 @Setter
 @Builder
 @AllArgsConstructor
-//@EqualsAndHashCode
 @NoArgsConstructor
 public class Requirement {
 
