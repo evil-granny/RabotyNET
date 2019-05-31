@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.softserve.ita.dao.PdfResumeDao;
 import ua.softserve.ita.model.PdfResume;
-import ua.softserve.ita.model.Skill;
 import ua.softserve.ita.service.PdfResumeService;
 
 import javax.transaction.Transactional;
@@ -33,8 +32,8 @@ public class PdfResumeServiceImpl implements PdfResumeService {
     }
 
     @Override
-    public PdfResume save(PdfResume pdfResume) {
-        return pdfResumeDao.save(pdfResume);
+    public void save(PdfResume pdfResume) {
+        pdfResumeDao.save(pdfResume);
     }
 
     @Override

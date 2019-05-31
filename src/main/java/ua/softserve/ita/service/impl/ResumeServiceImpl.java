@@ -52,7 +52,7 @@ public class ResumeServiceImpl implements ResumeService {
     public Resume save(Resume resume) {
 
         Person person = personDao.findById(getLoggedUser().get().getUserId())
-                .orElseThrow(() -> new ResourceNotFoundException(String.format("Person was not found")));
+                .orElseThrow(() -> new ResourceNotFoundException("Person was not found"));
         resume.setPerson(person);
 
         Set<Skill> skills = resume.getSkills();
@@ -78,7 +78,6 @@ public class ResumeServiceImpl implements ResumeService {
 
         Set<Vacancy> vacancies = resume.getVacancies();
         vacancies.clear();
-        vacancies.forEach(v -> v.getResumes().add(resume));
         vacancies.forEach(vacancyDao::update);
 
         return resumeDao.update(resume);
