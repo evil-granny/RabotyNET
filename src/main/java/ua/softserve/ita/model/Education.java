@@ -11,6 +11,7 @@ import java.util.Objects;
 
 @Getter
 @Setter
+@Builder
 @EqualsAndHashCode
 @ToString
 @NoArgsConstructor

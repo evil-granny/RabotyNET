@@ -9,6 +9,7 @@ import ua.softserve.ita.model.Company;
 import ua.softserve.ita.model.Requirement;
 import ua.softserve.ita.model.Resume;
 import ua.softserve.ita.model.Vacancy;
+import ua.softserve.ita.model.enumtype.VacancyStatus;
 import ua.softserve.ita.service.ResumeService;
 import ua.softserve.ita.service.VacancyService;
 
@@ -83,6 +84,7 @@ public class VacancyServiceImpl implements VacancyService {
 
         Set<Requirement> requirements = vacancy.getRequirements();
         requirements.forEach(e -> e.setVacancy(vacancy));
+        vacancy.setVacancyStatus(VacancyStatus.OPEN);
         vacancyDao.save(vacancy);
         requirements.forEach(requirementDao::save);
         return vacancyDao.save(vacancy);
@@ -100,7 +102,8 @@ public class VacancyServiceImpl implements VacancyService {
             requirements.forEach(requirementDao::update);
 
             Set<Resume> resumes = vacancyDao.findById(vacancy.getVacancyId()).get().getResumes();
-            resumes.forEach(resumeDao::update);
+            vacancy.setResumes(resumes);
+            resumes.forEach(resumeService::update);
         }
         return vacancyDao.update(vacancy);
     }

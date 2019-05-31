@@ -2,7 +2,7 @@ package ua.softserve.ita.model.profile;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.Data;
+import lombok.*;
 import ua.softserve.ita.adapter.LocalDateDeserializer;
 import ua.softserve.ita.adapter.LocalDateSerializer;
 import ua.softserve.ita.model.User;
@@ -13,7 +13,13 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "person")
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@EqualsAndHashCode
+@ToString
 public class Person implements Serializable {
 
     @Id

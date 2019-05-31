@@ -17,6 +17,9 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Set;
 
+/*
+@Data
+*/
 @Getter
 @Setter
 @Builder
@@ -108,8 +111,10 @@ public class Company implements Serializable {
                 ", edrpou='" + edrpou + '\'' +
                 ", description='" + description + '\'' +
                 ", website='" + website + '\'' +
+                ", status=" + status +
                 ", contact=" + contact +
                 ", address=" + address +
+                ", photo=" + photo +
                 ", vacancies=" + vacancies +
                 ", user=" + user +
                 '}';

@@ -21,9 +21,9 @@ import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 public class ResumeServiceImpl implements ResumeService {
 
     private final ResumeDao resumeDao;
-    private final UserDao userDao;
     private final PersonDao personDao;
     private final VacancyDao vacancyDao;
+    private final UserDao userDao;
     private final PdfResumeDao pdfResumeService;
     private final GenerateLetter generateService;
 
@@ -31,9 +31,9 @@ public class ResumeServiceImpl implements ResumeService {
     @Autowired
     public ResumeServiceImpl(ResumeDao resumeDao, UserDao userDao, PersonDao personDao, VacancyDao vacancyDao, PdfResumeDao pdfResumeService,GenerateLetter generateService) {
         this.resumeDao = resumeDao;
-        this.userDao = userDao;
         this.personDao = personDao;
         this.vacancyDao = vacancyDao;
+        this.userDao = userDao;
         this.pdfResumeService = pdfResumeService;
         this.generateService = generateService;
     }
@@ -112,20 +112,18 @@ public class ResumeServiceImpl implements ResumeService {
         skills.forEach(x -> x.setResume(resume));
         jobs.forEach(x -> x.setResume(resume));
 
-        Vacancy vacancy = vacancyDao.findById(vacancyId)
+      Vacancy vacancy = vacancyDao.findById(vacancyId)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Vacancy with id: %d not found", vacancyId)));
 
         //TO DO
-
         String eMail = vacancy.getCompany().getContact().getEmail();
-
         PdfResume pdfResume = pdfResumeService.findByUserId(getLoggedUser().get().getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("CV with id: %d not found"));
         generateService.sendResumePdfForVacancy(eMail, pdfResume.getPath());
-        //
+
         resume.getVacancies().add(vacancy);
         vacancies.forEach(v -> v.getResumes().add(resume));
-        vacancies.forEach(vacancyDao::update);
+        vacancies.forEach(vacancyDao::save);
 
         return update(resume);
     }
