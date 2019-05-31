@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class HealthCheckController {
 
 
-    @GetMapping("/healthCheck1")
+    @GetMapping("/healthCheck")
     public String  userLoginPost() {
         return "OK";
     }
