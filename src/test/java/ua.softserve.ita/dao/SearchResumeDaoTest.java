@@ -337,7 +337,6 @@ class SearchResumeDaoTest {
     @BeforeEach
     void setUp() throws IOException {
         sessionFactory = new Configuration()
-//                .addPackage("ua.softserve.ita")
                 .addAnnotatedClass(Person.class)
                 .addAnnotatedClass(Address.class)
                 .addAnnotatedClass(Contact.class)
