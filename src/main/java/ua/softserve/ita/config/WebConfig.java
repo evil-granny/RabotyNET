@@ -28,7 +28,7 @@ import java.util.List;
 @Import(value = {SecurityConfiguration.class})
 public class WebConfig implements WebMvcConfigurer {
 
-    private static final int MAX_UPLOAD_SIZE = 1000000;
+    private static final int MAX_UPLOAD_SIZE = 3000000;
 
     @Bean
     public InternalResourceViewResolver viewResolver() {
