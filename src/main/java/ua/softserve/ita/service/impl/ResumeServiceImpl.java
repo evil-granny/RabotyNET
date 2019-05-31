@@ -66,7 +66,7 @@ public class ResumeServiceImpl implements ResumeService {
     @Override
     public Resume update(Resume resume) {
         Long userId = getLoggedUser().get().getUserId();
-        if (resume.getPerson().getUser().getUserId().equals(userId)) {
+        if (resume.getPerson().getUserId().equals(userId)) {
             Person person = personDao.findById(userId)
                     .orElseThrow(() -> new ResourceNotFoundException("Person was not found"));
             resume.setPerson(person);

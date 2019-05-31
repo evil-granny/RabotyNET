@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import ua.softserve.ita.controller.ResumeController;
@@ -25,6 +26,7 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(LoggedUserUtil.class)
+@PowerMockIgnore("javax.management.*")
 public class ResumeControllerTest {
 
     @Mock
@@ -40,6 +42,7 @@ public class ResumeControllerTest {
 
     private static final long ID = 1;
     private static final long USER_ID = 2;
+    private static final long VACANCY_ID = 2;
 
     @Before
     public void setUp() {
@@ -170,4 +173,17 @@ public class ResumeControllerTest {
         verifyNoMoreInteractions(jobService);
     }
 
+    @Test
+    public void getResumeByVacancyId(){
+        List<Resume> mockResumes = new ArrayList<>();
+
+        when(resumeService.findResumeByVacancyId(eq(VACANCY_ID))).thenReturn(mockResumes);
+
+        List<Resume> allResumeByVacancyId = controller.getResumeByVacancyId(VACANCY_ID);
+
+        assertEquals(mockResumes,allResumeByVacancyId);
+
+        verify(resumeService, times(1)).findResumeByVacancyId(eq(USER_ID));
+        verifyNoMoreInteractions(resumeService);
+    }
 }
