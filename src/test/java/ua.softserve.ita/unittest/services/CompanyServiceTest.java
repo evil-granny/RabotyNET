@@ -182,7 +182,6 @@ public class CompanyServiceTest {
         mockStatic(LoggedUserUtil.class);
 
         when(LoggedUserUtil.getLoggedUser()).thenReturn(Optional.of(new UserPrincipal("admin", "admin", new ArrayList<>(), USER_ID)));
-        when(companyDao.findById(eq(COMPANY_ID))).thenReturn(Optional.of(companyToUpdate));
         when(companyDao.update(eq(companyToUpdate))).thenReturn(mockCompany);
         Company updatedCompany = service.update(companyToUpdate);
 
@@ -190,18 +189,7 @@ public class CompanyServiceTest {
 
         verifyStatic(LoggedUserUtil.class);
         LoggedUserUtil.getLoggedUser();
-        verify(companyDao, times(1)).findById(eq(COMPANY_ID));
         verify(companyDao, times(1)).update(eq(companyToUpdate));
-        verifyNoMoreInteractions(companyDao);
-    }
-
-    @Test(expected = ResourceNotFoundException.class)
-    public void updateCompanyNotFound() {
-        when(companyDao.findById(eq(COMPANY_ID))).thenThrow(new ResourceNotFoundException(String.format("Company with id: %d not found", COMPANY_ID)));
-
-        service.update(new Company());
-
-        verify(companyDao, times(1)).findById(eq(COMPANY_ID));
         verifyNoMoreInteractions(companyDao);
     }
 
