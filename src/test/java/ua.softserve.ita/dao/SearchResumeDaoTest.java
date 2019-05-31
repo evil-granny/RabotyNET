@@ -336,12 +336,8 @@ class SearchResumeDaoTest {
 
     @BeforeEach
     void setUp() throws IOException {
-//        Properties properties = new Properties();
-//        properties.load(new FileReader(new File("src/main/resources/database.properties")));
         sessionFactory = new Configuration()
 //                .addPackage("ua.softserve.ita")
-//                .setProperties(properties)
-//                .addResource("src/main/resources/database.properties")
                 .addAnnotatedClass(Person.class)
                 .addAnnotatedClass(Address.class)
                 .addAnnotatedClass(Contact.class)
@@ -367,7 +363,7 @@ class SearchResumeDaoTest {
                 .setProperty("hibernate.show_sql", "true")
                 .setProperty("hibernate.hbm2ddl.auto", "update")
                 .buildSessionFactory();
-        insert();
+//        insert();
     }
 
     @Test
