@@ -23,6 +23,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -173,7 +174,7 @@ public class CreateResumePdf {
             drawDoubleLine();
 
             final float Y_CORDINAT_EDUCATION_BORDER_LINE = this.yCoordinate;
-            PDImageXObject pdQR = PDImageXObject.createFromByteArray(this.document, createQR.createQRCode(resume, "").toByteArray(), "");
+            PDImageXObject pdQR = PDImageXObject.createFromByteArray(this.document, createQR.createQRCode(resume).toByteArray(), "");
 
             this.yCoordinate = Y_COORDINAT_SUBTITLE_EDUCATION;
             this.yCoordinate += SUBTITLE_FONT_SIZE;
@@ -196,9 +197,9 @@ public class CreateResumePdf {
             printContext("Degree", education.getDegree());
             printContext("School", education.getSchool());
             if (education.getSpecialty() == null) {printContext("Specialty", "");}
-            else {printContext("Specialty", education.getSpecialty().toString());};
+            else {printContext("Specialty", education.getSpecialty().toString());}
             if (education.getGraduation() == null) {printContext("Graduation", "");}
-            else {printContext("Graduation", education.getGraduation().toString());};
+            else {printContext("Graduation", education.getGraduation().toString());}
             this.contentStream.endText();
             boolean printExistsJob = jobs.stream()
                     .anyMatch(t -> t.getPrintPdf().equals(true));
@@ -231,10 +232,10 @@ public class CreateResumePdf {
 
                         experienceHeader(countLineForBlock);
                         printContext("Position", job.getPosition());
-                        printContext("Period", job.getBegin(), job.getEnd());
+                        printContext(job.getBegin(), job.getEnd());
 
                         if (job.getCompanyName() == null) {printContext("Company", "");}
-                        else {printContext("Company", job.getCompanyName());};
+                        else {printContext("Company", job.getCompanyName());}
 
                         if (job.getDescription() == null) {printContext("Description", "");}
                         else {printContext("Description", job.getDescription());}
@@ -421,7 +422,7 @@ public class CreateResumePdf {
                 float sizeOneChar = sizeNewLine / contextLength;
                 int maxLength = (int) (maxSize / sizeOneChar);
                 String[] contextArr = context.split(" ");
-                List<String> listContext = new ArrayList<String>();
+                List<String> listContext = new ArrayList<>();
                 StringBuilder buildLine = new StringBuilder();
                 for (String word : contextArr) {
 
@@ -458,17 +459,17 @@ public class CreateResumePdf {
     }
 
 
-    private void printContext(String formTitle, LocalDate beginDate, LocalDate endDate) {
+    private void printContext(LocalDate beginDate, LocalDate endDate) {
 
         try {
 
             this.contentStream.setFont(INFO_FONT, INFO_FONT_SIZE);
             this.contentStream.setNonStrokingColor(CV_FORM_FONT_COLOR);
-            this.contentStream.showText(formTitle + ": ");
+            this.contentStream.showText("Period" + ": ");
             this.contentStream.setNonStrokingColor(Color.BLACK);
             this.contentStream.setFont(CONTEXT_FONT, CONTEXT_FONT_SIZE);
 
-            StringBuffer educationPeriod = new StringBuffer(beginDate.format(DateTimeFormatter.ISO_LOCAL_DATE))
+            StringBuilder educationPeriod = new StringBuilder(beginDate.format(DateTimeFormatter.ISO_LOCAL_DATE))
                     .append(" : ")
                     .append(endDate.format(DateTimeFormatter.ISO_LOCAL_DATE));
 
@@ -518,7 +519,7 @@ public class CreateResumePdf {
 
         try {
 
-            pathLogo = Paths.get(CreateResumePdf.class.getClassLoader().getResource("logo.png").toURI()).toString();
+            pathLogo = Paths.get(Objects.requireNonNull(CreateResumePdf.class.getClassLoader().getResource("logo.png")).toURI()).toString();
             PDImageXObject pdLogo = PDImageXObject.createFromFile(pathLogo, document);
 
             float scaleLogo = (float) LOGO_SIZE_HEIGHT / pdLogo.getHeight();

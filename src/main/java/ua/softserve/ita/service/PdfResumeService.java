@@ -11,7 +11,7 @@ public interface PdfResumeService {
 
     List<PdfResume> findAll();
 
-    PdfResume save(PdfResume pdfResume);
+    void save(PdfResume pdfResume);
 
     PdfResume update(PdfResume pdfResume);
 
@@ -21,6 +21,6 @@ public interface PdfResumeService {
 
     Optional<PdfResume> findByUserId(Long id);
 
-    public Optional<PdfResume> findByPdfName(String name);
+    Optional<PdfResume> findByPdfName(String name);
 
 }

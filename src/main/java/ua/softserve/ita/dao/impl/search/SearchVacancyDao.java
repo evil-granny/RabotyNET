@@ -82,7 +82,7 @@ public class SearchVacancyDao {
         StringBuilder queryBuilder = new StringBuilder();
 
         if (isCount) {
-            queryBuilder.append(SELECT_COUNT).append(JOIN_COMPANY).append(STATUS);
+            queryBuilder.append(SELECT_COUNT).append(JOIN_COMPANY);
         } else {
             queryBuilder.append(SELECT).append(JOIN_COMPANY).append(JOIN_ADDRESS).append(STATUS);
         }
@@ -90,17 +90,20 @@ public class SearchVacancyDao {
         switch (searchParameter) {
             case "city":
                 if (isCount) {
-                    queryBuilder.append(JOIN_COMPANY).append(JOIN_ADDRESS);
+                    queryBuilder.append(JOIN_ADDRESS).append(STATUS);
                 }
                 queryBuilder.append(CITY);
                 break;
             case "company":
                 if (isCount) {
-                    queryBuilder.append(JOIN_COMPANY).append(JOIN_ADDRESS);
+                    queryBuilder.append(JOIN_ADDRESS).append(STATUS);
                 }
                 queryBuilder.append(COMPANY);
                 break;
             default:
+                if (isCount) {
+                    queryBuilder.append(STATUS);
+                }
                 queryBuilder.append(POSITION);
         }
 
@@ -122,6 +125,7 @@ public class SearchVacancyDao {
                     queryBuilder.append(String.format(BY_COMPANY, DESC.equalsIgnoreCase(direction) ? DESC : ASC));
             }
         }
+        log.info("Query = " + queryBuilder);
         return queryBuilder.toString();
     }
 

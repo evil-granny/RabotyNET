@@ -21,10 +21,8 @@ public class GenerateLetter {
 
         letter.setSubject("Registration on website RabotyNet");
 
-        String validationLink = linkOfValidation;
-
         String content = "Your mail has been specified for registration on the site of RabotyNET " +
-                "to complete the registration by clicking on the link:" + validationLink +
+                "to complete the registration by clicking on the link:" + linkOfValidation +
                 " If you do not know about this, ignore this message;";
 
         letter.setContent(content);
@@ -40,9 +38,8 @@ public class GenerateLetter {
 
         letter.setEMail(user.getLogin());
         letter.setSubject("Restore password on website RabotyNet");
-        String validationLink=linkOfValidation;
         String content = "Your mail has been specified for restore password on the site of RabotyNET " +
-                "to complete the restore password by clicking on the link:" + validationLink +
+                "to complete the restore password by clicking on the link:" + linkOfValidation +
                 " If you do not know about this, ignore this message;";
         letter.setContent(content);
         letter.setWithAttachment(false);

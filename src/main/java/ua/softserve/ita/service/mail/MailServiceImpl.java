@@ -51,7 +51,7 @@ public class MailServiceImpl implements MailService {
 
     private MimeMessagePreparator getContent(final Letter letter) {
 
-        MimeMessagePreparator preparator = new MimeMessagePreparator() {
+        return new MimeMessagePreparator() {
 
             public void prepare(MimeMessage mimeMessage) throws Exception {
 
@@ -70,13 +70,11 @@ public class MailServiceImpl implements MailService {
                 helper.addInline("company-logo", new ClassPathResource("logo.png"));
             }
         };
-
-        return preparator;
     }
 
     private MimeMessagePreparator getContentWithAttachement(final Letter letter) {
 
-        MimeMessagePreparator preparator = new MimeMessagePreparator() {
+        return new MimeMessagePreparator() {
 
             public void prepare(MimeMessage mimeMessage) throws Exception {
 
@@ -97,7 +95,5 @@ public class MailServiceImpl implements MailService {
                 helper.addAttachment(fileName, file);
             }
         };
-
-        return preparator;
     }
 }

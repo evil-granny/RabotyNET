@@ -11,9 +11,9 @@ import java.io.*;
 @Service("createQR")
 public class CreateQrCodeVCard {
 
-    final int QR_CODE_SIZE = 250;
+    private final int QR_CODE_SIZE = 250;
 
-    public ByteArrayOutputStream createQRCode(Resume resume, String url){
+    public ByteArrayOutputStream createQRCode(Resume resume){
 
         VCard vCard = new VCard();
 
@@ -25,12 +25,9 @@ public class CreateQrCodeVCard {
 
         vCard.setEmail(resume.getPerson().getContact().getEmail());
 
-        ByteArrayOutputStream bout =
-                QRCode.from(vCard)
-                        .withSize(QR_CODE_SIZE, QR_CODE_SIZE)
-                        .to(ImageType.PNG)
-                        .stream();
-
-        return bout;
+        return QRCode.from(vCard)
+                .withSize(QR_CODE_SIZE, QR_CODE_SIZE)
+                .to(ImageType.PNG)
+                .stream();
     }
 }

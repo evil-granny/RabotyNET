@@ -34,7 +34,7 @@ public class ResumeController {
 
     @GetMapping(value = "/user")
     public Resume getResumeByUser() {
-        return resumeService.findByUserId(getLoggedUser().get().getUserId()).orElseThrow(() -> new ResourceNotFoundException(String.format("Resume was not found")));
+        return resumeService.findByUserId(getLoggedUser().get().getUserId()).orElseThrow(() -> new ResourceNotFoundException("Resume was not found"));
     }
 
     @GetMapping(path = {"/all"})
