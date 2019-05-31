@@ -22,12 +22,20 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private static final String[] CSRF_IGNORE = {"/login/**", "/users/**","/password/**","/searchVacancy"};
+    private static final List<String> ALLOWED_HEADERS = ImmutableList.of("Access-Control-Allow-Origin",
+                    "Access-Control-Allow-Credentials",
+                    "Authorization",
+                    "Content-Type",
+                    "Accept",
+                    "application/pdf",
+                    "X-XSRF-TOKEN");
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -40,7 +48,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             configuration.setAllowedOrigins(ImmutableList.of("http://localhost:4200"));
             configuration.setAllowedMethods(ImmutableList.of("GET", "POST", "PUT", "DELETE"));
             configuration.setAllowCredentials(true);
-            configuration.setAllowedHeaders(ImmutableList.of("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials", "Authorization", "Content-Type", "Accept", "application/pdf", "X-XSRF-TOKEN"));
+            configuration.setAllowedHeaders(ALLOWED_HEADERS);
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
             source.registerCorsConfiguration("/**", configuration);
         return source;
@@ -57,14 +65,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 .authorizeRequests()
                     .antMatchers("/companies/all/**", "/companies/sendMail").access("hasRole('ROLE_ADMIN')")
-                    .antMatchers("/companies/my", "/**/companies/update", "/**/companies/delete/**", "/searchResume").access("hasRole('ROLE_COWNER')")
+                    .antMatchers("/companies/my", "/companies/update", "/companies/delete/**", "/searchResume").access("hasRole('ROLE_COWNER')")
                     .antMatchers("/users").access("hasRole('ROLE_USER')")
                     .antMatchers("/resume/findByVacancyId/**", "/showResume/**").access("hasRole('ROLE_COWNER')")
                     .antMatchers("/resume/**", "/companies/create", "/companies/approve", "/people", "/people/*", "people/**").access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
                     .antMatchers("/companies/byName/**", "/companies/byCompany/**", "/claims", "/photo/**", "/users/**", "/users/enabled/**").permitAll()
                     .antMatchers("/", "/vacancies/**", "/login", "/login/**", "/password/**","/healthCheck").permitAll()
                     .antMatchers("/pdf/**", "/updatePDF", "/createPdf/**").permitAll()
-                    .antMatchers("/sendResume/{vacancyId}").permitAll()
+                    .antMatchers("/sendResume/{vacancyId}","/companies/byVacancyId/**").permitAll()
                     .antMatchers("/pdf/**", "/updatePDF", "/createPdf/**", "/healthCheck", "/searchVacancy").permitAll()
                     .anyRequest().authenticated()
                 .and()
