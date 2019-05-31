@@ -315,9 +315,9 @@ class SearchResumeDaoTest {
     private void insert() throws FileNotFoundException {
         setData();
         Session session = sessionFactory.openSession();
-        insertResume(10, session);
         insertVacancies(12, session);
         insertRegisteredUsers(session);
+        insertResume(30, session);
     }
 
     @BeforeEach
@@ -348,7 +348,7 @@ class SearchResumeDaoTest {
                 .setProperty("hibernate.show_sql", "true")
                 .setProperty("hibernate.hbm2ddl.auto", "update")
                 .buildSessionFactory();
-        insert();
+//        insert();
     }
 
     @Test

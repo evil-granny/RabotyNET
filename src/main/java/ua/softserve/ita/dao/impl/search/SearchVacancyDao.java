@@ -30,12 +30,13 @@ public class SearchVacancyDao {
     private static final String COMPANY = " WHERE company.name ILIKE :searchText";
     private static final String SELECT_COUNT = "SELECT DISTINCT COUNT(vacancy.vacancy_id) " +
             "FROM vacancy";
-    private static final String BY_POSITION = " ORDER BY vacancy.position";
-    private static final String BY_CITY = " ORDER BY address.city";
-    private static final String BY_COMPANY = " ORDER BY company.name";
-    private static final String BY_EMPLOYMENT = " ORDER BY vacancy.employment";
-    private static final String BY_SALARY = " ORDER BY vacancy.salary";
-    private static final String DIRECTION = " DESC";
+    private static final String BY_POSITION = " ORDER BY vacancy.position %s, company.name, address.city";
+    private static final String BY_CITY = " ORDER BY address.city %s, vacancy.position, company.name";
+    private static final String BY_COMPANY = " ORDER BY company.name %s, vacancy.position, address.city";
+    private static final String BY_EMPLOYMENT = " ORDER BY vacancy.employment %s, vacancy.position, company.name";
+    private static final String BY_SALARY = " ORDER BY vacancy.salary %s, vacancy.position, company.name";
+    private static final String DESC = "DESC";
+    private static final String ASC = "ASC";
 
     private static final String SEARCH_TEXT = "searchText";
 
@@ -103,34 +104,19 @@ public class SearchVacancyDao {
         if (!isCount) {
             switch (searchSort) {
                 case "city":
-                    queryBuilder.append(BY_CITY);
-                    if ("desc".equals(direction)) {
-                        queryBuilder.append(DIRECTION);
-                    }
+                    queryBuilder.append(String.format(BY_CITY, DESC.equalsIgnoreCase(direction) ? DESC : ASC));
                     break;
                 case "position":
-                    queryBuilder.append(BY_POSITION);
-                    if ("desc".equals(direction)) {
-                        queryBuilder.append(DIRECTION);
-                    }
+                    queryBuilder.append(String.format(BY_POSITION, DESC.equalsIgnoreCase(direction) ? DESC : ASC));
                     break;
                 case "employment":
-                    queryBuilder.append(BY_EMPLOYMENT);
-                    if ("desc".equals(direction)) {
-                        queryBuilder.append(DIRECTION);
-                    }
+                    queryBuilder.append(String.format(BY_EMPLOYMENT, DESC.equalsIgnoreCase(direction) ? DESC : ASC));
                     break;
                 case "salary":
-                    queryBuilder.append(BY_SALARY);
-                    if ("desc".equals(direction)) {
-                        queryBuilder.append(DIRECTION);
-                    }
+                    queryBuilder.append(String.format(BY_SALARY, DESC.equalsIgnoreCase(direction) ? DESC : ASC));
                     break;
                 default:
-                    queryBuilder.append(BY_COMPANY);
-                    if ("desc".equals(direction)) {
-                        queryBuilder.append(DIRECTION);
-                    }
+                    queryBuilder.append(String.format(BY_COMPANY, DESC.equalsIgnoreCase(direction) ? DESC : ASC));
             }
         }
         return queryBuilder.toString();

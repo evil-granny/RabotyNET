@@ -24,31 +24,31 @@ public class SearchResumeDao {
     private static final String SELECT =
             "SELECT DISTINCT person.user_id, person.first_Name, person.last_name, person.birthday, " +
                     "resume.position, resume.resume_id, contact.phone_number, address.city " +
-                    "FROM person";
+                    "FROM resume";
+    private static final String JOIN_PERSON = " JOIN person ON resume.user_id = person.user_id";
     private static final String JOIN_CONTACT = " JOIN contact ON person.user_id = contact.contact_id";
     private static final String JOIN_ADDRESS = " JOIN address ON person.user_id = address.address_id";
-    private static final String JOIN_RESUME = " JOIN resume ON person.user_id = resume.user_id";
     private static final String JOIN_SKILL = " JOIN skill ON resume.resume_id = skill.resume_id";
     private static final String NAME =
             " WHERE first_name ILIKE :searchText OR last_name ILIKE :searchText";
     private static final String PHONE =
             " WHERE contact.phone_number ILIKE :searchText";
     private static final String CITY =
-            " WHERE address.city ILIKE :searchText ORDER BY";
+            " WHERE address.city ILIKE :searchText";
     private static final String SKILL =
             " WHERE skill.title ILIKE :searchText OR skill.description ILIKE :searchText";
     private static final String POSITION =
             " WHERE resume.position ILIKE :searchText";
-    private static final String BY_NAME = " ORDER BY first_name";
-    private static final String BY_LAST_NAME = " ORDER BY last_name";
-    private static final String BY_CITY = " ORDER BY address.city";
-    private static final String BY_POSITION = " ORDER BY resume.position";
-    private static final String BY_PHONE = " ORDER BY contact.phone_number";
-    private static final String BY_AGE = " ORDER BY person.birthday";
-    private static final String DIRECTION = " DESC";
-    private static final String INVERSE_DIRECTION = " ASC";
+    private static final String BY_NAME = " ORDER BY first_name %s, last_name";
+    private static final String BY_LAST_NAME = " ORDER BY last_name %s, first_name, last_name";
+    private static final String BY_CITY = " ORDER BY address.city %s, first_name, last_name";
+    private static final String BY_POSITION = " ORDER BY resume.position %s, first_name, last_name";
+    private static final String BY_PHONE = " ORDER BY contact.phone_number %s, first_name, last_name";
+    private static final String BY_AGE = " ORDER BY person.birthday %s, first_name, last_name";
+    private static final String DESC = "DESC";
+    private static final String ASC = "ASC";
     private static final String SELECT_COUNT =
-            "SELECT DISTINCT COUNT(person.user_id) FROM person";
+            "SELECT DISTINCT COUNT(resume.resume_id) FROM resume";
 
     private static final String SEARCH_TEXT = "searchText";
 
@@ -95,76 +95,55 @@ public class SearchResumeDao {
         if (isCount) {
             queryBuilder.append(SELECT_COUNT);
         } else {
-            queryBuilder.append(SELECT).append(JOIN_CONTACT).append(JOIN_ADDRESS).append(JOIN_RESUME);
+            queryBuilder.append(SELECT).append(JOIN_PERSON).append(JOIN_CONTACT).append(JOIN_ADDRESS);
         }
 
         switch (searchParameter) {
             case "name":
+                if (isCount) {
+                    queryBuilder.append(JOIN_PERSON);
+                }
                 queryBuilder.append(NAME);
                 break;
             case "phoneNumber":
                 if (isCount) {
+                    queryBuilder.append(JOIN_PERSON);
                     queryBuilder.append(JOIN_CONTACT);
                 }
                 queryBuilder.append(PHONE);
                 break;
             case "city":
                 if (isCount) {
+                    queryBuilder.append(JOIN_PERSON);
                     queryBuilder.append(JOIN_ADDRESS);
                 }
                 queryBuilder.append(CITY);
                 break;
             case "skill":
-                if (isCount) {
-                    queryBuilder.append(JOIN_RESUME);
-                }
                 queryBuilder.append(JOIN_SKILL).append(SKILL);
                 break;
             default:
-                if (isCount) {
-                    queryBuilder.append(JOIN_RESUME);
-                }
                 queryBuilder.append(POSITION);
         }
         if (!isCount) {
             switch (searchSort) {
                 case "lastName":
-                    queryBuilder.append(BY_LAST_NAME);
-                    if ("desc".equals(direction)) {
-                        queryBuilder.append(DIRECTION);
-                    }
+                    queryBuilder.append(String.format(BY_LAST_NAME, DESC.equalsIgnoreCase(direction) ? DESC : ASC));
                     break;
                 case "city":
-                    queryBuilder.append(BY_CITY);
-                    if ("desc".equals(direction)) {
-                        queryBuilder.append(DIRECTION);
-                    }
+                    queryBuilder.append(String.format(BY_CITY, DESC.equalsIgnoreCase(direction) ? DESC : ASC));
                     break;
                 case "position":
-                    queryBuilder.append(BY_POSITION);
-                    if ("desc".equals(direction)) {
-                        queryBuilder.append(DIRECTION);
-                    }
+                    queryBuilder.append(String.format(BY_POSITION, DESC.equalsIgnoreCase(direction) ? DESC : ASC));
                     break;
                 case "phone":
-                    queryBuilder.append(BY_PHONE);
-                    if ("desc".equals(direction)) {
-                        queryBuilder.append(DIRECTION);
-                    }
+                    queryBuilder.append(String.format(BY_PHONE, DESC.equalsIgnoreCase(direction) ? DESC : ASC));
                     break;
                 case "age":
-                    queryBuilder.append(BY_AGE);
-                    if ("desc".equals(direction)) {
-                        queryBuilder.append(INVERSE_DIRECTION);
-                    } else {
-                        queryBuilder.append(DIRECTION);
-                    }
+                    queryBuilder.append(String.format(BY_AGE, DESC.equalsIgnoreCase(direction) ? ASC : DESC));
                     break;
                 default:
-                    queryBuilder.append(BY_NAME);
-                    if ("desc".equals(direction)) {
-                        queryBuilder.append(DIRECTION);
-                    }
+                    queryBuilder.append(String.format(BY_NAME, DESC.equalsIgnoreCase(direction) ? DESC : ASC));
             }
         }
         return queryBuilder.toString();
