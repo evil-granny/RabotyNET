@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 @RestController
+@RequestMapping("/password")
 public class PasswordResetController {
 
     private final UserDao userDao;
@@ -36,7 +37,7 @@ public class PasswordResetController {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    @PostMapping("/resetPassword")
+    @PostMapping("/reset")
     public ResponseEntity<?> resetPassword(@RequestBody UserResetPasswordDto userResetPasswordDto, final HttpServletRequest request) {
         User user = userDao.getUserWithRoles(userResetPasswordDto.getUsername()).orElseThrow(() ->
                 new UserNotFoundException("Please check the correctness of the email " + userResetPasswordDto.getUsername()));
@@ -48,7 +49,7 @@ public class PasswordResetController {
         return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
     }
 
-    @PostMapping("/changePassword")
+    @PostMapping("/change")
     public ResponseEntity<?> changePassword(@RequestBody UserResetPasswordDto userResetPasswordDto) {
         final String result = tokenService.validateVerificationToken(userResetPasswordDto.getUserResetPasswordToken());
         if (result.equals("valid")) {

@@ -1,4 +1,4 @@
-package ua.softserve.ita.service.search;
+package ua.softserve.ita.service;
 
 import ua.softserve.ita.dto.search.SearchRequestDto;
 

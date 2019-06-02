@@ -50,7 +50,7 @@ public class PDFController {
 
     @GetMapping(value = "/pdf")
     public Resume getCVByUser() {
-        return resumeService.findByUserId(getLoggedUser().get().getUserId()).orElseThrow(() -> new ResourceNotFoundException(String.format("CV with id: %d not found")));
+        return resumeService.findByUserId(getLoggedUser().get().getUserId()).orElseThrow(() -> new ResourceNotFoundException("CV with id: %d not found"));
     }
 
     @GetMapping(value = "/pdf/sendEmail")

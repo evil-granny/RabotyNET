@@ -1,6 +1,7 @@
 package ua.softserve.ita.utility;
 
 import org.springframework.security.core.context.SecurityContextHolder;
+import ua.softserve.ita.exception.UserNotFoundException;
 import ua.softserve.ita.model.UserPrincipal;
 
 import java.util.Optional;
@@ -15,7 +16,7 @@ public class LoggedUserUtil {
             return Optional.of((UserPrincipal) principal);
         }
 
-        return Optional.of(UNKNOWN_USER);
+        throw new UserNotFoundException("No such user");
     }
 
 }

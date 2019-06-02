@@ -29,14 +29,6 @@ public class ClaimController {
         return companyService.update(company);
     }
 
-    @GetMapping(value = {"/{claimId}"})
-    public Claim findClaimById(@PathVariable("claimId") long claimId) {
-        if (claimId < 0) {
-            throw new IllegalArgumentException("ID can't be negative");
-        }
-        return claimService.findById(claimId).orElseThrow(() -> new ResourceNotFoundException("Claim not found with id " + claimId));
-    }
-
     @GetMapping(value = {"/byCompany/{companyId}"})
     public List<Claim> findClaims(@PathVariable("companyId") long companyId) {
         return claimService.findAllByCompanyId(companyId);

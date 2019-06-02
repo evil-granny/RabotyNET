@@ -21,7 +21,6 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 @NamedQueries({
         @NamedQuery(name = Vacancy.FIND_VACANCIES_BY_COMPANY_ID, query = "select vac from Vacancy vac where vac.company.companyId = :id ORDER BY vac.vacancyId DESC"),
         @NamedQuery(name = Vacancy.FIND_ALL_HOT_VACANCIES, query = "select vac from Vacancy vac where vac.company.status = ua.softserve.ita.model.enumtype.Status.APPROVED and vac.hotVacancy = true ORDER BY vac.vacancyId DESC"),
@@ -29,7 +28,7 @@ import java.util.Set;
         @NamedQuery(name = Vacancy.FIND_VACANCIES, query = "select vac from Vacancy vac WHERE vac.company.status = ua.softserve.ita.model.enumtype.Status.APPROVED and vac.vacancyStatus = ua.softserve.ita.model.enumtype.VacancyStatus.OPEN ORDER BY vac.vacancyId DESC"),
         @NamedQuery(name = Vacancy.FIND_BY_REQUIREMENT, query = "SELECT vac FROM Vacancy vac WHERE vac.vacancyId = (SELECT req.vacancy.vacancyId FROM Requirement req WHERE req.requirementId = :id)"),
         @NamedQuery(name = Vacancy.FIND_COUNT_VACANCIES_BY_COMPANY_ID, query = "select count(vac.vacancyId) from Vacancy vac where vac.company.companyId = :id"),
-        @NamedQuery(name = Vacancy.FIND_COUNT_All_VACANCY, query = "select count(vac.vacancyId) from Vacancy vac"),
+        @NamedQuery(name = Vacancy.FIND_COUNT_All_VACANCY, query = "select count(vac.vacancyId) from Vacancy vac WHERE vac.company.status = ua.softserve.ita.model.enumtype.Status.APPROVED and vac.vacancyStatus = ua.softserve.ita.model.enumtype.VacancyStatus.OPEN"),
         @NamedQuery(name = Vacancy.FIND_COUNT_HOT_VACANCIES, query = "select count(vac.vacancyId) from Vacancy vac where vac.hotVacancy = true"),
         @NamedQuery(name = Vacancy.FIND_BY_VACANCY_ID, query = "select vac from Vacancy vac where vac.vacancyId = :id"),
         @NamedQuery(name = Vacancy.FIND_COUNT_CLOSED_VACANCIES, query = "select count(vac.vacancyId) from Vacancy vac where vac.vacancyStatus = ua.softserve.ita.model.enumtype.VacancyStatus.OUTDATED or vac.vacancyStatus = ua.softserve.ita.model.enumtype.VacancyStatus.OCCUPIED"),
@@ -99,6 +98,28 @@ public class Vacancy {
     @JoinTable(name = "vacancy_resume", joinColumns = {@JoinColumn(name = "vacancy_id")},
             inverseJoinColumns = {@JoinColumn(name = "resume_id")})
     private Set<Resume> resumes;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vacancy vacancy = (Vacancy) o;
+        return Objects.equals(vacancyId, vacancy.vacancyId) &&
+                Objects.equals(description, vacancy.description) &&
+                Objects.equals(position, vacancy.position) &&
+                employment == vacancy.employment &&
+                vacancyStatus == vacancy.vacancyStatus &&
+                Objects.equals(salary, vacancy.salary) &&
+                currency == vacancy.currency &&
+                Objects.equals(hotVacancy, vacancy.hotVacancy) &&
+                Objects.equals(requirements, vacancy.requirements);
+//                Objects.equals(resumes, vacancy.resumes);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(vacancyId, description, position, employment, vacancyStatus, salary, currency, hotVacancy, requirements);
+    }
 
     @Override
     public String toString() {

@@ -71,6 +71,25 @@ public class GenerateLetter {
         letterService.sendLetter(letter);
     }
 
+    public void sendResumePdfForVacancy(String eMail, String path){
+
+        Letter letter = new Letter();
+
+        letter.setEMail(eMail);
+
+        letter.setSubject("Your get new resume from RabotyNET");
+
+        String content = "Candidate Resume in attached";
+
+        letter.setContent(content);
+
+        letter.setWithAttachment(true);
+
+        letter.setLinkForAttachment(path);
+
+        letterService.sendLetter(letter);
+    }
+
     public void sendCompanyApprove(Company company, String linkToAttachment) {
 
         Letter letter = new Letter();

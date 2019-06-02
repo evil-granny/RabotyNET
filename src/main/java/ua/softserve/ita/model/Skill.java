@@ -11,10 +11,10 @@ import java.io.Serializable;
 
 @Getter
 @Setter
-@EqualsAndHashCode
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "skill")
 public class Skill implements Serializable {

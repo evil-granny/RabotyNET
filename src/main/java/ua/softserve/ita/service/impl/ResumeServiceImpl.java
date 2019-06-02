@@ -2,14 +2,12 @@ package ua.softserve.ita.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.softserve.ita.dao.PersonDao;
-import ua.softserve.ita.dao.ResumeDao;
-import ua.softserve.ita.dao.UserDao;
-import ua.softserve.ita.dao.VacancyDao;
+import ua.softserve.ita.dao.*;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.*;
 import ua.softserve.ita.model.profile.Person;
 import ua.softserve.ita.service.ResumeService;
+import ua.softserve.ita.service.letter.GenerateLetter;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -23,16 +21,21 @@ import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 public class ResumeServiceImpl implements ResumeService {
 
     private final ResumeDao resumeDao;
-    private final UserDao userDao;
     private final PersonDao personDao;
     private final VacancyDao vacancyDao;
+    private final UserDao userDao;
+    private final PdfResumeDao pdfResumeService;
+    private final GenerateLetter generateService;
+
 
     @Autowired
-    public ResumeServiceImpl(ResumeDao resumeDao, UserDao userDao, PersonDao personDao, VacancyDao vacancyDao) {
+    public ResumeServiceImpl(ResumeDao resumeDao, UserDao userDao, PersonDao personDao, VacancyDao vacancyDao, PdfResumeDao pdfResumeService, GenerateLetter generateService) {
         this.resumeDao = resumeDao;
-        this.userDao = userDao;
         this.personDao = personDao;
         this.vacancyDao = vacancyDao;
+        this.userDao = userDao;
+        this.pdfResumeService = pdfResumeService;
+        this.generateService = generateService;
     }
 
     @Override
@@ -73,6 +76,7 @@ public class ResumeServiceImpl implements ResumeService {
 
         Set<Vacancy> vacancies = resume.getVacancies();
         vacancies.clear();
+        vacancies.forEach(vacancyDao::update);
 
         return resumeDao.update(resume);
     }
@@ -102,13 +106,20 @@ public class ResumeServiceImpl implements ResumeService {
         }
         Set<Skill> skills = resume.getSkills();
         Set<Job> jobs = resume.getJobs();
-        Set<Vacancy> vacancies = resume.getVacancies();
         skills.forEach(x -> x.setResume(resume));
         jobs.forEach(x -> x.setResume(resume));
-        resume.getVacancies().add(vacancyDao.findById(vacancyId)
-                .orElseThrow(() -> new ResourceNotFoundException(String.format("Vacancy with id: %d not found", vacancyId))));
-        vacancies.forEach(v -> v.getResumes().add(resume));
-        vacancies.forEach(vacancyDao::update);
+
+        Vacancy vacancy = vacancyDao.findById(vacancyId)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Vacancy with id: %d not found", vacancyId)));
+
+        String eMail = vacancy.getCompany().getContact().getEmail();
+        PdfResume pdfResume = pdfResumeService.findByUserId(getLoggedUser().get().getUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("CV with id: %d not found"));
+        generateService.sendResumePdfForVacancy(eMail, pdfResume.getPath());
+
+        resume.getVacancies().add(vacancy);
+        vacancy.getResumes().add(resume);
+        vacancyDao.save(vacancy);
         return update(resume);
     }
 

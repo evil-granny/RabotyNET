@@ -1,13 +1,12 @@
 package ua.softserve.ita.dto.search;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 @Data
 @Builder
 public class SearchResumeDto {
 
-    private long id;
+    private BigInteger id;
 
     private String firstName;
 
@@ -17,7 +16,7 @@ public class SearchResumeDto {
 
     private String position;
 
-    private long resumeId;
+    private BigInteger resumeId;
 
     private String city;
 

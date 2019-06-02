@@ -1,4 +1,4 @@
-package ua.softserve.ita.controller;
+package ua.softserve.ita.unittest.controllers;
 
 import org.junit.jupiter.api.Test;
 

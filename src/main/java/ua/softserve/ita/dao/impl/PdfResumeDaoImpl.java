@@ -3,6 +3,7 @@ package ua.softserve.ita.dao.impl;
 import org.springframework.stereotype.Repository;
 import ua.softserve.ita.dao.PdfResumeDao;
 import ua.softserve.ita.model.PdfResume;
+import ua.softserve.ita.model.Skill;
 import ua.softserve.ita.utility.QueryUtility;
 
 import javax.persistence.NoResultException;

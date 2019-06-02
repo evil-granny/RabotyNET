@@ -11,7 +11,7 @@ public interface PdfResumeService {
 
     List<PdfResume> findAll();
 
-    PdfResume save(PdfResume pdfResume);
+    void save(PdfResume pdfResume);
 
     PdfResume update(PdfResume pdfResume);
 

@@ -5,11 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import ua.softserve.ita.dto.search.SearchRequestDto;
-import ua.softserve.ita.dto.search.SearchResumeResponseDto;
-import ua.softserve.ita.dto.search.SearchVacancyResponseDto;
-import ua.softserve.ita.service.search.SearchResumeService;
-import ua.softserve.ita.service.search.SearchVacancyService;
+import ua.softserve.ita.dto.SearchDTO.SearchRequestDTO;
+import ua.softserve.ita.dto.SearchDTO.SearchResumeResponseDTO;
+import ua.softserve.ita.dto.SearchDTO.SearchVacancyResponseDTO;
+import ua.softserve.ita.service.impl.search.SearchResumeService;
+import ua.softserve.ita.service.impl.search.SearchVacancyService;
 
 @RestController
 @Slf4j
@@ -24,17 +24,17 @@ public class SearchController {
         this.searchVacancyService = searchVacancyService;
     }
 
-    @PostMapping("/search/resume")
-    public SearchResumeResponseDto getResult(@RequestBody SearchRequestDto searchRequestDto) {
-        log.info("Request = " + searchRequestDto.toString());
-        return searchResumeService.getResponse(searchRequestDto);
+    @PostMapping("/searchResume")
+    public SearchResumeResponseDTO getResult(@RequestBody SearchRequestDTO searchRequestDTO) {
+        log.info("Request = " + searchRequestDTO.toString());
+        return searchResumeService.getResponse(searchRequestDTO);
 
     }
 
-    @PostMapping("/search/vacancies")
-    public SearchVacancyResponseDto getVacanciesResult(@RequestBody SearchRequestDto searchRequestDto) {
-        log.info("Request = " + searchRequestDto.toString());
-        return searchVacancyService.getResponse(searchRequestDto);
+    @PostMapping("/searchVacancy")
+    public SearchVacancyResponseDTO getVacanciesResult(@RequestBody SearchRequestDTO searchRequestDTO) {
+        log.info("Request = " + searchRequestDTO.toString());
+        return searchVacancyService.getResponse(searchRequestDTO);
     }
 
 }

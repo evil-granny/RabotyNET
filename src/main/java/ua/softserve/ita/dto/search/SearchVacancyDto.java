@@ -5,15 +5,17 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.math.BigInteger;
+
 @Getter
 @Setter
 @ToString
 @Builder
 public class SearchVacancyDto {
 
-    private long vacancyId;
+    private BigInteger vacancyId;
 
-    private long companyId;
+    private BigInteger companyId;
 
     private String position;
 
@@ -23,6 +25,8 @@ public class SearchVacancyDto {
 
     private String employment;
 
-    private String salary;
+    private int salary;
+
+    private String currency;
 
 }

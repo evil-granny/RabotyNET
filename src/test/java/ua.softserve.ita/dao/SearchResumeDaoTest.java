@@ -6,9 +6,14 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ua.softserve.ita.dao.impl.search.SearchResumeDao;
+import ua.softserve.ita.dto.SearchDTO.SearchRequestDTO;
+import ua.softserve.ita.dto.SearchDTO.SearchResumeResponseDTO;
 import ua.softserve.ita.model.*;
+import ua.softserve.ita.model.enumtype.Currency;
 import ua.softserve.ita.model.enumtype.Employment;
 import ua.softserve.ita.model.enumtype.Status;
+import ua.softserve.ita.model.enumtype.VacancyStatus;
 import ua.softserve.ita.model.profile.Address;
 import ua.softserve.ita.model.profile.Contact;
 import ua.softserve.ita.model.profile.Person;
@@ -35,12 +40,14 @@ class SearchResumeDaoTest {
     private String[] positions = {"Developer", "QATC"};
     private String[] companies = {"Meta Cortex", "Google", "Microsoft", "Apple", "Amazon", "USA Government", "IBM",
             "Tesla", "GMC", "Cyberdyne Systems", "Umbrella", "Omni Consumer Products"};
-    private String[] universities = {"Stanford University", "Massachusetts Institute of Technology",
+    private String[] universities = {"Stanford University", "Massachusetts Institute",
             "Harvard University", "Princeton University", "University of Chicago"};
     private List<Employment> employmentList = new ArrayList<>();
-    private List<Status> statusList = new ArrayList<>();
+    private List<VacancyStatus> vacancyStatusList = new ArrayList<>();
+    private List<Currency> currencyList = new ArrayList<>();
     private int next = 0;
     private Random random = new Random();
+    private Role userRole, cownerRole;
 
     private void setData() throws FileNotFoundException {
         Scanner nameScanner =
@@ -63,7 +70,8 @@ class SearchResumeDaoTest {
         }
 
         employmentList = Arrays.asList(Employment.values());
-        statusList = Arrays.asList(Status.values());
+        vacancyStatusList = Arrays.asList(VacancyStatus.values());
+        currencyList = Arrays.asList(Currency.values());
     }
 
     private LocalDate getLocalDate() {
@@ -156,7 +164,7 @@ class SearchResumeDaoTest {
         return jobs;
     }
 
-    private Resume getCv(long user_id, Education education, Person person) {
+    private Resume getResume(long user_id, Education education, Person person) {
         Resume resume = new Resume();
         resume.setPosition(ranks[random.nextInt(ranks.length)] + " " +
                 languages[random.nextInt(languages.length)] + " " +
@@ -171,7 +179,7 @@ class SearchResumeDaoTest {
         Company company = new Company();
         company.setEdrpou(String.format("%08d", random.nextInt(100000000)));
         company.setName(companies[next++]);
-        company.setStatus(statusList.get(random.nextInt(statusList.size())));
+        company.setStatus(Status.APPROVED);
         if (company.getName().equals("Meta Cortex")) {
             company.setDescription("Wake up.. The Matrix has you...");
         }
@@ -190,6 +198,9 @@ class SearchResumeDaoTest {
                 positions[random.nextInt(positions.length)]);
         vacancy.setEmployment(employmentList.get(random.nextInt(employmentList.size())));
         vacancy.setSalary(random.nextInt(5) * 1000 + 500);
+        vacancy.setVacancyStatus(vacancyStatusList.get(random.nextInt(vacancyStatusList.size())));
+        vacancy.setHotVacancy(random.nextInt(5) % 2 != 0);
+        vacancy.setCurrency(currencyList.get(random.nextInt(currencyList.size())));
         vacancy.setCompany(company);
         return vacancy;
     }
@@ -198,52 +209,46 @@ class SearchResumeDaoTest {
 
         session.beginTransaction();
 
+        Role adminRole = new Role();
+        adminRole.setType("admin");
+        adminRole.setRoleId(1L);
+        session.save(adminRole);
+
+        userRole = new Role();
+        userRole.setType("user");
+        userRole.setRoleId(2L);
+        session.save(userRole);
+
+        cownerRole = new Role();
+        cownerRole.setType("cowner");
+        cownerRole.setRoleId(3L);
+        session.save(cownerRole);
+
         User adminUser = new User();
         adminUser.setLogin("admin@gmail.com");
         adminUser.setPassword("$2a$10$E2.PwtnpF2p6aB3NFM3Qo.TarTYsaiWD0yTZ7qY1U3K.ybKxNvCku");
         adminUser.setEnabled(true);
-        session.save(adminUser);
-        Role adminRole = new Role();
-        adminRole.setType("admin");
-        adminRole.setRoleId(adminUser.getUserId());
-        session.save(adminRole);
         List<Role> adminRoleList = new ArrayList<>();
         adminRoleList.add(adminRole);
         adminUser.setRoles(adminRoleList);
-        session.update(adminUser);
-
-//        User userUser = new User();
-//        userUser.setLogin("user@gmail.com");
-//        userUser.setPassword("$2a$10$t31PsVNWl8eaWr9/gPwKKeX.4Q2grl12wmiRrN9fEZDMlMGHwA92m");
-//        userUser.setEnabled(true);
-//        session.save(userUser);
-//        Role userRole = new Role();
-//        userRole.setType("user");
-//        userRole.setRoleId(userUser.getUserId());
-//        session.save(userRole);
-//        List<Role> userRoleList = new ArrayList<>();
-//        userRoleList.add(userRole);
-//        userUser.setRoles(userRoleList);
-//        session.update(userUser);
-
-//        User cownerUser = new User();
-//        cownerUser.setLogin("cowner@gmail.com");
-//        cownerUser.setPassword("$2a$10$DmeWO6UlY/m2QjJaxLGUzezqOotvJmpzbBmZGBr8o/HHeNUuCWcpK");
-//        cownerUser.setEnabled(true);
-//        session.save(cownerUser);
-//        Role cownerRole = new Role();
-//        cownerRole.setType("cowner");
-//        cownerRole.setRoleId(cownerUser.getUserId());
-//        session.save(cownerRole);
-//        List<Role> cownerRoleList = new ArrayList<>();
-//        cownerRoleList.add(cownerRole);
-//        cownerUser.setRoles(cownerRoleList);
-//        session.update(cownerUser);
+        session.save(adminUser);
 
         session.getTransaction().commit();
     }
 
-    private void insertCvs(int count, Session session) {
+    List<Role> getUserRole() {
+        List<Role> userRoleList = new ArrayList<>();
+        userRoleList.add(userRole);
+        return userRoleList;
+    }
+
+    List<Role> getCownerRole() {
+        List<Role> cownerRoleList = new ArrayList<>();
+        cownerRoleList .add(cownerRole);
+        return cownerRoleList ;
+    }
+
+    private void insertResume(int count, Session session) {
         for (int i = 1; i <= count; i++) {
             session.beginTransaction();
 
@@ -255,15 +260,8 @@ class SearchResumeDaoTest {
             }
             user.setPassword("$2a$10$t31PsVNWl8eaWr9/gPwKKeX.4Q2grl12wmiRrN9fEZDMlMGHwA92m");
             user.setEnabled(true);
+            user.setRoles(getUserRole());
             session.save(user);
-            Role userRole = new Role();
-            userRole.setType("user");
-            userRole.setRoleId(user.getUserId());
-            session.save(userRole);
-            List<Role> userRoleList = new ArrayList<>();
-            userRoleList.add(userRole);
-            user.setRoles(userRoleList);
-            session.update(user);
 
             Address address = getAddress(user.getUserId());
             session.save(address);
@@ -276,9 +274,9 @@ class SearchResumeDaoTest {
             session.save(photo);
             Person person = getPerson(user.getUserId(), address, contact, photo);
             session.save(person);
-            Resume resume = getCv(user.getUserId(), education, person);
+            Resume resume = getResume(user.getUserId(), education, person);
             session.save(resume);
-            log.info("#: " + String.valueOf(i) + " - Resume Id = " + String.valueOf(resume.getResumeId()));
+            log.info("#: " + i + " - Resume Id = " + resume.getResumeId());
             Set<Job> jobs = getJobs(resume);
             for (Job job : jobs) {
                 session.save(job);
@@ -287,7 +285,7 @@ class SearchResumeDaoTest {
             for (Skill skill : skills) {
                 session.save(skill);
             }
-            log.info("#: " + String.valueOf(i) + " - " + person.getFirstName() + " " + person.getLastName());
+            log.info("#: " + i + " - " + person.getFirstName() + " " + person.getLastName());
             session.getTransaction().commit();
         }
     }
@@ -303,15 +301,8 @@ class SearchResumeDaoTest {
             }
             cownerUser.setPassword("$2a$10$DmeWO6UlY/m2QjJaxLGUzezqOotvJmpzbBmZGBr8o/HHeNUuCWcpK");
             cownerUser.setEnabled(true);
+            cownerUser.setRoles(getCownerRole());
             session.save(cownerUser);
-            Role cownerRole = new Role();
-            cownerRole.setType("cowner");
-            cownerRole.setRoleId(cownerUser.getUserId());
-            session.save(cownerRole);
-            List<Role> cownerRoleList = new ArrayList<>();
-            cownerRoleList.add(cownerRole);
-            cownerUser.setRoles(cownerRoleList);
-            session.update(cownerUser);
             Contact contact = getContact(cownerUser.getUserId());
             contact.setEmail(cownerUser.getLogin());
             session.save(contact);
@@ -321,7 +312,7 @@ class SearchResumeDaoTest {
             session.save(company);
             for (int j = 0; j < 8; j++) {
                 Vacancy vacancy = getVacancy(company);
-                if(j == 2 || j == 4){
+                if (j == 2 || j == 4) {
                     vacancy.setHotVacancy(true);
                 }
                 session.save(vacancy);
@@ -338,13 +329,13 @@ class SearchResumeDaoTest {
     private void insert() throws FileNotFoundException {
         setData();
         Session session = sessionFactory.openSession();
-        insertCvs(3000, session);
-        insertVacancies(12, session);
         insertRegisteredUsers(session);
+        insertVacancies(12, session);
+        insertResume(30, session);
     }
 
     @BeforeEach
-    void setUp() throws FileNotFoundException {
+    void setUp() throws IOException {
         sessionFactory = new Configuration()
                 .addAnnotatedClass(Person.class)
                 .addAnnotatedClass(Address.class)
@@ -371,14 +362,21 @@ class SearchResumeDaoTest {
                 .setProperty("hibernate.show_sql", "true")
                 .setProperty("hibernate.hbm2ddl.auto", "update")
                 .buildSessionFactory();
-        insert();
+//        insert();
     }
 
     @Test
-    void search() {
-//        SearchResumeDao searchResumeDao= new SearchResumeDao(sessionFactory);
-//        SearchResumeResponseDto searchResumeResponseDTO = searchResumeDao.getResponse("name", "jo", 5000, 0);
-//        assertEquals(searchResumeResponseDTO.getCount().intValue(), searchResumeResponseDTO.getSearchResumeDTOS().size());
+    void getResponse() {
+        SearchRequestDTO searchRequestDTO = new SearchRequestDTO();
+        searchRequestDTO.setSearchParameter("position");
+        searchRequestDTO.setSearchText("Java ");
+        searchRequestDTO.setFirstResultNumber(0);
+        searchRequestDTO.setResultsOnPage(5000);
+        searchRequestDTO.setDirection("asc");
+        searchRequestDTO.setSearchSort("position");
+        SearchResumeDao searchResumeDao = new SearchResumeDao(sessionFactory);
+        SearchResumeResponseDTO searchResumeResponseDTO = searchResumeDao.getResponse(searchRequestDTO);
+        assertEquals(searchResumeResponseDTO.getCount().intValue(), searchResumeResponseDTO.getSearchResumeDTOS().size());
     }
 
 

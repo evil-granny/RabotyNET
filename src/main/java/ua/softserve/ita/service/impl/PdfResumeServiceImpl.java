@@ -32,8 +32,8 @@ public class PdfResumeServiceImpl implements PdfResumeService {
     }
 
     @Override
-    public PdfResume save(PdfResume pdfResume) {
-        return pdfResumeDao.save(pdfResume);
+    public void save(PdfResume pdfResume) {
+        pdfResumeDao.save(pdfResume);
     }
 
     @Override
