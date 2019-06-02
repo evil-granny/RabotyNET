@@ -30,6 +30,13 @@ public class RegistrationController {
         this.registrationListener = registrationListener;
     }
 
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<User> getPerson(@PathVariable("id") long id) {
+        User user = userService.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException(String.format("User with id: %d not found", id)));
+        return ResponseEntity.ok().body(user);
+    }
+
     @GetMapping(value = "/username/{login}/")
     public ResponseEntity<?> getByLogin(@PathVariable("login") String login) {
         return ResponseEntity.ok().body(userService.findByEmail(login).isPresent());
