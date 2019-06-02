@@ -1,9 +1,10 @@
 package ua.softserve.ita.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ua.softserve.ita.dao.*;
+import ua.softserve.ita.dao.CompanyDao;
+import ua.softserve.ita.dao.RoleDao;
+import ua.softserve.ita.dao.UserDao;
 import ua.softserve.ita.dto.company.CompanyPaginationDto;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Company;
@@ -22,14 +23,15 @@ import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 @Service
 @Transactional
 public class CompanyServiceImpl implements CompanyService {
+
     private final CompanyDao companyDao;
     private final UserDao userDao;
     private final RoleDao roleDao;
+
     private final GenerateLetter letterService;
 
     @Autowired
-    public CompanyServiceImpl(CompanyDao companyDao, UserDao userDao,
-                              RoleDao roleDao, GenerateLetter letterService) {
+    public CompanyServiceImpl(CompanyDao companyDao, UserDao userDao, RoleDao roleDao, GenerateLetter letterService) {
         this.companyDao = companyDao;
         this.userDao = userDao;
         this.roleDao = roleDao;
@@ -53,12 +55,13 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public Optional<Company> save(Company company) {
-        User loggedUser = userDao.findById(getLoggedUser().get().getUserId()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        User loggedUser = userDao.findById(getLoggedUser().get().getUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         company.setUser(loggedUser);
         Optional<Company> com = companyDao.findByName(company.getName());
         Company result = null;
 
-        if(!com.isPresent()) {
+        if (!com.isPresent()) {
             result = companyDao.save(company);
         }
 
@@ -67,16 +70,19 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public Company update(Company company) {
-        if(company.getUser().getUserId().equals(getLoggedUser().get().getUserId())) {
+        if (company.getUser().getUserId().equals(getLoggedUser().get().getUserId())) {
             return companyDao.update(company);
         }
+
         return company;
     }
 
     @Override
     public void deleteById(Long id) {
-        Company company = companyDao.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("Company with id: %d not found", id)));
-        if(company.getUser().getUserId().equals(getLoggedUser().get().getUserId())) {
+        Company company = companyDao.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Company with id: %d not found", id)));
+
+        if (company.getUser().getUserId().equals(getLoggedUser().get().getUserId())) {
             companyDao.deleteById(id);
         }
     }
@@ -100,7 +106,6 @@ public class CompanyServiceImpl implements CompanyService {
         letterService.sendCompanyApprove(com, hostLink +
                 "/approveCompany/" + com.getName() + "/" + Objects.hash(com.getName()));
         com.setStatus(Status.MAIL_SENT);
-
         companyDao.update(com);
 
         return res;
@@ -108,7 +113,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public Optional<Company> approve(Company company, String companyToken) {
-        if(!companyToken.equals(Objects.hash(company.getName()) + ""))
+        if (!companyToken.equals(Objects.hash(company.getName()) + ""))
             return Optional.empty();
 
         Optional<Company> res = companyDao.findByName(company.getName());
@@ -135,4 +140,5 @@ public class CompanyServiceImpl implements CompanyService {
     public Optional<Company> findCompanyByVacancyId(Long id) {
         return companyDao.findByVacancyId(id);
     }
+
 }

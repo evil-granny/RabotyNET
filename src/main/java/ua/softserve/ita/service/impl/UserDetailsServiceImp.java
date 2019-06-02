@@ -29,13 +29,14 @@ public class UserDetailsServiceImp implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-
         User user = userDao.getUserWithRoles(username).orElseThrow(() ->
                 new UsernameNotFoundException("No user found with username " + username));
+
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         for (Role role : user.getRoles()) {
             authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getType().toUpperCase()));
         }
+
         return new UserPrincipal(
                 user.getUsername(),
                 user.getPassword(),
@@ -43,5 +44,5 @@ public class UserDetailsServiceImp implements UserDetailsService {
                 user.getUserId()
         );
     }
-    
+
 }

@@ -28,65 +28,42 @@ public class MailServiceImpl implements MailService {
 
     @Override
     public void sendEmail(Object object) {
-
         Letter letter = (Letter) object;
-
         MimeMessagePreparator preparator;
-
         if (letter.isWithAttachment()) {
-
-            preparator = getContentWithAttachement(letter);
-
+            preparator = getContentWithAttachment(letter);
         } else {
-
             preparator = getContent(letter);
         }
 
         try {
-
             mailSender.send(preparator);
-
         } catch (MailException e) {
-
             LOGGER.log(Level.SEVERE, e.toString(), e);
         }
     }
 
     private MimeMessagePreparator getContent(final Letter letter) {
         return mimeMessage -> {
-
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-
             helper.setSubject(letter.getSubject());
-
             helper.setFrom("rabotynetch082@gmail.com");
-
             helper.setTo(letter.getEMail());
-
             String content = letter.getContent();
-
             helper.setText("<html><body><p>" + content + "</p><img src='cid:company-logo'></body></html>", true);
-
             helper.addInline("company-logo", new ClassPathResource("logo.png"));
         };
     }
 
-    private MimeMessagePreparator getContentWithAttachement(final Letter letter) {
-
+    private MimeMessagePreparator getContentWithAttachment(final Letter letter) {
         return mimeMessage -> {
-
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
-
             helper.setSubject(letter.getSubject());
-
             helper.setFrom("rabotynetch082@gmail.com");
-
             helper.setTo(letter.getEMail());
-
             helper.setText(letter.getContent());
 
             FileSystemResource file = new FileSystemResource(new File(letter.getLinkForAttachment()));
-
             String fileName = file.getFilename();
 
             helper.addAttachment(fileName, file);

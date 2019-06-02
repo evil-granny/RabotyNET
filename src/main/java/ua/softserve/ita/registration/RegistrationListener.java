@@ -13,7 +13,7 @@ import java.util.UUID;
 @Component
 public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
 
-    private static String FRONT_URL = "http://localhost:4200";
+    private static final String FRONT_URL = "http://localhost:4200";
 
     private final VerificationTokenService tokenService;
     private final GenerateLetter sendMailService;

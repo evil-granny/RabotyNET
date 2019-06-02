@@ -1,6 +1,9 @@
 package ua.softserve.ita.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import ua.softserve.ita.model.profile.Person;
 
 import javax.persistence.*;

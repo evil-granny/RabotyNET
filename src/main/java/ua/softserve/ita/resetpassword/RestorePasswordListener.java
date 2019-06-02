@@ -12,7 +12,7 @@ import java.util.UUID;
 @Component
 public class RestorePasswordListener implements ApplicationListener<OnRestorePasswordCompleteEvent> {
 
-    private static String FRONT_URL = "http://localhost:4200";
+    private static final String FRONT_URL = "http://localhost:4200";
 
     private final VerificationTokenService tokenService;
     private final GenerateLetter sendMailService;

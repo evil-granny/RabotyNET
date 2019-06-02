@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.softserve.ita.dao.CompanyDao;
 import ua.softserve.ita.dao.RequirementDao;
-import ua.softserve.ita.dao.ResumeDao;
 import ua.softserve.ita.dao.VacancyDao;
 import ua.softserve.ita.dto.VacancyDto;
 import ua.softserve.ita.exception.ResourceNotFoundException;
@@ -33,10 +32,11 @@ public class VacancyServiceImpl implements VacancyService {
     private final VacancyDao vacancyDao;
     private final RequirementDao requirementDao;
     private final CompanyDao companyDao;
+
     private final ResumeService resumeService;
 
     @Autowired
-    public VacancyServiceImpl(VacancyDao vacancyDao, RequirementDao requirementDao, CompanyDao companyDao, ResumeDao resumeDao, ResumeService resumeService) {
+    public VacancyServiceImpl(VacancyDao vacancyDao, RequirementDao requirementDao, CompanyDao companyDao, ResumeService resumeService) {
         this.vacancyDao = vacancyDao;
         this.requirementDao = requirementDao;
         this.companyDao = companyDao;
@@ -88,6 +88,7 @@ public class VacancyServiceImpl implements VacancyService {
         vacancy.setVacancyStatus(VacancyStatus.OPEN);
         vacancyDao.save(vacancy);
         requirements.forEach(requirementDao::save);
+
         return vacancyDao.save(vacancy);
     }
 
@@ -95,6 +96,7 @@ public class VacancyServiceImpl implements VacancyService {
     public Vacancy update(Vacancy vacancy) {
         Company company = companyDao.findByVacancyId(vacancy.getVacancyId())
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Company by vacancy id: %d not found", vacancy.getVacancyId())));
+
         if (company.getUser().getUserId().equals(getLoggedUser().get().getUserId())) {
             vacancy.setCompany(company);
             Set<Requirement> requirements = vacancy.getRequirements();
@@ -106,6 +108,7 @@ public class VacancyServiceImpl implements VacancyService {
             vacancy.setResumes(resumes);
             resumes.forEach(resumeService::update);
         }
+
         return vacancyDao.update(vacancy);
     }
 
@@ -113,6 +116,7 @@ public class VacancyServiceImpl implements VacancyService {
     public void deleteById(Long id) {
         Company company = companyDao.findByVacancyId(id)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Company by vacancy id: %d not found", id)));
+
         if (company.getUser().getUserId().equals(getLoggedUser().get().getUserId())) {
             vacancyDao.deleteById(id);
         }

@@ -25,10 +25,12 @@ import javax.servlet.http.HttpServletRequest;
 public class PasswordResetController {
 
     private final UserDao userDao;
+
     private final UserService userService;
     private final VerificationTokenService verificationTokenService;
     private final VerificationTokenService tokenService;
     private final RestorePasswordListener restorePasswordListener;
+
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public PasswordResetController(UserDao userDao, UserService userService, VerificationTokenService verificationTokenService, VerificationTokenService tokenService, RestorePasswordListener restorePasswordListener, BCryptPasswordEncoder bCryptPasswordEncoder) {

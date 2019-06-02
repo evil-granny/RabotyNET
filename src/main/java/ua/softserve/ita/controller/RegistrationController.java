@@ -54,7 +54,7 @@ public class RegistrationController {
 
     @PostMapping("/auth")
     public ResponseEntity<User> insert(@RequestBody @Valid UserDto userDto, final HttpServletRequest request) {
-        User user = userService.createDTO(userDto);
+        User user = userService.createDto(userDto);
         registrationListener.onApplicationEvent(new OnRegistrationCompleteEvent(user, getAppUrl(request)));
         return ResponseEntity.ok().body(user);
     }
@@ -76,9 +76,7 @@ public class RegistrationController {
     }
 
     @PostMapping(value = "/resendAuthToken")
-    public ResponseEntity<String> resendRegistrationToken(
-            HttpServletRequest request, @RequestParam String email) {
-
+    public ResponseEntity<String> resendRegistrationToken(HttpServletRequest request, @RequestParam String email) {
         Optional<User> user = userService.findByEmail(email);
         if (!user.isPresent()) {
             return ResponseEntity.badRequest().body("Email not found!");
@@ -94,7 +92,9 @@ public class RegistrationController {
         if (userService.findByEmail(email).isPresent()) {
             User user = userService.findByEmail(email).get();
             return ResponseEntity.ok(user.isEnabled());
-        } else return ResponseEntity.ok().body("User not found!");
+        } else {
+            return ResponseEntity.ok().body("User not found!");
+        }
     }
 
 

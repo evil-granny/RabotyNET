@@ -31,7 +31,6 @@ public class PDFController {
 
     private final ResumeService resumeService;
     private final GenerateLetter generateService;
-    private final VacancyService vacancyService;
     private final CreateResumePdf pdfService;
     private final PdfResumeService pdfResumeService;
 
@@ -40,7 +39,6 @@ public class PDFController {
         this.generateService = generateService;
         this.pdfService = pdfService;
         this.pdfResumeService = pdfResumeService;
-        this.vacancyService = vacancyService;
     }
 
     @GetMapping(value = "/pdf/{id}")
@@ -68,9 +66,9 @@ public class PDFController {
         Set<Job> jobs = resume.getJobs();
         Set<Vacancy> vacancies = resume.getVacancies();
         vacancies.clear();
-        vacancies.forEach(vacancyService::update);
         skills.forEach(x -> x.setResume(resume));
         jobs.forEach(x -> x.setResume(resume));
+
         return resumeService.update(resume);
     }
 
@@ -90,6 +88,7 @@ public class PDFController {
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
         }
+
         return null;
     }
 

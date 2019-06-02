@@ -15,7 +15,7 @@ public interface UserService {
 
     Optional<User> findByEmail(String email);
 
-    User createDTO(UserDto userDto) throws UserAlreadyExistException;
+    User createDto(UserDto userDto) throws UserAlreadyExistException;
 
     User save(User user);
 

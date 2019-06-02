@@ -1,7 +1,6 @@
 package ua.softserve.ita.controller;
 
 import org.springframework.web.bind.annotation.*;
-import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Claim;
 import ua.softserve.ita.model.Company;
 import ua.softserve.ita.service.ClaimService;

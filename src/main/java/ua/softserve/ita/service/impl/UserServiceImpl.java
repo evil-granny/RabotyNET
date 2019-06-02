@@ -9,6 +9,7 @@ import ua.softserve.ita.dto.UserDto;
 import ua.softserve.ita.exception.UserAlreadyExistException;
 import ua.softserve.ita.model.Role;
 import ua.softserve.ita.model.User;
+import ua.softserve.ita.model.profile.Contact;
 import ua.softserve.ita.model.profile.Person;
 import ua.softserve.ita.service.PersonService;
 import ua.softserve.ita.service.RoleService;
@@ -25,17 +26,18 @@ class UserServiceImpl implements UserService {
     private static final String USER = "user";
 
     private final UserDao userDao;
+
     private final RoleService roleService;
     private final PersonService personService;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserDao userDao, BCryptPasswordEncoder bCryptPasswordEncoder, RoleService roleService, PersonService personService) {
+    public UserServiceImpl(UserDao userDao, RoleService roleService, PersonService personService, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userDao = userDao;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.roleService = roleService;
         this.personService = personService;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
@@ -54,10 +56,11 @@ class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User createDTO(UserDto userDto) {
+    public User createDto(UserDto userDto) {
         if (emailExists(userDto.getLogin())) {
             throw new UserAlreadyExistException("There is an account with that email address: " + userDto.getLogin());
         }
+
         User user = new User();
         user.setLogin(userDto.getLogin());
         user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
@@ -66,13 +69,13 @@ class UserServiceImpl implements UserService {
         roles.add(role);
         user.setRoles(roles);
 
-        User savedUser = userDao.save(user);
-        System.out.println(savedUser);
-
         Person person = new Person();
-        person.setUserId(savedUser.getUserId());
-        person.getContact().setEmail(user.getLogin());
+        person.setUserId(userDao.save(user).getUserId());
+        Contact contact = new Contact();
+        contact.setEmail(user.getLogin());
+        person.setContact(contact);
         personService.save(person);
+
         return user;
     }
 

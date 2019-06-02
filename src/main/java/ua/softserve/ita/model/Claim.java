@@ -16,7 +16,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "claim")
 @NamedQueries({
-        @NamedQuery(name = Claim.FIND_BY_COMPANY_ID, query = "select claim from Claim claim where claim.company.companyId =:id order by claim.claimId"),
+        @NamedQuery(name = Claim.FIND_BY_COMPANY_ID, query = "select claim from Claim claim where claim.company.companyId = :id order by claim.claimId"),
 })
 public class Claim implements Serializable {
 

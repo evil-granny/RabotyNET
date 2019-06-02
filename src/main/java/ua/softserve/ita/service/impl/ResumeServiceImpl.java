@@ -24,9 +24,9 @@ public class ResumeServiceImpl implements ResumeService {
     private final PersonDao personDao;
     private final VacancyDao vacancyDao;
     private final UserDao userDao;
+
     private final PdfResumeDao pdfResumeService;
     private final GenerateLetter generateService;
-
 
     @Autowired
     public ResumeServiceImpl(ResumeDao resumeDao, UserDao userDao, PersonDao personDao, VacancyDao vacancyDao, PdfResumeDao pdfResumeService, GenerateLetter generateService) {
@@ -76,7 +76,6 @@ public class ResumeServiceImpl implements ResumeService {
 
         Set<Vacancy> vacancies = resume.getVacancies();
         vacancies.clear();
-        vacancies.forEach(vacancyDao::update);
 
         return resumeDao.update(resume);
     }
@@ -120,6 +119,7 @@ public class ResumeServiceImpl implements ResumeService {
         resume.getVacancies().add(vacancy);
         vacancy.getResumes().add(resume);
         vacancyDao.save(vacancy);
+
         return update(resume);
     }
 
