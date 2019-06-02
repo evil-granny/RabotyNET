@@ -5,13 +5,16 @@ import lombok.Data;
 import javax.persistence.*;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Optional;
 
 @Data
 @Entity
 @NamedQueries({
         @NamedQuery(name = VerificationToken.FIND_TOKEN_BY_USER, query = "select vt from VerificationToken vt where vt.user.userId = :id"),
         @NamedQuery(name = VerificationToken.FIND_VERIFICATION_TOKEN, query = "select vt from VerificationToken vt where vt.token = :token")
-})
+}
+)
+
 public class VerificationToken {
 
     private static final int EXPIRATION = 60 * 24;
@@ -30,6 +33,10 @@ public class VerificationToken {
     private User user;
 
     private Date expiryDate;
+
+    public  VerificationToken(){
+
+    }
 
     public VerificationToken(final String token, final User user) {
         this.token = token;

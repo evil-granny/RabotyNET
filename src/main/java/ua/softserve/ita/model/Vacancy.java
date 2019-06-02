@@ -113,24 +113,11 @@ public class Vacancy {
                 currency == vacancy.currency &&
                 Objects.equals(hotVacancy, vacancy.hotVacancy) &&
                 Objects.equals(requirements, vacancy.requirements);
-//                Objects.equals(resumes, vacancy.resumes);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(vacancyId, description, position, employment, vacancyStatus, salary, currency, hotVacancy, requirements);
-    }
-
-    @Override
-    public String toString() {
-        return "Vacancy{" +
-                "vacancyId=" + vacancyId +
-                ", position='" + position + '\'' +
-                ", employment=" + employment +
-                ", salary=" + salary +
-                ", hot=" + hotVacancy +
-                ", requirement=" + requirements +
-                '}';
     }
 
 }
