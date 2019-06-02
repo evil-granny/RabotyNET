@@ -1,10 +1,11 @@
-package ua.softserve.ita.dto.SearchDTO;
+package ua.softserve.ita.dto.search;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
 
 @Data
 @Builder
-public class SearchResumeDTO {
+public class SearchResumeDto {
 
     private long id;
 
@@ -23,4 +24,5 @@ public class SearchResumeDTO {
     private String phoneNumber;
 
     private String email;
+
 }

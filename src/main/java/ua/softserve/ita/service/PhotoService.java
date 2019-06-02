@@ -12,7 +12,9 @@ public interface PhotoService {
 
     List<Photo> findAll();
 
-    byte[] load(Long id);
+    byte[] loadAvatar(Long id);
+
+    byte[] loadLogo(Long id);
 
     Photo save(Photo photo);
 

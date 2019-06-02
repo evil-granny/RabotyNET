@@ -13,6 +13,7 @@ import java.util.Optional;
 @Service
 @Transactional
 public class JobServiceImpl implements JobService {
+
     private final JobDao jobDao;
 
     @Autowired
@@ -42,6 +43,7 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public void deleteById(Long id) {
-           jobDao.deleteById(id);
+        jobDao.deleteById(id);
     }
+
 }

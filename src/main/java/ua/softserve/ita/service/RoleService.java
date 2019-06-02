@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RoleService {
+
     Optional<Role> findById(Long id);
 
     List<Role> findAll();
@@ -17,4 +18,5 @@ public interface RoleService {
     Role update(Role role);
 
     void deleteById(Long id);
+
 }

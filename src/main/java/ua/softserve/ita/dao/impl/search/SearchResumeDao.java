@@ -3,14 +3,13 @@ package ua.softserve.ita.dao.impl.search;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import ua.softserve.ita.dto.SearchDTO.SearchRequestDTO;
-import ua.softserve.ita.dto.SearchDTO.SearchResumeDTO;
-import ua.softserve.ita.dto.SearchDTO.SearchResumeResponseDTO;
+import ua.softserve.ita.dto.search.SearchRequestDto;
+import ua.softserve.ita.dto.search.SearchResumeDto;
+import ua.softserve.ita.dto.search.SearchResumeResponseDto;
 import ua.softserve.ita.service.search.SearchResumeMapper;
 
 import java.math.BigInteger;
@@ -59,19 +58,19 @@ public class SearchResumeDao {
         session = sessionFactory.openSession();
     }
 
-    private BigInteger getCount(String query, String searchText){
-        return (BigInteger)session.createNativeQuery(query)
-                .setParameter( SEARCH_TEXT, "%" + searchText + "%").getSingleResult();
+    private BigInteger getCount(String query, String searchText) {
+        return (BigInteger) session.createNativeQuery(query)
+                .setParameter(SEARCH_TEXT, "%" + searchText + "%").getSingleResult();
     }
 
-    private List<SearchResumeDTO> getSearchResumeDTOS(List<Object> list) {
-        List<SearchResumeDTO> dtoList = new ArrayList<>();
+    private List<SearchResumeDto> getSearchResumeDTOS(List<Object> list) {
+        List<SearchResumeDto> dtoList = new ArrayList<>();
         SearchResumeMapper searchResumeMapper = new SearchResumeMapper();
-        SearchResumeDTO searchResumeDTO;
+        SearchResumeDto searchResumeDTO;
         ObjectMapper objectMapper = new ObjectMapper();
         for (Object object : list) {
             try {
-                searchResumeDTO = searchResumeMapper.getSearchResumeDTO(objectMapper.writeValueAsString(object));
+                searchResumeDTO = searchResumeMapper.getSearchResumeDto(objectMapper.writeValueAsString(object));
                 log.info("DTO = " + searchResumeDTO);
                 dtoList.add(searchResumeDTO);
             } catch (JsonProcessingException e) {
@@ -83,9 +82,9 @@ public class SearchResumeDao {
 
     @SuppressWarnings("unchecked")
     private List<Object> getResult(String query, String searchText,
-                                  int resultsOnPage, int firstResultNumber){
+                                   int resultsOnPage, int firstResultNumber) {
         return session.createNativeQuery(query)
-                .setParameter( SEARCH_TEXT, "%" + searchText + "%")
+                .setParameter(SEARCH_TEXT, "%" + searchText + "%")
                 .setFirstResult(firstResultNumber)
                 .setMaxResults(resultsOnPage)
                 .getResultList();
@@ -132,31 +131,31 @@ public class SearchResumeDao {
             switch (searchSort) {
                 case "lastName":
                     queryBuilder.append(BY_LAST_NAME);
-                    if ("desc".equals(direction)){
+                    if ("desc".equals(direction)) {
                         queryBuilder.append(DIRECTION);
                     }
                     break;
                 case "city":
                     queryBuilder.append(BY_CITY);
-                    if ("desc".equals(direction)){
+                    if ("desc".equals(direction)) {
                         queryBuilder.append(DIRECTION);
                     }
                     break;
                 case "position":
                     queryBuilder.append(BY_POSITION);
-                    if ("desc".equals(direction)){
+                    if ("desc".equals(direction)) {
                         queryBuilder.append(DIRECTION);
                     }
                     break;
                 case "phone":
                     queryBuilder.append(BY_PHONE);
-                    if ("desc".equals(direction)){
+                    if ("desc".equals(direction)) {
                         queryBuilder.append(DIRECTION);
                     }
                     break;
                 case "age":
                     queryBuilder.append(BY_AGE);
-                    if ("desc".equals(direction)){
+                    if ("desc".equals(direction)) {
                         queryBuilder.append(INVERSE_DIRECTION);
                     } else {
                         queryBuilder.append(DIRECTION);
@@ -164,7 +163,7 @@ public class SearchResumeDao {
                     break;
                 default:
                     queryBuilder.append(BY_NAME);
-                    if ("desc".equals(direction)){
+                    if ("desc".equals(direction)) {
                         queryBuilder.append(DIRECTION);
                     }
             }
@@ -173,19 +172,19 @@ public class SearchResumeDao {
         return queryBuilder.toString();
     }
 
-    public SearchResumeResponseDTO getResponse(SearchRequestDTO searchRequestDTO) {
-        SearchResumeResponseDTO searchResumeResponseDTO = SearchResumeResponseDTO.builder()
-                .count(getCount(getQuery(true, searchRequestDTO.getSearchParameter(),
-                        searchRequestDTO.getSearchSort(), searchRequestDTO.getDirection())
-                        , searchRequestDTO.getSearchText()))
-                .searchResumeDTOS(getSearchResumeDTOS(getResult(getQuery(false,
-                        searchRequestDTO.getSearchParameter(), searchRequestDTO.getSearchSort()
-                        , searchRequestDTO.getDirection())
-                        , searchRequestDTO.getSearchText()
-                        , searchRequestDTO.getResultsOnPage()
-                        , searchRequestDTO.getFirstResultNumber())))
+    public SearchResumeResponseDto getResponse(SearchRequestDto searchRequestDto) {
+        SearchResumeResponseDto searchResumeResponseDto = SearchResumeResponseDto.builder()
+                .count(getCount(getQuery(true, searchRequestDto.getSearchParameter(),
+                        searchRequestDto.getSearchSort(), searchRequestDto.getDirection())
+                        , searchRequestDto.getSearchText()))
+                .searchResumeDtos(getSearchResumeDTOS(getResult(getQuery(false,
+                        searchRequestDto.getSearchParameter(), searchRequestDto.getSearchSort()
+                        , searchRequestDto.getDirection())
+                        , searchRequestDto.getSearchText()
+                        , searchRequestDto.getResultsOnPage()
+                        , searchRequestDto.getFirstResultNumber())))
                 .build();
-        log.info("searchResumeResponseDTO = " + searchResumeResponseDTO.toString());
-        return searchResumeResponseDTO;
+        log.info("searchResumeResponseDto = " + searchResumeResponseDto.toString());
+        return searchResumeResponseDto;
     }
 }

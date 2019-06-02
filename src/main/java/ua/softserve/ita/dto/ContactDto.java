@@ -7,8 +7,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ContactDTO {
+public class ContactDto {
+
     private Long contactId;
+
     private String email;
+
     private String phoneNumber;
+
 }

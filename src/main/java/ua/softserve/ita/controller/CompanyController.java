@@ -1,7 +1,7 @@
 package ua.softserve.ita.controller;
 
 import org.springframework.web.bind.annotation.*;
-import ua.softserve.ita.dto.CompanyDTO.CompanyPaginationDTO;
+import ua.softserve.ita.dto.company.CompanyPaginationDto;
 import ua.softserve.ita.exception.CompanyAlreadyExistException;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Company;
@@ -34,7 +34,7 @@ public class CompanyController {
     }
 
     @GetMapping(path = {"/all/{first}/{count}"})
-    public CompanyPaginationDTO getAllWithPagination(@PathVariable("first") int first, @PathVariable("count") int count) {
+    public CompanyPaginationDto getAllWithPagination(@PathVariable("first") int first, @PathVariable("count") int count) {
         return companyService.findAllWithPagination(first, count);
     }
 

@@ -26,6 +26,7 @@ public enum Employment {
                 return type;
             }
         }
+
         throw new UnsupportedOperationException(
                 "The code " + code + " is not supported!");
     }

@@ -54,9 +54,11 @@ public class PersonServiceImpl implements PersonService {
     public Person update(Person person) {
         if (getLoggedUser().isPresent()) {
             Long loggedUserId = getLoggedUser().get().getUserId();
-            User user = userDao.findById(loggedUserId)
-                    .orElseThrow(() -> new ResourceNotFoundException(String.format("User with id %d was not found?!", loggedUserId)));
-            person.setUser(user);
+            if (person.getUserId().equals(loggedUserId)) {
+                User user = userDao.findById(loggedUserId)
+                        .orElseThrow(() -> new ResourceNotFoundException(String.format("User with id %d was not found?!", loggedUserId)));
+                person.setUser(user);
+            }
         }
 
         return personDao.update(person);

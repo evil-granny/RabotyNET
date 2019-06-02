@@ -1,18 +1,12 @@
 package ua.softserve.ita.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import ua.softserve.ita.model.profile.Person;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.List;
-import java.util.Objects;
 
 @Getter
 @Setter
@@ -27,6 +21,7 @@ import java.util.Objects;
         @NamedQuery(name = PdfResume.FIND_BY_PDF_NAME, query = "select pdfResume from PdfResume pdfResume where pdfResume.pdfName = :name"),
 })
 public class PdfResume implements Serializable {
+
     public static final String FIND_BY_USER_ID = "PdfResume.findByUserId";
     public static final String FIND_BY_PDF_NAME = "PdfResume.findByPdfName";
 

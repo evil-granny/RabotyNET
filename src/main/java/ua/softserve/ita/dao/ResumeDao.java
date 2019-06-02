@@ -10,5 +10,5 @@ public interface ResumeDao extends BaseDao<Resume, Long> {
     Optional<Resume> findByUserId(Long id);
 
     List<Resume> findResumeByVacancyId(Long vacancyId);
-}
 
+}

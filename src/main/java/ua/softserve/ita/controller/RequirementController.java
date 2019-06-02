@@ -6,16 +6,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.exception.ResourceNotFoundException;
-import ua.softserve.ita.model.Company;
 import ua.softserve.ita.model.Requirement;
 import ua.softserve.ita.model.Vacancy;
 import ua.softserve.ita.service.RequirementService;
 import ua.softserve.ita.service.VacancyService;
 
 import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/requirements")
@@ -25,7 +22,7 @@ public class RequirementController {
     private final VacancyService vacancyService;
 
     @Autowired
-    public RequirementController(RequirementService requirementService,VacancyService vacancyService) {
+    public RequirementController(RequirementService requirementService, VacancyService vacancyService) {
         this.requirementService = requirementService;
         this.vacancyService = vacancyService;
     }

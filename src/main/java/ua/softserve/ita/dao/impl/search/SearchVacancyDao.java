@@ -3,14 +3,13 @@ package ua.softserve.ita.dao.impl.search;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ua.softserve.ita.dto.SearchDTO.SearchRequestDTO;
-import ua.softserve.ita.dto.SearchDTO.SearchVacancyDTO;
-import ua.softserve.ita.dto.SearchDTO.SearchVacancyResponseDTO;
+import ua.softserve.ita.dto.search.SearchRequestDto;
+import ua.softserve.ita.dto.search.SearchVacancyDto;
+import ua.softserve.ita.dto.search.SearchVacancyResponseDto;
 import ua.softserve.ita.service.search.SearchVacancyMapper;
 
 import java.math.BigInteger;
@@ -49,19 +48,19 @@ public class SearchVacancyDao {
         session = sessionFactory.openSession();
     }
 
-    private BigInteger getCount(String query, String searchText){
-        return (BigInteger)session.createNativeQuery(query)
-                .setParameter( SEARCH_TEXT, "%" + searchText + "%").getSingleResult();
+    private BigInteger getCount(String query, String searchText) {
+        return (BigInteger) session.createNativeQuery(query)
+                .setParameter(SEARCH_TEXT, "%" + searchText + "%").getSingleResult();
     }
 
-    private List<SearchVacancyDTO> getSearchVacancyDTOS(List<Object> list) {
-        List<SearchVacancyDTO> dtoList = new ArrayList<>();
+    private List<SearchVacancyDto> getSearchVacancyDTOS(List<Object> list) {
+        List<SearchVacancyDto> dtoList = new ArrayList<>();
         SearchVacancyMapper searchVacancyMapper = new SearchVacancyMapper();
-        SearchVacancyDTO searchVacancyDTO;
+        SearchVacancyDto searchVacancyDTO;
         ObjectMapper objectMapper = new ObjectMapper();
         for (Object object : list) {
             try {
-                searchVacancyDTO = searchVacancyMapper.getSearchVacancyDTO(objectMapper.writeValueAsString(object));
+                searchVacancyDTO = searchVacancyMapper.getSearchVacancyDto(objectMapper.writeValueAsString(object));
                 log.info("DTO = " + searchVacancyDTO);
                 dtoList.add(searchVacancyDTO);
             } catch (JsonProcessingException e) {
@@ -73,9 +72,9 @@ public class SearchVacancyDao {
 
     @SuppressWarnings("unchecked")
     private List<Object> getResult(String query, String searchText,
-                                  int resultsOnPage, int firstResultNumber){
+                                   int resultsOnPage, int firstResultNumber) {
         return session.createNativeQuery(query)
-                .setParameter( SEARCH_TEXT, "%" + searchText + "%")
+                .setParameter(SEARCH_TEXT, "%" + searchText + "%")
                 .setFirstResult(firstResultNumber)
                 .setMaxResults(resultsOnPage)
                 .getResultList();
@@ -111,31 +110,31 @@ public class SearchVacancyDao {
             switch (searchSort) {
                 case "city":
                     queryBuilder.append(BY_CITY);
-                    if ("desc".equals(direction)){
+                    if ("desc".equals(direction)) {
                         queryBuilder.append(DIRECTION);
                     }
                     break;
                 case "position":
                     queryBuilder.append(BY_POSITION);
-                    if ("desc".equals(direction)){
+                    if ("desc".equals(direction)) {
                         queryBuilder.append(DIRECTION);
                     }
                     break;
                 case "employment":
                     queryBuilder.append(BY_EMPLOYMENT);
-                    if ("desc".equals(direction)){
+                    if ("desc".equals(direction)) {
                         queryBuilder.append(DIRECTION);
                     }
                     break;
                 case "salary":
                     queryBuilder.append(BY_SALARY);
-                    if ("desc".equals(direction)){
+                    if ("desc".equals(direction)) {
                         queryBuilder.append(DIRECTION);
                     }
                     break;
                 default:
                     queryBuilder.append(BY_COMPANY);
-                    if ("desc".equals(direction)){
+                    if ("desc".equals(direction)) {
                         queryBuilder.append(DIRECTION);
                     }
             }
@@ -144,12 +143,12 @@ public class SearchVacancyDao {
         return queryBuilder.toString();
     }
 
-    public SearchVacancyResponseDTO getResponse(SearchRequestDTO searchRequestDTO) {
-        SearchVacancyResponseDTO searchVacancyResponseDTO = SearchVacancyResponseDTO.builder()
+    public SearchVacancyResponseDto getResponse(SearchRequestDto searchRequestDTO) {
+        SearchVacancyResponseDto searchVacancyResponseDTO = SearchVacancyResponseDto.builder()
                 .count(getCount(getQuery(true, searchRequestDTO.getSearchParameter(),
                         searchRequestDTO.getSearchSort(), searchRequestDTO.getDirection())
                         , searchRequestDTO.getSearchText()))
-                .searchVacancyDTOS(getSearchVacancyDTOS(getResult(getQuery(false,
+                .searchVacancyDtos(getSearchVacancyDTOS(getResult(getQuery(false,
                         searchRequestDTO.getSearchParameter(), searchRequestDTO.getSearchSort()
                         , searchRequestDTO.getDirection())
                         , searchRequestDTO.getSearchText(), searchRequestDTO.getResultsOnPage()

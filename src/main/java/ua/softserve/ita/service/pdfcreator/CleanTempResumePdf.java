@@ -1,4 +1,4 @@
-package ua.softserve.ita.service.pdfcreater;
+package ua.softserve.ita.service.pdfcreator;
 
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -13,29 +13,21 @@ public class CleanTempResumePdf extends TimerTask {
 
     private Path path;
 
-    final String PREFIX_FILE_NAME = "pdfCV";
+    private static final String PREFIX_FILE_NAME = "pdfCV";
 
     public CleanTempResumePdf(Path path) {
-
         this.path = path;
-
     }
 
     @Override
     public void run() {
-
         try (DirectoryStream<Path> newDirectoryStream = Files.newDirectoryStream(this.path, PREFIX_FILE_NAME + "*")) {
-
             for (final Path newDirectoryStreamItem : newDirectoryStream) {
-
                 Files.delete(newDirectoryStreamItem);
-
             }
-
         } catch (final Exception e) {
-
             LOGGER.log(Level.SEVERE, e.toString(), e);
-
         }
     }
+
 }

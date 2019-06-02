@@ -21,6 +21,6 @@ public interface PdfResumeService {
 
     Optional<PdfResume> findByUserId(Long id);
 
-    public Optional<PdfResume> findByPdfName(String name);
+    Optional<PdfResume> findByPdfName(String name);
 
 }

@@ -2,8 +2,11 @@ package ua.softserve.ita.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.softserve.ita.dao.*;
-import ua.softserve.ita.dto.VacancyDTO.VacancyDTO;
+import ua.softserve.ita.dao.CompanyDao;
+import ua.softserve.ita.dao.RequirementDao;
+import ua.softserve.ita.dao.ResumeDao;
+import ua.softserve.ita.dao.VacancyDao;
+import ua.softserve.ita.dto.VacancyDto;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Company;
 import ua.softserve.ita.model.Requirement;
@@ -30,7 +33,6 @@ public class VacancyServiceImpl implements VacancyService {
     private final RequirementDao requirementDao;
     private final CompanyDao companyDao;
     private final ResumeDao resumeDao;
-    private final ResumeService resumeService;
 
     @Autowired
     public VacancyServiceImpl(VacancyDao vacancyDao, RequirementDao requirementDao, CompanyDao companyDao, ResumeDao resumeDao, ResumeService resumeService) {
@@ -38,7 +40,6 @@ public class VacancyServiceImpl implements VacancyService {
         this.requirementDao = requirementDao;
         this.companyDao = companyDao;
         this.resumeDao = resumeDao;
-        this.resumeService = resumeService;
     }
 
     @Override
@@ -52,26 +53,26 @@ public class VacancyServiceImpl implements VacancyService {
     }
 
     @Override
-    public VacancyDTO findAllVacanciesByCompanyId(Long companyId, int first) {
-        return new VacancyDTO(vacancyDao.getCountOfVacanciesByCompanyId(companyId),
+    public VacancyDto findAllVacanciesByCompanyId(Long companyId, int first) {
+        return new VacancyDto(vacancyDao.getCountOfVacanciesByCompanyId(companyId),
                 vacancyDao.findAllByCompanyIdWithPagination(companyId, first, COUNT_VACANCIES_ON_VIEW_COMPANY_PAGE));
     }
 
     @Override
-    public VacancyDTO findAllHotVacanciesWithPagination(int first) {
-        return new VacancyDTO(vacancyDao.getCountAllHotVacancies(),
+    public VacancyDto findAllHotVacanciesWithPagination(int first) {
+        return new VacancyDto(vacancyDao.getCountAllHotVacancies(),
                 vacancyDao.findAllHotVacanciesWithPagination(first, COUNT_VACANCIES_ON_SINGLE_PAGE));
     }
 
     @Override
-    public VacancyDTO findAllClosedVacanciesWithPagination(int first) {
-        return new VacancyDTO(vacancyDao.getCountAllClosedVacancies(),
+    public VacancyDto findAllClosedVacanciesWithPagination(int first) {
+        return new VacancyDto(vacancyDao.getCountAllClosedVacancies(),
                 vacancyDao.findAllClosedVacanciesWithPagination(first, COUNT_VACANCIES_ON_SINGLE_PAGE));
     }
 
     @Override
-    public VacancyDTO findAllVacanciesWithPagination(int first) {
-        return new VacancyDTO(vacancyDao.getCountOfAllVacancies(),
+    public VacancyDto findAllVacanciesWithPagination(int first) {
+        return new VacancyDto(vacancyDao.getCountOfAllVacancies(),
                 vacancyDao.findAllVacanciesWithPagination(first, COUNT_VACANCIES_ON_SINGLE_PAGE));
     }
 

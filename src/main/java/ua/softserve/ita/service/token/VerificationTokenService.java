@@ -22,4 +22,5 @@ public interface VerificationTokenService {
     String validateVerificationToken(String token);
 
     void createVerificationTokenForUser(User user, String token);
+
 }

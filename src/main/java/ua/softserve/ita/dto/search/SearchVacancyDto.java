@@ -1,4 +1,4 @@
-package ua.softserve.ita.dto.SearchDTO;
+package ua.softserve.ita.dto.search;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-public class SearchVacancyDTO {
+public class SearchVacancyDto {
 
     private long vacancyId;
 

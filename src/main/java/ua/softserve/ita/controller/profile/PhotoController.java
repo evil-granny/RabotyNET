@@ -24,11 +24,18 @@ public class PhotoController {
         this.photoService = photoService;
     }
 
-    @GetMapping(path = {"/{id}"})
+    @GetMapping(path = {"/avatars/{id}"})
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Get photo by specific id")
-    public byte[] load(@PathVariable("id") Long id) {
-        return photoService.load(id);
+    public byte[] loadAvatar(@PathVariable("id") Long id) {
+        return photoService.loadAvatar(id);
+    }
+
+    @GetMapping(path = {"/logos/{id}"})
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Get photo by specific id")
+    public byte[] loadLogo(@PathVariable("id") Long id) {
+        return photoService.loadLogo(id);
     }
 
     @PostMapping(path = "/avatars/{user_id}")

@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 
 @Repository
 public class CompanyDaoImpl extends AbstractDao<Company, Long> implements CompanyDao {
+
     private static final String ID = "id";
     private static final String NAME = "name";
 
@@ -40,6 +41,7 @@ public class CompanyDaoImpl extends AbstractDao<Company, Long> implements Compan
             } catch (NoResultException ex) {
                 Logger.getLogger(CompanyDaoImpl.class.getName()).log(Level.WARNING, "Company not found with name " + name);
             }
+
             return result;
         });
     }
@@ -51,4 +53,5 @@ public class CompanyDaoImpl extends AbstractDao<Company, Long> implements Compan
                 .setParameter(ID, id)
                 .getResultList();
     }
+
 }

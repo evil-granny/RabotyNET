@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ua.softserve.ita.dao.*;
-import ua.softserve.ita.dto.CompanyDTO.CompanyPaginationDTO;
+import ua.softserve.ita.dto.company.CompanyPaginationDto;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Company;
 import ua.softserve.ita.model.User;
@@ -50,8 +50,8 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public CompanyPaginationDTO findAllWithPagination(int first, int count) {
-        return new CompanyPaginationDTO(companyDao.getCompaniesCount(), companyDao.findWithPagination(first, count));
+    public CompanyPaginationDto findAllWithPagination(int first, int count) {
+        return new CompanyPaginationDto(companyDao.getCompaniesCount(), companyDao.findWithPagination(first, count));
     }
 
     @Override

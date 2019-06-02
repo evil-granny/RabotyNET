@@ -4,13 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.softserve.ita.dao.impl.search.SearchVacancyDao;
-import ua.softserve.ita.dto.SearchDTO.SearchRequestDTO;
-import ua.softserve.ita.dto.SearchDTO.SearchVacancyResponseDTO;
+import ua.softserve.ita.dto.search.SearchRequestDto;
+import ua.softserve.ita.dto.search.SearchVacancyResponseDto;
 
 
 @Component
 @Slf4j
-public class SearchVacancyService implements SearchService<SearchVacancyResponseDTO> {
+public class SearchVacancyService implements SearchService<SearchVacancyResponseDto> {
 
     private final SearchVacancyDao searchVacancyDao;
 
@@ -20,7 +20,8 @@ public class SearchVacancyService implements SearchService<SearchVacancyResponse
     }
 
     @Override
-    public SearchVacancyResponseDTO getResponse(SearchRequestDTO searchRequestDTO) {
+    public SearchVacancyResponseDto getResponse(SearchRequestDto searchRequestDTO) {
         return searchVacancyDao.getResponse(searchRequestDTO);
     }
+
 }

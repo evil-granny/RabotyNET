@@ -23,9 +23,7 @@ public class ClaimController {
 
     @PostMapping(value = "/create")
     public Company createClaim(@RequestBody Claim claim) {
-
         Company company = claim.getCompany();
-
         claimService.save(claim);
 
         return companyService.update(company);
@@ -36,7 +34,7 @@ public class ClaimController {
         if (claimId < 0) {
             throw new IllegalArgumentException("ID can't be negative");
         }
-        return claimService.findById(claimId).orElseThrow(() ->new ResourceNotFoundException("Claim not found with id " + claimId));
+        return claimService.findById(claimId).orElseThrow(() -> new ResourceNotFoundException("Claim not found with id " + claimId));
     }
 
     @GetMapping(value = {"/byCompany/{companyId}"})

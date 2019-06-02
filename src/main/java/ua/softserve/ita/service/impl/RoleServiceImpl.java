@@ -13,6 +13,7 @@ import java.util.Optional;
 @Service
 @Transactional
 public class RoleServiceImpl implements RoleService {
+
     private final RoleDao roleDao;
 
     @Autowired
@@ -37,7 +38,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role findByType(String type) {
-       return roleDao.findByType(type);
+        return roleDao.findByType(type);
     }
 
     @Override
@@ -47,6 +48,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void deleteById(Long id) {
-       roleDao.deleteById(id);
+        roleDao.deleteById(id);
     }
+
 }

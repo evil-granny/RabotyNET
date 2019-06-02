@@ -3,7 +3,6 @@ package ua.softserve.ita.dao.impl;
 import org.springframework.stereotype.Repository;
 import ua.softserve.ita.dao.ResumeDao;
 import ua.softserve.ita.model.Resume;
-import ua.softserve.ita.model.Vacancy;
 import ua.softserve.ita.utility.QueryUtility;
 
 import javax.persistence.NoResultException;
@@ -13,9 +12,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Repository
-public class ResumeDaoImpl extends AbstractDao<Resume,Long> implements ResumeDao {
+public class ResumeDaoImpl extends AbstractDao<Resume, Long> implements ResumeDao {
+
     private static final String ID = "id";
-    private static final String NAME = "name";
 
     @Override
     @SuppressWarnings("unchecked")
@@ -29,6 +28,7 @@ public class ResumeDaoImpl extends AbstractDao<Resume,Long> implements ResumeDao
             } catch (NoResultException ex) {
                 Logger.getLogger(ResumeDaoImpl.class.getName()).log(Level.WARNING, "Resume not found with name " + id);
             }
+
             return result;
         });
     }

@@ -1,10 +1,10 @@
-package ua.softserve.ita.dto.VacancyDTO;
+package ua.softserve.ita.dto.company;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ua.softserve.ita.model.Vacancy;
+import ua.softserve.ita.model.Company;
 
 import java.util.List;
 
@@ -12,7 +12,10 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class VacancyDTO {
+public class CompanyPaginationDto {
+
     private Long count;
-    private List<Vacancy> vacancies;
+
+    private List<Company> companies;
+
 }

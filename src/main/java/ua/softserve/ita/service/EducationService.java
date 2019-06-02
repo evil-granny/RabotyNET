@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EducationService {
+
     Optional<Education> findById(Long id);
 
     List<Education> findAll();
@@ -16,4 +17,5 @@ public interface EducationService {
     Education update(Education education);
 
     void deleteById(Long id);
+
 }

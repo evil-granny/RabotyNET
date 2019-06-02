@@ -1,4 +1,4 @@
-package ua.softserve.ita.service.pdfcreater;
+package ua.softserve.ita.service.pdfcreator;
 
 import lombok.Data;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import ua.softserve.ita.model.*;
 import ua.softserve.ita.service.PdfResumeService;
 import ua.softserve.ita.service.ResumeService;
+
 import java.awt.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -77,7 +78,7 @@ public class CreateResumePdf {
     private float xCoordinate;
 
     @Autowired
-    public CreateResumePdf(PdfResumeService pdfResumeService, ResumeService resumeService, CreateQrCodeVCard createQR){
+    public CreateResumePdf(PdfResumeService pdfResumeService, ResumeService resumeService, CreateQrCodeVCard createQR) {
         this.pdfResumeService = pdfResumeService;
         this.resumeService = resumeService;
         this.createQR = createQR;
@@ -124,7 +125,6 @@ public class CreateResumePdf {
 
             final float Y_CORDINAT_TITLE_BORDER_LINE = this.yCoordinate;
 
-            //TITLE
             this.contentStream.beginText();
 
             this.yCoordinate = Y_CORDINAT_PHOTO + TITLE_FONT_SIZE + TITLE_LEADING;
@@ -145,7 +145,6 @@ public class CreateResumePdf {
 
             this.contentStream.endText();
 
-            //info
             this.contentStream.beginText();
 
             this.yCoordinate = Y_CORDINAT_TITLE_BORDER_LINE - LEADING_LINE - INFO_LEADING;
@@ -172,7 +171,6 @@ public class CreateResumePdf {
 
             this.contentStream.endText();
 
-            //Context
             Education education = resume.getEducation();
 
             Set<Job> jobs = resume.getJobs();
@@ -205,7 +203,7 @@ public class CreateResumePdf {
 
             final float Y_CORDINAT_EDUCATION_BORDER_LINE = this.yCoordinate;
 
-            PDImageXObject pdQR = PDImageXObject.createFromByteArray(this.document, createQR.createQRCode(resume, "").toByteArray(), "");
+            PDImageXObject pdQR = PDImageXObject.createFromByteArray(this.document, createQR.createQRCode(resume).toByteArray(), "");
 
             this.yCoordinate = Y_COORDINAT_SUBTITLE_EDUCATION;
 
@@ -237,13 +235,19 @@ public class CreateResumePdf {
 
             printContext("School", education.getSchool());
 
-            if (education.getSpecialty() == null) {printContext("Specialty", "");}
+            if (education.getSpecialty() == null) {
+                printContext("Specialty", "");
+            } else {
+                printContext("Specialty", education.getSpecialty().toString());
+            }
+            ;
 
-            else {printContext("Specialty", education.getSpecialty().toString());};
-
-            if (education.getGraduation() == null) {printContext("Graduation", "");}
-
-            else {printContext("Graduation", education.getGraduation().toString());};
+            if (education.getGraduation() == null) {
+                printContext("Graduation", "");
+            } else {
+                printContext("Graduation", education.getGraduation().toString());
+            }
+            ;
 
             this.contentStream.endText();
 
@@ -273,7 +277,7 @@ public class CreateResumePdf {
                 this.xCoordinate = BORDER_LEFT;
 
                 drawDoubleLine();
-//
+
                 int countLineForBlock = 4;
 
                 for (Job job : jobs) {
@@ -282,9 +286,11 @@ public class CreateResumePdf {
 
                         this.yCoordinate -= LEADING_LINE;
 
-                        if (job.getDescription() == null) {countLineForBlock += 1;}
-
-                        else {countLineForBlock += countDescriptionLine(job.getDescription());}
+                        if (job.getDescription() == null) {
+                            countLineForBlock += 1;
+                        } else {
+                            countLineForBlock += countDescriptionLine(job.getDescription());
+                        }
 
                         experienceHeader(countLineForBlock);
 
@@ -292,13 +298,18 @@ public class CreateResumePdf {
 
                         printContext("Period", job.getBegin(), job.getEnd());
 
-                        if (job.getCompanyName() == null) {printContext("Company", "");}
+                        if (job.getCompanyName() == null) {
+                            printContext("Company", "");
+                        } else {
+                            printContext("Company", job.getCompanyName());
+                        }
+                        ;
 
-                        else {printContext("Company", job.getCompanyName());};
-
-                        if (job.getDescription() == null) {printContext("Description", "");}
-
-                        else {printContext("Description", job.getDescription());}
+                        if (job.getDescription() == null) {
+                            printContext("Description", "");
+                        } else {
+                            printContext("Description", job.getDescription());
+                        }
 
                         this.yCoordinate -= INFO_LEADING;
 
@@ -310,7 +321,6 @@ public class CreateResumePdf {
                     }
                 }
             }
-//
 
             this.yCoordinate -= LEADING_LINE;
 
@@ -326,7 +336,7 @@ public class CreateResumePdf {
 
             boolean printExistsSkill = skills.stream()
                     .anyMatch(t -> t.getPrintPdf().equals(true));
-            //
+
             if (printExistsSkill) {
 
                 if (((checkYCoordinate) < BORDER_LOWER + LOGO_SIZE_HEIGHT)) {
@@ -337,7 +347,7 @@ public class CreateResumePdf {
 
                     this.xCoordinate = this.page.getMediaBox().getLowerLeftX() + BORDER_LEFT;
 
-                    this.yCoordinate -=  SUBTITLE_LEADING;
+                    this.yCoordinate -= SUBTITLE_LEADING;
 
                 }
 
@@ -367,17 +377,21 @@ public class CreateResumePdf {
 
                         this.yCoordinate -= LEADING_LINE;
 
-                        if (skill.getDescription() == null) {countLineForBlock += 1;}
-
-                        else {countLineForBlock += countDescriptionLine(skill.getDescription());}
+                        if (skill.getDescription() == null) {
+                            countLineForBlock += 1;
+                        } else {
+                            countLineForBlock += countDescriptionLine(skill.getDescription());
+                        }
 
                         experienceHeader(countLineForBlock);
 
                         printContext("Title", skill.getTitle());
 
-                        if (skill.getDescription() == null) {printContext("Description", "");}
-
-                        else {printContext("Description", skill.getDescription());}
+                        if (skill.getDescription() == null) {
+                            printContext("Description", "");
+                        } else {
+                            printContext("Description", skill.getDescription());
+                        }
 
                         this.yCoordinate -= INFO_LEADING;
 
@@ -389,8 +403,6 @@ public class CreateResumePdf {
                     }
                 }
             }
-
-            //
 
             this.contentStream.close();
 
@@ -554,7 +566,9 @@ public class CreateResumePdf {
                     }
                 }
 
-                if (buildLine.length() != 0) {listContext.add(buildLine.toString());}
+                if (buildLine.length() != 0) {
+                    listContext.add(buildLine.toString());
+                }
 
                 for (String line : listContext) {
 
@@ -724,7 +738,5 @@ public class CreateResumePdf {
         }
 
     }
-
-
 
 }

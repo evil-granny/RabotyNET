@@ -45,7 +45,7 @@ public class Job implements Serializable {
     @Column(name = "\"end\"")
     private LocalDate end;
 
-    @Column(name = "companyName", length = 50)
+    @Column(name = "company_name", length = 50)
     @Size(max = 50, message = "company name length is incorrect")
     private String companyName;
 
@@ -53,7 +53,7 @@ public class Job implements Serializable {
     @Size(max = 200, message = "description length is incorrect")
     private String description;
 
-    @Column(name = "print_pdf",nullable = false)
+    @Column(name = "print_pdf", nullable = false)
     private Boolean printPdf;
 
     @JsonIgnore

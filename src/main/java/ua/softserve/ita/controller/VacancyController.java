@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ua.softserve.ita.dto.VacancyDTO.VacancyDTO;
+import ua.softserve.ita.dto.VacancyDto;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Resume;
 import ua.softserve.ita.model.Vacancy;
@@ -69,29 +69,30 @@ public class VacancyController {
 
     @GetMapping("/findAll/{first}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<VacancyDTO> findAllVacanciesWithPagination(@PathVariable("first") int first) {
+    public ResponseEntity<VacancyDto> findAllVacanciesWithPagination(@PathVariable("first") int first) {
         return ResponseEntity.ok().body(vacancyService.findAllVacanciesWithPagination(first));
     }
 
     @GetMapping("/{companyId}/{first}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<VacancyDTO> findAllVacanciesByCompanyNameWithPagination(@PathVariable("companyId") Long companyId,
+    public ResponseEntity<VacancyDto> findAllVacanciesByCompanyNameWithPagination(@PathVariable("companyId") Long companyId,
                                                                                   @PathVariable("first") int first) {
         return ResponseEntity.ok().body(vacancyService.findAllVacanciesByCompanyId(companyId, first));
     }
 
     @GetMapping("hotVacancies/{first}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<VacancyDTO> findAllHotVacanciesWithPagination(@PathVariable("first") int first) {
+    public ResponseEntity<VacancyDto> findAllHotVacanciesWithPagination(@PathVariable("first") int first) {
         return ResponseEntity.ok().body(vacancyService.findAllHotVacanciesWithPagination(first));
     }
 
     @GetMapping("closedVacancies/{first}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<VacancyDTO> findAllClosedVacanciesWithPagination(@PathVariable("first") int first) {
+    public ResponseEntity<VacancyDto> findAllClosedVacanciesWithPagination(@PathVariable("first") int first) {
         System.out.println(vacancyService.findAllClosedVacanciesWithPagination(first));
         return ResponseEntity.ok().body(vacancyService.findAllClosedVacanciesWithPagination(first));
     }
+
     @PostMapping("/sendResume/{vacancyId}")
     public ResponseEntity<Resume> sendResumeOnThisVacancy(@Valid @RequestBody Resume resume, @PathVariable("vacancyId") Long vacancyId) {
         return ResponseEntity.ok().body(resumeService.sendResumeOnThisVacancy(resume, vacancyId));

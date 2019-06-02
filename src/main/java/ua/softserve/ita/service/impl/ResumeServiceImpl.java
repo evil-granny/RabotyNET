@@ -2,8 +2,8 @@ package ua.softserve.ita.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.softserve.ita.dao.ResumeDao;
 import ua.softserve.ita.dao.PersonDao;
+import ua.softserve.ita.dao.ResumeDao;
 import ua.softserve.ita.dao.UserDao;
 import ua.softserve.ita.dao.VacancyDao;
 import ua.softserve.ita.exception.ResourceNotFoundException;
@@ -47,9 +47,8 @@ public class ResumeServiceImpl implements ResumeService {
 
     @Override
     public Resume save(Resume resume) {
-
         Person person = personDao.findById(getLoggedUser().get().getUserId())
-                .orElseThrow(() -> new ResourceNotFoundException(String.format("Person was not found")));
+                .orElseThrow(() -> new ResourceNotFoundException("Person was not found"));
         resume.setPerson(person);
 
         Set<Skill> skills = resume.getSkills();
@@ -74,8 +73,6 @@ public class ResumeServiceImpl implements ResumeService {
 
         Set<Vacancy> vacancies = resume.getVacancies();
         vacancies.clear();
-        vacancies.forEach(v -> v.getResumes().add(resume));
-        vacancies.forEach(vacancyDao::update);
 
         return resumeDao.update(resume);
     }
@@ -114,4 +111,5 @@ public class ResumeServiceImpl implements ResumeService {
         vacancies.forEach(vacancyDao::update);
         return update(resume);
     }
+
 }

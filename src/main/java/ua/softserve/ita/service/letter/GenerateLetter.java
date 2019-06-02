@@ -2,16 +2,20 @@ package ua.softserve.ita.service.letter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.softserve.ita.model.*;
+import ua.softserve.ita.model.Company;
+import ua.softserve.ita.model.Letter;
+import ua.softserve.ita.model.User;
 import ua.softserve.ita.model.profile.Person;
-
-import java.util.Optional;
 
 @Service("generateService")
 public class GenerateLetter {
 
+    private final LetterService letterService;
+
     @Autowired
-    LetterService letterService;
+    public GenerateLetter(LetterService letterService) {
+        this.letterService = letterService;
+    }
 
     public void sendValidationEmail(User user, String linkOfValidation) {
 
@@ -21,10 +25,8 @@ public class GenerateLetter {
 
         letter.setSubject("Registration on website RabotyNet");
 
-        String validationLink = linkOfValidation;
-
         String content = "Your mail has been specified for registration on the site of RabotyNET " +
-                "to complete the registration by clicking on the link:" + validationLink +
+                "to complete the registration by clicking on the link:" + linkOfValidation +
                 " If you do not know about this, ignore this message;";
 
         letter.setContent(content);
@@ -35,14 +37,13 @@ public class GenerateLetter {
 
     }
 
-    public void sendRestoreForgotPasswordEmail(User user, String linkOfValidation){
+    public void sendRestoreForgotPasswordEmail(User user, String linkOfValidation) {
         Letter letter = new Letter();
 
         letter.setEMail(user.getLogin());
         letter.setSubject("Restore password on website RabotyNet");
-        String validationLink=linkOfValidation;
         String content = "Your mail has been specified for restore password on the site of RabotyNET " +
-                "to complete the restore password by clicking on the link:" + validationLink +
+                "to complete the restore password by clicking on the link:" + linkOfValidation +
                 " If you do not know about this, ignore this message;";
         letter.setContent(content);
         letter.setWithAttachment(false);
@@ -51,7 +52,7 @@ public class GenerateLetter {
 
     }
 
-    public void sendPersonPDF(Person person, String path){
+    public void sendPersonPDF(Person person, String path) {
 
         Letter letter = new Letter();
 
@@ -86,4 +87,5 @@ public class GenerateLetter {
 
         letterService.sendLetter(letter);
     }
+
 }

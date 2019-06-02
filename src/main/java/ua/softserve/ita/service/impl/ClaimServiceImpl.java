@@ -13,6 +13,7 @@ import java.util.Optional;
 @Service
 @Transactional
 public class ClaimServiceImpl implements ClaimService {
+
     private final ClaimDao claimDao;
 
     @Autowired
@@ -42,11 +43,12 @@ public class ClaimServiceImpl implements ClaimService {
 
     @Override
     public void deleteById(Long id) {
-      claimDao.deleteById(id);
+        claimDao.deleteById(id);
     }
 
     @Override
     public List<Claim> findAllByCompanyId(Long id) {
         return claimDao.findAllByCompanyId(id);
     }
+
 }

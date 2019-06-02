@@ -21,4 +21,5 @@ public interface BaseDao<T, PK extends Serializable> {
     List<T> findWithPagination(int first, int count);
 
     boolean existsById(PK pk);
+
 }

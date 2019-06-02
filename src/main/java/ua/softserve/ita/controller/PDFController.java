@@ -11,7 +11,7 @@ import ua.softserve.ita.service.PdfResumeService;
 import ua.softserve.ita.service.ResumeService;
 import ua.softserve.ita.service.VacancyService;
 import ua.softserve.ita.service.letter.GenerateLetter;
-import ua.softserve.ita.service.pdfcreater.CreateResumePdf;
+import ua.softserve.ita.service.pdfcreator.CreateResumePdf;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -68,7 +68,6 @@ public class PDFController {
         Set<Job> jobs = resume.getJobs();
         Set<Vacancy> vacancies = resume.getVacancies();
         vacancies.clear();
-        vacancies.forEach(v -> v.getResumes().add(resume));
         vacancies.forEach(vacancyService::update);
         skills.forEach(x -> x.setResume(resume));
         jobs.forEach(x -> x.setResume(resume));

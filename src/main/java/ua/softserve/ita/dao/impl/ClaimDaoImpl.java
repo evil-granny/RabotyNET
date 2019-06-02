@@ -9,13 +9,14 @@ import java.util.List;
 @Repository
 public class ClaimDaoImpl extends AbstractDao<Claim, Long> implements ClaimDao {
 
-    private final String ID = "id";
+    private static final String ID = "id";
 
     @Override
     @SuppressWarnings("unchecked")
     public List<Claim> findAllByCompanyId(Long id) {
-        return (List<Claim>)createNamedQuery(Claim.FIND_BY_COMPANY_ID)
+        return (List<Claim>) createNamedQuery(Claim.FIND_BY_COMPANY_ID)
                 .setParameter(ID, id)
                 .getResultList();
     }
+
 }

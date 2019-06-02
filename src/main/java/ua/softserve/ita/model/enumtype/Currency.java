@@ -24,6 +24,7 @@ public enum Currency {
                 return type;
             }
         }
+
         throw new UnsupportedOperationException(
                 "The code " + code + " is not supported!");
     }

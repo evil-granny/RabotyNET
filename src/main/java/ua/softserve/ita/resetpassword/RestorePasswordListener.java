@@ -7,13 +7,13 @@ import ua.softserve.ita.model.User;
 import ua.softserve.ita.service.letter.GenerateLetter;
 import ua.softserve.ita.service.token.VerificationTokenService;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Component
 public class RestorePasswordListener implements ApplicationListener<OnRestorePasswordCompleteEvent> {
 
     private static String FRONT_URL = "http://localhost:4200";
+
     private final VerificationTokenService tokenService;
     private final GenerateLetter sendMailService;
 
@@ -35,4 +35,5 @@ public class RestorePasswordListener implements ApplicationListener<OnRestorePas
         final String confirmationUrl = FRONT_URL + "/confirmPassword?token=" + token;
         sendMailService.sendRestoreForgotPasswordEmail(user, confirmationUrl);
     }
+
 }

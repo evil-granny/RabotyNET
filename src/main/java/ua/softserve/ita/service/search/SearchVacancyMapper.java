@@ -1,13 +1,12 @@
 package ua.softserve.ita.service.search;
 
-import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
-import ua.softserve.ita.dto.SearchDTO.SearchVacancyDTO;
+import ua.softserve.ita.dto.search.SearchVacancyDto;
 
 @Slf4j
 public class SearchVacancyMapper {
 
-    public SearchVacancyDTO getSearchVacancyDTO(String result) {
+    public SearchVacancyDto getSearchVacancyDto(String result) {
         String[] resultArray = result.split(",");
         for (int i = 0; i < resultArray.length; i++) {
             resultArray[i] = resultArray[i].replace("[", "");
@@ -15,7 +14,7 @@ public class SearchVacancyMapper {
             resultArray[i] = resultArray[i].replace("\"", "");
         }
 
-        return SearchVacancyDTO.builder()
+        return SearchVacancyDto.builder()
                 .position(resultArray[0])
                 .salary(resultArray[1])
                 .employment(resultArray[2])

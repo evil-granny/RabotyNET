@@ -1,9 +1,9 @@
-package ua.softserve.ita.dto.SearchDTO;
+package ua.softserve.ita.dto.search;
 
 import lombok.Data;
 
 @Data
-public class SearchRequestDTO {
+public class SearchRequestDto {
 
     private String searchText;
 
@@ -18,4 +18,5 @@ public class SearchRequestDTO {
     private int resultsOnPage;
 
     private int firstResultNumber;
+
 }

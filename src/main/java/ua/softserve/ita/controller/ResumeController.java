@@ -15,6 +15,7 @@ import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 @RestController
 @RequestMapping("/resume")
 public class ResumeController {
+
     private final ResumeService resumeService;
     private final SkillService skillService;
     private final JobService jobService;

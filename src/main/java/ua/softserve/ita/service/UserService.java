@@ -27,4 +27,5 @@ public interface UserService {
     Optional<VerificationToken> findByToken(String token);
 
     boolean emailExists(String email);
+
 }

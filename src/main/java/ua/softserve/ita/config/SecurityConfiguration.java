@@ -83,4 +83,5 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/configuration/security",
             "/csrf"
     };
+
 }

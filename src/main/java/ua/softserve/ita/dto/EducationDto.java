@@ -8,11 +8,18 @@ import ua.softserve.ita.model.Resume;
 @Getter
 @Setter
 @NoArgsConstructor
-public class EducationDTO {
+public class EducationDto {
+
     private Long educationId;
+
     private String degree;
+
     private String school;
+
     private String specialty;
+
     private Integer graduation;
+
     private Resume resume;
+
 }

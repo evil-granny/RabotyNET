@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ResumeService {
+
     Optional<Resume> findById(Long id);
 
     List<Resume> findAll();
@@ -20,5 +21,6 @@ public interface ResumeService {
 
     List<Resume> findResumeByVacancyId(Long vacancyId);
 
-    Resume sendResumeOnThisVacancy(Resume resume,Long vacancyId);
+    Resume sendResumeOnThisVacancy(Resume resume, Long vacancyId);
+
 }

@@ -5,6 +5,5 @@ import ua.softserve.ita.dao.SkillDao;
 import ua.softserve.ita.model.Skill;
 
 @Repository
-public class SkillDaoImpl extends AbstractDao<Skill,Long> implements SkillDao {
-
+public class SkillDaoImpl extends AbstractDao<Skill, Long> implements SkillDao {
 }

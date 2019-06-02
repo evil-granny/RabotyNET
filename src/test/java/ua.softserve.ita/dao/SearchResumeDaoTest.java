@@ -377,7 +377,7 @@ class SearchResumeDaoTest {
     @Test
     void search() {
 //        SearchResumeDao searchResumeDao= new SearchResumeDao(sessionFactory);
-//        SearchResumeResponseDTO searchResumeResponseDTO = searchResumeDao.getResponse("name", "jo", 5000, 0);
+//        SearchResumeResponseDto searchResumeResponseDTO = searchResumeDao.getResponse("name", "jo", 5000, 0);
 //        assertEquals(searchResumeResponseDTO.getCount().intValue(), searchResumeResponseDTO.getSearchResumeDTOS().size());
     }
 

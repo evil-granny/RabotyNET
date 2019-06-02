@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.softserve.ita.dao.PdfResumeDao;
 import ua.softserve.ita.model.PdfResume;
-import ua.softserve.ita.model.Skill;
 import ua.softserve.ita.service.PdfResumeService;
 
 import javax.transaction.Transactional;
@@ -48,7 +47,9 @@ public class PdfResumeServiceImpl implements PdfResumeService {
     }
 
     @Override
-    public void deleteAll() {pdfResumeDao.deleteAll();}
+    public void deleteAll() {
+        pdfResumeDao.deleteAll();
+    }
 
     @Override
     public Optional<PdfResume> findByUserId(Long id) {

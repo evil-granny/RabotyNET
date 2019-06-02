@@ -23,4 +23,5 @@ public class UserResetPasswordDto {
     @NotEmpty
     @Size(min = 8, max = 60)
     private String resetPassword;
+
 }

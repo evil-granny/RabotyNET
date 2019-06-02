@@ -24,7 +24,7 @@ import java.util.Set;
 @EqualsAndHashCode
 @NamedQueries({
         @NamedQuery(name = Vacancy.FIND_VACANCIES_BY_COMPANY_ID, query = "select vac from Vacancy vac where vac.company.companyId = :id ORDER BY vac.vacancyId DESC"),
-        @NamedQuery(name = Vacancy.FIND_ALL_HOT_VACANCIES, query = "select vac from Vacancy vac where vac.hotVacancy = true ORDER BY vac.vacancyId DESC"),
+        @NamedQuery(name = Vacancy.FIND_ALL_HOT_VACANCIES, query = "select vac from Vacancy vac where vac.company.status = ua.softserve.ita.model.enumtype.Status.APPROVED and vac.hotVacancy = true ORDER BY vac.vacancyId DESC"),
         @NamedQuery(name = Vacancy.FIND_CLOSED_VACANCIES, query = "select vac from Vacancy vac where (vac.vacancyStatus = ua.softserve.ita.model.enumtype.VacancyStatus.OUTDATED or vac.vacancyStatus = ua.softserve.ita.model.enumtype.VacancyStatus.OCCUPIED) and vac.company.status = ua.softserve.ita.model.enumtype.Status.APPROVED and vac.company.user.userId = :id order by vac.vacancyId DESC"),
         @NamedQuery(name = Vacancy.FIND_VACANCIES, query = "select vac from Vacancy vac WHERE vac.company.status = ua.softserve.ita.model.enumtype.Status.APPROVED and vac.vacancyStatus = ua.softserve.ita.model.enumtype.VacancyStatus.OPEN ORDER BY vac.vacancyId DESC"),
         @NamedQuery(name = Vacancy.FIND_BY_REQUIREMENT, query = "SELECT vac FROM Vacancy vac WHERE vac.vacancyId = (SELECT req.vacancy.vacancyId FROM Requirement req WHERE req.requirementId = :id)"),

@@ -58,11 +58,20 @@ public class PhotoServiceImpl implements PhotoService {
     }
 
     @Override
-    public byte[] load(Long id) {
+    public byte[] loadAvatar(Long id) {
+        return loadPhoto(id, UPLOAD_DIRECTORY_FOR_AVATARS);
+    }
+
+    @Override
+    public byte[] loadLogo(Long id) {
+        return loadPhoto(id, UPLOAD_DIRECTORY_FOR_LOGOS);
+    }
+
+    private byte[] loadPhoto(Long id, String uploadDirectory) {
         Photo photo = photoDao.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Photo with id %d was not found?!", id)));
 
-        Path file = Paths.get(UPLOAD_DIRECTORY_FOR_AVATARS).resolve(photo.getName());
+        Path file = Paths.get(uploadDirectory).resolve(photo.getName());
 
         try {
             return FileUtils.readFileToByteArray(file.toFile());

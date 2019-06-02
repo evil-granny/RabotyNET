@@ -5,12 +5,14 @@ import ua.softserve.ita.model.Company;
 import java.util.List;
 import java.util.Optional;
 
-public interface CompanyDao extends BaseDao<Company,Long> {
-     Optional<Company> findByVacancyId(Long id);
+public interface CompanyDao extends BaseDao<Company, Long> {
 
-     Long getCompaniesCount();
+    Optional<Company> findByVacancyId(Long id);
 
-     Optional<Company> findByName(String name);
+    Long getCompaniesCount();
 
-     List<Company> findByUserId(Long id);
+    Optional<Company> findByName(String name);
+
+    List<Company> findByUserId(Long id);
+
 }

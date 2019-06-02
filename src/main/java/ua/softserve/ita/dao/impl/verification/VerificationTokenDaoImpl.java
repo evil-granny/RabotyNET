@@ -18,17 +18,17 @@ import java.util.logging.Logger;
 
 
 @Repository
-public class VerificationTokenDaoImpl extends AbstractDao<VerificationToken,Long> implements VerificationTokenDao {
+public class VerificationTokenDaoImpl extends AbstractDao<VerificationToken, Long> implements VerificationTokenDao {
 
     private static final String ID = "id";
     private static final String TOKEN = "token";
     private static final String EXPIRY_DATE = "expiryDate";
-    private Logger logger =  Logger.getLogger(VerificationTokenDaoImpl.class.getName());
+
+    private Logger logger = Logger.getLogger(VerificationTokenDaoImpl.class.getName());
 
     public VerificationTokenDaoImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
-
 
     @Override
     public Optional<VerificationToken> findVerificationToken(String token) {
@@ -41,6 +41,7 @@ public class VerificationTokenDaoImpl extends AbstractDao<VerificationToken,Long
             } catch (NoResultException ex) {
                 logger.warning("Token not found");
             }
+
             return verificationToken;
         });
     }
@@ -51,11 +52,12 @@ public class VerificationTokenDaoImpl extends AbstractDao<VerificationToken,Long
             VerificationToken result = null;
             try {
                 result = (VerificationToken) createNamedQuery(VerificationToken.FIND_TOKEN_BY_USER)
-                .setParameter(ID, user.getUserId())
-                .getSingleResult();
+                        .setParameter(ID, user.getUserId())
+                        .getSingleResult();
             } catch (NoResultException ex) {
-                logger.warning("Token for user "+user.getUsername()+"not found");
+                logger.warning("Token for user " + user.getUsername() + "not found");
             }
+
             return result;
         });
     }
@@ -67,4 +69,5 @@ public class VerificationTokenDaoImpl extends AbstractDao<VerificationToken,Long
                 .setParameter(EXPIRY_DATE, Date.from(Instant.now()));
         query.executeUpdate();
     }
+
 }

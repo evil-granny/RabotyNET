@@ -2,10 +2,7 @@ package ua.softserve.ita.dao.impl;
 
 import org.springframework.stereotype.Repository;
 import ua.softserve.ita.dao.PdfResumeDao;
-import ua.softserve.ita.dao.SkillDao;
-
 import ua.softserve.ita.model.PdfResume;
-import ua.softserve.ita.model.Skill;
 import ua.softserve.ita.utility.QueryUtility;
 
 import javax.persistence.NoResultException;
@@ -14,13 +11,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Repository
-public class PdfResumeDaoImpl extends AbstractDao<PdfResume,Long> implements PdfResumeDao {
+public class PdfResumeDaoImpl extends AbstractDao<PdfResume, Long> implements PdfResumeDao {
+
     private static final String ID = "id";
     private static final String NAME = "name";
 
     @Override
     public void deleteAll() {
-        sessionFactory.getCurrentSession().createQuery("delete from PdfResume").executeUpdate();}
+        sessionFactory.getCurrentSession().createQuery("delete from PdfResume").executeUpdate();
+    }
 
     @Override
     @SuppressWarnings("unchecked")
@@ -34,6 +33,7 @@ public class PdfResumeDaoImpl extends AbstractDao<PdfResume,Long> implements Pdf
             } catch (NoResultException ex) {
                 Logger.getLogger(PdfResumeDaoImpl.class.getName()).log(Level.WARNING, "PdfResume not found with id " + id);
             }
+
             return result;
         });
     }
@@ -49,7 +49,9 @@ public class PdfResumeDaoImpl extends AbstractDao<PdfResume,Long> implements Pdf
             } catch (NoResultException ex) {
                 Logger.getLogger(PdfResumeDaoImpl.class.getName()).log(Level.WARNING, "PdfFile not found with name " + name);
             }
+
             return result;
         });
     }
+
 }

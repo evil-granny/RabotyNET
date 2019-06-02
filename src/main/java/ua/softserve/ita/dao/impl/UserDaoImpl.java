@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 public class UserDaoImpl extends AbstractDao<User, Long> implements UserDao {
 
     private static final String LOGIN = "login";
+
     private Logger logger = Logger.getLogger(UserDaoImpl.class.getName());
 
     @Override
@@ -30,6 +31,7 @@ public class UserDaoImpl extends AbstractDao<User, Long> implements UserDao {
             } catch (NoResultException ex) {
                 logger.warning("User not found!");
             }
+
             return result;
         });
     }
@@ -46,6 +48,7 @@ public class UserDaoImpl extends AbstractDao<User, Long> implements UserDao {
             } catch (NoResultException ex) {
                 logger.warning("User not found with email " + email);
             }
+
             return result;
         });
     }

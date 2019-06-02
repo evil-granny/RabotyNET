@@ -28,7 +28,7 @@ public class EducationServiceImpl implements EducationService {
 
     @Override
     public List<Education> findAll() {
-       return educationDao.findAll();
+        return educationDao.findAll();
     }
 
     @Override
@@ -45,4 +45,5 @@ public class EducationServiceImpl implements EducationService {
     public void deleteById(Long id) {
         educationDao.deleteById(id);
     }
+
 }

@@ -24,11 +24,10 @@ public class UserServiceImpl implements UserService {
 
     private final UserDao userDao;
     private final VerificationTokenDao verificationTokenDao;
+
     private final RoleService roleService;
 
-
-    private final
-    BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
     public UserServiceImpl(UserDao userDao, BCryptPasswordEncoder bCryptPasswordEncoder, VerificationTokenDao verificationTokenDao, RoleService roleService) {
@@ -54,7 +53,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User createDTO(UserDto userDto)  {
+    public User createDTO(UserDto userDto) {
         if (emailExists(userDto.getLogin())) {
             throw new UserAlreadyExistException("There is an account with that email address: " + userDto.getLogin());
         }
@@ -80,7 +79,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<VerificationToken> findByToken(String token) {
-       return verificationTokenDao.findVerificationToken(token);
+        return verificationTokenDao.findVerificationToken(token);
     }
 
     @Override

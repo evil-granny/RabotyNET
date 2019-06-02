@@ -1,7 +1,7 @@
 package ua.softserve.ita.service.search;
 
 import lombok.extern.slf4j.Slf4j;
-import ua.softserve.ita.dto.SearchDTO.SearchResumeDTO;
+import ua.softserve.ita.dto.search.SearchResumeDto;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -11,7 +11,7 @@ import java.time.ZoneId;
 @Slf4j
 public class SearchResumeMapper {
 
-    public SearchResumeDTO getSearchResumeDTO(String result) {
+    public SearchResumeDto getSearchResumeDto(String result) {
         String[] resultArray = result.split(",");
         for (int i = 0; i < resultArray.length; i++) {
             resultArray[i] = resultArray[i].replace("[", "");
@@ -19,7 +19,7 @@ public class SearchResumeMapper {
             resultArray[i] = resultArray[i].replace("\"", "");
         }
 
-        return SearchResumeDTO.builder()
+        return SearchResumeDto.builder()
                 .id(Long.valueOf(resultArray[0]))
                 .firstName(resultArray[1].trim())
                 .lastName(resultArray[2].trim())
@@ -32,4 +32,5 @@ public class SearchResumeMapper {
                 .city(resultArray[8].trim())
                 .build();
     }
+
 }

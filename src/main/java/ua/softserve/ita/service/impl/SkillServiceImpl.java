@@ -13,6 +13,7 @@ import java.util.Optional;
 @Service
 @Transactional
 public class SkillServiceImpl implements SkillService {
+
     private final SkillDao skillDao;
 
     @Autowired
@@ -44,4 +45,5 @@ public class SkillServiceImpl implements SkillService {
     public void deleteById(Long id) {
         skillDao.deleteById(id);
     }
+
 }

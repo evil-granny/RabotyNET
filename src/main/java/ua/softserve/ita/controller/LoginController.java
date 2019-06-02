@@ -1,37 +1,24 @@
 package ua.softserve.ita.controller;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import ua.softserve.ita.exception.UserNotFoundException;
-import ua.softserve.ita.model.User;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ua.softserve.ita.exception.UserNotFoundException;
 import ua.softserve.ita.model.UserPrincipal;
-import ua.softserve.ita.service.UserService;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import static ua.softserve.ita.model.UserPrincipal.UNKNOWN_USER;
 import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 
 @RestController
 public class LoginController {
 
-    private final UserService userService;
-
-    public LoginController(UserService userService) {
-        this.userService = userService;
-    }
-
-
     @PostMapping("/login")
     public UserPrincipal userLoginPost() {
-        if (getLoggedUser().isPresent()){
+        if (getLoggedUser().isPresent()) {
             return getLoggedUser().get();
         } else {
             throw new UserNotFoundException("No such user");
@@ -53,4 +40,5 @@ public class LoginController {
             response.addCookie(cookie);
         }
     }
+
 }

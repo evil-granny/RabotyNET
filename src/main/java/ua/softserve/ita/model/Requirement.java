@@ -9,7 +9,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.util.Objects;
 
 @Entity
 @Table(name = "requirement")
@@ -17,7 +16,6 @@ import java.util.Objects;
 @Setter
 @Builder
 @AllArgsConstructor
-//@EqualsAndHashCode
 @NoArgsConstructor
 public class Requirement {
 
@@ -45,4 +43,5 @@ public class Requirement {
                 ", description='" + description + '\'' +
                 '}';
     }
+
 }

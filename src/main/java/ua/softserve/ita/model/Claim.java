@@ -55,7 +55,7 @@ public class Claim implements Serializable {
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", user=" + user +
-//                ", company=" + company +
                 '}';
     }
+
 }

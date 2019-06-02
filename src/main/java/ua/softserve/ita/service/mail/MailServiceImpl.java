@@ -10,7 +10,6 @@ import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 import ua.softserve.ita.model.Letter;
 
-import javax.mail.internet.MimeMessage;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,8 +19,12 @@ public class MailServiceImpl implements MailService {
 
     private static final Logger LOGGER = Logger.getLogger(MailServiceImpl.class.getName());
 
+    private final JavaMailSender mailSender;
+
     @Autowired
-    JavaMailSender mailSender;
+    public MailServiceImpl(JavaMailSender mailSender) {
+        this.mailSender = mailSender;
+    }
 
     @Override
     public void sendEmail(Object object) {
@@ -50,54 +53,44 @@ public class MailServiceImpl implements MailService {
     }
 
     private MimeMessagePreparator getContent(final Letter letter) {
+        return mimeMessage -> {
 
-        MimeMessagePreparator preparator = new MimeMessagePreparator() {
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
-            public void prepare(MimeMessage mimeMessage) throws Exception {
+            helper.setSubject(letter.getSubject());
 
-                MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+            helper.setFrom("rabotynetch082@gmail.com");
 
-                helper.setSubject(letter.getSubject());
+            helper.setTo(letter.getEMail());
 
-                helper.setFrom("rabotynetch082@gmail.com");
+            String content = letter.getContent();
 
-                helper.setTo(letter.getEMail());
+            helper.setText("<html><body><p>" + content + "</p><img src='cid:company-logo'></body></html>", true);
 
-                String content = letter.getContent();
-
-                helper.setText("<html><body><p>" + content + "</p><img src='cid:company-logo'></body></html>", true);
-
-                helper.addInline("company-logo", new ClassPathResource("logo.png"));
-            }
+            helper.addInline("company-logo", new ClassPathResource("logo.png"));
         };
-
-        return preparator;
     }
 
     private MimeMessagePreparator getContentWithAttachement(final Letter letter) {
 
-        MimeMessagePreparator preparator = new MimeMessagePreparator() {
+        return mimeMessage -> {
 
-            public void prepare(MimeMessage mimeMessage) throws Exception {
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
 
-                MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+            helper.setSubject(letter.getSubject());
 
-                helper.setSubject(letter.getSubject());
+            helper.setFrom("rabotynetch082@gmail.com");
 
-                helper.setFrom("rabotynetch082@gmail.com");
+            helper.setTo(letter.getEMail());
 
-                helper.setTo(letter.getEMail());
+            helper.setText(letter.getContent());
 
-                helper.setText(letter.getContent());
+            FileSystemResource file = new FileSystemResource(new File(letter.getLinkForAttachment()));
 
-                FileSystemResource file = new FileSystemResource(new File(letter.getLinkForAttachment()));
+            String fileName = file.getFilename();
 
-                String fileName = file.getFilename();
-
-                helper.addAttachment(fileName, file);
-            }
+            helper.addAttachment(fileName, file);
         };
-
-        return preparator;
     }
+
 }

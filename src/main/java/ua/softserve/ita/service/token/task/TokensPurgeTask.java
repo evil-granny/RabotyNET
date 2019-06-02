@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.softserve.ita.service.token.VerificationTokenService;
 
-
 @Service
 @Transactional
 public class TokensPurgeTask {
@@ -20,4 +19,5 @@ public class TokensPurgeTask {
     public void purgeExpired() {
         verificationTokenService.deleteAllExpiredSince();
     }
+
 }

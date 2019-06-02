@@ -1,9 +1,9 @@
 package ua.softserve.ita.service.search;
 
-import ua.softserve.ita.dto.SearchDTO.SearchRequestDTO;
+import ua.softserve.ita.dto.search.SearchRequestDto;
 
 public interface SearchService<Z> {
 
-    Z getResponse(SearchRequestDTO searchRequestDTO);
+    Z getResponse(SearchRequestDto searchRequestDto);
 
 }
