@@ -51,13 +51,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private static final String[] CSRF_IGNORE = {"/login/**", "/users/**", "/password/**", "/searchVacancy"};
     private static final String[] ADMIN_URLS = {"/companies/all/**", "/companies/sendMail"};
     private static final String[] COWNER_URLS = {"/companies/my", "/companies/update", "/companies/delete/**", "/searchResume",
-                                                 "/resume/findByVacancyId/**", "/showResume/**"};
+            "/resume/findByVacancyId/**", "/showResume/**"};
     private static final String[] USER_URLS = {"/users"};
     private static final String[] COWNER_USER_URLS = {"/resume/**", "/companies/create", "/companies/approve", "/people", "/people/*", "people/**"};
     private static final String[] ALL_USERS_URLS = {"/companies/byName/**", "/companies/byCompany/**", "/claims", "/photo/**", "/users/**", "/users/enabled/**",
-                                                    "/", "/vacancies/**", "/login", "/login/**", "/password/**", "/healthCheck", "/pdf/**", "/updatePDF", "/createPdf/**",
-                                                    "/sendResume/{vacancyId}", "/companies/byVacancyId/**", "/searchVacancy"};
-
+            "/", "/vacancies/**", "/login", "/login/**", "/password/**", "/healthCheck", "/pdf/**", "/updatePDF", "/createPdf/**",
+            "/sendResume/{vacancyId}", "/companies/byVacancyId/**", "/searchVacancy"};
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -86,24 +85,24 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
 
                 .authorizeRequests()
-                    .antMatchers(ADMIN_URLS).access("hasRole('ROLE_ADMIN')")
-                    .antMatchers(COWNER_URLS).access("hasRole('ROLE_COWNER')")
-                    .antMatchers(USER_URLS).access("hasRole('ROLE_USER')")
-                    .antMatchers(COWNER_USER_URLS).access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
-                    .antMatchers(ALL_USERS_URLS).permitAll()
+                .antMatchers(ADMIN_URLS).access("hasRole('ROLE_ADMIN')")
+                .antMatchers(COWNER_URLS).access("hasRole('ROLE_COWNER')")
+                .antMatchers(USER_URLS).access("hasRole('ROLE_USER')")
+                .antMatchers(COWNER_USER_URLS).access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
+                .antMatchers(ALL_USERS_URLS).permitAll()
                 .anyRequest().authenticated()
                 .and()
 
                 .logout()
-                    .logoutSuccessUrl("/logout")
-                    .clearAuthentication(true)
-                    .invalidateHttpSession(true)
-                    .deleteCookies("JSESSIONID", "XSRF-TOKEN")
+                .logoutSuccessUrl("/logout")
+                .clearAuthentication(true)
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID", "XSRF-TOKEN")
                 .and()
 
                 .csrf()
-                    .ignoringAntMatchers(CSRF_IGNORE)
-                    .csrfTokenRepository(csrfTokenRepository())
+                .ignoringAntMatchers(CSRF_IGNORE)
+                .csrfTokenRepository(csrfTokenRepository())
                 .and()
                 .addFilterAfter(csrfHeaderFilter(), CsrfFilter.class);
     }
@@ -141,4 +140,5 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) {
         web.ignoring().antMatchers(AUTH_WHITELIST);
     }
+
 }

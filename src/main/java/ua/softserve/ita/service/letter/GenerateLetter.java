@@ -71,7 +71,7 @@ public class GenerateLetter {
         letterService.sendLetter(letter);
     }
 
-    public void sendResumePdfForVacancy(String eMail, String path){
+    public void sendResumePdfForVacancy(String eMail, String path) {
 
         Letter letter = new Letter();
 

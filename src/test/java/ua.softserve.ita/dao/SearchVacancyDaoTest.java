@@ -5,8 +5,8 @@ import org.hibernate.cfg.Configuration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ua.softserve.ita.dao.impl.search.SearchVacancyDao;
-import ua.softserve.ita.dto.SearchDTO.SearchRequestDTO;
-import ua.softserve.ita.dto.SearchDTO.SearchVacancyResponseDTO;
+import ua.softserve.ita.dto.search.SearchRequestDto;
+import ua.softserve.ita.dto.search.SearchVacancyResponseDto;
 import ua.softserve.ita.model.*;
 import ua.softserve.ita.model.enumtype.Status;
 import ua.softserve.ita.model.profile.Address;
@@ -14,9 +14,7 @@ import ua.softserve.ita.model.profile.Contact;
 import ua.softserve.ita.model.profile.Person;
 import ua.softserve.ita.model.profile.Photo;
 
-import java.io.IOException;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SearchVacancyDaoTest {
 
@@ -54,15 +52,16 @@ class SearchVacancyDaoTest {
 
     @Test
     void getResponse() {
-        SearchRequestDTO searchRequestDTO = new SearchRequestDTO();
-        searchRequestDTO.setSearchParameter("position");
-        searchRequestDTO.setSearchText("Java ");
-        searchRequestDTO.setFirstResultNumber(0);
-        searchRequestDTO.setResultsOnPage(5000);
-        searchRequestDTO.setDirection("asc");
-        searchRequestDTO.setSearchSort("position");
+        SearchRequestDto searchRequestDto = new SearchRequestDto();
+        searchRequestDto.setSearchParameter("position");
+        searchRequestDto.setSearchText("Java ");
+        searchRequestDto.setFirstResultNumber(0);
+        searchRequestDto.setResultsOnPage(5000);
+        searchRequestDto.setDirection("asc");
+        searchRequestDto.setSearchSort("position");
         SearchVacancyDao searchVacancyDao = new SearchVacancyDao(sessionFactory);
-        SearchVacancyResponseDTO searchVacancyResponseDTO = searchVacancyDao.getResponse(searchRequestDTO);
-        assertEquals(searchVacancyResponseDTO.getCount().intValue(), searchVacancyResponseDTO.getSearchVacancyDTOS().size());
+        SearchVacancyResponseDto searchVacancyResponseDto = searchVacancyDao.getResponse(searchRequestDto);
+        assertEquals(searchVacancyResponseDto.getCount().intValue(), searchVacancyResponseDto.getSearchVacancyDtos().size());
     }
+
 }

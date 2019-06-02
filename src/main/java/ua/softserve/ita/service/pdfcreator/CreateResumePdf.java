@@ -81,7 +81,7 @@ public class CreateResumePdf {
     private float xCoordinate;
 
     @Autowired
-    public CreateResumePdf(PdfResumeService pdfResumeService, ResumeService resumeService, CreateQrCodeVCard createQR, PhotoService photoService){
+    public CreateResumePdf(PdfResumeService pdfResumeService, ResumeService resumeService, CreateQrCodeVCard createQR, PhotoService photoService) {
         this.pdfResumeService = pdfResumeService;
         this.resumeService = resumeService;
         this.createQR = createQR;
@@ -99,8 +99,8 @@ public class CreateResumePdf {
             try {
 
                 Long photoId = resume.getPerson().getPhoto().getPhotoId();
-                byte[] photo = photoService.load(photoId);
-                PDImageXObject pdImage = PDImageXObject.createFromByteArray(this.document,photo,"");
+                byte[] photo = photoService.loadAvatar(photoId);
+                PDImageXObject pdImage = PDImageXObject.createFromByteArray(this.document, photo, "");
                 float scale = (float) PHOTO_SIZE / pdImage.getHeight();
                 this.yCoordinate -= pdImage.getHeight() * scale;
                 this.xCoordinate -= pdImage.getWidth() * scale;
@@ -197,10 +197,16 @@ public class CreateResumePdf {
             this.contentStream.setLeading(INFO_LEADING);
             printContext("Degree", education.getDegree());
             printContext("School", education.getSchool());
-            if (education.getSpecialty() == null) {printContext("Specialty", "");}
-            else {printContext("Specialty", education.getSpecialty().toString());}
-            if (education.getGraduation() == null) {printContext("Graduation", "");}
-            else {printContext("Graduation", education.getGraduation().toString());}
+            if (education.getSpecialty() == null) {
+                printContext("Specialty", "");
+            } else {
+                printContext("Specialty", education.getSpecialty().toString());
+            }
+            if (education.getGraduation() == null) {
+                printContext("Graduation", "");
+            } else {
+                printContext("Graduation", education.getGraduation().toString());
+            }
             this.contentStream.endText();
             boolean printExistsJob = jobs.stream()
                     .anyMatch(t -> t.getPrintPdf().equals(true));
@@ -228,18 +234,27 @@ public class CreateResumePdf {
                     if (job.getPrintPdf()) {
 
                         this.yCoordinate -= LEADING_LINE;
-                        if (job.getDescription() == null) {countLineForBlock += 1;}
-                        else {countLineForBlock += countDescriptionLine(job.getDescription());}
+                        if (job.getDescription() == null) {
+                            countLineForBlock += 1;
+                        } else {
+                            countLineForBlock += countDescriptionLine(job.getDescription());
+                        }
 
                         experienceHeader(countLineForBlock);
                         printContext("Position", job.getPosition());
                         printContext(job.getBegin(), job.getEnd());
 
-                        if (job.getCompanyName() == null) {printContext("Company", "");}
-                        else {printContext("Company", job.getCompanyName());}
+                        if (job.getCompanyName() == null) {
+                            printContext("Company", "");
+                        } else {
+                            printContext("Company", job.getCompanyName());
+                        }
 
-                        if (job.getDescription() == null) {printContext("Description", "");}
-                        else {printContext("Description", job.getDescription());}
+                        if (job.getDescription() == null) {
+                            printContext("Description", "");
+                        } else {
+                            printContext("Description", job.getDescription());
+                        }
 
                         this.yCoordinate -= INFO_LEADING;
                         this.xCoordinate = BORDER_LEFT;
@@ -271,7 +286,7 @@ public class CreateResumePdf {
                     createNewPage();
 
                     this.xCoordinate = this.page.getMediaBox().getLowerLeftX() + BORDER_LEFT;
-                    this.yCoordinate -=  SUBTITLE_LEADING;
+                    this.yCoordinate -= SUBTITLE_LEADING;
 
                 }
 
@@ -295,14 +310,20 @@ public class CreateResumePdf {
                     if (skill.getPrintPdf()) {
 
                         this.yCoordinate -= LEADING_LINE;
-                        if (skill.getDescription() == null) {countLineForBlock += 1;}
-                        else {countLineForBlock += countDescriptionLine(skill.getDescription());}
+                        if (skill.getDescription() == null) {
+                            countLineForBlock += 1;
+                        } else {
+                            countLineForBlock += countDescriptionLine(skill.getDescription());
+                        }
 
                         experienceHeader(countLineForBlock);
                         printContext("Title", skill.getTitle());
 
-                        if (skill.getDescription() == null) {printContext("Description", "");}
-                        else {printContext("Description", skill.getDescription());}
+                        if (skill.getDescription() == null) {
+                            printContext("Description", "");
+                        } else {
+                            printContext("Description", skill.getDescription());
+                        }
 
                         this.yCoordinate -= INFO_LEADING;
                         this.xCoordinate = BORDER_LEFT;
@@ -441,7 +462,9 @@ public class CreateResumePdf {
                     }
                 }
 
-                if (buildLine.length() != 0) {listContext.add(buildLine.toString());}
+                if (buildLine.length() != 0) {
+                    listContext.add(buildLine.toString());
+                }
 
                 for (String line : listContext) {
 
@@ -587,10 +610,5 @@ public class CreateResumePdf {
 
     }
 
-
-
 }
 
-
-
-}

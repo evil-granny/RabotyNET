@@ -1,14 +1,13 @@
 package ua.softserve.ita.dao.impl.search;
 
 import lombok.extern.slf4j.Slf4j;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ua.softserve.ita.dto.SearchDTO.SearchRequestDTO;
-import ua.softserve.ita.dto.SearchDTO.SearchVacancyDTO;
-import ua.softserve.ita.dto.SearchDTO.SearchVacancyResponseDTO;
+import ua.softserve.ita.dto.search.SearchRequestDto;
+import ua.softserve.ita.dto.search.SearchVacancyDto;
+import ua.softserve.ita.dto.search.SearchVacancyResponseDto;
 
 import javax.persistence.Tuple;
 import java.math.BigInteger;
@@ -54,7 +53,7 @@ public class SearchVacancyDao {
                 .setParameter(SEARCH_TEXT, "%" + searchText + "%").getSingleResult();
     }
 
-    private List<SearchVacancyDTO> getResult(String query, String searchText,
+    private List<SearchVacancyDto> getResult(String query, String searchText,
                                              int resultsOnPage, int firstResultNumber) {
         List<Tuple> tupleList = session.createNativeQuery(query, Tuple.class)
                 .setParameter(SEARCH_TEXT, "%" + searchText + "%")
@@ -62,9 +61,9 @@ public class SearchVacancyDao {
                 .setMaxResults(resultsOnPage)
                 .getResultList();
 
-        List<SearchVacancyDTO> dtoList = new ArrayList<>();
+        List<SearchVacancyDto> dtoList = new ArrayList<>();
         for (Tuple tuple : tupleList) {
-            dtoList.add(SearchVacancyDTO.builder()
+            dtoList.add(SearchVacancyDto.builder()
                     .vacancyId(tuple.get("vacancy_id", BigInteger.class))
                     .companyId(tuple.get("company_id", BigInteger.class))
                     .position(tuple.get("position", String.class))
@@ -129,16 +128,17 @@ public class SearchVacancyDao {
         return queryBuilder.toString();
     }
 
-    public SearchVacancyResponseDTO getResponse(SearchRequestDTO searchRequestDTO) {
-        return SearchVacancyResponseDTO.builder()
-                .count(getCount(getQuery(true, searchRequestDTO.getSearchParameter(),
-                        searchRequestDTO.getSearchSort(), searchRequestDTO.getDirection())
-                        , searchRequestDTO.getSearchText()))
-                .searchVacancyDTOS(getResult(getQuery(false,
-                        searchRequestDTO.getSearchParameter(), searchRequestDTO.getSearchSort()
-                        , searchRequestDTO.getDirection())
-                        , searchRequestDTO.getSearchText(), searchRequestDTO.getResultsOnPage()
-                        , searchRequestDTO.getFirstResultNumber()))
+    public SearchVacancyResponseDto getResponse(SearchRequestDto searchRequestDto) {
+        return SearchVacancyResponseDto.builder()
+                .count(getCount(getQuery(true, searchRequestDto.getSearchParameter(),
+                        searchRequestDto.getSearchSort(), searchRequestDto.getDirection())
+                        , searchRequestDto.getSearchText()))
+                .searchVacancyDtos(getResult(getQuery(false,
+                        searchRequestDto.getSearchParameter(), searchRequestDto.getSearchSort()
+                        , searchRequestDto.getDirection())
+                        , searchRequestDto.getSearchText(), searchRequestDto.getResultsOnPage()
+                        , searchRequestDto.getFirstResultNumber()))
                 .build();
     }
+
 }

@@ -22,14 +22,13 @@ import java.util.Optional;
 @Transactional
 class UserServiceImpl implements UserService {
 
-    private static String USER = "user";
+    private static final String USER = "user";
+
     private final UserDao userDao;
     private final RoleService roleService;
     private final PersonService personService;
 
-
-    private final
-    BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
     public UserServiceImpl(UserDao userDao, BCryptPasswordEncoder bCryptPasswordEncoder, RoleService roleService, PersonService personService) {
@@ -55,7 +54,7 @@ class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User createDTO(UserDto userDto)  {
+    public User createDTO(UserDto userDto) {
         if (emailExists(userDto.getLogin())) {
             throw new UserAlreadyExistException("There is an account with that email address: " + userDto.getLogin());
         }
@@ -66,8 +65,13 @@ class UserServiceImpl implements UserService {
         List<Role> roles = new ArrayList<>();
         roles.add(role);
         user.setRoles(roles);
+
+        User savedUser = userDao.save(user);
+        System.out.println(savedUser);
+
         Person person = new Person();
-        person.setUserId(userDao.save(user).getUserId());
+        person.setUserId(savedUser.getUserId());
+        person.getContact().setEmail(user.getLogin());
         personService.save(person);
         return user;
     }

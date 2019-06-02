@@ -1,6 +1,9 @@
 package ua.softserve.ita.dto.search;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+
+import java.math.BigInteger;
 
 @Data
 @Builder

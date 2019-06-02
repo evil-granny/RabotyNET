@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import ua.softserve.ita.dao.impl.search.SearchResumeDao;
 import ua.softserve.ita.dto.search.SearchRequestDto;
 import ua.softserve.ita.dto.search.SearchResumeResponseDto;
+import ua.softserve.ita.service.SearchService;
 
 @Component
 @Slf4j

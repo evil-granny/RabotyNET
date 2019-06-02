@@ -7,8 +7,8 @@ import org.hibernate.cfg.Configuration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ua.softserve.ita.dao.impl.search.SearchResumeDao;
-import ua.softserve.ita.dto.SearchDTO.SearchRequestDTO;
-import ua.softserve.ita.dto.SearchDTO.SearchResumeResponseDTO;
+import ua.softserve.ita.dto.search.SearchRequestDto;
+import ua.softserve.ita.dto.search.SearchResumeResponseDto;
 import ua.softserve.ita.model.*;
 import ua.softserve.ita.model.enumtype.Currency;
 import ua.softserve.ita.model.enumtype.Employment;
@@ -19,7 +19,9 @@ import ua.softserve.ita.model.profile.Contact;
 import ua.softserve.ita.model.profile.Person;
 import ua.softserve.ita.model.profile.Photo;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -244,8 +246,8 @@ class SearchResumeDaoTest {
 
     List<Role> getCownerRole() {
         List<Role> cownerRoleList = new ArrayList<>();
-        cownerRoleList .add(cownerRole);
-        return cownerRoleList ;
+        cownerRoleList.add(cownerRole);
+        return cownerRoleList;
     }
 
     private void insertResume(int count, Session session) {
@@ -367,18 +369,16 @@ class SearchResumeDaoTest {
 
     @Test
     void getResponse() {
-        SearchRequestDTO searchRequestDTO = new SearchRequestDTO();
-        searchRequestDTO.setSearchParameter("position");
-        searchRequestDTO.setSearchText("Java ");
-        searchRequestDTO.setFirstResultNumber(0);
-        searchRequestDTO.setResultsOnPage(5000);
-        searchRequestDTO.setDirection("asc");
-        searchRequestDTO.setSearchSort("position");
+        SearchRequestDto searchRequestDto = new SearchRequestDto();
+        searchRequestDto.setSearchParameter("position");
+        searchRequestDto.setSearchText("Java ");
+        searchRequestDto.setFirstResultNumber(0);
+        searchRequestDto.setResultsOnPage(5000);
+        searchRequestDto.setDirection("asc");
+        searchRequestDto.setSearchSort("position");
         SearchResumeDao searchResumeDao = new SearchResumeDao(sessionFactory);
-        SearchResumeResponseDTO searchResumeResponseDTO = searchResumeDao.getResponse(searchRequestDTO);
-        assertEquals(searchResumeResponseDTO.getCount().intValue(), searchResumeResponseDTO.getSearchResumeDTOS().size());
+        SearchResumeResponseDto searchResumeResponseDto = searchResumeDao.getResponse(searchRequestDto);
+        assertEquals(searchResumeResponseDto.getCount().intValue(), searchResumeResponseDto.getSearchResumeDtos().size());
     }
 
-
 }
-

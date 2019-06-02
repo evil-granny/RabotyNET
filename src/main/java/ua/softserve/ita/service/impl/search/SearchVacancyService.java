@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import ua.softserve.ita.dao.impl.search.SearchVacancyDao;
 import ua.softserve.ita.dto.search.SearchRequestDto;
 import ua.softserve.ita.dto.search.SearchVacancyResponseDto;
+import ua.softserve.ita.service.SearchService;
 
 
 @Component
@@ -20,8 +21,8 @@ public class SearchVacancyService implements SearchService<SearchVacancyResponse
     }
 
     @Override
-    public SearchVacancyResponseDto getResponse(SearchRequestDto searchRequestDTO) {
-        return searchVacancyDao.getResponse(searchRequestDTO);
+    public SearchVacancyResponseDto getResponse(SearchRequestDto searchRequestDto) {
+        return searchVacancyDao.getResponse(searchRequestDto);
     }
 
 }

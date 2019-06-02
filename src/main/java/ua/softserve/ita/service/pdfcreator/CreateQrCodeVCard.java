@@ -6,7 +6,7 @@ import net.glxn.qrgen.javase.QRCode;
 import org.springframework.stereotype.Service;
 import ua.softserve.ita.model.Resume;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
 
 @Service("createQR")
 public class CreateQrCodeVCard {

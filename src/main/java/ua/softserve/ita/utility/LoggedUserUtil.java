@@ -6,8 +6,6 @@ import ua.softserve.ita.model.UserPrincipal;
 
 import java.util.Optional;
 
-import static ua.softserve.ita.model.UserPrincipal.UNKNOWN_USER;
-
 public class LoggedUserUtil {
 
     public static Optional<UserPrincipal> getLoggedUser() {

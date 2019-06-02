@@ -8,7 +8,7 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import ua.softserve.ita.controller.CompanyController;
-import ua.softserve.ita.dto.CompanyDTO.CompanyPaginationDTO;
+import ua.softserve.ita.dto.company.CompanyPaginationDto;
 import ua.softserve.ita.exception.CompanyAlreadyExistException;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Company;
@@ -115,12 +115,12 @@ public class CompanyControllerTest {
         List<Company> mockCompanies = new LinkedList<>();
         mockCompanies.add(mockCompany1);
         mockCompanies.add(mockCompany2);
-        CompanyPaginationDTO mockDTO = new CompanyPaginationDTO(ALL_COUNT, mockCompanies);
+        CompanyPaginationDto mockDto = new CompanyPaginationDto(ALL_COUNT, mockCompanies);
 
-        when(companyService.findAllWithPagination(eq(FIRST), eq(COUNT))).thenReturn(mockDTO);
-        CompanyPaginationDTO companyPaginationDTO = controller.getAllWithPagination(FIRST, COUNT);
+        when(companyService.findAllWithPagination(eq(FIRST), eq(COUNT))).thenReturn(mockDto);
+        CompanyPaginationDto companyPaginationDto = controller.getAllWithPagination(FIRST, COUNT);
 
-        assertEquals(mockDTO, companyPaginationDTO);
+        assertEquals(mockDto, companyPaginationDto);
 
         verify(companyService, times(1)).findAllWithPagination(eq(FIRST), eq(COUNT));
         verifyNoMoreInteractions(companyService);
@@ -310,4 +310,5 @@ public class CompanyControllerTest {
         verify(companyService, times(1)).findCompanyByVacancyId(eq(VACANCY_ID));
         verifyNoMoreInteractions(companyService);
     }
+
 }

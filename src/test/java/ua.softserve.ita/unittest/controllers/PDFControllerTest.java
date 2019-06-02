@@ -8,18 +8,16 @@ import org.mockito.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
 import ua.softserve.ita.controller.PDFController;
 import ua.softserve.ita.model.Resume;
-import ua.softserve.ita.model.Vacancy;
 import ua.softserve.ita.service.PdfResumeService;
 import ua.softserve.ita.service.ResumeService;
 import ua.softserve.ita.service.VacancyService;
 import ua.softserve.ita.service.letter.GenerateLetter;
-import ua.softserve.ita.service.pdfcreater.CreateResumePdf;
+import ua.softserve.ita.service.pdfcreator.CreateResumePdf;
 
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @RunWith(PowerMockRunner.class)
 public class PDFControllerTest {
@@ -44,12 +42,12 @@ public class PDFControllerTest {
     private static final long ID = 1;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         this.controller = new PDFController(resumeService, generateService, pdfService, pdfResumeService, vacancyService);
     }
 
     @Test
-    public void getResumeById()  {
+    public void getResumeById() {
         Resume mockResume = new Resume();
         when(resumeService.findById(eq(ID))).thenReturn(Optional.of(mockResume));
         Resume resumeById = controller.getCV(ID);
@@ -59,7 +57,7 @@ public class PDFControllerTest {
     }
 
     @Test
-    public void updateResume(){
+    public void updateResume() {
         Resume mockResume = Resume.builder()
                 .resumeId(4L)
                 .position("Developer")
@@ -73,4 +71,5 @@ public class PDFControllerTest {
         verify(resumeService, times(1)).update(any(Resume.class));
         verifyNoMoreInteractions(resumeService);
     }
+
 }

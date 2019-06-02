@@ -33,14 +33,14 @@ public class VacancyServiceImpl implements VacancyService {
     private final VacancyDao vacancyDao;
     private final RequirementDao requirementDao;
     private final CompanyDao companyDao;
-    private final ResumeDao resumeDao;
+    private final ResumeService resumeService;
 
     @Autowired
     public VacancyServiceImpl(VacancyDao vacancyDao, RequirementDao requirementDao, CompanyDao companyDao, ResumeDao resumeDao, ResumeService resumeService) {
         this.vacancyDao = vacancyDao;
         this.requirementDao = requirementDao;
         this.companyDao = companyDao;
-        this.resumeDao = resumeDao;
+        this.resumeService = resumeService;
     }
 
     @Override

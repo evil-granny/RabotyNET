@@ -23,11 +23,11 @@ import java.util.List;
         @NamedQuery(name = User.FIND_USER_BY_ID, query = "select user from User user where user.userId = :id"),
         @NamedQuery(name = User.FIND_USER_BY_EMAIL, query = "select user from User user where user.login = :login"),
         @NamedQuery(name = User.GET_USER_WITH_ROLES, query = "select user from User user join user.roles where user.login = :login")
-}
-)
+})
 public class User implements Serializable, UserDetails {
 
     private static final long serialVersionUID = 1L;
+
     public static final String FIND_USER_BY_ID = "User.findUserById";
     public static final String FIND_USER_BY_EMAIL = "User.findUserByEmail";
     public static final String GET_USER_WITH_ROLES = "User.getUserWithRoles";
@@ -90,4 +90,5 @@ public class User implements Serializable, UserDetails {
     public boolean isCredentialsNonExpired() {
         return true;
     }
+
 }

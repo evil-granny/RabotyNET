@@ -10,7 +10,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import ua.softserve.ita.dao.CompanyDao;
 import ua.softserve.ita.dao.RoleDao;
 import ua.softserve.ita.dao.UserDao;
-import ua.softserve.ita.dto.CompanyDTO.CompanyPaginationDTO;
+import ua.softserve.ita.dto.company.CompanyPaginationDto;
 import ua.softserve.ita.exception.ResourceNotFoundException;
 import ua.softserve.ita.model.Company;
 import ua.softserve.ita.model.Role;
@@ -119,13 +119,13 @@ public class CompanyServiceTest {
         List<Company> mockCompanies = new LinkedList<>();
         mockCompanies.add(mockCompany1);
         mockCompanies.add(mockCompany2);
-        CompanyPaginationDTO mockDTO = new CompanyPaginationDTO(ALL_COUNT, mockCompanies);
+        CompanyPaginationDto mockDto = new CompanyPaginationDto(ALL_COUNT, mockCompanies);
 
         when(companyDao.findWithPagination(eq(FIRST), eq(COUNT))).thenReturn(mockCompanies);
         when(companyDao.getCompaniesCount()).thenReturn(ALL_COUNT);
-        CompanyPaginationDTO companyPaginationDTO = service.findAllWithPagination(FIRST, COUNT);
+        CompanyPaginationDto companyPaginationDto = service.findAllWithPagination(FIRST, COUNT);
 
-        assertEquals(mockDTO, companyPaginationDTO);
+        assertEquals(mockDto, companyPaginationDto);
 
         verify(companyDao, times(1)).findWithPagination(eq(FIRST), eq(COUNT));
         verify(companyDao, times(1)).getCompaniesCount();
@@ -379,4 +379,5 @@ public class CompanyServiceTest {
         verify(companyDao, times(1)).findByVacancyId(eq(VACANCY_ID));
         verifyNoMoreInteractions(companyDao);
     }
+
 }

@@ -1,14 +1,13 @@
 package ua.softserve.ita.dao.impl.search;
 
 import lombok.extern.slf4j.Slf4j;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import ua.softserve.ita.dto.SearchDTO.SearchRequestDTO;
-import ua.softserve.ita.dto.SearchDTO.SearchResumeDTO;
-import ua.softserve.ita.dto.SearchDTO.SearchResumeResponseDTO;
+import ua.softserve.ita.dto.search.SearchRequestDto;
+import ua.softserve.ita.dto.search.SearchResumeDto;
+import ua.softserve.ita.dto.search.SearchResumeResponseDto;
 
 import javax.persistence.Tuple;
 import java.math.BigInteger;
@@ -64,7 +63,7 @@ public class SearchResumeDao {
                 .setParameter(SEARCH_TEXT, "%" + searchText + "%").getSingleResult();
     }
 
-    private List<SearchResumeDTO> getResult(String query, String searchText,
+    private List<SearchResumeDto> getResult(String query, String searchText,
                                             int resultsOnPage, int firstResultNumber) {
 
         List<Tuple> tupleList = session.createNativeQuery(query, Tuple.class)
@@ -73,9 +72,9 @@ public class SearchResumeDao {
                 .setMaxResults(resultsOnPage)
                 .getResultList();
 
-        List<SearchResumeDTO> dtoList = new ArrayList<>();
+        List<SearchResumeDto> dtoList = new ArrayList<>();
         for (Tuple tuple : tupleList) {
-            dtoList.add(SearchResumeDTO.builder()
+            dtoList.add(SearchResumeDto.builder()
                     .id(tuple.get("user_id", BigInteger.class))
                     .firstName(tuple.get("first_name", String.class))
                     .lastName(tuple.get("last_name", String.class))
@@ -149,19 +148,20 @@ public class SearchResumeDao {
         return queryBuilder.toString();
     }
 
-    public SearchResumeResponseDTO getResponse(SearchRequestDTO searchRequestDTO) {
-        SearchResumeResponseDTO searchResumeResponseDTO = SearchResumeResponseDTO.builder()
-                .count(getCount(getQuery(true, searchRequestDTO.getSearchParameter(),
-                        searchRequestDTO.getSearchSort(), searchRequestDTO.getDirection())
-                        , searchRequestDTO.getSearchText()))
-                .searchResumeDTOS(getResult(getQuery(false,
-                        searchRequestDTO.getSearchParameter(), searchRequestDTO.getSearchSort()
-                        , searchRequestDTO.getDirection())
-                        , searchRequestDTO.getSearchText()
-                        , searchRequestDTO.getResultsOnPage()
-                        , searchRequestDTO.getFirstResultNumber()))
+    public SearchResumeResponseDto getResponse(SearchRequestDto searchRequestDto) {
+        SearchResumeResponseDto searchResumeResponseDTO = SearchResumeResponseDto.builder()
+                .count(getCount(getQuery(true, searchRequestDto.getSearchParameter(),
+                        searchRequestDto.getSearchSort(), searchRequestDto.getDirection())
+                        , searchRequestDto.getSearchText()))
+                .searchResumeDtos(getResult(getQuery(false,
+                        searchRequestDto.getSearchParameter(), searchRequestDto.getSearchSort()
+                        , searchRequestDto.getDirection())
+                        , searchRequestDto.getSearchText()
+                        , searchRequestDto.getResultsOnPage()
+                        , searchRequestDto.getFirstResultNumber()))
                 .build();
         log.info("searchResumeResponseDTO = " + searchResumeResponseDTO.toString());
         return searchResumeResponseDTO;
     }
+
 }
