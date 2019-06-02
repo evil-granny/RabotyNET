@@ -74,6 +74,7 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
                 User user = verificationToken.getUser();
                 user.setEnabled(true);
                 userDao.update(user);
+                verificationTokenDao.delete(verificationToken);
                 return TOKEN_VALID;
             }
         } else

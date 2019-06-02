@@ -5,12 +5,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.softserve.ita.dao.UserDao;
-import ua.softserve.ita.dao.VerificationTokenDao;
 import ua.softserve.ita.dto.UserDto;
 import ua.softserve.ita.exception.UserAlreadyExistException;
 import ua.softserve.ita.model.Role;
 import ua.softserve.ita.model.User;
-import ua.softserve.ita.model.VerificationToken;
+import ua.softserve.ita.model.profile.Person;
+import ua.softserve.ita.service.PersonService;
 import ua.softserve.ita.service.RoleService;
 import ua.softserve.ita.service.UserService;
 
@@ -20,22 +20,23 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class UserServiceImpl implements UserService {
+class UserServiceImpl implements UserService {
 
+    private static String USER = "user";
     private final UserDao userDao;
-    private final VerificationTokenDao verificationTokenDao;
     private final RoleService roleService;
+    private final PersonService personService;
 
 
     private final
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserDao userDao, BCryptPasswordEncoder bCryptPasswordEncoder, VerificationTokenDao verificationTokenDao, RoleService roleService) {
+    public UserServiceImpl(UserDao userDao, BCryptPasswordEncoder bCryptPasswordEncoder, RoleService roleService, PersonService personService) {
         this.userDao = userDao;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.verificationTokenDao = verificationTokenDao;
         this.roleService = roleService;
+        this.personService = personService;
     }
 
     @Override
@@ -61,11 +62,14 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setLogin(userDto.getLogin());
         user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
-        Role role = roleService.findByType("user");
+        Role role = roleService.findByType(USER);
         List<Role> roles = new ArrayList<>();
         roles.add(role);
         user.setRoles(roles);
-        return userDao.save(user);
+        Person person = new Person();
+        person.setUserId(userDao.save(user).getUserId());
+        personService.save(person);
+        return user;
     }
 
     @Override
@@ -76,11 +80,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteById(Long id) {
         userDao.deleteById(id);
-    }
-
-    @Override
-    public Optional<VerificationToken> findByToken(String token) {
-       return verificationTokenDao.findVerificationToken(token);
     }
 
     @Override
