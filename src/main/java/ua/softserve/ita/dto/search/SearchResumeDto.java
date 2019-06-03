@@ -1,12 +1,13 @@
 package ua.softserve.ita.dto.search;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.math.BigInteger;
 
-@Data
-@Builder
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
 public class SearchResumeDto {
 
     private BigInteger id;

@@ -74,16 +74,40 @@ public class SearchResumeDao {
 
         List<SearchResumeDto> dtoList = new ArrayList<>();
         for (Tuple tuple : tupleList) {
-            dtoList.add(SearchResumeDto.builder()
-                    .id(tuple.get("user_id", BigInteger.class))
-                    .firstName(tuple.get("first_name", String.class))
-                    .lastName(tuple.get("last_name", String.class))
-                    .age(Period.between(tuple.get("birthday", java.sql.Date.class).toLocalDate(), LocalDate.now()).getYears())
-                    .position(tuple.get("position", String.class))
-                    .resumeId(tuple.get("resume_id", BigInteger.class))
-                    .city(tuple.get("city", String.class))
-                    .phoneNumber(tuple.get("phone_number", String.class))
-                    .build());
+            SearchResumeDto searchResumeDto = new SearchResumeDto();
+            searchResumeDto.setId(tuple.get("user_id", BigInteger.class));
+            try {
+                searchResumeDto.setFirstName(tuple.get("first_name", String.class));
+            } catch (IllegalArgumentException e) {
+                searchResumeDto.setFirstName("");
+            }
+            try {
+                searchResumeDto.setLastName(tuple.get("last_name", String.class));
+            } catch (IllegalArgumentException e) {
+                searchResumeDto.setLastName("");
+            }
+            try {
+                searchResumeDto.setAge(Period.between(tuple.get("birthday", java.sql.Date.class).toLocalDate(), LocalDate.now()).getYears());
+            } catch (IllegalArgumentException e) {
+                searchResumeDto.setAge(0);
+            }
+            try {
+                searchResumeDto.setPosition(tuple.get("position", String.class));
+            } catch (IllegalArgumentException e) {
+                searchResumeDto.setPosition("");
+            }
+            searchResumeDto.setResumeId(tuple.get("resume_id", BigInteger.class));
+            try {
+                searchResumeDto.setCity(tuple.get("city", String.class));
+            } catch (IllegalArgumentException e) {
+                searchResumeDto.setCity("");
+            }
+            try {
+                searchResumeDto.setPhoneNumber(tuple.get("phone_number", String.class));
+            } catch (IllegalArgumentException e) {
+                searchResumeDto.setPhoneNumber("");
+            }
+            dtoList.add(searchResumeDto);
         }
         return dtoList;
     }
@@ -160,7 +184,7 @@ public class SearchResumeDao {
                         , searchRequestDto.getResultsOnPage()
                         , searchRequestDto.getFirstResultNumber()))
                 .build();
-        log.info("searchResumeResponseDTO = " + searchResumeResponseDTO.toString());
+        log.info("Resume response = " + searchResumeResponseDTO.toString());
         return searchResumeResponseDTO;
     }
 

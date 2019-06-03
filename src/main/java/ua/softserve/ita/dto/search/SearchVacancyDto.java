@@ -1,16 +1,13 @@
 package ua.softserve.ita.dto.search;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.math.BigInteger;
 
 @Getter
 @Setter
 @ToString
-@Builder
+@NoArgsConstructor
 public class SearchVacancyDto {
 
     private BigInteger vacancyId;

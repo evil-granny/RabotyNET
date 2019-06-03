@@ -40,8 +40,8 @@ class SearchResumeDaoTest {
             {"Java", "Python", "Angular", "JavaScript", "Fortran", "HTML", "CSS", "Scala", "Assembler"};
     private String[] ranks = {"Junior", "Middle", "Senior"};
     private String[] positions = {"Developer", "QATC"};
-    private String[] companies = {"Meta Cortex", "Google", "Microsoft", "Apple", "Amazon", "USA Government", "IBM",
-            "Tesla", "GMC", "Cyberdyne Systems", "Umbrella", "Omni Consumer Products"};
+    private String[] companies = {"Meta Cortex", "Google", "Microsoft", "Apple", "Amazon", "USA Government", "IBM Tech",
+            "Tesla", "Atlantis", "Cyberdyne Systems", "Umbrella", "Omni Consumer Products"};
     private String[] universities = {"Stanford University", "Massachusetts Institute",
             "Harvard University", "Princeton University", "University of Chicago"};
     private List<Employment> employmentList = new ArrayList<>();
@@ -81,13 +81,6 @@ class SearchResumeDaoTest {
         long maxDay = LocalDate.of(2000, 12, 31).toEpochDay();
         long randomDay = ThreadLocalRandom.current().nextLong(minDay, maxDay);
         return LocalDate.ofEpochDay(randomDay);
-    }
-
-    private User getUser() {
-        User user = new User();
-        user.setLogin((random.nextInt(70000) + 10000) + "@gmail.com");
-        user.setPassword("password");
-        return user;
     }
 
     private Address getAddress(long id) {
@@ -199,10 +192,10 @@ class SearchResumeDaoTest {
                 languages[random.nextInt(languages.length)] + " " +
                 positions[random.nextInt(positions.length)]);
         vacancy.setEmployment(employmentList.get(random.nextInt(employmentList.size())));
-        vacancy.setSalary(random.nextInt(5) * 1000 + 500);
+//        vacancy.setSalary(random.nextInt(5) * 1000 + 500);
         vacancy.setVacancyStatus(vacancyStatusList.get(random.nextInt(vacancyStatusList.size())));
         vacancy.setHotVacancy(random.nextInt(5) % 2 != 0);
-        vacancy.setCurrency(currencyList.get(random.nextInt(currencyList.size())));
+//        vacancy.setCurrency(currencyList.get(random.nextInt(currencyList.size())));
         vacancy.setCompany(company);
         return vacancy;
     }
@@ -255,11 +248,7 @@ class SearchResumeDaoTest {
             session.beginTransaction();
 
             User user = new User();
-            if (i == 1) {
-                user.setLogin("user@gmail.com");
-            } else {
-                user.setLogin("user" + i + "@gmail.com");
-            }
+            user.setLogin("user" + i + "@gmail.com");
             user.setPassword("$2a$10$t31PsVNWl8eaWr9/gPwKKeX.4Q2grl12wmiRrN9fEZDMlMGHwA92m");
             user.setEnabled(true);
             user.setRoles(getUserRole());
@@ -296,11 +285,7 @@ class SearchResumeDaoTest {
         for (int i = 1; i <= count; i++) {
             session.beginTransaction();
             User cownerUser = new User();
-            if (i == 1) {
-                cownerUser.setLogin("cowner@gmail.com");
-            } else {
-                cownerUser.setLogin("cowner" + i + "@gmail.com");
-            }
+            cownerUser.setLogin("cowner" + i + "@gmail.com");
             cownerUser.setPassword("$2a$10$DmeWO6UlY/m2QjJaxLGUzezqOotvJmpzbBmZGBr8o/HHeNUuCWcpK");
             cownerUser.setEnabled(true);
             cownerUser.setRoles(getCownerRole());

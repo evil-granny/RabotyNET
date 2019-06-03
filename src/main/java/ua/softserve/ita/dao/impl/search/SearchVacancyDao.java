@@ -63,16 +63,40 @@ public class SearchVacancyDao {
 
         List<SearchVacancyDto> dtoList = new ArrayList<>();
         for (Tuple tuple : tupleList) {
-            dtoList.add(SearchVacancyDto.builder()
-                    .vacancyId(tuple.get("vacancy_id", BigInteger.class))
-                    .companyId(tuple.get("company_id", BigInteger.class))
-                    .position(tuple.get("position", String.class))
-                    .companyName(tuple.get("name", String.class))
-                    .city(tuple.get("city", String.class))
-                    .employment(tuple.get("employment", String.class))
-                    .salary(tuple.get("salary", Integer.class))
-                    .currency(tuple.get("currency", String.class))
-                    .build());
+            SearchVacancyDto searchVacancyDto = new SearchVacancyDto();
+            searchVacancyDto.setVacancyId(tuple.get("vacancy_id", BigInteger.class));
+            searchVacancyDto.setCompanyId(tuple.get("company_id", BigInteger.class));
+            try {
+                searchVacancyDto.setPosition(tuple.get("position", String.class));
+            } catch (IllegalArgumentException e) {
+                searchVacancyDto.setPosition("");
+            }
+            try {
+                searchVacancyDto.setCompanyName(tuple.get("name", String.class));
+            } catch (IllegalArgumentException e) {
+                searchVacancyDto.setCompanyName("");
+            }
+            try {
+                searchVacancyDto.setCity(tuple.get("city", String.class));
+            } catch (IllegalArgumentException e) {
+                searchVacancyDto.setCity("");
+            }
+            try {
+                searchVacancyDto.setEmployment(tuple.get("employment", String.class));
+            } catch (IllegalArgumentException e) {
+                searchVacancyDto.setEmployment("");
+            }
+            try {
+                searchVacancyDto.setSalary(tuple.get("salary", Integer.class));
+            } catch (IllegalArgumentException e) {
+                searchVacancyDto.setSalary(0);
+            }
+            try {
+                searchVacancyDto.setCurrency(tuple.get("currency", String.class));
+            } catch (IllegalArgumentException e) {
+                searchVacancyDto.setCurrency("");
+            }
+            dtoList.add(searchVacancyDto);
         }
         return dtoList;
     }
@@ -129,7 +153,7 @@ public class SearchVacancyDao {
     }
 
     public SearchVacancyResponseDto getResponse(SearchRequestDto searchRequestDto) {
-        return SearchVacancyResponseDto.builder()
+        SearchVacancyResponseDto searchVacancyResponseDto = SearchVacancyResponseDto.builder()
                 .count(getCount(getQuery(true, searchRequestDto.getSearchParameter(),
                         searchRequestDto.getSearchSort(), searchRequestDto.getDirection())
                         , searchRequestDto.getSearchText()))
@@ -139,6 +163,7 @@ public class SearchVacancyDao {
                         , searchRequestDto.getSearchText(), searchRequestDto.getResultsOnPage()
                         , searchRequestDto.getFirstResultNumber()))
                 .build();
+        log.info("Vacancy response = " + searchVacancyResponseDto.toString());
+        return searchVacancyResponseDto;
     }
-
 }
