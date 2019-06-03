@@ -110,32 +110,32 @@ INSERT INTO public.company(
   VALUES ('Third company', 63964221, 'ValSoft', 'BLOCKED', 'www.valsoft.com', 5, 5, null, 2);
 
 INSERT INTO public.vacancy(
-   description, "position", salary, employment, vacancy_status, company_id)
-  VALUES ('Junior Java Developer', 'Junior Developer', 1000, 'FULL', 'OCCUPIED', 1);
+   description, "position", salary, currency, employment, vacancy_status, company_id)
+  VALUES ('Junior Java Developer', 'Junior Developer', 1000, 'USD', 'FULL', 'OCCUPIED', 1);
 INSERT INTO public.vacancy(
-   description, "position", salary, employment, vacancy_status, company_id)
-  VALUES ('Middle React Developer', 'Middle Developer', 3000, 'HOURLY', 'OUTDATED', 1);
+   description, "position", salary, currency, employment, vacancy_status, company_id)
+  VALUES ('Middle React Developer', 'Middle Developer', 3000, 'UAH', 'HOURLY', 'OUTDATED', 1);
 INSERT INTO public.vacancy(
-   description, "position", salary, employment, vacancy_status, company_id)
-  VALUES ('Senior Angular Developer', 'Senior Developer', 4000, 'PART_TIME', 'OUTDATED', 1);
+   description, "position", salary, currency, employment, vacancy_status, company_id)
+  VALUES ('Senior Angular Developer', 'Senior Developer', 4000, 'UAH', 'PART_TIME', 'OUTDATED', 1);
 INSERT INTO public.vacancy(
-   description, "position", salary, employment, vacancy_status, company_id)
-  VALUES ('Junior Junior Developer', 'Junior Developer', 1000, 'FULL', 'OPEN', 1);
+   description, "position", salary, currency, employment, vacancy_status, company_id)
+  VALUES ('Junior Junior Developer', 'Junior Developer', 1000, 'EUR', 'FULL', 'OPEN', 1);
 INSERT INTO public.vacancy(
-   description, "position", salary, employment, vacancy_status, company_id)
-  VALUES ('Middle WebUI Developer', 'Middle Developer', 3000, 'HOURLY', 'OPEN', 1);
+   description, "position", salary, currency, employment, vacancy_status, company_id)
+  VALUES ('Middle WebUI Developer', 'Middle Developer', 3000, 'EUR', 'HOURLY', 'OPEN', 1);
 INSERT INTO public.vacancy(
-   description, "position", salary, hot_vacancy ,employment, vacancy_status, company_id)
-  VALUES ('Senior Angular Developer', 'Senior Developer', 4000, true, 'PART_TIME', 'OPEN', 1);
+   description, "position", salary, currency, hot_vacancy ,employment, vacancy_status, company_id)
+  VALUES ('Senior Angular Developer', 'Senior Developer', 4000, 'USD', true, 'PART_TIME', 'OPEN', 1);
 INSERT INTO public.vacancy(
-   description, "position", salary, employment, vacancy_status, company_id)
-  VALUES ('Junior Java Developer', 'Junior Developer', 1000, 'FULL', 'OPEN', 3);
+   description, "position", salary, currency, employment, vacancy_status, company_id)
+  VALUES ('Junior Java Developer', 'Junior Developer', 1000, 'USD', 'FULL', 'OPEN', 3);
 INSERT INTO public.vacancy(
-   description, "position", salary, hot_vacancy, employment, vacancy_status, company_id)
-  VALUES ('Middle WebUI Developer', 'Middle Developer', 3000, true, 'HOURLY', 'OPEN', 3);
+   description, "position", salary, currency, hot_vacancy, employment, vacancy_status, company_id)
+  VALUES ('Middle WebUI Developer', 'Middle Developer', 3000, 'UAH',true, 'HOURLY', 'OPEN', 3);
 INSERT INTO public.vacancy(
-   description, "position", salary, hot_vacancy ,employment, vacancy_status, company_id)
-  VALUES ('Senior React Developer', 'Senior Developer', 4000, true, 'PART_TIME', 'OPEN', 3);
+   description, "position", salary, currency, hot_vacancy ,employment, vacancy_status, company_id)
+  VALUES ('Senior React Developer', 'Senior Developer', 4000, 'EUR', true, 'PART_TIME', 'OPEN', 3);
 
 INSERT INTO public.requirement(
    description, vacancy_id)
