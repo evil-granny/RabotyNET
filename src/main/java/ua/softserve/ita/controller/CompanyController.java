@@ -24,7 +24,7 @@ public class CompanyController {
     }
 
     @GetMapping(value = "/byName/{name}")
-    public Company getCompanyByName(@PathVariable("name") String name) {
+    public Company getCompanyById(@PathVariable("name") String name) {
         return companyService.findByName(name).orElseThrow(() -> new ResourceNotFoundException("Company not found with name " + name));
     }
 
@@ -83,7 +83,7 @@ public class CompanyController {
     }
 
     @GetMapping(value = "/byId/{companyId}")
-    public Company getCompanyByName(@PathVariable("companyId") Long companyId) {
+    public Company getCompanyById(@PathVariable("companyId") Long companyId) {
         return companyService.findById(companyId).orElseThrow(() -> new ResourceNotFoundException("Company not found with id " + companyId));
     }
 

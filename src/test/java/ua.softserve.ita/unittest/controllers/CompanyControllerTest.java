@@ -61,7 +61,7 @@ public class CompanyControllerTest {
                 .build();
 
         when(companyService.findByName(eq(COMPANY_NAME))).thenReturn(Optional.of(mockCompany));
-        Company companyByName = controller.getCompanyByName(COMPANY_NAME);
+        Company companyByName = controller.getCompanyById(COMPANY_NAME);
 
         assertEquals(mockCompany, companyByName);
 
@@ -73,7 +73,7 @@ public class CompanyControllerTest {
     public void getCompanyByNameNotFound() {
         when(companyService.findByName(eq(COMPANY_NAME))).thenThrow(new ResourceNotFoundException("Company not found with name " + COMPANY_NAME));
 
-        controller.getCompanyByName(COMPANY_NAME);
+        controller.getCompanyById(COMPANY_NAME);
 
         verify(companyService, times(1)).findByName(eq(COMPANY_NAME));
         verifyNoMoreInteractions(companyService);

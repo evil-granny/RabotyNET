@@ -32,7 +32,7 @@ import java.util.Set;
         @NamedQuery(name = Vacancy.FIND_COUNT_All_VACANCY, query = "select count(vac.vacancyId) from Vacancy vac WHERE vac.company.status = ua.softserve.ita.model.enumtype.Status.APPROVED and vac.vacancyStatus = ua.softserve.ita.model.enumtype.VacancyStatus.OPEN"),
         @NamedQuery(name = Vacancy.FIND_COUNT_HOT_VACANCIES, query = "select count(vac.vacancyId) from Vacancy vac where vac.hotVacancy = true"),
         @NamedQuery(name = Vacancy.FIND_BY_VACANCY_ID, query = "select vac from Vacancy vac where vac.vacancyId = :id"),
-        @NamedQuery(name = Vacancy.FIND_COUNT_CLOSED_VACANCIES, query = "select count(vac.vacancyId) from Vacancy vac where vac.vacancyStatus = ua.softserve.ita.model.enumtype.VacancyStatus.OUTDATED or vac.vacancyStatus = ua.softserve.ita.model.enumtype.VacancyStatus.OCCUPIED"),
+        @NamedQuery(name = Vacancy.FIND_COUNT_CLOSED_VACANCIES, query = "select count(vac.vacancyId) from Vacancy vac where (vac.vacancyStatus = ua.softserve.ita.model.enumtype.VacancyStatus.OUTDATED or vac.vacancyStatus = ua.softserve.ita.model.enumtype.VacancyStatus.OCCUPIED) and vac.company.status = ua.softserve.ita.model.enumtype.Status.APPROVED and vac.company.user.userId = :id"),
 })
 public class Vacancy {
 

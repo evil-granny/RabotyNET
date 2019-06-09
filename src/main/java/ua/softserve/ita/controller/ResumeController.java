@@ -33,9 +33,15 @@ public class ResumeController {
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Resume with id: %d not found", id)));
     }
 
-    @GetMapping(value = "/user")
-    public Resume getResumeByUser() {
-        return resumeService.findByUserId(getLoggedUser().get().getUserId()).orElseThrow(() -> new ResourceNotFoundException("Resume was not found"));
+    @GetMapping(value = "/user/{userId}")
+    public Resume getResumeByUserId(@PathVariable("userId") long userId) {
+        return resumeService.findByUserId(userId)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Resume was not found with user id: %d", userId)));
+    }
+
+    @GetMapping(value = "/exists/{userId}")
+    public boolean exists(@PathVariable("userId") Long userId) {
+        return resumeService.findByUserId(userId).isPresent();
     }
 
     @GetMapping(path = {"/all"})

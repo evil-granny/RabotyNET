@@ -80,91 +80,52 @@ public class AppConfig {
 
     @Bean
     public JavaMailSender getMailSender() {
-
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-
         mailSender.setHost(environment.getProperty("mail.host"));
-
         mailSender.setPort(Integer.parseInt(Objects.requireNonNull(environment.getProperty("mail.port"))));
-
         mailSender.setUsername(environment.getProperty("mail.username"));
-
         mailSender.setPassword(environment.getProperty("mail.password"));
-
         Properties javaMailProperties = new Properties();
-
         javaMailProperties.put("mail.smtp.starttls.enable", Objects.requireNonNull(environment.getProperty("mail.smtp.starttls.enable")));
-
         javaMailProperties.put("mail.smtp.auth", Objects.requireNonNull(environment.getProperty("mail.smtp.auth")));
-
         javaMailProperties.put("mail.transport.protocol", Objects.requireNonNull(environment.getProperty("mail.transport.protocol")));
-
         javaMailProperties.put("mail.debug", Objects.requireNonNull(environment.getProperty("mail.debug")));
-
         mailSender.setJavaMailProperties(javaMailProperties);
-
         return mailSender;
     }
 
     @Bean
     public Path createDirectoryForCvPdf() {
-
         final Logger LOGGER = Logger.getLogger(AppConfig.class.getName());
-
         final String dirPath = "pdf/tempPDFdir";
-
         Path dirPathObj = Paths.get(dirPath);
-
         boolean dirExists = Files.exists(dirPathObj);
-
         if (!dirExists) {
-
             try {
                 Files.createDirectories(dirPathObj);
-
             } catch (IOException e) {
-
                 LOGGER.log(Level.SEVERE, e.toString(), e);
             }
         }
-
         return dirPathObj;
     }
 
     @Scheduled(cron = "${cron.cleanTempFileCvPdf}")
     public void cleanTempFile() {
-
         final String SAVE_DIRECTORY_FOR_PDF_DOC = "pdf/tempPDFdir";
-
         final Logger LOGGER = Logger.getLogger(AppConfig.class.getName());
-
         final String PREFIX_FILE_NAME = "pdfCV";
-
         Path path = Paths.get(SAVE_DIRECTORY_FOR_PDF_DOC);
-
         boolean toClean = false;
-
         try (DirectoryStream<Path> newDirectoryStream = Files.newDirectoryStream(path, "pdfCV" + "*")) {
-
             for (final Path newDirectoryStreamItem : newDirectoryStream) {
-
                 Files.delete(newDirectoryStreamItem);
-
-                System.out.println("hello my cron");
-
                 toClean = true;
-
             }
-
-            if (toClean) pdfResumeService.deleteAll();
-
-            System.out.println("clean table pdf");
-
+            if (toClean)
+                pdfResumeService.deleteAll();
         } catch (final Exception e) {
-
             LOGGER.log(Level.SEVERE, e.toString(), e);
-
         }
     }
-
 }

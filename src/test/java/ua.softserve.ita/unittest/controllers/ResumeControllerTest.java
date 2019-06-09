@@ -23,6 +23,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
+import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(LoggedUserUtil.class)
@@ -90,15 +91,15 @@ public class ResumeControllerTest {
 
         mockStatic(LoggedUserUtil.class);
 
-        when(LoggedUserUtil.getLoggedUser()).thenReturn(Optional.of(new UserPrincipal("user.user@gmail.com","user", new ArrayList<>(), USER_ID)));
+        when(getLoggedUser()).thenReturn(Optional.of(new UserPrincipal("user.user@gmail.com","user", new ArrayList<>(), USER_ID)));
         when(resumeService.findByUserId(eq(USER_ID))).thenReturn(Optional.of(mockResume));
 
-        Resume resumeByUserId = controller.getResumeByUser();
+        Resume resumeByUserId = controller.getResumeByUserId(getLoggedUser().get().getUserId());
 
         assertEquals(mockResume,resumeByUserId);
 
         verifyStatic(LoggedUserUtil.class);
-        LoggedUserUtil.getLoggedUser();
+        getLoggedUser();
         verify(resumeService, times(1)).findByUserId(eq(USER_ID));
         verifyNoMoreInteractions(resumeService);
     }
@@ -107,12 +108,12 @@ public class ResumeControllerTest {
     public void getProductsResumeByUserIdServiceThrowsException()  {
         mockStatic(LoggedUserUtil.class);
 
-        when(LoggedUserUtil.getLoggedUser()).thenReturn(Optional.of(new UserPrincipal("user.user@gmail.com","user", new ArrayList<>(), USER_ID)));
+        when(getLoggedUser()).thenReturn(Optional.of(new UserPrincipal("user.user@gmail.com","user", new ArrayList<>(), USER_ID)));
         when(resumeService.findByUserId(eq(USER_ID))).thenThrow(new ResourceNotFoundException("Resume not found with id "));
-        controller.getResumeByUser();
+        controller.getResumeByUserId(getLoggedUser().get().getUserId());
 
         verifyStatic(LoggedUserUtil.class);
-        LoggedUserUtil.getLoggedUser();
+        getLoggedUser();
         verify(resumeService, times(1)).findByUserId(eq(USER_ID));
         verifyNoMoreInteractions(resumeService);
     }

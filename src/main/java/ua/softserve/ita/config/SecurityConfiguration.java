@@ -50,13 +50,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     };
     private static final String[] CSRF_IGNORE = {"/login/**", "/users/**", "/password/**", "/searchVacancy"};
     private static final String[] ADMIN_URLS = {"/companies/all/**", "/companies/sendMail"};
-    private static final String[] COWNER_URLS = {"/companies/my", "/companies/update", "/companies/delete/**", "/searchResume",
+    private static final String[] COWNER_URLS = {"/companies/my", "/companies/delete/**", "/searchResume",
             "/resume/findByVacancyId/**", "/showResume/**"};
     private static final String[] USER_URLS = {"/users"};
     private static final String[] COWNER_USER_URLS = {"/resume/**", "/companies/create", "/companies/approve", "/people", "/people/*", "people/**"};
     private static final String[] ALL_USERS_URLS = {"/companies/byName/**", "/companies/byCompany/**", "/claims", "/photo/**", "/users/**", "/users/enabled/**",
             "/", "/vacancies/**", "/login", "/login/**", "/password/**", "/healthCheck", "/pdf/**", "/updatePDF", "/createPdf/**",
             "/sendResume/{vacancyId}", "/companies/byVacancyId/**", "/searchVacancy"};
+    private static final String[] COWNER_AND_USER_URLS = {"/companies/update"};
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -89,6 +90,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(COWNER_URLS).access("hasRole('ROLE_COWNER')")
                 .antMatchers(USER_URLS).access("hasRole('ROLE_USER')")
                 .antMatchers(COWNER_USER_URLS).access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
+                .antMatchers(COWNER_AND_USER_URLS).access("hasRole('ROLE_USER') and hasRole('ROLE_COWNER')")
                 .antMatchers(ALL_USERS_URLS).permitAll()
                 .anyRequest().authenticated()
                 .and()

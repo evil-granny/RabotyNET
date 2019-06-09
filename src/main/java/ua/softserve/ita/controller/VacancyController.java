@@ -87,7 +87,6 @@ public class VacancyController {
     @GetMapping("closedVacancies/{first}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<VacancyDto> findAllClosedVacanciesWithPagination(@PathVariable("first") int first) {
-        System.out.println(vacancyService.findAllClosedVacanciesWithPagination(first));
         return ResponseEntity.ok().body(vacancyService.findAllClosedVacanciesWithPagination(first));
     }
 

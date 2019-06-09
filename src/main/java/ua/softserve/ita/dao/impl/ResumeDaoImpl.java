@@ -26,7 +26,7 @@ public class ResumeDaoImpl extends AbstractDao<Resume, Long> implements ResumeDa
                         .setParameter(ID, id)
                         .getSingleResult();
             } catch (NoResultException ex) {
-                Logger.getLogger(ResumeDaoImpl.class.getName()).log(Level.WARNING, "Resume not found with name " + id);
+                Logger.getLogger(ResumeDaoImpl.class.getName()).log(Level.WARNING, "Resume not found with id " + id);
             }
 
             return result;

@@ -53,6 +53,7 @@ public class VacancyDaoImpl extends AbstractDao<Vacancy, Long> implements Vacanc
     @Override
     public Long getCountAllClosedVacancies() {
         return (Long) createNamedQuery(Vacancy.FIND_COUNT_CLOSED_VACANCIES)
+                .setParameter(ID, LoggedUserUtil.getLoggedUser().get().getUserId())
                 .getSingleResult();
     }
 
