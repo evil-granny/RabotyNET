@@ -1,6 +1,7 @@
 package ua.softserve.ita.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import ua.softserve.ita.dao.CompanyDao;
 import ua.softserve.ita.dao.RoleDao;
@@ -14,9 +15,11 @@ import ua.softserve.ita.service.CompanyService;
 import ua.softserve.ita.service.letter.GenerateLetter;
 
 import javax.transaction.Transactional;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 
@@ -70,10 +73,16 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public Company update(Company company) {
-        if (company.getUser().getUserId().equals(getLoggedUser().get().getUserId())) {
-            return companyDao.update(company);
+        if (getLoggedUser().isPresent()) {
+            Collection<GrantedAuthority> authorities = getLoggedUser().get().getAuthorities();
+            Stream<String> stringStream = authorities.stream()
+                    .map(GrantedAuthority::getAuthority);
+            Long loggedUserId = getLoggedUser().get().getUserId();
+            if (company.getUser().getUserId().equals(loggedUserId) ||
+                    stringStream.findFirst().get().equals("ROLE_ADMIN")) {
+                return companyDao.update(company);
+            }
         }
-
         return company;
     }
 
@@ -116,24 +125,20 @@ public class CompanyServiceImpl implements CompanyService {
         if (!companyToken.equals(Objects.hash(company.getName()) + ""))
             return Optional.empty();
 
-        Optional<Company> res = companyDao.findByName(company.getName());
-
-        Company com = res.orElseThrow(() -> new ResourceNotFoundException("Company not found with name " + company.getName()));
+        Optional<Company> result = companyDao.findByName(company.getName());
+        Company com = result.orElseThrow(() -> new ResourceNotFoundException("Company not found with name " + company.getName()));
 
         if (com.getUser().getUserId().equals(getLoggedUser().get().getUserId())) {
             com.setStatus(Status.APPROVED);
-
             User user = com.getUser();
-
             if (user.getRoles().stream().noneMatch(role -> role.getType().equals("cowner"))) {
                 user.getRoles().add(roleDao.findByType("cowner"));
-
                 userDao.update(user);
             }
             companyDao.update(com);
         }
 
-        return res;
+        return result;
     }
 
     @Override

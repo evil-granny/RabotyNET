@@ -1,5 +1,6 @@
 package ua.softserve.ita.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ua.softserve.ita.dto.company.CompanyPaginationDto;
 import ua.softserve.ita.exception.CompanyAlreadyExistException;
@@ -17,8 +18,10 @@ import static ua.softserve.ita.utility.LoggedUserUtil.getLoggedUser;
 @RequestMapping("/companies")
 public class CompanyController {
 
+
     private final CompanyService companyService;
 
+    @Autowired
     public CompanyController(CompanyService companyService) {
         this.companyService = companyService;
     }

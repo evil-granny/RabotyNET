@@ -23,4 +23,6 @@ public interface ResumeService {
 
     Resume sendResumeOnThisVacancy(Resume resume, Long vacancyId);
 
+    boolean existsResume(Long userId);
+
 }
