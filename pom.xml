@@ -7,7 +7,7 @@
 
     <groupId>ua.com.projects</groupId>
     <artifactId>RabotyNET</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.1</version>
 
     <dependencies>
         <dependency>
