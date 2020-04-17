@@ -1,1 +1,1 @@
-web: java --port $PORT target/*.war
+web: java -Dserver.port=$PORT $JAVA_OPTS -jar target/RabotyNet.war
