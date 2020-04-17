@@ -15,6 +15,7 @@ import ua.com.model.User;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Service
 @Transactional
@@ -28,9 +29,9 @@ public class UserDetailsServiceImp implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) {
-        User user = userDao.getUserWithRoles(username).orElseThrow(() ->
-                new UsernameNotFoundException("No user found with username " + username));
+    public UserDetails loadUserByUsername(String userName) {
+        User user = userDao.getUserWithRoles(userName).orElseThrow(() ->
+                new UsernameNotFoundException("No user found with userName " + userName));
 
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         for (Role role : user.getRoles()) {
@@ -44,5 +45,4 @@ public class UserDetailsServiceImp implements UserDetailsService {
                 user.getUserId()
         );
     }
-
 }

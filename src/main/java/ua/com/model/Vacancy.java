@@ -29,7 +29,7 @@ import java.util.Set;
         @NamedQuery(name = Vacancy.FIND_VACANCIES, query = "select vac from Vacancy vac WHERE vac.company.status = ua.com.model.enumtype.Status.APPROVED and vac.vacancyStatus = ua.com.model.enumtype.VacancyStatus.OPEN ORDER BY vac.vacancyId DESC"),
         @NamedQuery(name = Vacancy.FIND_BY_REQUIREMENT, query = "SELECT vac FROM Vacancy vac WHERE vac.vacancyId = (SELECT req.vacancy.vacancyId FROM Requirement req WHERE req.requirementId = :id)"),
         @NamedQuery(name = Vacancy.FIND_COUNT_VACANCIES_BY_COMPANY_ID, query = "select count(vac.vacancyId) from Vacancy vac where vac.company.companyId = :id"),
-        @NamedQuery(name = Vacancy.FIND_COUNT_All_VACANCY, query = "select count(vac.vacancyId) from Vacancy vac WHERE vac.company.status = ua.com.model.enumtype.Status.APPROVED and vac.vacancyStatus = ua.com.model.enumtype.VacancyStatus.OPEN"),
+        @NamedQuery(name = Vacancy.FIND_COUNT_ALL_VACANCIES, query = "select count(vac.vacancyId) from Vacancy vac WHERE vac.company.status = ua.com.model.enumtype.Status.APPROVED and vac.vacancyStatus = ua.com.model.enumtype.VacancyStatus.OPEN"),
         @NamedQuery(name = Vacancy.FIND_COUNT_HOT_VACANCIES, query = "select count(vac.vacancyId) from Vacancy vac where vac.hotVacancy = true"),
         @NamedQuery(name = Vacancy.FIND_BY_VACANCY_ID, query = "select vac from Vacancy vac where vac.vacancyId = :id"),
         @NamedQuery(name = Vacancy.FIND_COUNT_CLOSED_VACANCIES, query = "select count(vac.vacancyId) from Vacancy vac where (vac.vacancyStatus = ua.com.model.enumtype.VacancyStatus.OUTDATED or vac.vacancyStatus = ua.com.model.enumtype.VacancyStatus.OCCUPIED) and vac.company.status = ua.com.model.enumtype.Status.APPROVED and vac.company.user.userId = :id"),
@@ -39,7 +39,7 @@ public class Vacancy {
     public static final String FIND_VACANCIES_BY_COMPANY_ID = "Vacancy.findVacanciesByCompanyId";
     public static final String FIND_BY_REQUIREMENT = "Vacancy.findByRequirement";
     public static final String FIND_COUNT_VACANCIES_BY_COMPANY_ID = "Vacancy.findCountVacanciesByCompanyId";
-    public static final String FIND_COUNT_All_VACANCY = "Vacancy.findCountAllVacancy";
+    public static final String FIND_COUNT_ALL_VACANCIES = "Vacancy.findCountAllVacancies";
     public static final String FIND_COUNT_HOT_VACANCIES = "Vacancy.findCountAllHotVacancies";
     public static final String FIND_COUNT_CLOSED_VACANCIES = "Vacancy.findCountAllClosedVacancies";
     public static final String FIND_VACANCIES = "Vacancy.findVacancies";

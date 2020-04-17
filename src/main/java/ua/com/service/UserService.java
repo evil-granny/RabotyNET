@@ -2,6 +2,7 @@ package ua.com.service;
 
 import ua.com.exception.UserAlreadyExistException;
 import ua.com.dto.UserDto;
+import ua.com.model.Role;
 import ua.com.model.User;
 
 import java.util.List;
@@ -24,5 +25,7 @@ public interface UserService {
     void deleteById(Long id);
 
     boolean emailExists(String email);
+
+    List<String> getUserRoles(String userName);
 
 }

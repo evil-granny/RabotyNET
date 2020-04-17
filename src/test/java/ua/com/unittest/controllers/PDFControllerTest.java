@@ -10,7 +10,6 @@ import ua.com.controller.PDFController;
 import ua.com.model.Resume;
 import ua.com.service.PdfResumeService;
 import ua.com.service.ResumeService;
-import ua.com.service.VacancyService;
 import ua.com.service.letter.GenerateLetter;
 import ua.com.service.pdfcreator.CreateResumePdf;
 
@@ -34,16 +33,13 @@ public class PDFControllerTest {
     @Mock
     private PdfResumeService pdfResumeService;
 
-    @Mock
-    private VacancyService vacancyService;
-
     private PDFController controller;
 
     private static final long ID = 1;
 
     @Before
     public void setUp() {
-        this.controller = new PDFController(resumeService, generateService, pdfService, pdfResumeService, vacancyService);
+        this.controller = new PDFController(resumeService, generateService, pdfService, pdfResumeService);
     }
 
     @Test

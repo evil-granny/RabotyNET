@@ -1,5 +1,6 @@
 package ua.com.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,8 +13,6 @@ import ua.com.service.ResumeService;
 import ua.com.service.letter.GenerateLetter;
 import ua.com.service.pdfcreator.CreateResumePdf;
 import ua.com.utility.LoggedUserUtil;
-import ua.com.model.*;
-import ua.com.service.VacancyService;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -34,7 +33,8 @@ public class PDFController {
     private final CreateResumePdf pdfService;
     private final PdfResumeService pdfResumeService;
 
-    public PDFController(ResumeService resumeService, GenerateLetter generateService, CreateResumePdf pdfService, PdfResumeService pdfResumeService, VacancyService vacancyService) {
+    @Autowired
+    public PDFController(ResumeService resumeService, GenerateLetter generateService, CreateResumePdf pdfService, PdfResumeService pdfResumeService) {
         this.resumeService = resumeService;
         this.generateService = generateService;
         this.pdfService = pdfService;

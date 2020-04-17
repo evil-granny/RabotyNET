@@ -2,12 +2,16 @@ package ua.com.dao.impl;
 
 import org.springframework.stereotype.Repository;
 import ua.com.dao.VacancyDao;
+import ua.com.exception.ResourceNotFoundException;
+import ua.com.model.UserPrincipal;
 import ua.com.utility.LoggedUserUtil;
 import ua.com.utility.QueryUtility;
 import ua.com.model.Vacancy;
 
 import java.util.List;
 import java.util.Optional;
+
+import static ua.com.utility.LoggedUserUtil.getLoggedUser;
 
 @Repository
 public class VacancyDaoImpl extends AbstractDao<Vacancy, Long> implements VacancyDao {
@@ -40,7 +44,7 @@ public class VacancyDaoImpl extends AbstractDao<Vacancy, Long> implements Vacanc
 
     @Override
     public Long getCountOfAllVacancies() {
-        return (Long) createNamedQuery(Vacancy.FIND_COUNT_All_VACANCY)
+        return (Long) createNamedQuery(Vacancy.FIND_COUNT_ALL_VACANCIES)
                 .getSingleResult();
     }
 
@@ -53,7 +57,7 @@ public class VacancyDaoImpl extends AbstractDao<Vacancy, Long> implements Vacanc
     @Override
     public Long getCountAllClosedVacancies() {
         return (Long) createNamedQuery(Vacancy.FIND_COUNT_CLOSED_VACANCIES)
-                .setParameter(ID, LoggedUserUtil.getLoggedUser().get().getUserId())
+                .setParameter(ID, getLoggedUser().get().getUserId())
                 .getSingleResult();
     }
 
@@ -78,8 +82,10 @@ public class VacancyDaoImpl extends AbstractDao<Vacancy, Long> implements Vacanc
     @Override
     @SuppressWarnings("unchecked")
     public List<Vacancy> findAllClosedVacanciesWithPagination(int first, int count) {
+        UserPrincipal loggedUser = getLoggedUser()
+                .orElseThrow(() -> new ResourceNotFoundException("Logged user not found"));
         return (List<Vacancy>) createNamedQuery(Vacancy.FIND_CLOSED_VACANCIES)
-                .setParameter(ID, LoggedUserUtil.getLoggedUser().get().getUserId())
+                .setParameter(ID, loggedUser.getUserId())
                 .setFirstResult(first)
                 .setMaxResults(count)
                 .getResultList();

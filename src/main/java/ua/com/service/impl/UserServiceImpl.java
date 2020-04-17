@@ -1,6 +1,7 @@
 package ua.com.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ import ua.com.service.UserService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -96,6 +98,12 @@ class UserServiceImpl implements UserService {
 
     public boolean emailExists(final String email) {
         return findByEmail(email).isPresent();
+    }
+
+    public List<String> getUserRoles(String userName) {
+        User user = userDao.getUserWithRoles(userName)
+                .orElseThrow(() -> new UsernameNotFoundException("No user found with userName " + userName));
+        return user.getRoles().stream().map(Role::getType).collect(Collectors.toList());
     }
 
 }

@@ -13,6 +13,7 @@ import ua.com.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -87,7 +88,7 @@ public class RegistrationController {
         }
     }
 
-    @RequestMapping(value = "/enabled/{email}/", method = RequestMethod.GET)
+    @GetMapping(value = "/enabled/{email}/")
     public ResponseEntity<?> enabledUser(@PathVariable("email") String email) {
         if (userService.findByEmail(email).isPresent()) {
             User user = userService.findByEmail(email).get();
@@ -100,6 +101,11 @@ public class RegistrationController {
 
     private String getAppUrl(HttpServletRequest request) {
         return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+    }
+
+    @GetMapping(value = "/getRoles/{userName}/")
+    public ResponseEntity<List<String>> getUserRoles(@PathVariable("userName") String userName) {
+        return ResponseEntity.ok().body(userService.getUserRoles(userName));
     }
 
 }

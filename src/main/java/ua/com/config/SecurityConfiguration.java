@@ -31,6 +31,7 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+    private static final String XSRF_TOKEN = "XSRF-TOKEN";
     private static final List<String> ALLOWED_METHODS = ImmutableList.of("GET", "POST", "PUT", "DELETE");
     private static final List<String> ALLOWED_HEADERS = ImmutableList.of("Access-Control-Allow-Origin",
             "Access-Control-Allow-Credentials",
@@ -49,16 +50,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/csrf"
     };
     private static final String[] CSRF_IGNORE = {"/login/**", "/users/**", "/password/**", "/searchVacancy"};
-    private static final String[] ADMIN_URLS = {"/companies/all/**", "/companies/sendMail"};
+    private static final String[] ADMIN_URLS = {"/companies/all/**", "/companies/sendMail", "/people/*"};
     private static final String[] COWNER_URLS = {"/companies/my", "/companies/delete/**", "/searchResume",
             "/resume/findByVacancyId/**", "/showResume/**"};
-    private static final String[] USER_URLS = {"/users"};
-    private static final String [] COWNER_ADMIN_URLS = {"/companies/update"};
-    private static final String[] COWNER_USER_URLS = {"/resume/**", "/companies/create", "/companies/approve", "/people", "/people/*", "people/**"};
-    private static final String[] ALL_USERS_URLS = {"/companies/byName/**", "/companies/byCompany/**", "/claims", "/photo/**", "/users/**", "/users/enabled/**",
+    private static final String[] USER_URLS = {"/users", "/companies/create", "/companies/update"};
+    private static final String[] COWNER_ADMIN_URLS = {"/companies/update"};
+    private static final String[] COWNER_USER_URLS = {"/resume/**", "/companies/create", "/companies/approve", "/people", "/people/*", "people/**", "/companies/my", "/companies/update"};
+    private static final String[] ALL_USERS_URLS = {"/companies/byName/**", "/companies/byCompany/**", "/claims", "/photo/**", "/users/**", "/users/enabled/**", "/users/getRoles/*",
             "/", "/vacancies/**", "/login", "/login/**", "/password/**", "/healthCheck", "/pdf/**", "/updatePDF", "/createPdf/**",
             "/sendResume/{vacancyId}", "/companies/byVacancyId/**", "/searchVacancy"};
-//    private static final String[] COWNER_AND_USER_URLS = {"/companies/update"};
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -82,17 +82,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .httpBasic()
                 .and()
-
                 .cors()
                 .and()
-
                 .authorizeRequests()
                 .antMatchers(ADMIN_URLS).access("hasRole('ROLE_ADMIN')")
                 .antMatchers(COWNER_URLS).access("hasRole('ROLE_COWNER')")
                 .antMatchers(USER_URLS).access("hasRole('ROLE_USER')")
                 .antMatchers(COWNER_ADMIN_URLS).access("hasRole('ROLE_ADMIN') or hasRole('ROLE_COWNER')")
                 .antMatchers(COWNER_USER_URLS).access("hasRole('ROLE_USER') or hasRole('ROLE_COWNER')")
-//                .antMatchers(COWNER_AND_USER_URLS).access("hasRole('ROLE_USER') and hasRole('ROLE_COWNER')")
                 .antMatchers(ALL_USERS_URLS).permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -101,7 +98,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/logout")
                 .clearAuthentication(true)
                 .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID", "XSRF-TOKEN")
+                .deleteCookies("JSESSIONID", XSRF_TOKEN)
                 .and()
 
                 .csrf()
@@ -120,11 +117,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 CsrfToken csrf = (CsrfToken) request.getAttribute(CsrfToken.class
                         .getName());
                 if (csrf != null) {
-                    Cookie cookie = WebUtils.getCookie(request, "XSRF-TOKEN");
+                    Cookie cookie = WebUtils.getCookie(request, XSRF_TOKEN);
                     String token = csrf.getToken();
                     if (cookie == null || token != null
                             && !token.equals(cookie.getValue())) {
-                        cookie = new Cookie("XSRF-TOKEN", token);
+                        cookie = new Cookie(XSRF_TOKEN, token);
                         cookie.setPath("/");
                         response.addCookie(cookie);
                     }

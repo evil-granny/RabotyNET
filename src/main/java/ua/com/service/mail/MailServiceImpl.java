@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import ua.com.model.Letter;
 
 import java.io.File;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,15 +30,15 @@ public class MailServiceImpl implements MailService {
     @Override
     public void sendEmail(Object object) {
         Letter letter = (Letter) object;
-        MimeMessagePreparator preparator;
+        MimeMessagePreparator messagePreparator;
         if (letter.isWithAttachment()) {
-            preparator = getContentWithAttachment(letter);
+            messagePreparator = getContentWithAttachment(letter);
         } else {
-            preparator = getContent(letter);
+            messagePreparator = getContent(letter);
         }
 
         try {
-            mailSender.send(preparator);
+            mailSender.send(messagePreparator);
         } catch (MailException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
         }
@@ -64,9 +65,7 @@ public class MailServiceImpl implements MailService {
             helper.setText(letter.getContent());
 
             FileSystemResource file = new FileSystemResource(new File(letter.getLinkForAttachment()));
-            String fileName = file.getFilename();
-
-            helper.addAttachment(fileName, file);
+            helper.addAttachment(Objects.requireNonNull(file.getFilename()), file);
         };
     }
 

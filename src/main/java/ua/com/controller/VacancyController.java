@@ -1,5 +1,6 @@
 package ua.com.controller;
 
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,7 @@ public class VacancyController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Get all vacancies")
     public ResponseEntity<List<Vacancy>> getAllVacancies() {
         List<Vacancy> vacancyList = vacancyService.findAll();
         return ResponseEntity.ok().body(vacancyList);
@@ -37,6 +39,7 @@ public class VacancyController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Get vacancy by specific id")
     public ResponseEntity<Vacancy> getVacancyById(@PathVariable("id") Long id) {
         Vacancy vacancy = vacancyService.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Vacancy with id: %d not found", id)));
@@ -46,6 +49,7 @@ public class VacancyController {
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_COWNER')")
+    @ApiOperation(value = "Update vacancy")
     public ResponseEntity<Vacancy> updateVacancy(@Valid @RequestBody Vacancy vacancy) {
         final Vacancy updatedVacancy = vacancyService.update(vacancy);
         return ResponseEntity.ok(updatedVacancy);
@@ -54,6 +58,7 @@ public class VacancyController {
     @PostMapping("/createVacancy/{companyId}")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ROLE_COWNER')")
+    @ApiOperation(value = "Create vacancy")
     public ResponseEntity<Vacancy> createVacancy(@Valid @RequestBody Vacancy vacancy, @PathVariable(value = "companyId") Long companyId) {
         return ResponseEntity.ok(vacancyService.save(vacancy, companyId));
     }
@@ -61,6 +66,7 @@ public class VacancyController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('ROLE_COWNER')")
+    @ApiOperation(value = "Delete vacancy with specific id")
     public void deleteVacancy(@PathVariable("id") Long id) {
         vacancyService.deleteById(id);
     }
@@ -80,17 +86,20 @@ public class VacancyController {
 
     @GetMapping("hotVacancies/{first}")
     @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Find hot vacancies with pagination")
     public ResponseEntity<VacancyDto> findAllHotVacanciesWithPagination(@PathVariable("first") int first) {
         return ResponseEntity.ok().body(vacancyService.findAllHotVacanciesWithPagination(first));
     }
 
     @GetMapping("closedVacancies/{first}")
     @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Find closed vacancies with pagination")
     public ResponseEntity<VacancyDto> findAllClosedVacanciesWithPagination(@PathVariable("first") int first) {
         return ResponseEntity.ok().body(vacancyService.findAllClosedVacanciesWithPagination(first));
     }
 
     @PostMapping("/sendResume/{vacancyId}")
+    @ApiOperation(value = "Send resume on specific vacancy")
     public ResponseEntity<Resume> sendResumeOnThisVacancy(@Valid @RequestBody Resume resume, @PathVariable("vacancyId") Long vacancyId) {
         return ResponseEntity.ok().body(resumeService.sendResumeOnThisVacancy(resume, vacancyId));
     }

@@ -6,9 +6,8 @@ import org.springframework.stereotype.Service;
 import ua.com.dao.CompanyDao;
 import ua.com.dao.RoleDao;
 import ua.com.dao.UserDao;
-import ua.com.exception.ResourceNotFoundException;
-import ua.com.utility.LoggedUserUtil;
 import ua.com.dto.company.CompanyPaginationDto;
+import ua.com.exception.ResourceNotFoundException;
 import ua.com.model.Company;
 import ua.com.model.User;
 import ua.com.model.enumtype.Status;
@@ -21,6 +20,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
+
+import static ua.com.utility.LoggedUserUtil.getLoggedUser;
 
 @Service
 @Transactional
@@ -57,7 +58,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public Optional<Company> save(Company company) {
-        User loggedUser = userDao.findById(LoggedUserUtil.getLoggedUser().get().getUserId())
+        User loggedUser = userDao.findById(getLoggedUser().get().getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         company.setUser(loggedUser);
         Optional<Company> com = companyDao.findByName(company.getName());
@@ -72,11 +73,11 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public Company update(Company company) {
-        if (LoggedUserUtil.getLoggedUser().isPresent()) {
-            Collection<GrantedAuthority> authorities = LoggedUserUtil.getLoggedUser().get().getAuthorities();
+        if (getLoggedUser().isPresent()) {
+            Collection<GrantedAuthority> authorities = getLoggedUser().get().getAuthorities();
             Stream<String> stringStream = authorities.stream()
                     .map(GrantedAuthority::getAuthority);
-            Long loggedUserId = LoggedUserUtil.getLoggedUser().get().getUserId();
+            Long loggedUserId = getLoggedUser().get().getUserId();
             if (company.getUser().getUserId().equals(loggedUserId) ||
                     stringStream.findFirst().get().equals("ROLE_ADMIN")) {
                 return companyDao.update(company);
@@ -90,7 +91,7 @@ public class CompanyServiceImpl implements CompanyService {
         Company company = companyDao.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Company with id: %d not found", id)));
 
-        if (company.getUser().getUserId().equals(LoggedUserUtil.getLoggedUser().get().getUserId())) {
+        if (company.getUser().getUserId().equals(getLoggedUser().get().getUserId())) {
             companyDao.deleteById(id);
         }
     }
@@ -108,14 +109,12 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public Optional<Company> sendMail(Company company, String hostLink) {
         Optional<Company> res = companyDao.findByName(company.getName());
-
         Company com = res.orElseThrow(() -> new ResourceNotFoundException("Company not found with name " + company.getName()));
 
         letterService.sendCompanyApprove(com, hostLink +
                 "/approveCompany/" + com.getName() + "/" + Objects.hash(com.getName()));
         com.setStatus(Status.MAIL_SENT);
         companyDao.update(com);
-
         return res;
     }
 
@@ -127,7 +126,7 @@ public class CompanyServiceImpl implements CompanyService {
         Optional<Company> result = companyDao.findByName(company.getName());
         Company com = result.orElseThrow(() -> new ResourceNotFoundException("Company not found with name " + company.getName()));
 
-        if (com.getUser().getUserId().equals(LoggedUserUtil.getLoggedUser().get().getUserId())) {
+        if (com.getUser().getUserId().equals(getLoggedUser().get().getUserId())) {
             com.setStatus(Status.APPROVED);
             User user = com.getUser();
             if (user.getRoles().stream().noneMatch(role -> role.getType().equals("cowner"))) {

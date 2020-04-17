@@ -33,6 +33,9 @@ import java.util.logging.Logger;
 @Data
 public class CreateResumePdf {
 
+    private static final String GRADUATION = "Graduation";
+    private static final String DESCRIPTION = "Description";
+
     static final float BORDER_LEFT = 60;
     static final float BORDER_RIGHT = 20;
     static final float BORDER_UPPER = 20;
@@ -89,15 +92,10 @@ public class CreateResumePdf {
     }
 
     public Path createPDF(Resume resume) {
-
         try {
-
             this.document = new PDDocument();
-
             createNewPage();
-
             try {
-
                 Long photoId = resume.getPerson().getPhoto().getPhotoId();
                 byte[] photo = photoService.loadAvatar(photoId);
                 PDImageXObject pdImage = PDImageXObject.createFromByteArray(this.document, photo, "");
@@ -106,16 +104,12 @@ public class CreateResumePdf {
                 this.xCoordinate -= pdImage.getWidth() * scale;
                 this.contentStream.drawImage(pdImage, this.xCoordinate, this.yCoordinate,
                         pdImage.getWidth() * scale, pdImage.getHeight() * scale);
-
             } catch (Exception e) {
-
                 this.yCoordinate -= PHOTO_SIZE;
                 this.xCoordinate -= PHOTO_SIZE;
             }
-
             final float X_CORDINAT_PHOTO = this.xCoordinate;
             final float Y_CORDINAT_PHOTO = this.yCoordinate;
-
             this.yCoordinate -= LEADING_LINE;
             this.xCoordinate = BORDER_LEFT;
 
@@ -135,7 +129,6 @@ public class CreateResumePdf {
             this.contentStream.endText();
 
             this.contentStream.beginText();
-
             this.yCoordinate = Y_CORDINAT_TITLE_BORDER_LINE - LEADING_LINE - INFO_LEADING;
             this.xCoordinate = X_CORDINAT_PHOTO - PHOTO_SIZE;
 
@@ -151,13 +144,11 @@ public class CreateResumePdf {
             printContext("EMail", eMail);
 
             this.contentStream.endText();
-
             Education education = resume.getEducation();
             Set<Job> jobs = resume.getJobs();
             Set<Skill> skills = resume.getSkills();
 
             float startContext = (float) 2 / 3;
-
             this.yCoordinate = page.getMediaBox().getHeight() * startContext;
             this.xCoordinate = BORDER_LEFT;
 
@@ -191,7 +182,6 @@ public class CreateResumePdf {
             this.yCoordinate -= LEADING_LINE;
             this.yCoordinate -= INFO_LEADING;
             this.xCoordinate = BORDER_LEFT;
-
             this.contentStream.beginText();
             this.contentStream.newLineAtOffset(this.xCoordinate, this.yCoordinate);
             this.contentStream.setLeading(INFO_LEADING);
@@ -200,16 +190,18 @@ public class CreateResumePdf {
             if (education.getSpecialty() == null) {
                 printContext("Specialty", "");
             } else {
-                printContext("Specialty", education.getSpecialty().toString());
+                printContext("Specialty", education.getSpecialty());
             }
+
             if (education.getGraduation() == null) {
-                printContext("Graduation", "");
+                printContext(GRADUATION, "");
             } else {
-                printContext("Graduation", education.getGraduation().toString());
+                printContext(GRADUATION, education.getGraduation().toString());
             }
             this.contentStream.endText();
             boolean printExistsJob = jobs.stream()
                     .anyMatch(t -> t.getPrintPdf().equals(true));
+
 
             if (printExistsJob) {
 
@@ -230,9 +222,7 @@ public class CreateResumePdf {
                 int countLineForBlock = 4;
 
                 for (Job job : jobs) {
-
                     if (job.getPrintPdf()) {
-
                         this.yCoordinate -= LEADING_LINE;
                         if (job.getDescription() == null) {
                             countLineForBlock += 1;
@@ -249,11 +239,10 @@ public class CreateResumePdf {
                         } else {
                             printContext("Company", job.getCompanyName());
                         }
-
                         if (job.getDescription() == null) {
-                            printContext("Description", "");
+                            printContext(DESCRIPTION, "");
                         } else {
-                            printContext("Description", job.getDescription());
+                            printContext(DESCRIPTION, job.getDescription());
                         }
 
                         this.yCoordinate -= INFO_LEADING;
@@ -320,23 +309,18 @@ public class CreateResumePdf {
                         printContext("Title", skill.getTitle());
 
                         if (skill.getDescription() == null) {
-                            printContext("Description", "");
+                            printContext(DESCRIPTION, "");
                         } else {
-                            printContext("Description", skill.getDescription());
+                            printContext(DESCRIPTION, skill.getDescription());
                         }
 
                         this.yCoordinate -= INFO_LEADING;
                         this.xCoordinate = BORDER_LEFT;
-
                         this.contentStream.endText();
-
                         drawLine();
                     }
                 }
             }
-
-            //
-
             this.contentStream.close();
             Path saveDir = Paths.get(SAVE_DIRECTORY_FOR_PDF_DOC);
             Path tempCVFile = null;
@@ -352,58 +336,43 @@ public class CreateResumePdf {
                 pdfResume.setPerson(resume.getPerson());
                 pdfResumeService.save(pdfResume);
             } else {
-
                 tempCVFile = Paths.get(pdfResume.getPath());
 
             }
-
             this.document.save(tempCVFile.toFile());
             this.document.close();
-
             return tempCVFile;
 
         } catch (IOException e) {
-
             LOGGER.log(Level.SEVERE, e.toString(), e);
-
         }
         return null;
     }
 
     private int countDescriptionLine(String description) {
-
         try {
-
             int descriptionLength = description.length();
             int countLineForDescription = 1;
-            float size = CONTEXT_FONT_SIZE * CONTEXT_FONT.getStringWidth(("Description" + description)) / 1000;
+            float size = CONTEXT_FONT_SIZE * CONTEXT_FONT.getStringWidth((DESCRIPTION + description)) / 1000;
             float maxSize = page.getMediaBox().getWidth();
 
             maxSize -= BORDER_LEFT;
             maxSize -= BORDER_RIGHT;
-
             if (size < maxSize) {
-
                 return countLineForDescription;
 
             } else {
-
                 float sizeLongDescription = CONTEXT_FONT_SIZE * CONTEXT_FONT.getStringWidth(description) / 1000;
                 float sizeOneChar = size / descriptionLength;
                 int maxLength = (int) (maxSize / sizeOneChar);
 
                 if ((descriptionLength % maxLength) == 0) {
-
                     return countLineForDescription += descriptionLength / maxLength;
-
                 } else {
-
                     return countLineForDescription += (descriptionLength / maxLength) + 1;
-
                 }
             }
         } catch (IOException e) {
-
             LOGGER.log(Level.SEVERE, e.toString(), e);
         }
         return 0;
@@ -411,9 +380,7 @@ public class CreateResumePdf {
 
 
     private void printContext(String formTitle, String context) {
-
         try {
-
             this.contentStream.setFont(INFO_FONT, INFO_FONT_SIZE);
             this.contentStream.setNonStrokingColor(CV_FORM_FONT_COLOR);
             this.contentStream.setLeading(INFO_LEADING);
@@ -423,7 +390,6 @@ public class CreateResumePdf {
 
             int contextLength = context.length();
             int formTitleLength = formTitle.length();
-
             float size = CONTEXT_FONT_SIZE * CONTEXT_FONT.getStringWidth((context + formTitle)) / 1000;
             float maxSize = page.getMediaBox().getWidth();
 
@@ -431,13 +397,10 @@ public class CreateResumePdf {
             maxSize -= BORDER_RIGHT;
 
             if (size < maxSize) {
-
                 this.contentStream.showText(context);
                 this.contentStream.newLine();
                 this.yCoordinate -= INFO_LEADING;
-
             } else {
-
                 this.contentStream.newLine();
                 this.yCoordinate -= INFO_LEADING;
                 float sizeNewLine = CONTEXT_FONT_SIZE * CONTEXT_FONT.getStringWidth(context) / 1000;
@@ -447,18 +410,14 @@ public class CreateResumePdf {
                 List<String> listContext = new ArrayList<>();
                 StringBuilder buildLine = new StringBuilder();
                 for (String word : contextArr) {
-
                     if (word.length() + buildLine.length() < maxLength) {
                         buildLine.append(word)
                                 .append(" ");
-
                     } else {
-
                         listContext.add(buildLine.toString());
                         buildLine.delete(0, buildLine.length() - 1);
                         buildLine.append(word)
                                 .append(" ");
-
                     }
                 }
 
@@ -467,131 +426,94 @@ public class CreateResumePdf {
                 }
 
                 for (String line : listContext) {
-
                     this.contentStream.showText(line);
                     this.contentStream.newLine();
                     this.yCoordinate -= LEADING_LINE;
                 }
             }
-
         } catch (IOException e) {
-
             LOGGER.log(Level.SEVERE, e.toString(), e);
-
         }
 
     }
 
 
     private void printContext(LocalDate beginDate, LocalDate endDate) {
-
         try {
-
             this.contentStream.setFont(INFO_FONT, INFO_FONT_SIZE);
             this.contentStream.setNonStrokingColor(CV_FORM_FONT_COLOR);
             this.contentStream.showText("Period" + ": ");
             this.contentStream.setNonStrokingColor(Color.BLACK);
             this.contentStream.setFont(CONTEXT_FONT, CONTEXT_FONT_SIZE);
-
             StringBuilder educationPeriod = new StringBuilder(beginDate.format(DateTimeFormatter.ISO_LOCAL_DATE))
                     .append(" : ")
                     .append(endDate.format(DateTimeFormatter.ISO_LOCAL_DATE));
-
             this.contentStream.showText(educationPeriod.toString());
             this.contentStream.newLine();
             this.yCoordinate -= INFO_LEADING;
 
         } catch (IOException e) {
-
             LOGGER.log(Level.SEVERE, e.toString(), e);
-
         }
 
     }
 
     private void drawLine() {
-
         try {
-
             this.contentStream.moveTo(xCoordinate, yCoordinate);
             this.xCoordinate += page.getMediaBox().getUpperRightX() - BORDER_LEFT - BORDER_RIGHT;
             this.contentStream.lineTo(xCoordinate, yCoordinate);
             this.contentStream.stroke();
-
         } catch (IOException e) {
-
             LOGGER.log(Level.SEVERE, e.toString(), e);
-
         }
 
     }
 
     private void drawDoubleLine() {
-
         drawLine();
-
         this.yCoordinate -= LEADING_LINE / 4;
         this.xCoordinate = BORDER_LEFT;
-
         drawLine();
     }
 
 
     private void drawLogo() {
-
         String pathLogo = null;
-
         try {
-
             pathLogo = Paths.get(Objects.requireNonNull(CreateResumePdf.class.getClassLoader().getResource("logo.png")).toURI()).toString();
             PDImageXObject pdLogo = PDImageXObject.createFromFile(pathLogo, document);
-
             float scaleLogo = (float) LOGO_SIZE_HEIGHT / pdLogo.getHeight();
             this.yCoordinate = page.getMediaBox().getLowerLeftY();
             this.yCoordinate += BORDER_LOWER;
             this.xCoordinate = page.getMediaBox().getLowerLeftX();
             this.xCoordinate += BORDER_LEFT;
-
             contentStream.drawImage(pdLogo, this.xCoordinate, this.yCoordinate,
                     pdLogo.getWidth() * scaleLogo, LOGO_SIZE_HEIGHT);
-
         } catch (URISyntaxException | IOException e) {
-
             LOGGER.log(Level.SEVERE, e.toString(), e);
-
         }
 
     }
 
     private void createNewPage() {
-
         try {
-
             this.page = new PDPage(PDRectangle.A4);
             this.document.addPage(this.page);
             this.contentStream = new PDPageContentStream(this.document, this.page);
-
             drawLogo();
-
             this.yCoordinate = this.page.getMediaBox().getUpperRightY() - BORDER_UPPER;
             this.xCoordinate = this.page.getMediaBox().getUpperRightX() - BORDER_RIGHT;
-
         } catch (IOException e) {
-
             LOGGER.log(Level.SEVERE, e.toString(), e);
-
         }
 
     }
 
     private void experienceHeader(int countLineForBlock) {
-
         try {
-
             float countSizeForBlock = countLineForBlock * INFO_LEADING;
-
             if (((this.yCoordinate - countSizeForBlock) < BORDER_LOWER + LOGO_SIZE_HEIGHT)) {
-
                 this.contentStream.close();
                 createNewPage();
             }
@@ -601,14 +523,9 @@ public class CreateResumePdf {
             this.contentStream.beginText();
             this.contentStream.newLineAtOffset(this.xCoordinate, this.yCoordinate);
             this.contentStream.setLeading(INFO_LEADING);
-
         } catch (IOException e) {
-
             LOGGER.log(Level.SEVERE, e.toString(), e);
-
         }
-
     }
-
 }
 

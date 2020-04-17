@@ -36,11 +36,19 @@ import static org.hibernate.cfg.AvailableSettings.*;
 @ComponentScan(basePackages = "ua.com")
 public class AppConfig {
 
-    @Autowired
-    private Environment environment;
+    private final Logger LOGGER = Logger.getLogger(AppConfig.class.getName());
+    private final Environment environment;
+    private PdfResumeService pdfResumeService;
 
     @Autowired
-    private PdfResumeService pdfResumeService;
+    public void setPdfResumeService(PdfResumeService pdfResumeService) {
+        this.pdfResumeService = pdfResumeService;
+    }
+
+    @Autowired
+    public AppConfig(Environment environment) {
+        this.environment = environment;
+    }
 
     @Bean
     public LocalSessionFactoryBean getSessionFactory() {
@@ -64,7 +72,7 @@ public class AppConfig {
         properties.put(C3P0_MAX_STATEMENTS, Objects.requireNonNull(environment.getProperty("hibernate.c3p0.max_statements")));
 
         sessionFactoryBean.setHibernateProperties(properties);
-        sessionFactoryBean.setPackagesToScan("ua.softserve.ita.model");
+        sessionFactoryBean.setPackagesToScan("ua.com.model");
 
         return sessionFactoryBean;
     }
@@ -113,18 +121,17 @@ public class AppConfig {
     @Scheduled(cron = "${cron.cleanTempFileCvPdf}")
     public void cleanTempFile() {
         final String SAVE_DIRECTORY_FOR_PDF_DOC = "pdf/tempPDFdir";
-        final Logger LOGGER = Logger.getLogger(AppConfig.class.getName());
         final String PREFIX_FILE_NAME = "pdfCV";
         Path path = Paths.get(SAVE_DIRECTORY_FOR_PDF_DOC);
         boolean toClean = false;
-        try (DirectoryStream<Path> newDirectoryStream = Files.newDirectoryStream(path, "pdfCV" + "*")) {
-            for (final Path newDirectoryStreamItem : newDirectoryStream) {
+        try (DirectoryStream<Path> newDirectoryStream = Files.newDirectoryStream(path, PREFIX_FILE_NAME + "*")) {
+            for (Path newDirectoryStreamItem : newDirectoryStream) {
                 Files.delete(newDirectoryStreamItem);
                 toClean = true;
             }
             if (toClean)
                 pdfResumeService.deleteAll();
-        } catch (final Exception e) {
+        } catch (Exception e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
         }
     }

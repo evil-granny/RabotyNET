@@ -126,7 +126,8 @@ public class ResumeServiceImpl implements ResumeService {
 
     @Override
     public boolean existsResume(Long userId) {
-        return resumeDao.findAll().stream().anyMatch(x -> x.getPerson().getUserId().equals(userId));
+        return resumeDao.findAll().stream()
+                .anyMatch(x -> x.getPerson().getUserId().equals(userId));
     }
 
 }

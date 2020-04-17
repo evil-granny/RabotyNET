@@ -77,7 +77,7 @@ public class ResumeController {
         return resumeService.findResumeByVacancyId(vacancyId);
     }
 
-    @GetMapping(value = "/exists/{userId}")
+    @GetMapping(value = "/existsResume/{userId}")
     public boolean existsResume(@PathVariable("userId") Long userId) {
         return resumeService.existsResume(userId);
     }
