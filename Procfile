@@ -1,1 +1,1 @@
-web: java -jar target/RabotyNET.jar
+web: java --port $PORT target/*.war
