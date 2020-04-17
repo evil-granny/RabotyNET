@@ -326,7 +326,6 @@
     </distributionManagement>
 
     <build>
-        <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -364,7 +363,7 @@
                                     <artifactItem>
                                         <groupId>com.heroku</groupId>
                                         <artifactId>webapp-runner</artifactId>
-                                        <version>9.0.34.0</version>
+                                        <version>9.0.30.0</version>
                                         <destFileName>webapp-runner.jar</destFileName>
                                     </artifactItem>
                                 </artifactItems>
@@ -373,7 +372,6 @@
                     </executions>
                 </plugin>
             </plugins>
-        </pluginManagement>
         <finalName>RabotyNET</finalName>
     </build>
 
