@@ -1,1 +1,1 @@
-web: java -war target/RabotyNET.war
+web: java target/RabotyNET.war
