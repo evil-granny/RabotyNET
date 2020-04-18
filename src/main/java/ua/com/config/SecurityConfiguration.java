@@ -68,7 +68,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(ImmutableList.of("http://localhost:4200"));
+        configuration.setAllowedOrigins(ImmutableList.of("https://rabotynetweb.herokuapp.com"));
         configuration.setAllowedMethods(ALLOWED_METHODS);
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(ALLOWED_HEADERS);
