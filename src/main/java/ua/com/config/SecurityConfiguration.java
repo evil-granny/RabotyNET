@@ -93,7 +93,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(ALL_USERS_URLS).permitAll()
                 .anyRequest().authenticated()
                 .and()
-
                 .logout()
                 .logoutSuccessUrl("/logout")
                 .clearAuthentication(true)
