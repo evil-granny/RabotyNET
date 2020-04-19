@@ -33,7 +33,7 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
         final User user = event.getUser();
         final String token = UUID.randomUUID().toString();
         tokenService.createVerificationTokenForUser(user, token);
-        final String confirmationUrl = FRONT_URL + "/users/auth/confirm?token=" + token;
+        final String confirmationUrl = "http://localhost:4200/users/auth/confirm?token=" + token;
         sendMailService.sendValidationEmail(user, confirmationUrl);
     }
 
