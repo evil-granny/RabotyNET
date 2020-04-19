@@ -51,20 +51,12 @@ CREATE SEQUENCE public.address_address_id_seq
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
-    CACHE 1;
+    CACHE 1
+    OWNED BY public.address.address_id;
 
 
 ALTER TABLE public.address_address_id_seq
     OWNER TO oxmxyadlvfjbdj;
-
---
--- TOC entry 2310 (class 0 OID 0)
--- Dependencies: 198
--- Name: address_address_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oxmxyadlvfjbdj
---
-
-ALTER SEQUENCE public.address_address_id_seq OWNED BY public.address.address_id;
-
 
 --
 -- TOC entry 201 (class 1259 OID 43546)
@@ -99,19 +91,12 @@ CREATE SEQUENCE public.company_company_id_seq
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
-    CACHE 1;
+    CACHE 1
+    OWNED BY public.company.company_id;
 
 
 ALTER TABLE public.company_company_id_seq
     OWNER TO oxmxyadlvfjbdj;
-
---
--- TOC entry 2311 (class 0 OID 0)
--- Dependencies: 200
--- Name: company_company_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oxmxyadlvfjbdj
---
-
-ALTER SEQUENCE public.company_company_id_seq OWNED BY public.company.company_id;
 
 
 --
@@ -140,20 +125,12 @@ CREATE SEQUENCE public.contact_contact_id_seq
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
-    CACHE 1;
+    CACHE 1
+    OWNED BY public.contact.contact_id;
 
 
 ALTER TABLE public.contact_contact_id_seq
     OWNER TO oxmxyadlvfjbdj;
-
---
--- TOC entry 2312 (class 0 OID 0)
--- Dependencies: 202
--- Name: contact_contact_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oxmxyadlvfjbdj
---
-
-ALTER SEQUENCE public.contact_contact_id_seq OWNED BY public.contact.contact_id;
-
 
 --
 -- TOC entry 205 (class 1259 OID 43565)
@@ -183,21 +160,12 @@ CREATE SEQUENCE public.resume_resume_id_seq
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
-    CACHE 1;
+    CACHE 1
+    OWNED BY public.resume.resume_id;
 
 
 ALTER TABLE public.resume_resume_id_seq
     OWNER TO oxmxyadlvfjbdj;
-
---
--- TOC entry 2313 (class 0 OID 0)
--- Dependencies: 204
--- Name: resume_resume_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oxmxyadlvfjbdj
---
-
-ALTER SEQUENCE public.resume_resume_id_seq OWNED BY public.resume.resume_id;
-
-
 
 --
 -- TOC entry 207 (class 1259 OID 43573)
@@ -227,20 +195,12 @@ CREATE SEQUENCE public.education_education_id_seq
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
-    CACHE 1;
+    CACHE 1
+    OWNED BY public.education.education_id;
 
 
 ALTER TABLE public.education_education_id_seq
     OWNER TO oxmxyadlvfjbdj;
-
---
--- TOC entry 2314 (class 0 OID 0)
--- Dependencies: 206
--- Name: education_education_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oxmxyadlvfjbdj
---
-
-ALTER SEQUENCE public.education_education_id_seq OWNED BY public.education.education_id;
-
 
 --
 -- TOC entry 197 (class 1259 OID 43534)
@@ -289,20 +249,12 @@ CREATE SEQUENCE public.job_job_id_seq
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
-    CACHE 1;
+    CACHE 1
+    OWNED BY public.job.job_id;
 
 
 ALTER TABLE public.job_job_id_seq
     OWNER TO oxmxyadlvfjbdj;
-
---
--- TOC entry 2315 (class 0 OID 0)
--- Dependencies: 208
--- Name: job_job_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oxmxyadlvfjbdj
---
-
-ALTER SEQUENCE public.job_job_id_seq OWNED BY public.job.job_id;
-
 
 --
 -- TOC entry 210 (class 1259 OID 43587)
@@ -351,20 +303,12 @@ CREATE SEQUENCE public.requirement_requirement_id_seq
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
-    CACHE 1;
+    CACHE 1
+    OWNED BY public.requirement.requirement_id;
 
 
 ALTER TABLE public.requirement_requirement_id_seq
     OWNER TO oxmxyadlvfjbdj;
-
---
--- TOC entry 2316 (class 0 OID 0)
--- Dependencies: 211
--- Name: requirement_requirement_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oxmxyadlvfjbdj
---
-
-ALTER SEQUENCE public.requirement_requirement_id_seq OWNED BY public.requirement.requirement_id;
-
 
 --
 -- TOC entry 214 (class 1259 OID 43605)
@@ -391,20 +335,12 @@ CREATE SEQUENCE public.roles_role_id_seq
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
-    CACHE 1;
+    CACHE 1
+    OWNED BY public.roles.role_id;
 
 
 ALTER TABLE public.roles_role_id_seq
     OWNER TO oxmxyadlvfjbdj;
-
---
--- TOC entry 2317 (class 0 OID 0)
--- Dependencies: 213
--- Name: roles_role_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oxmxyadlvfjbdj
---
-
-ALTER SEQUENCE public.roles_role_id_seq OWNED BY public.roles.role_id;
-
 
 --
 -- TOC entry 216 (class 1259 OID 43613)
@@ -434,20 +370,12 @@ CREATE SEQUENCE public.skill_skill_id_seq
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
-    CACHE 1;
+    CACHE 1
+    OWNED BY public.skill.skill_id;
 
 
 ALTER TABLE public.skill_skill_id_seq
     OWNER TO oxmxyadlvfjbdj;
-
---
--- TOC entry 2318 (class 0 OID 0)
--- Dependencies: 215
--- Name: skill_skill_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oxmxyadlvfjbdj
---
-
-ALTER SEQUENCE public.skill_skill_id_seq OWNED BY public.skill.skill_id;
-
 
 --
 -- TOC entry 217 (class 1259 OID 43619)
@@ -492,20 +420,12 @@ CREATE SEQUENCE public.users_user_id_seq
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
-    CACHE 1;
+    CACHE 1
+    OWNED BY public.users.user_id;
 
 
 ALTER TABLE public.users_user_id_seq
     OWNER TO oxmxyadlvfjbdj;
-
---
--- TOC entry 2319 (class 0 OID 0)
--- Dependencies: 218
--- Name: users_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oxmxyadlvfjbdj
---
-
-ALTER SEQUENCE public.users_user_id_seq OWNED BY public.users.user_id;
-
 
 --
 -- TOC entry 221 (class 1259 OID 43635)
@@ -539,19 +459,12 @@ CREATE SEQUENCE public.vacancy_vacancy_id_seq
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
-    CACHE 1;
+    CACHE 1
+    OWNED BY public.vacancy.vacancy_id;
 
 
 ALTER TABLE public.vacancy_vacancy_id_seq
     OWNER TO oxmxyadlvfjbdj;
-
---
--- TOC entry 2320 (class 0 OID 0)
--- Dependencies: 220
--- Name: vacancy_vacancy_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: oxmxyadlvfjbdj
---
-
-ALTER SEQUENCE public.vacancy_vacancy_id_seq OWNED BY public.vacancy.vacancy_id;
 
 
 --
@@ -670,6 +583,9 @@ ALTER TABLE ONLY public.vacancy
     ALTER COLUMN vacancy_id SET DEFAULT nextval('public.vacancy_vacancy_id_seq'::regclass);
 
 
+
+
+--Insert all data
 INSERT INTO public.users(enabled, login, password)
 VALUES (true, 'admin@gmail.com', '$2a$10$E2.PwtnpF2p6aB3NFM3Qo.TarTYsaiWD0yTZ7qY1U3K.ybKxNvCku');
 INSERT INTO public.users(enabled, login, password)
@@ -822,53 +738,6 @@ VALUES ('Deep knowledge DBs, RDBMS, SQL', 9);
 INSERT INTO public.requirement(description, vacancy_id)
 VALUES ('You are adept at writing unit tests and testable code, and working under distributed version control', 9);
 
-
-
---
--- TOC entry 2321 (class 0 OID 0)
--- Dependencies: 198
--- Name: address_address_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oxmxyadlvfjbdj
---
-
-SELECT pg_catalog.setval('public.address_address_id_seq', 1, true);
-
-
---
--- TOC entry 2322 (class 0 OID 0)
--- Dependencies: 200
--- Name: company_company_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oxmxyadlvfjbdj
---
-
-SELECT pg_catalog.setval('public.company_company_id_seq', 1, true);
-
-
---
--- TOC entry 2323 (class 0 OID 0)
--- Dependencies: 202
--- Name: contact_contact_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oxmxyadlvfjbdj
---
-
-SELECT pg_catalog.setval('public.contact_contact_id_seq', 1, true);
-
-
---
--- TOC entry 2324 (class 0 OID 0)
--- Dependencies: 204
--- Name: resume_resume_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oxmxyadlvfjbdj
---
-
-SELECT pg_catalog.setval('public.resume_resume_id_seq', 1, true);
-
-
---
--- TOC entry 2325 (class 0 OID 0)
--- Dependencies: 206
--- Name: education_education_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oxmxyadlvfjbdj
---
-
-SELECT pg_catalog.setval('public.education_education_id_seq', 1, true);
-
-
 --
 -- TOC entry 2326 (class 0 OID 0)
 -- Dependencies: 197
@@ -877,62 +746,6 @@ SELECT pg_catalog.setval('public.education_education_id_seq', 1, true);
 
 SELECT pg_catalog.setval('public.hibernate_sequence', 1, false);
 
-
---
--- TOC entry 2327 (class 0 OID 0)
--- Dependencies: 208
--- Name: job_job_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oxmxyadlvfjbdj
---
-
-SELECT pg_catalog.setval('public.job_job_id_seq', 1, true);
-
-
---
--- TOC entry 2328 (class 0 OID 0)
--- Dependencies: 211
--- Name: requirement_requirement_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oxmxyadlvfjbdj
---
-
-SELECT pg_catalog.setval('public.requirement_requirement_id_seq', 9, true);
-
-
---
--- TOC entry 2329 (class 0 OID 0)
--- Dependencies: 213
--- Name: roles_role_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oxmxyadlvfjbdj
---
-
-SELECT pg_catalog.setval('public.roles_role_id_seq', 1, false);
-
-
---
--- TOC entry 2330 (class 0 OID 0)
--- Dependencies: 215
--- Name: skill_skill_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oxmxyadlvfjbdj
---
-
-SELECT pg_catalog.setval('public.skill_skill_id_seq', 1, true);
-
-
---
--- TOC entry 2331 (class 0 OID 0)
--- Dependencies: 218
--- Name: users_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oxmxyadlvfjbdj
---
-
-SELECT pg_catalog.setval('public.users_user_id_seq', 3, true);
-
-
---
--- TOC entry 2332 (class 0 OID 0)
--- Dependencies: 220
--- Name: vacancy_vacancy_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oxmxyadlvfjbdj
---
-
-SELECT pg_catalog.setval('public.vacancy_vacancy_id_seq', 3, true);
-
-
---
 -- TOC entry 2117 (class 2606 OID 43543)
 -- Name: address address_pkey; Type: CONSTRAINT; Schema: public; Owner: oxmxyadlvfjbdj
 --
@@ -1021,12 +834,6 @@ ALTER TABLE ONLY public.roles
 ALTER TABLE ONLY public.skill
     ADD CONSTRAINT skill_pkey PRIMARY KEY (skill_id);
 
-
---
--- TOC entry 2137 (class 2606 OID 43647)
--- Name: user_role uk_it77eq964jhfqtu54081ebtio; Type: CONSTRAINT; Schema: public; Owner: oxmxyadlvfjbdj
---
-
 --
 -- TOC entry 2139 (class 2606 OID 43632)
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: oxmxyadlvfjbdj
@@ -1052,7 +859,6 @@ ALTER TABLE ONLY public.vacancy
 
 ALTER TABLE ONLY public.verificationtoken
     ADD CONSTRAINT verificationtoken_pkey PRIMARY KEY (id);
-
 
 --
 -- TOC entry 2147 (class 2606 OID 43663)
@@ -1080,7 +886,6 @@ ALTER TABLE ONLY public.company
 ALTER TABLE ONLY public.vacancy
     ADD CONSTRAINT fk9p6ux32w6e3jewgvnvcjuqdgg FOREIGN KEY (company_id) REFERENCES public.company (company_id);
 
-
 --
 -- TOC entry 2156 (class 2606 OID 43708)
 -- Name: verificationtoken fk_verify_user; Type: FK CONSTRAINT; Schema: public; Owner: oxmxyadlvfjbdj
@@ -1088,7 +893,6 @@ ALTER TABLE ONLY public.vacancy
 
 ALTER TABLE ONLY public.verificationtoken
     ADD CONSTRAINT fk_verify_user FOREIGN KEY (user_id) REFERENCES public.users (user_id);
-
 
 --
 -- TOC entry 2144 (class 2606 OID 43648)
@@ -1169,6 +973,7 @@ ALTER TABLE ONLY public.company
 
 ALTER TABLE ONLY public.user_role
     ADD CONSTRAINT fkt7e7djp752sqn6w22i6ocqy6q FOREIGN KEY (role_id) REFERENCES public.roles (role_id);
+
 
 
 -- Completed on 2019-04-24 13:17:40
