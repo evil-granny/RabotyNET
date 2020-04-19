@@ -59,8 +59,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private static final String[] ALL_USERS_URLS = {"/companies/byName/**", "/companies/byCompany/**", "/claims", "/photo/**", "/users/**", "/users/enabled/**", "/users/getRoles/*",
             "/", "/vacancies/**", "/login", "/login/**", "/password/**", "/healthCheck", "/pdf/**", "/updatePDF", "/createPdf/**",
             "/sendResume/{vacancyId}", "/companies/byVacancyId/**", "/searchVacancy"};
-    public static final String FRONT_URL_M = "https://rabotynetweb.herokuapp.com";
-    public static final String FRONT_URL = "http://localhost:4200";
+//    public static final String FRONT_URL_M = "https://rabotynetweb.herokuapp.com";
+    public static final String FRONT_URL = "https://rabotynetweb.herokuapp.com";
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -70,7 +70,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(ImmutableList.of(FRONT_URL_M));
+        configuration.setAllowedOrigins(ImmutableList.of(FRONT_URL));
         configuration.setAllowedMethods(ALLOWED_METHODS);
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(ALLOWED_HEADERS);
