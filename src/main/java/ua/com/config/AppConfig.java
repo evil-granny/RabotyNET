@@ -98,6 +98,10 @@ public class AppConfig {
         javaMailProperties.put("mail.smtp.auth", Objects.requireNonNull(environment.getProperty("mail.smtp.auth")));
         javaMailProperties.put("mail.transport.protocol", Objects.requireNonNull(environment.getProperty("mail.transport.protocol")));
         javaMailProperties.put("mail.debug", Objects.requireNonNull(environment.getProperty("mail.debug")));
+
+        javaMailProperties.put("mail.smtp.starttls.required", Objects.requireNonNull(environment.getProperty("mail.smtp.starttls.required")));
+        javaMailProperties.put("mail.smtp.ssl.enable", Objects.requireNonNull(environment.getProperty("mail.smtp.ssl.enable")));
+        javaMailProperties.put("mail.smtp.socketFactory.fallback", Objects.requireNonNull(environment.getProperty("mail.smtp.socketFactory.fallback")));
         mailSender.setJavaMailProperties(javaMailProperties);
         return mailSender;
     }

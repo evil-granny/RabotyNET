@@ -9,10 +9,10 @@ import ua.com.service.token.VerificationTokenService;
 
 import java.util.UUID;
 
+import static ua.com.config.SecurityConfiguration.FRONT_URL;
+
 @Component
 public class RestorePasswordListener implements ApplicationListener<OnRestorePasswordCompleteEvent> {
-
-    private static final String FRONT_URL = "http://localhost:4200";
 
     private final VerificationTokenService tokenService;
     private final GenerateLetter sendMailService;

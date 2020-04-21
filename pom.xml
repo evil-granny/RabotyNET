@@ -7,7 +7,7 @@
 
     <groupId>ua.com.projects</groupId>
     <artifactId>RabotyNET</artifactId>
-    <version>1.2-SNAPSHOP</version>
+    <version>1.3-SNAPSHOP</version>
 
     <dependencies>
         <dependency>
@@ -326,7 +326,6 @@
     </distributionManagement>
 
     <build>
-        <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -352,8 +351,27 @@
                         <failOnMissingWebXml>false</failOnMissingWebXml>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals><goal>copy</goal></goals>
+                            <configuration>
+                                <artifactItems>
+                                    <artifactItem>
+                                        <groupId>com.heroku</groupId>
+                                        <artifactId>webapp-runner</artifactId>
+                                        <version>9.0.30.0</version>
+                                        <destFileName>webapp-runner.jar</destFileName>
+                                    </artifactItem>
+                                </artifactItems>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
-        </pluginManagement>
         <finalName>RabotyNET</finalName>
     </build>
 
