@@ -59,8 +59,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private static final String[] ALL_USERS_URLS = {"/companies/byName/**", "/companies/byCompany/**", "/claims", "/photo/**", "/users/**", "/users/enabled/**", "/users/getRoles/*",
             "/", "/vacancies/**", "/login", "/login/**", "/password/**", "/healthCheck", "/pdf/**", "/updatePDF", "/createPdf/**",
             "/sendResume/{vacancyId}", "/companies/byVacancyId/**", "/searchVacancy"};
-//    public static final String FRONT_URL_LOCAL_HOS = "http://localhost:4200";
-    public static final String FRONT_URL = "https://rabotynetweb.herokuapp.com";
+//    public static final String FRONT_URL_LOCAL_HOS = "https://rabotynetweb.herokuapp.com";
+    public static final String FRONT_URL = "http://localhost:4200";
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
