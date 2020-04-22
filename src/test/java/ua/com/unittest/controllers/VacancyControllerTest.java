@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import ua.com.controller.VacancyController;
 import ua.com.exception.ResourceNotFoundException;
 import ua.com.service.ResumeService;
-import ua.com.service.VacancyService;
+import ua.com.service.vacancy.VacancyService;
 import ua.com.model.Vacancy;
 
 import java.util.ArrayList;

@@ -1,6 +1,7 @@
 package ua.com.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import ua.com.dao.CompanyDao;
 import ua.com.dao.RequirementDao;
@@ -14,7 +15,7 @@ import ua.com.model.Company;
 import ua.com.model.Vacancy;
 import ua.com.model.enumtype.VacancyStatus;
 import ua.com.service.ResumeService;
-import ua.com.service.VacancyService;
+import ua.com.service.vacancy.VacancyService;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -119,6 +120,12 @@ public class VacancyServiceImpl implements VacancyService {
         if (company.getUser().getUserId().equals(LoggedUserUtil.getLoggedUser().get().getUserId())) {
             vacancyDao.deleteById(id);
         }
+    }
+
+    @Override
+    @Scheduled(cron = "${cron.cleanClosedVacancies}")
+    public void deleteAllClosedVacancies() {
+        vacancyDao.deleteAllClosedVacancies();
     }
 
 }

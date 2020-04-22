@@ -9,7 +9,7 @@ import ua.com.exception.ResourceNotFoundException;
 import ua.com.model.Requirement;
 import ua.com.service.RequirementService;
 import ua.com.model.Vacancy;
-import ua.com.service.VacancyService;
+import ua.com.service.vacancy.VacancyService;
 
 import javax.validation.Valid;
 import java.util.List;

@@ -1,4 +1,4 @@
-package ua.com.service;
+package ua.com.service.vacancy;
 
 import ua.com.dto.VacancyDto;
 import ua.com.model.Vacancy;
@@ -25,5 +25,7 @@ public interface VacancyService {
     Vacancy update(Vacancy vacancy);
 
     void deleteById(Long id);
+
+    void deleteAllClosedVacancies();
 
 }
