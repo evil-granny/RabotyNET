@@ -23,8 +23,9 @@ import java.util.Collections;
 public class SwaggerConfig {
 
     private static final String TITLE = "RabotyNET REST API Documentation";
-    private static final String DESCRIPTION = "RESTful API Documentation";
+    private static final String DESCRIPTION = "RESTFull API Documentation";
     private static final String VERSION = "1.0";
+    private static final String BASIC_AUTH = "BasicAuth";
 
     @Bean
     public Docket basicAuthSecuredApi() {
@@ -35,8 +36,8 @@ public class SwaggerConfig {
                 .apis(RequestHandlerSelectors.basePackage("ua.com.controller"))
                 .paths(PathSelectors.any())
                 .build()
-                .securitySchemes(Collections.singletonList(new BasicAuth("BasicAuth")))
-                .securityContexts(Collections.singletonList(BasicSecurityContext()));
+                .securitySchemes(Collections.singletonList(new BasicAuth(BASIC_AUTH)))
+                .securityContexts(Collections.singletonList(basicSecurityContext()));
     }
 
     private ApiInfo apiInfo() {
@@ -47,9 +48,10 @@ public class SwaggerConfig {
                 .build();
     }
 
-    private SecurityContext BasicSecurityContext() {
+    private SecurityContext basicSecurityContext() {
         return SecurityContext.builder()
-                .securityReferences(Collections.singletonList(new SecurityReference("BasicAuth", new AuthorizationScope[0])))
+                .securityReferences(Collections.singletonList(new SecurityReference(BASIC_AUTH,
+                        new AuthorizationScope[0])))
                 .build();
     }
 

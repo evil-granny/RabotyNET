@@ -1,10 +1,10 @@
 package ua.com.dao.impl;
 
+import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 import ua.com.dao.VacancyDao;
 import ua.com.exception.ResourceNotFoundException;
 import ua.com.model.UserPrincipal;
-import ua.com.utility.LoggedUserUtil;
 import ua.com.utility.QueryUtility;
 import ua.com.model.Vacancy;
 
@@ -17,6 +17,7 @@ import static ua.com.utility.LoggedUserUtil.getLoggedUser;
 public class VacancyDaoImpl extends AbstractDao<Vacancy, Long> implements VacancyDao {
 
     private static final String ID = "id";
+    private static final String DELETE_FROM_VACANCY = "DELETE FROM Vacancy vac WHERE vac.status NOT LIKE 'OPEN'";
 
     @Override
     public Optional<Vacancy> findByRequirementId(Long id) {
@@ -89,6 +90,12 @@ public class VacancyDaoImpl extends AbstractDao<Vacancy, Long> implements Vacanc
                 .setFirstResult(first)
                 .setMaxResults(count)
                 .getResultList();
+    }
+
+    @Override
+    public void deleteAllClosedVacancies() {
+        Query namedQuery = createNamedQuery(DELETE_FROM_VACANCY);
+        namedQuery.executeUpdate();
     }
 
 }

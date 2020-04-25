@@ -25,4 +25,6 @@ public interface VacancyDao extends BaseDao<Vacancy, Long> {
 
     Optional<Vacancy> findByRequirementId(Long id);
 
+    void deleteAllClosedVacancies();
+
 }

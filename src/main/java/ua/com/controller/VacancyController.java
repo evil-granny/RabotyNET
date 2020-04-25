@@ -11,7 +11,7 @@ import ua.com.model.Resume;
 import ua.com.service.ResumeService;
 import ua.com.dto.VacancyDto;
 import ua.com.model.Vacancy;
-import ua.com.service.VacancyService;
+import ua.com.service.vacancy.VacancyService;
 
 import javax.validation.Valid;
 import java.util.List;
