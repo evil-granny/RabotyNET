@@ -37,9 +37,6 @@ public class CompanyController {
         return companyService.findAll();
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Get companies")
     @GetMapping(path = {"/all/{first}/{count}"})
     public CompanyPaginationDto getAllWithPagination(@PathVariable("first") int first, @PathVariable("count") int count) {
         return companyService.findAllWithPagination(first, count);
