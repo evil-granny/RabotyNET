@@ -1,6 +1,9 @@
 package ua.com.controller;
 
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ua.com.exception.CompanyAlreadyExistException;
 import ua.com.exception.ResourceNotFoundException;
@@ -34,6 +37,9 @@ public class CompanyController {
         return companyService.findAll();
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Get companies")
     @GetMapping(path = {"/all/{first}/{count}"})
     public CompanyPaginationDto getAllWithPagination(@PathVariable("first") int first, @PathVariable("count") int count) {
         return companyService.findAllWithPagination(first, count);
