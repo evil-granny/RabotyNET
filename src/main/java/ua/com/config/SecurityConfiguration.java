@@ -58,7 +58,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private static final String[] COWNER_USER_URLS = {"/resume/**", "/companies/create", "/companies/approve", "/people", "/people/*", "people/**", "/companies/my", "/companies/update"};
     private static final String[] ALL_USERS_URLS = {"/companies/byName/**", "/companies/byCompany/**", "/claims", "/photo/**", "/users/**", "/users/enabled/**", "/users/getRoles/*",
             "/", "/vacancies/**", "/login", "/login/**", "/password/**", "/healthCheck", "/pdf/**", "/updatePDF", "/createPdf/**",
-            "/sendResume/{vacancyId}", "/companies/byVacancyId/**", "/searchVacancy", "/people/*", "/companies/all/**", "/companies/my"};
+            "/sendResume/{vacancyId}", "/companies/byVacancyId/**", "/searchVacancy", "/people/*", "/companies/all/**"};
     public static final String FRONT_URL = "https://rabotynetweb.herokuapp.com";
 //    public static final String FRONT_URL = "http://localhost:4200";
 
