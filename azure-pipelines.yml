@@ -9,13 +9,13 @@ trigger:
 variables:
 
   # Azure Resource Manager connection created during pipeline creation
-  azureSubscription: 'df4ad829-5eb3-462e-8c7d-0de2ea491b03'
+  azureSubscription: 'c2c15c61-e2fb-4339-b7b5-435e8f604233'
   
   # Web app name
-  webAppName: ''
+  webAppName: 'RabotyNET'
 
   # Environment name
-  environmentName: ''
+  environmentName: 'Windows'
   
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
@@ -24,23 +24,28 @@ stages:
 - stage: Build
   displayName: Build stage
   jobs:
-  - job: MavenPackageAndPublishArtifacts
+  - job: packageAndPublishArtifacts
     displayName: Maven Package and Publish Artifacts
     pool:
       vmImage: $(vmImageName)
     
     steps:
-    - task: Maven@3
-      displayName: 'Maven Package'
-      inputs:
-        mavenPomFile: 'pom.xml'
-
     - task: CopyFiles@2
       displayName: 'Copy Files to artifact staging directory'
       inputs:
         SourceFolder: '$(System.DefaultWorkingDirectory)'
         Contents: '**/target/*.?(war|jar)'
         TargetFolder: $(Build.ArtifactStagingDirectory)
+    - task: Maven@3
+      inputs:
+        mavenPomFile: 'pom.xml'
+        publishJUnitResults: true
+        testResultsFiles: '**/surefire-reports/TEST-*.xml'
+        javaHomeOption: 'JDKVersion'
+        mavenVersionOption: 'Default'
+        mavenAuthenticateFeed: false
+        effectivePomSkip: false
+        sonarQubeRunAnalysis: false
 
     - upload: $(Build.ArtifactStagingDirectory)
       artifact: drop
