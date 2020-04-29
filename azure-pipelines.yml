@@ -47,9 +47,9 @@ stages:
         effectivePomSkip: false
         sonarQubeRunAnalysis: false
     - task: PublishBuildArtifacts@1
-      displayName: 'Publish Artifact: drop'
-      inputs:
-        PathtoPublish: '$(build.ArtifactStagingDirectory)'
+        inputs:
+          artifactName: 'war'
+          pathToPublish: '$(build.artifactStagingDirectory)'
 
     - upload: $(Build.ArtifactStagingDirectory)
       artifact: drop
