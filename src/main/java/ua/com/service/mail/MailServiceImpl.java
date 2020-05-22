@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 public class MailServiceImpl implements MailService {
 
     private static final Logger LOGGER = Logger.getLogger(MailServiceImpl.class.getName());
+    private static final String MAIL = "rabotynetch082@gmail.com";
 
     private final JavaMailSender mailSender;
 
@@ -48,7 +49,7 @@ public class MailServiceImpl implements MailService {
         return mimeMessage -> {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
             helper.setSubject(letter.getSubject());
-            helper.setFrom("rabotynetch082@gmail.com");
+            helper.setFrom(MAIL);
             helper.setTo(letter.getEMail());
             String content = letter.getContent();
             helper.setText("<html><body><p>" + content + "</p><img src='cid:company-logo'></body></html>", true);
@@ -60,7 +61,7 @@ public class MailServiceImpl implements MailService {
         return mimeMessage -> {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setSubject(letter.getSubject());
-            helper.setFrom("rabotynetch082@gmail.com");
+            helper.setFrom(MAIL);
             helper.setTo(letter.getEMail());
             helper.setText(letter.getContent());
 
