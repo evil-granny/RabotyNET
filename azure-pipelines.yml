@@ -46,10 +46,6 @@ stages:
         mavenAuthenticateFeed: false
         effectivePomSkip: false
         sonarQubeRunAnalysis: false
-    - task: PublishBuildArtifacts@1
-        inputs:
-          artifactName: 'war'
-          pathToPublish: '$(build.artifactStagingDirectory)'
 
     - upload: $(Build.ArtifactStagingDirectory)
       artifact: drop
