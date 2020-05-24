@@ -9,7 +9,7 @@ Web application for searching job
 * make pdf fom resume and sent it on the mail
 * send resume on the vacancy
 * create, update, approve, delete company
-* block company
+* reject company
 * search vacancy and resume
 * has several roles
 * log in, log out and sing in
