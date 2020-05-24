@@ -1,7 +1,7 @@
 # RabotyNET
-##Web application for searching job
+## Web application for searching job
 
-## Installation
+# :eight_spoked_asterisk: Installation
 * clone project from repository
 * run sql script for restoring database in pgAdmin
 
@@ -18,3 +18,4 @@ postgresql.password=yourpassword
 ![Configuration for server](https://github.com/evil-granny/RabotyNET/blob/development/screenshots/server.png) 
 
 ![Configuration for deployment](https://github.com/evil-granny/RabotyNET/blob/development/screenshots/deployment.png) 
+
