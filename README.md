@@ -15,6 +15,6 @@ postgresql.password=yourpassword
 ```
 * Configure server
 
-![Configuration for server](https://https://github.com/evil-granny/RabotyNET/tree/development/screenshots/server.png) 
+![Configuration for server](https://github.com/evil-granny/RabotyNET/tree/development/screenshots/server.png) 
 
-![Configuration for deployment](https://https://github.com/evil-granny/RabotyNET/tree/development/screenshots/deployment.png) 
+![Configuration for deployment](https://github.com/evil-granny/RabotyNET/tree/development/screenshots/deployment.png) 
