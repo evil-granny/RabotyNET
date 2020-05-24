@@ -1,5 +1,18 @@
 # RabotyNET
-## Web application for searching job
+# :eight_spoked_asterisk: Appointment 
+Web application for searching job
+
+# :eight_spoked_asterisk: Description
+## Project allows user: 
+* create, update and close vacancies
+* create, update resume
+* make pdf fom resume and sent it on the mail
+* send resume on the vacancy
+* create, update, approve, delete company
+* block company
+* search vacancy and resume
+* has several roles
+* log in, log out and sing in
 
 # :eight_spoked_asterisk: Installation
 * clone project from repository
@@ -18,4 +31,19 @@ postgresql.password=yourpassword
 ![Configuration for server](https://github.com/evil-granny/RabotyNET/blob/development/screenshots/server.png) 
 
 ![Configuration for deployment](https://github.com/evil-granny/RabotyNET/blob/development/screenshots/deployment.png) 
+# :eight_spoked_asterisk: Tools and libraries
+* Spring 5.1.6.RELEASE
+* javax.mail 1.4.7
+* Hibernate 5.2.11.Final
+* Postgresql 
+* Lombok
+* Spring Security
+* Log4j
+* Junit
+* Maven
+* Java 8
+
+# :eight_spoked_asterisk: Author
+
+Project was created by Denys Ohorodnik [(t.me)](https://t.me/denys_ohorodnik) [(mail)](https://den.ohorodnik@gmail.com).
 
