@@ -15,7 +15,6 @@ import ua.com.service.JobService;
 import ua.com.service.ResumeService;
 import ua.com.service.SkillService;
 import ua.com.utility.LoggedUserUtil;
-import ua.com.service.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +52,7 @@ public class ResumeControllerTest {
     }
 
     @Test
-    public void getResumeById()  {
+    public void getResumeById() {
         Resume mockResume = new Resume();
 
         when(resumeService.findById(eq(ID))).thenReturn(Optional.of(mockResume));
@@ -66,8 +65,8 @@ public class ResumeControllerTest {
         verifyNoMoreInteractions(resumeService);
     }
 
-    @Test(expected = ResourceNotFoundException.class )
-    public void getProductsResumeServiceThrowsException()  {
+    @Test(expected = ResourceNotFoundException.class)
+    public void getProductsResumeServiceThrowsException() {
         when(resumeService.findById(eq(ID))).thenThrow(new ResourceNotFoundException("Resume not found with id "));
         controller.findById(ID);
         verify(resumeService, times(1)).findById(eq(ID));
@@ -75,7 +74,7 @@ public class ResumeControllerTest {
     }
 
     @Test
-    public void getAllResume(){
+    public void getAllResume() {
         List<Resume> mockResumes = new ArrayList<>();
         when(resumeService.findAll()).thenReturn(mockResumes);
 
@@ -88,17 +87,17 @@ public class ResumeControllerTest {
     }
 
     @Test
-    public void getResumeByUserId(){
+    public void getResumeByUserId() {
         Resume mockResume = new Resume();
 
         mockStatic(LoggedUserUtil.class);
 
-        when(LoggedUserUtil.getLoggedUser()).thenReturn(Optional.of(new UserPrincipal("user.user@gmail.com","user", new ArrayList<>(), USER_ID)));
+        when(LoggedUserUtil.getLoggedUser()).thenReturn(Optional.of(new UserPrincipal("user.user@gmail.com", "user", new ArrayList<>(), USER_ID)));
         when(resumeService.findByUserId(eq(USER_ID))).thenReturn(Optional.of(mockResume));
 
         Resume resumeByUserId = controller.getResumeByUserId(LoggedUserUtil.getLoggedUser().get().getUserId());
 
-        assertEquals(mockResume,resumeByUserId);
+        assertEquals(mockResume, resumeByUserId);
 
         verifyStatic(LoggedUserUtil.class);
         LoggedUserUtil.getLoggedUser();
@@ -106,11 +105,11 @@ public class ResumeControllerTest {
         verifyNoMoreInteractions(resumeService);
     }
 
-    @Test(expected = ResourceNotFoundException.class )
-    public void getProductsResumeByUserIdServiceThrowsException()  {
+    @Test(expected = ResourceNotFoundException.class)
+    public void getProductsResumeByUserIdServiceThrowsException() {
         mockStatic(LoggedUserUtil.class);
 
-        when(LoggedUserUtil.getLoggedUser()).thenReturn(Optional.of(new UserPrincipal("user.user@gmail.com","user", new ArrayList<>(), USER_ID)));
+        when(LoggedUserUtil.getLoggedUser()).thenReturn(Optional.of(new UserPrincipal("user.user@gmail.com", "user", new ArrayList<>(), USER_ID)));
         when(resumeService.findByUserId(eq(USER_ID))).thenThrow(new ResourceNotFoundException("Resume not found with id "));
         controller.getResumeByUserId(LoggedUserUtil.getLoggedUser().get().getUserId());
 
@@ -121,7 +120,7 @@ public class ResumeControllerTest {
     }
 
     @Test
-    public void createResume(){
+    public void createResume() {
         Resume mockResume = Resume.builder()
                 .resumeId(4L)
                 .position("Developer")
@@ -137,7 +136,7 @@ public class ResumeControllerTest {
     }
 
     @Test
-    public void updateResume(){
+    public void updateResume() {
         Resume mockResume = Resume.builder()
                 .resumeId(4L)
                 .position("Developer")
@@ -153,7 +152,7 @@ public class ResumeControllerTest {
     }
 
     @Test
-    public void deleteResume(){
+    public void deleteResume() {
         controller.deleteById(ID);
 
         verify(resumeService, times(1)).deleteById(eq(ID));
@@ -161,7 +160,7 @@ public class ResumeControllerTest {
     }
 
     @Test
-    public void deleteSkillInResume(){
+    public void deleteSkillInResume() {
         controller.deleteSkill(ID);
 
         verify(skillService, times(1)).deleteById(eq(ID));
@@ -169,7 +168,7 @@ public class ResumeControllerTest {
     }
 
     @Test
-    public void deleteJobInResume(){
+    public void deleteJobInResume() {
         controller.deleteJob(ID);
 
         verify(jobService, times(1)).deleteById(eq(ID));
@@ -177,14 +176,14 @@ public class ResumeControllerTest {
     }
 
     @Test
-    public void getResumeByVacancyId(){
+    public void getResumeByVacancyId() {
         List<Resume> mockResumes = new ArrayList<>();
 
         when(resumeService.findResumeByVacancyId(eq(VACANCY_ID))).thenReturn(mockResumes);
 
         List<Resume> allResumeByVacancyId = controller.getResumeByVacancyId(VACANCY_ID);
 
-        assertEquals(mockResumes,allResumeByVacancyId);
+        assertEquals(mockResumes, allResumeByVacancyId);
 
         verify(resumeService, times(1)).findResumeByVacancyId(eq(USER_ID));
         verifyNoMoreInteractions(resumeService);

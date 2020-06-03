@@ -15,9 +15,11 @@ import ua.com.service.ResumeService;
 import ua.com.service.impl.ResumeServiceImpl;
 import ua.com.service.letter.GenerateLetter;
 import ua.com.utility.LoggedUserUtil;
-import ua.com.dao.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
@@ -55,12 +57,12 @@ public class ResumeServiceTest {
     private static final long VACANCY_ID = 2;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         this.service = new ResumeServiceImpl(resumeDao, userDao, personDao, vacancyDao, pdfResumeDao, generateLetter);
     }
 
     @Test
-    public void getResumeById(){
+    public void getResumeById() {
         Resume mockResume = Resume.builder()
                 .resumeId(ID)
                 .position("Developer")
@@ -76,7 +78,7 @@ public class ResumeServiceTest {
     }
 
     @Test
-    public void getAllResume(){
+    public void getAllResume() {
         List<Resume> mockResumes = new ArrayList<>();
         when(resumeDao.findAll()).thenReturn(mockResumes);
 
@@ -89,7 +91,7 @@ public class ResumeServiceTest {
     }
 
     @Test
-    public void createResume(){
+    public void createResume() {
         Person mockUser = Person.builder()
                 .userId(USER_ID)
                 .build();
@@ -125,7 +127,7 @@ public class ResumeServiceTest {
     }
 
     @Test
-    public void updateResume(){
+    public void updateResume() {
         Person mockUser = Person.builder()
                 .userId(USER_ID)
                 .build();
@@ -164,7 +166,7 @@ public class ResumeServiceTest {
     }
 
     @Test
-    public void deleteResume(){
+    public void deleteResume() {
         service.deleteById(ID);
 
         verify(resumeDao, times(1)).deleteById(eq(ID));
@@ -172,7 +174,7 @@ public class ResumeServiceTest {
     }
 
     @Test
-    public void getResumeByUserId()  {
+    public void getResumeByUserId() {
         Resume mockResume = new Resume();
         when(resumeDao.findByUserId(eq(ID))).thenReturn(Optional.of(mockResume));
         Optional<Resume> resumeById = service.findByUserId(ID);

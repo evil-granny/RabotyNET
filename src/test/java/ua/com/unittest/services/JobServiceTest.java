@@ -6,9 +6,9 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
 import ua.com.dao.JobDao;
+import ua.com.model.Job;
 import ua.com.service.JobService;
 import ua.com.service.impl.JobServiceImpl;
-import ua.com.model.Job;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,21 +19,21 @@ import static org.mockito.Mockito.*;
 
 @RunWith(PowerMockRunner.class)
 public class JobServiceTest {
-    
+
     @Mock
     private JobDao jobDao;
-    
+
     private JobService service;
-    
+
     private final static long ID = 2;
-    
+
     @Before
-    public void setUp(){
+    public void setUp() {
         this.service = new JobServiceImpl(jobDao);
     }
 
     @Test
-    public void getSkillById(){
+    public void getSkillById() {
         Job mockJob = Job.builder()
                 .jobId(ID)
                 .build();
@@ -49,7 +49,7 @@ public class JobServiceTest {
     }
 
     @Test
-    public void getAllSkill(){
+    public void getAllSkill() {
         List<Job> mockJobs = new ArrayList<>();
         when(jobDao.findAll()).thenReturn(mockJobs);
 
@@ -62,7 +62,7 @@ public class JobServiceTest {
     }
 
     @Test
-    public void createSkill(){
+    public void createSkill() {
         Job mockJob = Job.builder()
                 .jobId(4L)
                 .build();
@@ -77,7 +77,7 @@ public class JobServiceTest {
     }
 
     @Test
-    public void updateSkill(){
+    public void updateSkill() {
         Job mockJob = Job.builder()
                 .jobId(4L)
                 .build();
@@ -92,7 +92,7 @@ public class JobServiceTest {
     }
 
     @Test
-    public void deleteSkill(){
+    public void deleteSkill() {
         service.deleteById(ID);
 
         verify(jobDao, times(1)).deleteById(eq(ID));
