@@ -8,13 +8,13 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import ua.com.controller.CompanyController;
+import ua.com.dto.company.CompanyPaginationDto;
 import ua.com.exception.CompanyAlreadyExistException;
 import ua.com.exception.ResourceNotFoundException;
+import ua.com.model.Company;
 import ua.com.model.UserPrincipal;
 import ua.com.service.CompanyService;
 import ua.com.utility.LoggedUserUtil;
-import ua.com.dto.company.CompanyPaginationDto;
-import ua.com.model.Company;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;

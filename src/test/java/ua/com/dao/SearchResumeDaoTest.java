@@ -7,6 +7,8 @@ import org.hibernate.cfg.Configuration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ua.com.dao.impl.search.SearchResumeDao;
+import ua.com.dto.search.SearchRequestDto;
+import ua.com.dto.search.SearchResumeResponseDto;
 import ua.com.model.*;
 import ua.com.model.enumtype.Currency;
 import ua.com.model.enumtype.Employment;
@@ -16,9 +18,6 @@ import ua.com.model.profile.Address;
 import ua.com.model.profile.Contact;
 import ua.com.model.profile.Person;
 import ua.com.model.profile.Photo;
-import ua.com.dto.search.SearchRequestDto;
-import ua.com.dto.search.SearchResumeResponseDto;
-import ua.com.model.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -193,10 +192,8 @@ class SearchResumeDaoTest {
                 languages[random.nextInt(languages.length)] + " " +
                 positions[random.nextInt(positions.length)]);
         vacancy.setEmployment(employmentList.get(random.nextInt(employmentList.size())));
-//        vacancy.setSalary(random.nextInt(5) * 1000 + 500);
         vacancy.setVacancyStatus(vacancyStatusList.get(random.nextInt(vacancyStatusList.size())));
         vacancy.setHotVacancy(random.nextInt(5) % 2 != 0);
-//        vacancy.setCurrency(currencyList.get(random.nextInt(currencyList.size())));
         vacancy.setCompany(company);
         return vacancy;
     }
@@ -350,7 +347,6 @@ class SearchResumeDaoTest {
                 .setProperty("hibernate.show_sql", "true")
                 .setProperty("hibernate.hbm2ddl.auto", "update")
                 .buildSessionFactory();
-//        insert();
     }
 
     @Test

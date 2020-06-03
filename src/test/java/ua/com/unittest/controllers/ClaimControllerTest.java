@@ -36,7 +36,7 @@ public class ClaimControllerTest {
     }
 
     @Test
-    public void getClaimsByCompanyId()  {
+    public void getClaimsByCompanyId() {
         Claim mockClaim = Claim.builder()
                 .claimId(1)
                 .title("Claim")

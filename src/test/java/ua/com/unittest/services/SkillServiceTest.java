@@ -6,9 +6,9 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
 import ua.com.dao.SkillDao;
+import ua.com.model.Skill;
 import ua.com.service.SkillService;
 import ua.com.service.impl.SkillServiceImpl;
-import ua.com.model.Skill;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,12 +29,12 @@ public class SkillServiceTest {
     private static final long ID = 2;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         this.service = new SkillServiceImpl(skillDao);
     }
 
     @Test
-    public void getSkillById(){
+    public void getSkillById() {
         Skill mockSkill = Skill.builder()
                 .skillId(ID)
                 .build();
@@ -50,7 +50,7 @@ public class SkillServiceTest {
     }
 
     @Test
-    public void getAllSkill(){
+    public void getAllSkill() {
         List<Skill> mockSkills = new ArrayList<>();
         when(skillDao.findAll()).thenReturn(mockSkills);
 
@@ -63,7 +63,7 @@ public class SkillServiceTest {
     }
 
     @Test
-    public void createSkill(){
+    public void createSkill() {
         Skill mockSkill = Skill.builder()
                 .skillId(4L)
                 .build();
@@ -78,7 +78,7 @@ public class SkillServiceTest {
     }
 
     @Test
-    public void updateSkill(){
+    public void updateSkill() {
         Skill mockSkill = Skill.builder()
                 .skillId(4L)
                 .build();
@@ -93,7 +93,7 @@ public class SkillServiceTest {
     }
 
     @Test
-    public void deleteSkill(){
+    public void deleteSkill() {
         service.deleteById(ID);
 
         verify(skillDao, times(1)).deleteById(eq(ID));

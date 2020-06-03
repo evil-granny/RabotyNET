@@ -10,17 +10,17 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import ua.com.dao.CompanyDao;
 import ua.com.dao.RoleDao;
 import ua.com.dao.UserDao;
+import ua.com.dto.company.CompanyPaginationDto;
 import ua.com.exception.ResourceNotFoundException;
+import ua.com.model.Company;
+import ua.com.model.Role;
+import ua.com.model.User;
 import ua.com.model.UserPrincipal;
 import ua.com.model.enumtype.Status;
 import ua.com.service.CompanyService;
 import ua.com.service.impl.CompanyServiceImpl;
 import ua.com.service.letter.GenerateLetter;
 import ua.com.utility.LoggedUserUtil;
-import ua.com.dto.company.CompanyPaginationDto;
-import ua.com.model.Company;
-import ua.com.model.Role;
-import ua.com.model.User;
 
 import java.util.*;
 
