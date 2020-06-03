@@ -199,7 +199,6 @@ class SearchResumeDaoTest {
     }
 
     private void insertRegisteredUsers(Session session) {
-
         session.beginTransaction();
 
         Role adminRole = new Role();
