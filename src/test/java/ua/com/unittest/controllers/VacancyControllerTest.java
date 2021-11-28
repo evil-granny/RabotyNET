@@ -10,6 +10,7 @@ import ua.com.controller.VacancyController;
 import ua.com.exception.ResourceNotFoundException;
 import ua.com.model.Vacancy;
 import ua.com.service.ResumeService;
+import ua.com.service.vacancy.BookmarkService;
 import ua.com.service.vacancy.VacancyService;
 
 import java.util.ArrayList;
@@ -27,6 +28,9 @@ public class VacancyControllerTest {
 
     @Mock
     private ResumeService resumeService;
+
+    @Mock
+    private BookmarkService bookmarkService;
 
     private VacancyController controller;
 

@@ -3,9 +3,10 @@ package ua.com.service.letter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ua.com.model.Letter;
 import ua.com.service.mail.MailService;
 
-@Service("letterService")
+@Service
 public class LetterServiceImpl implements LetterService {
 
     private final MailService mailService;
@@ -16,8 +17,8 @@ public class LetterServiceImpl implements LetterService {
     }
 
     @Override
-    public void sendLetter(Object object) {
-        mailService.sendEmail(object);
+    public void sendLetter(Letter letter) {
+        mailService.sendEmail(letter);
     }
 
 }

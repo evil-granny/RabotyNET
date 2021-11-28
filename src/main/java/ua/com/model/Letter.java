@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 public class Letter {
 
-    String eMail;
+    String emailAddress;
 
     String subject;
 

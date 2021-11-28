@@ -29,8 +29,7 @@ public class MailServiceImpl implements MailService {
     }
 
     @Override
-    public void sendEmail(Object object) {
-        Letter letter = (Letter) object;
+    public void sendEmail(Letter letter) {
         MimeMessagePreparator messagePreparator;
         if (letter.isWithAttachment()) {
             messagePreparator = getContentWithAttachment(letter);
@@ -50,7 +49,7 @@ public class MailServiceImpl implements MailService {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
             helper.setSubject(letter.getSubject());
             helper.setFrom(MAIL);
-            helper.setTo(letter.getEMail());
+            helper.setTo(letter.getEmailAddress());
             String content = letter.getContent();
             helper.setText("<html><body><p>" + content + "</p><img src='cid:company-logo'></body></html>", true);
             helper.addInline("company-logo", new ClassPathResource("logo.png"));
@@ -62,7 +61,7 @@ public class MailServiceImpl implements MailService {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setSubject(letter.getSubject());
             helper.setFrom(MAIL);
-            helper.setTo(letter.getEMail());
+            helper.setTo(letter.getEmailAddress());
             helper.setText(letter.getContent());
 
             FileSystemResource file = new FileSystemResource(new File(letter.getLinkForAttachment()));

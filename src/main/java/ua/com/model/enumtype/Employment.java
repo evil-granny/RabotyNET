@@ -1,34 +1,34 @@
 package ua.com.model.enumtype;
 
+import java.util.Arrays;
+
 public enum Employment {
 
-    FULL("full"),
+    FULL("full", "Full time"),
 
-    PART_TIME("part_time"),
+    PART_TIME("part_time", "Part time"),
 
-    HOURLY("hourly"),
+    HOURLY("hourly", "Hourly"),
 
-    TRAINEE("trainee");
+    TRAINEE("trainee", "Trainee");
 
     private String type;
+    private String displayValue;
 
-    Employment(String code) {
-        this.type = code;
+    Employment(String type, String displayValue) {
+        this.type = type;
+        this.displayValue = displayValue;
     }
 
-    public String getCode() {
+    public String getType() {
         return type;
     }
 
-    public static Employment fromCode(String code) {
-        for (Employment type : Employment.values()) {
-            if (type.getCode().equals(code)) {
-                return type;
-            }
-        }
-
-        throw new UnsupportedOperationException(
-                "The code " + code + " is not supported!");
+    public static Employment fromCode(String type) {
+        return Arrays.stream(Employment.values())
+                .filter(employment -> employment.getType().equals(type))
+                .findFirst()
+                .orElseThrow(() ->  new UnsupportedOperationException("The type " + type + " is not supported!"));
     }
 
 }

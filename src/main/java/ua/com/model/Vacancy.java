@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.data.jpa.repository.Query;
 import ua.com.model.enumtype.Currency;
 import ua.com.model.enumtype.Employment;
 import ua.com.model.enumtype.VacancyStatus;
@@ -12,6 +13,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -84,6 +86,9 @@ public class Vacancy {
     @Column(name = "hot_vacancy", columnDefinition = "BOOLEAN DEFAULT false")
     private Boolean hotVacancy;
 
+    @Transient
+    private boolean markedAsBookmark;
+
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "company_id")
@@ -99,6 +104,12 @@ public class Vacancy {
     @JoinTable(name = "vacancy_resume", joinColumns = {@JoinColumn(name = "vacancy_id")},
             inverseJoinColumns = {@JoinColumn(name = "resume_id")})
     private Set<Resume> resumes;
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            mappedBy = "vacancies")
+    private Set<User> users;
 
     @Override
     public boolean equals(Object o) {

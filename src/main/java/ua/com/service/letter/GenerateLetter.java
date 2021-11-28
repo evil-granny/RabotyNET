@@ -19,7 +19,7 @@ public class GenerateLetter {
 
     public void sendValidationEmail(User user, String linkOfValidation) {
         Letter letter = new Letter();
-        letter.setEMail(user.getLogin());
+        letter.setEmailAddress(user.getLogin());
         letter.setSubject("Registration on website RabotyNet");
         String content = "Your mail has been specified for registration on the site of RabotyNET " +
                 "to complete the registration by clicking on the link:" + linkOfValidation +
@@ -33,7 +33,7 @@ public class GenerateLetter {
 
     public void sendRestoreForgotPasswordEmail(User user, String linkOfValidation) {
         Letter letter = new Letter();
-        letter.setEMail(user.getLogin());
+        letter.setEmailAddress(user.getLogin());
         letter.setSubject("Restore password on website RabotyNet");
         String content = "Your mail has been specified for restore password on the site of RabotyNET " +
                 "to complete the restore password by clicking on the link:" + linkOfValidation +
@@ -47,7 +47,7 @@ public class GenerateLetter {
 
     public void sendPersonPDF(Person person, String path) {
         Letter letter = new Letter();
-        letter.setEMail(person.getContact().getEmail());
+        letter.setEmailAddress(person.getContact().getEmail());
         letter.setSubject("Your new resume from RabotyNET");
         String content = "Thank you for using our PDF designer, your Resume in attached";
         letter.setContent(content);
@@ -56,10 +56,10 @@ public class GenerateLetter {
         letterService.sendLetter(letter);
     }
 
-    public void sendResumePdfForVacancy(String eMail, String path) {
+    public void sendResumePdfForVacancy(String emailAddress, String path) {
 
         Letter letter = new Letter();
-        letter.setEMail(eMail);
+        letter.setEmailAddress(emailAddress);
         letter.setSubject("Your get new resume from RabotyNET");
         String content = "Candidate Resume in attached";
         letter.setContent(content);
@@ -70,11 +70,11 @@ public class GenerateLetter {
 
     public void sendCompanyApprove(Company company, String linkToAttachment) {
         Letter letter = new Letter();
-        letter.setEMail(company.getContact().getEmail());
+        letter.setEmailAddress(company.getContact().getEmail());
         letter.setSubject("Approving company " + company.getName() + " on website RabotyNET");
 
         letter.setWithAttachment(false);
-        letter.setContent("This email has benn specified as " + company.getName() + " company email.\n" +
+        letter.setContent("This email has been specified as " + company.getName() + " company email.\n" +
                 "Company " + company.getName() + " has been approved by RabotyNET admin.\n" +
                 "To complete the approving visit the next link " + linkToAttachment);
 

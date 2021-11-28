@@ -1,7 +1,9 @@
 package ua.com.service.mail;
 
+import ua.com.model.Letter;
+
 public interface MailService {
 
-    void sendEmail(final Object object);
+    void sendEmail(final Letter letter);
 
 }

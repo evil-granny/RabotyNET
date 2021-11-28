@@ -50,7 +50,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/csrf"
     };
     private static final String[] CSRF_IGNORE = {"/login/**", "/users/**", "/password/**", "/searchVacancy"};
-    private static final String[] ADMIN_URLS = {"/companies/all/**", "/companies/sendMail", "/people/*"};
+    private static final String[] ADMIN_URLS = {"/companies/all/**", "/companies/sendMail", "/people/*", "/companies/update"};
     private static final String[] COWNER_URLS = {"/companies/my", "/companies/delete/**", "/searchResume",
             "/resume/findByVacancyId/**", "/showResume/**"};
     private static final String[] USER_URLS = {"/users", "/companies/create", "/companies/update"};
@@ -58,9 +58,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private static final String[] COWNER_USER_URLS = {"/resume/**", "/companies/create", "/companies/approve", "/people", "/people/*", "people/**", "/companies/my", "/companies/update"};
     private static final String[] ALL_USERS_URLS = {"/companies/byName/**", "/companies/byCompany/**", "/claims", "/photo/**", "/users/**", "/users/enabled/**", "/users/getRoles/*",
             "/", "/vacancies/**", "/login", "/login/**", "/password/**", "/healthCheck", "/pdf/**", "/updatePDF", "/createPdf/**",
-            "/sendResume/{vacancyId}", "/companies/byVacancyId/**", "/searchVacancy", "/people/*", "/companies/all/**"};
-    public static final String FRONT_URL = "https://rabotynetweb.herokuapp.com";
-//    public static final String FRONT_URL = "http://localhost:4200";
+            "/sendResume/{vacancyId}", "/companies/byVacancyId/**", "/searchVacancy", "/people/*", "/companies/all/**", "bookmarks/**"};
+//    public static final String FRONT_URL = "https://rabotynetweb.herokuapp.com";
+    public static final String FRONT_URL = "http://localhost:4200";
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -101,7 +101,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID", XSRF_TOKEN)
                 .and()
-
                 .csrf()
                 .ignoringAntMatchers(CSRF_IGNORE)
                 .csrfTokenRepository(csrfTokenRepository())
@@ -115,13 +114,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             protected void doFilterInternal(HttpServletRequest request,
                                             HttpServletResponse response, FilterChain filterChain)
                     throws ServletException, IOException {
-                CsrfToken csrf = (CsrfToken) request.getAttribute(CsrfToken.class
-                        .getName());
+                CsrfToken csrf = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
                 if (csrf != null) {
                     Cookie cookie = WebUtils.getCookie(request, XSRF_TOKEN);
                     String token = csrf.getToken();
-                    if (cookie == null || token != null
-                            && !token.equals(cookie.getValue())) {
+                    if (cookie == null || token != null && !token.equals(cookie.getValue())) {
                         cookie = new Cookie(XSRF_TOKEN, token);
                         cookie.setPath("/");
                         response.addCookie(cookie);

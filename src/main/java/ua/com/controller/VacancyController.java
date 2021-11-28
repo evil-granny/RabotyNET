@@ -6,11 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import ua.com.dto.VacancyDto;
 import ua.com.exception.ResourceNotFoundException;
 import ua.com.model.Resume;
-import ua.com.service.ResumeService;
-import ua.com.dto.VacancyDto;
 import ua.com.model.Vacancy;
+import ua.com.service.ResumeService;
 import ua.com.service.vacancy.VacancyService;
 
 import javax.validation.Valid;
@@ -43,7 +43,7 @@ public class VacancyController {
     public ResponseEntity<Vacancy> getVacancyById(@PathVariable("id") Long id) {
         Vacancy vacancy = vacancyService.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Vacancy with id: %d not found", id)));
-        return ResponseEntity.ok().body(vacancy);
+        return ResponseEntity.ok(vacancy);
     }
 
     @PutMapping
@@ -71,10 +71,10 @@ public class VacancyController {
         vacancyService.deleteById(id);
     }
 
-    @GetMapping("/findAll/{first}")
+    @GetMapping("/findAll/{first}/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<VacancyDto> findAllVacanciesWithPagination(@PathVariable("first") int first) {
-        return ResponseEntity.ok().body(vacancyService.findAllVacanciesWithPagination(first));
+    public ResponseEntity<VacancyDto> findAllVacanciesWithPagination(@PathVariable("first") int first, @PathVariable(value = "userId", required = false) Long userId) {
+        return ResponseEntity.ok().body(vacancyService.findAllVacanciesWithPagination(first, userId));
     }
 
     @GetMapping("/{companyId}/{first}")

@@ -3,6 +3,7 @@ package ua.com.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import ua.com.dao.CompanyDao;
 import ua.com.dao.RequirementDao;
 import ua.com.dao.VacancyDao;
@@ -19,6 +20,7 @@ import ua.com.service.vacancy.VacancyService;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -45,7 +47,13 @@ public class VacancyServiceImpl implements VacancyService {
 
     @Override
     public Optional<Vacancy> findById(Long id) {
-        return vacancyDao.findById(id);
+        Optional<Vacancy> vacancy = vacancyDao.findById(id);
+        vacancy.ifPresent(vac -> {
+            if (!CollectionUtils.isEmpty(vac.getUsers())) {
+                vac.setMarkedAsBookmark(true);
+            }
+        });
+        return vacancy;
     }
 
     @Override
@@ -72,9 +80,17 @@ public class VacancyServiceImpl implements VacancyService {
     }
 
     @Override
-    public VacancyDto findAllVacanciesWithPagination(int first) {
+    @Transactional
+    public VacancyDto findAllVacanciesWithPagination(int first, Long userId) {
+        List<Vacancy> vacancies = vacancyDao.findAllVacanciesWithPagination(first, COUNT_VACANCIES_ON_SINGLE_PAGE);
+
+        vacancies.forEach(vacancy -> {
+            if (vacancy.getUsers().stream().anyMatch(user -> user.getUserId().equals(userId))) {
+                vacancy.setMarkedAsBookmark(true);
+            }
+        });
         return new VacancyDto(vacancyDao.getCountOfAllVacancies(),
-                vacancyDao.findAllVacanciesWithPagination(first, COUNT_VACANCIES_ON_SINGLE_PAGE));
+                vacancies);
     }
 
     @Override
@@ -84,7 +100,7 @@ public class VacancyServiceImpl implements VacancyService {
         vacancy.setCompany(company);
 
         Set<Requirement> requirements = vacancy.getRequirements();
-        requirements.forEach(e -> e.setVacancy(vacancy));
+        requirements.forEach(requirement -> requirement.setVacancy(vacancy));
         vacancy.setVacancyStatus(VacancyStatus.OPEN);
         vacancyDao.save(vacancy);
         requirements.forEach(requirementDao::save);
@@ -100,8 +116,10 @@ public class VacancyServiceImpl implements VacancyService {
         if (company.getUser().getUserId().equals(LoggedUserUtil.getLoggedUser().get().getUserId())) {
             vacancy.setCompany(company);
             Set<Requirement> requirements = vacancy.getRequirements();
-            requirements.forEach(e -> e.setVacancy(vacancy));
-            requirements.stream().filter(requirement -> requirement.getRequirementId() == null).forEach(requirementDao::save);
+            requirements.forEach(requirement -> requirement.setVacancy(vacancy));
+            requirements.stream()
+                    .filter(requirement -> requirement.getRequirementId() == null)
+                    .forEach(requirementDao::save);
             requirements.forEach(requirementDao::update);
 
             Set<Resume> resumes = vacancyDao.findById(vacancy.getVacancyId()).get().getResumes();

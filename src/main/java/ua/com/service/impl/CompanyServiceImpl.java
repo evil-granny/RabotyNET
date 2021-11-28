@@ -15,10 +15,8 @@ import ua.com.service.CompanyService;
 import ua.com.service.letter.GenerateLetter;
 
 import javax.transaction.Transactional;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static ua.com.utility.LoggedUserUtil.getLoggedUser;
@@ -48,12 +46,16 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public List<Company> findAll() {
-        return companyDao.findAll();
+        return companyDao.findAll().stream()
+                .sorted(Comparator.comparing(Company::getName, String.CASE_INSENSITIVE_ORDER))
+                .collect(Collectors.toList());
     }
 
     @Override
     public CompanyPaginationDto findAllWithPagination(int first, int count) {
-        return new CompanyPaginationDto(companyDao.getCompaniesCount(), companyDao.findWithPagination(first, count));
+        return new CompanyPaginationDto(companyDao.getCompaniesCount(), companyDao.findWithPagination(first, count).stream()
+                .sorted(Comparator.comparing(Company::getName, String.CASE_INSENSITIVE_ORDER))
+                .collect(Collectors.toList()));
     }
 
     @Override
@@ -108,20 +110,21 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public Optional<Company> sendMail(Company company, String hostLink) {
-        Optional<Company> res = companyDao.findByName(company.getName());
-        Company com = res.orElseThrow(() -> new ResourceNotFoundException("Company not found with name " + company.getName()));
+        Optional<Company> result = companyDao.findByName(company.getName());
+        Company com = result.orElseThrow(() -> new ResourceNotFoundException("Company not found with name " + company.getName()));
 
         letterService.sendCompanyApprove(com, hostLink +
                 "/approveCompany/" + com.getName() + "/" + Objects.hash(com.getName()));
         com.setStatus(Status.MAIL_SENT);
         companyDao.update(com);
-        return res;
+        return result;
     }
 
     @Override
     public Optional<Company> approve(Company company, String companyToken) {
-        if (!companyToken.equals(Objects.hash(company.getName()) + ""))
+        if (!companyToken.equals(Objects.hash(company.getName()) + "")) {
             return Optional.empty();
+        }
 
         Optional<Company> result = companyDao.findByName(company.getName());
         Company com = result.orElseThrow(() -> new ResourceNotFoundException("Company not found with name " + company.getName()));

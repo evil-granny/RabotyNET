@@ -18,7 +18,7 @@ Web application for searching job. It is a server part.
 * clone project from repository
 * run sql script for restoring database in pgAdmin
 
-`RabotyNETlocalhost.sql` for localhost
+`RabotyNET_localhost.sql` for localhost
 * Run `mvn clean install` in console
 * Change:
 ```
