@@ -12,6 +12,7 @@ import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -57,7 +58,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private static final String[] COWNER_ADMIN_URLS = {"/companies/update"};
     private static final String[] COWNER_USER_URLS = {"/resume/**", "/companies/create", "/companies/approve", "/people", "/people/*", "people/**", "/companies/my", "/companies/update"};
     private static final String[] ALL_USERS_URLS = {"/companies/byName/**", "/companies/byCompany/**", "/claims", "/photo/**", "/users/**", "/users/enabled/**", "/users/getRoles/*",
-            "/", "/vacancies/**", "/login", "/login/**", "/password/**", "/healthCheck", "/pdf/**", "/updatePDF", "/createPdf/**",
+            "/", "/vacancies/**", "/login", "/login/**", "/logout", "/logout/**", "/password/**", "/healthCheck", "/pdf/**", "/updatePDF", "/createPdf/**",
             "/sendResume/{vacancyId}", "/companies/byVacancyId/**", "/searchVacancy", "/people/*", "/companies/all/**", "bookmarks/**"};
 //    public static final String FRONT_URL = "https://rabotynetweb.herokuapp.com";
     public static final String FRONT_URL = "http://localhost:4200";

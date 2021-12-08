@@ -20,7 +20,7 @@ import static ua.com.utility.LoggedUserUtil.getLoggedUser;
 public class VacancyDaoImpl extends AbstractDao<Vacancy, Long> implements VacancyDao {
 
     private static final String ID = "id";;
-    private static final String DELETE_FROM_VACANCY = "DELETE FROM Vacancy vac WHERE vac.status NOT LIKE 'OPEN'";
+    private static final String DELETE_FROM_VACANCY = "DELETE FROM Vacancy vac WHERE vac.vacancy_status NOT LIKE 'OPEN'";
 
     @Override
     public Optional<Vacancy> findByRequirementId(Long id) {
@@ -117,8 +117,8 @@ public class VacancyDaoImpl extends AbstractDao<Vacancy, Long> implements Vacanc
 
     @Override
     public void deleteAllClosedVacancies() {
-        Query namedQuery = createNamedQuery(DELETE_FROM_VACANCY);
-        namedQuery.executeUpdate();
+        Query nativeQuery = createNativeQuery(DELETE_FROM_VACANCY);
+        nativeQuery.executeUpdate();
     }
 
 }
