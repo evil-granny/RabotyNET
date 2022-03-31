@@ -379,7 +379,7 @@
 
     <properties>
         <spring-security-version>5.4.2</spring-security-version>
-        <spring-version>5.2.18.RELEASE</spring-version>
+        <spring-version>5.3.18</spring-version>
         <java.version>8</java.version>
     </properties>
 
